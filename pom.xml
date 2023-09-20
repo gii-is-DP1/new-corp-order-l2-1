@@ -36,6 +36,11 @@
 
 	<developers>
 		<developer>
+			<name>Alberto Mimbrero</name>
+			<email>mimbrero.alberto@gmail.com</email>
+			<url>http://www.mimbrero.es/</url>
+		</developer>
+		<developer>
 			<name>MarcoAnarmo</name>
 			<email>marcoanarmo@gmail.com</email>
 			<url>http://marcoanarmo.github.io</url>

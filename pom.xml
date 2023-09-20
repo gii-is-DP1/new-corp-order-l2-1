@@ -12,6 +12,8 @@
 	</parent>
 	<name>New Corp Order</name>
 
+
+
 	<properties>
 
 		<!-- Generic properties -->
@@ -46,6 +48,13 @@
 			<url>http://marcoanarmo.github.io</url>
 		</developer>
         <developer>
+            <name>Giorgio</name>
+            <email>giozam@alumn.us.es</email>
+            <properties>
+              
+            </properties>
+           </developer>
+             <developer>
             <name>JuanGarciaCarballo</name>
             <email>juangarciacarballo@gmail.com</email>
             <url>https://es.wikipedia.org/wiki/Tuenti</url>

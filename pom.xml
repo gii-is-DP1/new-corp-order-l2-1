@@ -2,7 +2,7 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.springframework.samples</groupId>
-	<artifactId>spring-petclinic</artifactId>
+	<artifactId>L2-1</artifactId>
 	<version>2.2.0.BUILD-SNAPSHOT</version>
 
 	<parent>
@@ -10,7 +10,7 @@
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>3.1.1</version>
 	</parent>
-	<name>PetClinic React</name>
+	<name>New Corp Order</name>
 
 	<properties>
 
@@ -31,18 +31,18 @@
 		<node.version>v18.12.1</node.version>
 		<npm.version>8.19.2</npm.version>
 		<frontend-src-dir>${project.basedir}/frontend</frontend-src-dir>
-		  		
+
 	</properties>
 
 	<developers>
 		<developer>
-			<name>JAParejo</name>
-			<email>japarejo@gmail.com</email>
-			<url>http://www.isa.us.es</url>
+			<name>MarcoAnarmo</name>
+			<email>marcoanarmo@gmail.com</email>
+			<url>http://marcoanarmo.github.io</url>
 		</developer>
 	</developers>
 
-	<dependencies>		
+	<dependencies>
 
 		<!-- Spring and Spring Boot dependencies -->
 		<dependency>

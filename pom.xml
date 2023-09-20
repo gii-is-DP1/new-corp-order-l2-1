@@ -2,7 +2,7 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.springframework.samples</groupId>
-	<artifactId>spring-petclinic</artifactId>
+	<artifactId>L2-1</artifactId>
 	<version>2.2.0.BUILD-SNAPSHOT</version>
 
 	<parent>
@@ -10,7 +10,7 @@
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>3.1.1</version>
 	</parent>
-	<name>PetClinic React</name>
+	<name>New Corp Order</name>
 
 
 
@@ -38,15 +38,26 @@
 
 	<developers>
 		<developer>
-			<name>JAParejo</name>
-			<email>japarejo@gmail.com</email>
-			<url>http://www.isa.us.es</url>
+			<name>Alberto Mimbrero</name>
+			<email>mimbrero.alberto@gmail.com</email>
+			<url>http://www.mimbrero.es/</url>
+		</developer>
+		<developer>
+			<name>MarcoAnarmo</name>
+			<email>marcoanarmo@gmail.com</email>
+			<url>http://marcoanarmo.github.io</url>
 		</developer>
         <developer>
             <name>Giorgio</name>
             <email>giozam@alumn.us.es</email>
             <properties>
+              
             </properties>
+           </developer>
+             <developer>
+            <name>JuanGarciaCarballo</name>
+            <email>juangarciacarballo@gmail.com</email>
+            <url>https://es.wikipedia.org/wiki/Tuenti</url>
         </developer>
 	</developers>
 

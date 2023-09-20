@@ -59,6 +59,11 @@
             <email>juangarciacarballo@gmail.com</email>
             <url>https://es.wikipedia.org/wiki/Tuenti</url>
         </developer>
+            <developer>
+            <id>DWR4414</id>
+            <name>Michelangelo Bertoli</name>
+            <email>micber1@alum.us.es</email>
+        </developer>
 	</developers>
 
 	<dependencies>

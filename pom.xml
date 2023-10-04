@@ -22,7 +22,6 @@
     	<maven.compiler.target>${java.version}</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-
 		<lombok.version>1.18.28</lombok.version>
 		<mapstruct.version>1.5.5.Final</mapstruct.version>
 
@@ -51,7 +50,7 @@
             <name>Giorgio</name>
             <email>giozam@alumn.us.es</email>
             <properties>
-              
+
             </properties>
            </developer>
              <developer>
@@ -59,6 +58,17 @@
             <email>juangarciacarballo@gmail.com</email>
             <url>https://es.wikipedia.org/wiki/Tuenti</url>
         </developer>
+            <developer>
+            <id>DWR4414</id>
+            <name>Michelangelo Bertoli</name>
+            <email>micber1@alum.us.es</email>
+        </developer>
+        <developer>
+            <name>Victoria del Carmen Ruiz Delgado</name>
+            <email>vicruidel1@alum.us.es</email>
+            <url>https://es.wikipedia.org/wiki/Venecia</url>
+        </developer>
+
 	</developers>
 
 	<dependencies>
@@ -108,7 +118,6 @@
 			<groupId>javax.cache</groupId>
 			<artifactId>cache-api</artifactId>
 		</dependency>
-
 		<!-- Testing -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -175,7 +184,6 @@
 		</dependency>
 
  </dependencies>
-
 	<build>
 		<plugins>
 			<plugin>

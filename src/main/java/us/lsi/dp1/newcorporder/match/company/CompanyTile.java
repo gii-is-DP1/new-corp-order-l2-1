@@ -3,7 +3,7 @@ package us.lsi.dp1.newcorporder.match.company;
 import com.google.common.base.Preconditions;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import us.lsi.dp1.newcorporder.match.conglomerate.Conglomerate;
+import us.lsi.dp1.newcorporder.match.Conglomerate;
 
 @Getter
 @EqualsAndHashCode(of = "company")

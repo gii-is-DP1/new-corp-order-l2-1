@@ -6,7 +6,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Multiset;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import us.lsi.dp1.newcorporder.match.conglomerate.Conglomerate;
+import us.lsi.dp1.newcorporder.match.Conglomerate;
 
 import java.util.ArrayList;
 import java.util.Collections;

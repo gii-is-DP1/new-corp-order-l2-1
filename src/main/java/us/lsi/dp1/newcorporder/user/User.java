@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import org.apache.commons.lang3.ArrayUtils;
 import us.lsi.dp1.newcorporder.authority.Authority;
 import us.lsi.dp1.newcorporder.friends.Friendship;
+import us.lsi.dp1.newcorporder.friends.FriendshipRequest;
 import us.lsi.dp1.newcorporder.model.BaseEntity;
 
 import lombok.Getter;
@@ -29,13 +30,19 @@ public class User extends BaseEntity {
 	@JoinColumn(name = "authority")
     Authority authority;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.REMOVE)
         @JoinTable(
             name = "user_friendship",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "friendship_id")
         )
     Set<Friendship> friendship;
+
+    @OneToMany(cascade = CascadeType.REMOVE)
+    Set<FriendshipRequest> friendshipRequestsSended;
+
+    @OneToMany(cascade = CascadeType.REMOVE)
+    Set<FriendshipRequest> friendshipRequestsRecieved;
 
     public Boolean hasAuthority(String auth) {
 		return authority.getName().equals(auth);

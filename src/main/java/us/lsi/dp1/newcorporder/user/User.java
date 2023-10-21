@@ -7,6 +7,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import us.lsi.dp1.newcorporder.authority.Authority;
 import us.lsi.dp1.newcorporder.friends.Friendship;
 import us.lsi.dp1.newcorporder.friends.FriendshipRequest;
+import us.lsi.dp1.newcorporder.misc.Notification;
 import us.lsi.dp1.newcorporder.model.BaseEntity;
 
 import lombok.Getter;
@@ -43,6 +44,9 @@ public class User extends BaseEntity {
 
     @OneToMany(cascade = CascadeType.REMOVE)
     Set<FriendshipRequest> friendshipRequestsRecieved;
+
+    @OneToMany(cascade = CascadeType.REMOVE)
+    Set<Notification> notifications;
 
     public Boolean hasAuthority(String auth) {
 		return authority.getName().equals(auth);

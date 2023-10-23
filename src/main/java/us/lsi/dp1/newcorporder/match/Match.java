@@ -1,11 +1,13 @@
 package us.lsi.dp1.newcorporder.match;
 
+import com.google.common.collect.Lists;
 import lombok.Getter;
 import us.lsi.dp1.newcorporder.match.company.CompanyMatrix;
 import us.lsi.dp1.newcorporder.match.player.MatchPlayer;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Getter
@@ -46,13 +48,25 @@ public class Match {
     public void init() {
         this.generalSupply.init(null, players.size());
         this.companyMatrix.init(players.size() > 2 ? MatchSize.GROUP : MatchSize.COUPLE);
-        this.getMatchPlayers().forEach(MatchPlayer::init);
+        this.initPlayers();
+    }
+
+    private void initPlayers(){
+        List<ConsultantType> consultantTypes = Lists.newArrayList(ConsultantType.values());
+        if (players.size() < 3) {
+            consultantTypes.remove(ConsultantType.CORPORATE_LAWYER);
+        }
+
+        for (MatchPlayer matchPlayer : this.getMatchPlayers()) {
+            ConsultantType consultantType = consultantTypes.get(0);
+            matchPlayer.init(consultantType);
+            consultantTypes.remove(consultantType);
+        }
     }
 
     public MatchPlayer getMatchPlayer(int playerId) {
         return this.players.get(playerId);
     }
-
     public Collection<MatchPlayer> getMatchPlayers() {
         return this.players.values();
     }

@@ -6,6 +6,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Multiset;
 import lombok.Getter;
 import us.lsi.dp1.newcorporder.match.Conglomerate;
+import us.lsi.dp1.newcorporder.match.ConsultantType;
 import us.lsi.dp1.newcorporder.match.company.CompanyType;
 
 import java.util.ArrayList;
@@ -25,8 +26,9 @@ public class MatchPlayer {
         this.headquarter = headquarter;
     }
 
-    public void init() {
+    public void init(ConsultantType consultant) {
         this.selectSecretObjectives();
+        this.headquarter.addConsultant(consultant);
     }
 
     private void selectSecretObjectives() {

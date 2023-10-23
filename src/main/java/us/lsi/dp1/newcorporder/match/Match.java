@@ -5,13 +5,11 @@ import lombok.Getter;
 import us.lsi.dp1.newcorporder.match.company.CompanyMatrix;
 import us.lsi.dp1.newcorporder.match.player.MatchPlayer;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-@Getter
 public class Match {
+
+    private static final int INITIAL_CONGLOMERATE_SHARES_PER_PLAYER = 4;
 
     /**
      * Creates a new match for the given configuration
@@ -28,14 +26,15 @@ public class Match {
         return new Match(maxPlayers, matchMode, inviteCode, generalSupply, companyMatrix);
     }
 
-    private final int maxPlayers;
-    private final MatchMode matchMode;
-    private final String inviteCode;
+    @Getter private final int maxPlayers;
+    @Getter private final MatchMode matchMode;
+    @Getter private final String inviteCode;
 
+    @Getter private MatchState matchState = MatchState.WAITING;
     private final Map<Integer, MatchPlayer> players = new HashMap<>();
 
-    private final GeneralSupply generalSupply;
-    private final CompanyMatrix companyMatrix;
+    @Getter private final GeneralSupply generalSupply;
+    @Getter private final CompanyMatrix companyMatrix;
 
     private Match(int maxPlayers, MatchMode matchMode, String inviteCode, GeneralSupply generalSupply, CompanyMatrix companyMatrix) {
         this.maxPlayers = maxPlayers;
@@ -45,28 +44,41 @@ public class Match {
         this.companyMatrix = companyMatrix;
     }
 
+    /**
+     * Initializes the match.
+     */
     public void init() {
-        this.generalSupply.init(null, players.size());
+        this.generalSupply.init(this.matchMode, this.players.size());
         this.companyMatrix.init(players.size() > 2 ? MatchSize.GROUP : MatchSize.COUPLE);
+
         this.initPlayers();
+
+        this.matchState = MatchState.PLAYING;
     }
 
-    private void initPlayers(){
+    private void initPlayers() {
         List<ConsultantType> consultantTypes = Lists.newArrayList(ConsultantType.values());
+
+        // if there are less than 3 players, CORPORATE_LAWYER is not used
         if (players.size() < 3) {
             consultantTypes.remove(ConsultantType.CORPORATE_LAWYER);
         }
 
+        // init every player giving them a different consultant and the first 4 cards of the deck
         for (MatchPlayer matchPlayer : this.getMatchPlayers()) {
-            ConsultantType consultantType = consultantTypes.get(0);
-            matchPlayer.init(consultantType);
-            consultantTypes.remove(consultantType);
+            List<Conglomerate> initialHand = this.generalSupply.takeConglomerateSharesFromDeck(INITIAL_CONGLOMERATE_SHARES_PER_PLAYER);
+
+            ConsultantType initialConsultant = consultantTypes.get(0);
+            consultantTypes.remove(initialConsultant);
+
+            matchPlayer.init(initialConsultant, initialHand);
         }
     }
 
     public MatchPlayer getMatchPlayer(int playerId) {
         return this.players.get(playerId);
     }
+
     public Collection<MatchPlayer> getMatchPlayers() {
         return this.players.values();
     }

@@ -17,11 +17,10 @@ import us.lsi.dp1.newcorporder.model.NamedEntity;
 @Table(name = "achievements")
 @Entity
 public class Achievement extends NamedEntity {
-    Integer id;
     @Size(max=256)
     String description;
     String imageUrl;
-    //@Enumerated(EnumType.STRING)
-   // Stat stat;
+    @Enumerated(EnumType.STRING)
+    Stat stat;
     Integer threshold;
 }

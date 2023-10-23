@@ -4,6 +4,7 @@ import lombok.Getter;
 import us.lsi.dp1.newcorporder.match.company.CompanyMatrix;
 import us.lsi.dp1.newcorporder.match.player.MatchPlayer;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,7 +43,17 @@ public class Match {
         this.companyMatrix = companyMatrix;
     }
 
+    public void init() {
+        this.generalSupply.init(null, players.size());
+        this.companyMatrix.init(players.size() > 2 ? MatchSize.GROUP : MatchSize.COUPLE);
+        this.getMatchPlayers().forEach(MatchPlayer::init);
+    }
+
     public MatchPlayer getMatchPlayer(int playerId) {
         return this.players.get(playerId);
+    }
+
+    public Collection<MatchPlayer> getMatchPlayers() {
+        return this.players.values();
     }
 }

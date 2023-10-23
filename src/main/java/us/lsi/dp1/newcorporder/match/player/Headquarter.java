@@ -3,23 +3,21 @@ package us.lsi.dp1.newcorporder.match.player;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
-import lombok.Getter;
 import us.lsi.dp1.newcorporder.match.Conglomerate;
 import us.lsi.dp1.newcorporder.match.ConsultantType;
-import us.lsi.dp1.newcorporder.match.company.CompanyType;
-
-import java.util.List;
 
 public class Headquarter {
+
+    public static Headquarter create() {
+        return new Headquarter();
+    }
 
     private final Multiset<Conglomerate> agents = HashMultiset.create();
     private final Multiset<ConsultantType> consultants = HashMultiset.create();
     private final Multiset<Conglomerate> conglomerateShares = HashMultiset.create();
     private final Multiset<Conglomerate> usedConglomerateShares = HashMultiset.create();
-    @Getter private final List<CompanyType> secretObjectives;
 
-    public Headquarter(List<CompanyType> secretObjectives) {
-        this.secretObjectives = secretObjectives;
+    private Headquarter() {
     }
 
     public void addAgents(Conglomerate conglomerate, int num) {

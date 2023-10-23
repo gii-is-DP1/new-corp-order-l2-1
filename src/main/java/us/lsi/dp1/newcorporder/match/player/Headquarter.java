@@ -1,9 +1,11 @@
-package us.lsi.dp1.newcorporder.match;
+package us.lsi.dp1.newcorporder.match.player;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
 import lombok.Getter;
+import us.lsi.dp1.newcorporder.match.Conglomerate;
+import us.lsi.dp1.newcorporder.match.ConsultantType;
 import us.lsi.dp1.newcorporder.match.company.CompanyType;
 
 import java.util.List;

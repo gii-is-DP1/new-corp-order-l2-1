@@ -31,13 +31,8 @@ public class User extends BaseEntity {
 	@JoinColumn(name = "authority")
     Authority authority;
 
-    @ManyToMany(cascade = CascadeType.REMOVE)
-        @JoinTable(
-            name = "user_friendship",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "friendship_id")
-        )
-    Set<Friendship> friendship;
+    @OneToMany(cascade = CascadeType.REMOVE)
+    Set<Friendship> friendships;
 
     @OneToMany(cascade = CascadeType.REMOVE)
     Set<FriendshipRequest> friendshipRequestsSended;

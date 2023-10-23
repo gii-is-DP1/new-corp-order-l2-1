@@ -20,9 +20,11 @@ import java.util.Set;
 public class Friendship extends BaseEntity {
     @NotNull
     @Column(name = "since")
-    private Instant since;
+    Instant since;
 
-    @ManyToMany(mappedBy = "friendship")
+    @ManyToOne
+    User friendshipUser;
 
-    private Set<User> users;
+    @ManyToOne
+    User friend;
 }

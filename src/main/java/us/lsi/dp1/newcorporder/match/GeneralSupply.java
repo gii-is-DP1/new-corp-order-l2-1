@@ -1,5 +1,6 @@
 package us.lsi.dp1.newcorporder.match;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMultiset;
@@ -123,9 +124,8 @@ public class GeneralSupply {
      * @throws IllegalStateException if there are no enough conglomerate shares left in the deck to take
      */
     public List<Conglomerate> takeConglomerateSharesFromDeck(int sharesToTake) {
-        if (this.deck.size() < sharesToTake) {
-            throw new IllegalStateException("there are no enough conglomerate shares left in the deck to take");
-        }
+        Preconditions.checkState(this.deck.size() < sharesToTake,
+            "there are no enough conglomerate shares left in the deck to take");
 
         List<Conglomerate> conglomerateShares = new ArrayList<>();
         for (int i = 0; i < sharesToTake; i++) {
@@ -133,6 +133,21 @@ public class GeneralSupply {
         }
 
         return conglomerateShares;
+    }
+
+    /**
+     * Polls the given number of conglomerate shares from the deck and places them into the open display.
+     *
+     * @param sharesToTake the number of conglomerate shares to take from the deck and place them into the open display
+     * @throws IllegalStateException    if there are no enough conglomerate shares left in the deck to take
+     * @throws IllegalArgumentException if the current number of shares in the open display + the given number of shares
+     *                                  to take is grater than 5
+     */
+    public void revealConglomerateSharesToOpenDisplay(int sharesToTake) {
+        Preconditions.checkArgument(this.openDisplay.size() + sharesToTake > 5,
+            "open display size would be greater than 5");
+
+        this.openDisplay.addAll(this.takeConglomerateSharesFromDeck(sharesToTake));
     }
 
     /**

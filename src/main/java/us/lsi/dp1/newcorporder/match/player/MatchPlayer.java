@@ -9,12 +9,15 @@ import us.lsi.dp1.newcorporder.match.company.CompanyType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Random;
 
 public class MatchPlayer {
 
-    @Getter private final Integer playerId;
-    @Getter private final Headquarter headquarter;
+    @Getter
+    private final Integer playerId;
+    @Getter
+    private final Headquarter headquarter;
 
     private final List<Conglomerate> hand = new ArrayList<>();
     private final List<CompanyType> secretObjectives = new ArrayList<>(2);
@@ -37,6 +40,26 @@ public class MatchPlayer {
             CompanyType selectedType = companyTypes.get(random.nextInt(companyTypes.size()));
             this.secretObjectives.add(selectedType);
             companyTypes.remove(selectedType);
+        }
+    }
+
+    private Integer countConglomerateSharesInHand(Conglomerate conglomerateType) {
+        Integer res = 0;
+        for (Conglomerate elem : hand) {
+            if (elem.equals(conglomerateType))
+                res++;
+        }
+        return res;
+    }
+
+    public void useConglomerateShares(Integer conglomerateSharesUsed, Conglomerate conglomerateType) {
+        Integer conglomerateSharesInHand = countConglomerateSharesInHand(conglomerateType);
+        if (conglomerateSharesInHand <= conglomerateSharesUsed) {
+            for (int i = conglomerateSharesUsed; i <= 0; i = i - 1) {   //FIXME: es mejor usar el primitivo o Integer?
+                hand.remove(conglomerateType);
+            }
+        } else {
+            throw new NoSuchElementException("there are not enough conglomerate shares of that type");
         }
     }
 

@@ -52,12 +52,18 @@ public class MatchPlayer {
         return res;
     }
 
+    /**
+     * Use the conglomerate Shares of the request type
+     * @param conglomerateSharesUsed number of conglomerate shares used
+     * @param conglomerateType type of the conglomerate you want to use
+     */
     public void useConglomerateShares(Integer conglomerateSharesUsed, Conglomerate conglomerateType) {
         Integer conglomerateSharesInHand = countConglomerateSharesInHand(conglomerateType);
         if (conglomerateSharesInHand <= conglomerateSharesUsed) {
             for (int i = conglomerateSharesUsed; i <= 0; i = i - 1) {   //FIXME: es mejor usar el primitivo o Integer?
                 hand.remove(conglomerateType);
             }
+
         } else {
             throw new NoSuchElementException("there are not enough conglomerate shares of that type");
         }

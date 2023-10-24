@@ -30,11 +30,15 @@ public class Match {
     @Getter private final MatchMode matchMode;
     @Getter private final String inviteCode;
 
-    @Getter private MatchState matchState = MatchState.WAITING;
-    private final Map<Integer, MatchPlayer> players = new HashMap<>();
-
     @Getter private final GeneralSupply generalSupply;
     @Getter private final CompanyMatrix companyMatrix;
+
+    @Getter private MatchState matchState = MatchState.WAITING;
+    private final Map<Integer, MatchPlayer> players = new HashMap<>();
+    private final List<MatchPlayer> playOrder = new ArrayList<>();
+
+    @Getter private MatchPlayer currentTurnPlayer;
+    @Getter private MatchTurnState currentTurnState;
 
     private Match(int maxPlayers, MatchMode matchMode, String inviteCode, GeneralSupply generalSupply, CompanyMatrix companyMatrix) {
         this.maxPlayers = maxPlayers;
@@ -49,10 +53,12 @@ public class Match {
      */
     public void init() {
         this.generalSupply.init(this.matchMode, this.players.size());
-        this.companyMatrix.init(players.size() > 2 ? MatchSize.GROUP : MatchSize.COUPLE);
+        this.companyMatrix.init(this.players.size() > 2 ? MatchSize.GROUP : MatchSize.COUPLE);
 
         this.initPlayers();
+        this.playOrder.addAll(this.players.values());
 
+        this.changeTurn(this.playOrder.get(0));
         this.matchState = MatchState.PLAYING;
     }
 
@@ -73,6 +79,24 @@ public class Match {
 
             matchPlayer.init(initialConsultant, initialHand);
         }
+    }
+
+    //
+    // Turn system
+    //
+
+    private void setTurnState(MatchTurnState nextTurnState) {
+        this.currentTurnState = nextTurnState;
+    }
+
+    private void nextTurn() {
+        int currentTurnIndex = this.playOrder.indexOf(this.currentTurnPlayer);
+        this.changeTurn(this.playOrder.get(currentTurnIndex < this.playOrder.size() - 1 ? currentTurnIndex + 1 : 0));
+    }
+
+    private void changeTurn(MatchPlayer player) {
+        this.currentTurnPlayer = player;
+        this.setTurnState(MatchTurnState.SELECTING_ACTION);
     }
 
     public MatchPlayer getMatchPlayer(int playerId) {

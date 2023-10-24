@@ -40,6 +40,10 @@ public class MatchPlayer {
         }
     }
 
+    public void addShareToHand(Conglomerate conglomerate) {
+        this.hand.add(conglomerate);
+    }
+
     public List<Conglomerate> getHand() {
         return ImmutableList.copyOf(hand);
     }

@@ -1,5 +1,6 @@
 package us.lsi.dp1.newcorporder.match;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import lombok.Getter;
 import us.lsi.dp1.newcorporder.match.company.CompanyMatrix;
@@ -79,6 +80,37 @@ public class Match {
 
             matchPlayer.init(initialConsultant, initialHand);
         }
+    }
+
+    //
+    // Plot
+    //
+
+    public void takeShareFromDeck() {
+        Preconditions.checkState(this.currentTurnState == MatchTurnState.SELECTING_FIRST_SHARE
+                || this.currentTurnState == MatchTurnState.SELECTING_SECOND_SHARE,
+            "illegal turn state");
+
+        Conglomerate share = this.generalSupply.takeConglomerateShareFromDeck();
+        this.currentTurnPlayer.addShareToHand(share);
+
+        if (this.currentTurnState == MatchTurnState.SELECTING_FIRST_SHARE) {
+            this.setTurnState(MatchTurnState.SELECTING_SECOND_SHARE);
+            return;
+        }
+
+        if (this.currentTurnPlayer.getHand().size() > 6) {
+            this.setTurnState(MatchTurnState.REMOVING_SHARES_FROM_HAND);
+            return;
+        }
+
+        int sharesInOpenDisplay = this.generalSupply.getOpenDisplay().size();
+        if (sharesInOpenDisplay < 5) {
+            // TODO Final round if IllegalStateException
+            this.generalSupply.revealConglomerateSharesToOpenDisplay(5 - sharesInOpenDisplay);
+        }
+
+        this.nextTurn();
     }
 
     //

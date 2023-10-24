@@ -22,25 +22,25 @@ import java.util.Set;
 public class User extends BaseEntity {
 
     @Column(unique = true)
-    private String username;
+    String username;
 
-    private String password;
+    String password;
 
     @NotNull
     @ManyToOne(optional = false)
     @JoinColumn(name = "authority")
-    private Authority authority;
+    Authority authority;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "users")
+    @OneToMany(cascade = CascadeType.ALL)
     private Set<Friendship> friendships;
 
-    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "users")
+    @OneToMany(cascade = CascadeType.ALL)
     private Set<FriendshipRequest> sentFriendshipRequests;
 
-    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "users")
+    @OneToMany(cascade = CascadeType.REMOVE)
     private Set<FriendshipRequest> receivedFriendshipRequests;
 
-    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "users")
+    @OneToMany(cascade = CascadeType.REMOVE)
     private Set<Notification> notifications;
 
     public Boolean hasAuthority(String auth) {
@@ -50,4 +50,5 @@ public class User extends BaseEntity {
     public Boolean hasAnyAuthority(String... authorities) {
         return ArrayUtils.contains(authorities, this.authority.getName());
     }
+
 }

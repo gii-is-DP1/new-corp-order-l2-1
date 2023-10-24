@@ -22,7 +22,9 @@ public class Friendship extends BaseEntity {
     @Column(name = "since")
     private Instant since;
 
-    @ManyToMany(mappedBy = "friendship")
+    @ManyToOne
+    private User user;
 
-    private Set<User> users;
+    @ManyToOne
+    private User friend;
 }

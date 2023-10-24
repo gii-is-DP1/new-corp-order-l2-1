@@ -1,10 +1,12 @@
 package us.lsi.dp1.newcorporder.misc;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,23 +18,29 @@ import java.time.Instant;
 @Entity
 @Getter
 @Setter
-@Table(name = "notifications")
+@Table(name = "notification")
 public class Notification extends BaseEntity {
-    @NotNull
-    Instant sentAt;
 
     @NotNull
-    @Size(max=50)
-    String title;
+    @Column(name = "sent_at")
+    private Instant sentAt;
 
     @NotNull
-    String message;
-
-    String imageUrl;
+    @Column(name = "title")
+    @Size(max = 50)
+    private String title;
 
     @NotNull
-    NotificacionState state;
+    @Column(name = "message")
+    private String message;
+
+    @Column(name = "image_url")
+    private String imageUrl;
+
+    @NotNull
+    @Column(name = "state")
+    private NotificacionState state;
 
     @ManyToOne
-    User user;
+    private User user;
 }

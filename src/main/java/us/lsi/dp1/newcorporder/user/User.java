@@ -21,38 +21,33 @@ import java.util.Set;
 @Table(name = "users")
 public class User extends BaseEntity {
 
-	@Column(unique = true)
-	String username;
+    @Column(unique = true)
+    private String username;
 
-	String password;
+    private String password;
 
-	@NotNull
-	@ManyToOne(optional = false)
-	@JoinColumn(name = "authority")
-    Authority authority;
+    @NotNull
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "authority")
+    private Authority authority;
 
-    @ManyToMany(cascade = CascadeType.REMOVE)
-        @JoinTable(
-            name = "user_friendship",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "friendship_id")
-        )
-    Set<Friendship> friendship;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "users")
+    private Set<Friendship> friendships;
 
-    @OneToMany(cascade = CascadeType.REMOVE)
-    Set<FriendshipRequest> friendshipRequestsSended;
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "users")
+    private Set<FriendshipRequest> sentFriendshipRequests;
 
-    @OneToMany(cascade = CascadeType.REMOVE)
-    Set<FriendshipRequest> friendshipRequestsRecieved;
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "users")
+    private Set<FriendshipRequest> receivedFriendshipRequests;
 
-    @OneToMany(cascade = CascadeType.REMOVE)
-    Set<Notification> notifications;
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "users")
+    private Set<Notification> notifications;
 
     public Boolean hasAuthority(String auth) {
-		return authority.getName().equals(auth);
-	}
+        return authority.getName().equals(auth);
+    }
 
-	public Boolean hasAnyAuthority(String... authorities) {
+    public Boolean hasAnyAuthority(String... authorities) {
         return ArrayUtils.contains(authorities, this.authority.getName());
-	}
+    }
 }

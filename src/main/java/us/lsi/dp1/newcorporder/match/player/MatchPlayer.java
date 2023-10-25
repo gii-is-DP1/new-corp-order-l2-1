@@ -1,7 +1,10 @@
 package us.lsi.dp1.newcorporder.match.player;
 
+import com.google.common.base.Preconditions;
+import com.google.common.collect.HashMultiset;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Multiset;
 import lombok.Getter;
 import us.lsi.dp1.newcorporder.match.Conglomerate;
 import us.lsi.dp1.newcorporder.match.ConsultantType;
@@ -19,7 +22,7 @@ public class MatchPlayer {
     @Getter
     private final Headquarter headquarter;
 
-    private final List<Conglomerate> hand = new ArrayList<>();
+    private final Multiset<Conglomerate> hand = HashMultiset.create();
     private final List<CompanyType> secretObjectives = new ArrayList<>(2);
 
     public MatchPlayer(Integer playerId, Headquarter headquarter) {
@@ -43,30 +46,16 @@ public class MatchPlayer {
         }
     }
 
-    private Integer countConglomerateSharesInHand(Conglomerate conglomerateType) {
-        Integer res = 0;
-        for (Conglomerate elem : hand) {
-            if (elem.equals(conglomerateType))
-                res++;
-        }
-        return res;
-    }
-
     /**
-     * Use the conglomerate Shares of the request type
-     * @param conglomerateSharesUsed number of conglomerate shares used
-     * @param conglomerateType type of the conglomerate you want to use
+     * Use the conglomerate shares of the requested type
+     *
+     * @param conglomerateType       conglomerate type to use
+     * @param conglomerateSharesUsed number of conglomerate shares to use
      */
-    public void useConglomerateShares(Integer conglomerateSharesUsed, Conglomerate conglomerateType) {
-        Integer conglomerateSharesInHand = countConglomerateSharesInHand(conglomerateType);
-        if (conglomerateSharesInHand <= conglomerateSharesUsed) {
-            for (int i = conglomerateSharesUsed; i <= 0; i = i - 1) {   //FIXME: es mejor usar el primitivo o Integer?
-                hand.remove(conglomerateType);
-            }
-
-        } else {
-            throw new NoSuchElementException("there are not enough conglomerate shares of that type");
-        }
+    public void useConglomerateShares(Conglomerate conglomerateType, Integer conglomerateSharesUsed) {
+        Preconditions.checkArgument(this.hand.count(conglomerateType) <= conglomerateSharesUsed,
+            "there are not enough conglomerate shares of that type");
+        this.hand.remove(conglomerateType, conglomerateSharesUsed);
     }
 
     public List<Conglomerate> getHand() {

@@ -84,4 +84,20 @@ public class CompanyMatrix {
         Collections.shuffle(agents);
         return agents;
     }
+
+    /**
+     * Add a number of agents to a specific tile
+     *
+     * @param x the x position in the matrix
+     * @param y the y position in the matrix
+     * @param numAgents the number of agents you want to add
+     * @param agentsConglomerateType the type of agent you want to add
+     *
+     */
+    public void addAgentsSpecificTile(Integer x, Integer y, Integer numAgents, Conglomerate agentsConglomerateType){
+        CompanyTile tile = getTile(x,y);
+        Preconditions.checkArgument(tile.getCurrentConglomerate()!=agentsConglomerateType,
+                                "you cannot add agents to a box that has agents from a different conglomerate");
+        tile.addAgents(numAgents);
+    }
 }

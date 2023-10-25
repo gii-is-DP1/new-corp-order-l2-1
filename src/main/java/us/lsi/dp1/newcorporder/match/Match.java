@@ -82,6 +82,16 @@ public class Match {
     }
 
     //
+    // Infiltrate
+    //
+
+    public void infiltrate(Conglomerate conglomerateType, int conglomerateSharesUsed, int x, int y){
+        this.currentTurnPlayer.useConglomerateShares(conglomerateType, conglomerateSharesUsed);
+        this.currentTurnPlayer.getHeadquarter().addConglomerateShare(conglomerateType, conglomerateSharesUsed);
+        this.companyMatrix.addAgentsSpecificTile(x,y,conglomerateSharesUsed,conglomerateType);
+    }
+
+    //
     // Turn system
     //
 

@@ -19,9 +19,9 @@ public class CompanyTile {
         this.currentConglomerate = currentConglomerate;
     }
 
-    public void addAgents(int num) {
-        Preconditions.checkArgument(num > 0, "num cannot be zero");
-        this.agents += num;
+    public void addAgents(int quantity) {
+        Preconditions.checkArgument(quantity > 0, "quantity cannot be zero");
+        this.agents += quantity;
     }
 
     public void removeAgent(int num) {
@@ -30,7 +30,7 @@ public class CompanyTile {
         this.agents -= num;
     }
 
-    public void attack(Conglomerate conglomerate, int agents) {
+    public void takeOver(Conglomerate conglomerate, int agents) {
         Preconditions.checkArgument(conglomerate != this.currentConglomerate, "cannot attack with the current conglomerate");
         Preconditions.checkArgument(agents > this.agents, "unsuccessful attack");
         this.currentConglomerate = conglomerate;

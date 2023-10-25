@@ -3,6 +3,8 @@ package us.lsi.dp1.newcorporder.match.player;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
+import lombok.Getter;
+import lombok.Setter;
 import us.lsi.dp1.newcorporder.match.Conglomerate;
 import us.lsi.dp1.newcorporder.match.ConsultantType;
 
@@ -11,8 +13,7 @@ public class Headquarter {
     public static Headquarter create() {
         return new Headquarter();
     }
-
-    private final Multiset<Conglomerate> agents = HashMultiset.create();
+    private final Multiset<Conglomerate> capturedAgents = HashMultiset.create();
     private final Multiset<ConsultantType> consultants = HashMultiset.create();
     private final Multiset<Conglomerate> conglomerateShares = HashMultiset.create();
     private final Multiset<Conglomerate> usedConglomerateShares = HashMultiset.create();
@@ -21,19 +22,17 @@ public class Headquarter {
     }
 
     public void addAgents(Conglomerate conglomerate, int num) {
-        this.agents.add(conglomerate, num);
+        this.capturedAgents.add(conglomerate, num);
     }
 
     public void removeAgents(Conglomerate conglomerate, int num) {
-        this.agents.remove(conglomerate, num);
+        this.capturedAgents.remove(conglomerate, num);
     }
+
+    public int getCapturedAgentsCount() {return capturedAgents.size();}
 
     public void addConsultant(ConsultantType consultant) {
         this.consultants.add(consultant);
-    }
-    public Multiset<ConsultantType> getConsultants()
-    {
-        return consultants;
     }
 
     public void removeConsultant(ConsultantType consultant) {

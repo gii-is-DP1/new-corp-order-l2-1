@@ -1,9 +1,9 @@
 package us.lsi.dp1.newcorporder.match;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Multiset;
 import lombok.Getter;
 import us.lsi.dp1.newcorporder.match.company.CompanyMatrix;
+import us.lsi.dp1.newcorporder.match.company.CompanyTile;
 import us.lsi.dp1.newcorporder.match.player.MatchPlayer;
 
 import java.util.*;
@@ -110,6 +110,8 @@ public class Match {
 
     enum TakeOverConsultant {NONE, MILITARY_CONTRACTOR, DEAL_MAKER}
     private TakeOverConsultant choosenTakeOverConsultant;
+    private int takeOverAgents;
+    private Conglomerate sourceConglomerate;
     public void chooseConsultantToActivate(TakeOverConsultant choosenConsultant) throws IllegalStateException
     {
         if(currentTurnState != MatchTurnState.SELECTING_CONSULTANT)
@@ -119,13 +121,38 @@ public class Match {
         setTurnState(MatchTurnState.ROTATING_CARDS);
     }
 
-    public void rotatingCards(Conglomerate type, int quantityToRotate)
+    public void rotateCards(Conglomerate type, int quantityToRotate)
     {
         if(currentTurnState != MatchTurnState.ROTATING_CARDS)
             throw new IllegalStateException();
 
         currentTurnPlayer.getHeadquarter().rotateConglomerates(type, quantityToRotate);
 
+        takeOverAgents = quantityToRotate;
+
         setTurnState(MatchTurnState.CHOOSING_COMPANY_TAKEOVER);
     }
+
+    public void chooseCompanyToTakeOver(CompanyTile sourceCompany, CompanyTile targetCompany)
+    {
+        if(targetCompany.getCurrentConglomerate() == sourceConglomerate)
+                targetCompany.addAgents(takeOverAgents);
+        else if(targetCompany.getAgents() < sourceCompany.getAgents() ||
+                (choosenTakeOverConsultant == TakeOverConsultant.MILITARY_CONTRACTOR && targetCompany.getAgents() <= sourceCompany.getAgents()))
+            {
+                targetCompany.takeOver(sourceConglomerate,targetCompany.getAgents());
+                currentTurnPlayer.getHeadquarter().addAgents(targetCompany.getCurrentConglomerate(),1);
+                // TODO company ability
+            }
+        else{
+            sourceCompany.addAgents(takeOverAgents);
+        }
+        if(choosenTakeOverConsultant == TakeOverConsultant.DEAL_MAKER)
+        {
+            Conglomerate share = this.generalSupply.takeConglomerateShareFromDeck();
+            //TODO use addShareToHand method
+        }
+
+    }
+
 }

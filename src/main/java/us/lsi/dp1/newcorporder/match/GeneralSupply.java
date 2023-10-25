@@ -21,7 +21,7 @@ public class GeneralSupply {
 
     private final Queue<Conglomerate> deck = new LinkedList<>();
     private final Multiset<ConsultantType> consultants = HashMultiset.create();
-    private final List<Conglomerate> openDisplay = new ArrayList<>(5);
+    private final Multiset<Conglomerate> openDisplay = HashMultiset.create();
 
     private GeneralSupply() {
     }
@@ -29,7 +29,9 @@ public class GeneralSupply {
     public void init(MatchMode matchMode, int numberOfPlayers) {
         this.fillDeck(matchMode);
         this.fillConsultants(numberOfPlayers);
-        this.fillOpenDisplay();
+
+        // reveal the first 5 cards from the deck to the open display
+        this.revealConglomerateSharesToOpenDisplay(5);
     }
 
     private void fillDeck(MatchMode matchMode) {
@@ -51,14 +53,6 @@ public class GeneralSupply {
             if (numberOfPlayers > 2 || consultantType != ConsultantType.CORPORATE_LAWYER) {
                 consultants.add(consultantType, numberOfPlayers - 1);
             }
-        }
-    }
-
-    private void fillOpenDisplay() {
-        // the first 5 cards of the deck are revealed and placed into the open display
-        for (int i = 0; i < 5; i++) {
-            Conglomerate conglomerateShare = this.takeConglomerateShareFromDeck();
-            openDisplay.add(conglomerateShare);
         }
     }
 
@@ -136,15 +130,30 @@ public class GeneralSupply {
     }
 
     /**
+     * Removes a share of the given conglomerate from the open display.
+     *
+     * @param conglomerate the conglomerate to take the share of
+     * @throws IllegalStateException if there are no shares of the given conglomerate in the open display
+     */
+    public void takeConglomerateShareFromOpenDisplay(Conglomerate conglomerate) {
+        Preconditions.checkState(this.openDisplay.contains(conglomerate),
+            "there are no shares for the given conglomerate");
+
+        this.openDisplay.remove(conglomerate);
+    }
+
+    /**
      * Polls the given number of conglomerate shares from the deck and places them into the open display.
      *
      * @param sharesToTake the number of conglomerate shares to take from the deck and place them into the open display
-     * @throws IllegalStateException    if there are no enough conglomerate shares left in the deck to take
-     * @throws IllegalArgumentException if the current number of shares in the open display + the given number of shares
-     *                                  to take is grater than 5
+     * @throws IllegalArgumentException if the given number of shares to take is not greater than 0
+     * @throws IllegalStateException    if there are no enough conglomerate shares left in the deck to take, or the current
+     *                                  number of shares in the open display + the given number of shares to take is grater
+     *                                  than 5
      */
     public void revealConglomerateSharesToOpenDisplay(int sharesToTake) {
-        Preconditions.checkArgument(this.openDisplay.size() + sharesToTake > 5,
+        Preconditions.checkArgument(sharesToTake > 0, "cannot reveal less than 1 share");
+        Preconditions.checkState(this.openDisplay.size() + sharesToTake > 5,
             "open display size would be greater than 5");
 
         this.openDisplay.addAll(this.takeConglomerateSharesFromDeck(sharesToTake));

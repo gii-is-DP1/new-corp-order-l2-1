@@ -4,13 +4,15 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import lombok.Getter;
 import us.lsi.dp1.newcorporder.match.company.CompanyMatrix;
+import us.lsi.dp1.newcorporder.match.payload.request.TakeShareRequest;
 import us.lsi.dp1.newcorporder.match.player.MatchPlayer;
 
 import java.util.*;
 
 public class Match {
 
-    private static final int INITIAL_CONGLOMERATE_SHARES_PER_PLAYER = 4;
+    public static final int INITIAL_CONGLOMERATE_SHARES_PER_PLAYER = 4;
+    public static final int SHARES_IN_OPEN_DISPLAY = 4;
 
     /**
      * Creates a new match for the given configuration
@@ -86,28 +88,47 @@ public class Match {
     // Plot
     //
 
-    public void takeShareFromDeck() {
+    private void takeShare(TakeShareRequest takeShareRequest) {
         Preconditions.checkState(this.currentTurnState == MatchTurnState.SELECTING_FIRST_SHARE
-                || this.currentTurnState == MatchTurnState.SELECTING_SECOND_SHARE,
+                                 || this.currentTurnState == MatchTurnState.SELECTING_SECOND_SHARE,
             "illegal turn state");
 
-        Conglomerate share = this.generalSupply.takeConglomerateShareFromDeck();
-        this.currentTurnPlayer.addShareToHand(share);
+        Conglomerate share = switch (takeShareRequest.getSource()) {
+            case DECK -> this.generalSupply.takeConglomerateShareFromDeck();
+            case OPEN_DISPLAY -> {
+                Preconditions.checkNotNull(takeShareRequest.getConglomerate(),
+                    "conglomerate must be specified to take a share from the open display");
 
+                this.generalSupply.takeConglomerateShareFromOpenDisplay(takeShareRequest.getConglomerate());
+                yield takeShareRequest.getConglomerate();
+            }
+        };
+
+        this.currentTurnPlayer.addShareToHand(share);
+        this.nextPlotTurnState();
+    }
+
+    private void nextPlotTurnState() {
+        // if just took the first share, the next turn state is SELECTING_SECOND_SHARE
         if (this.currentTurnState == MatchTurnState.SELECTING_FIRST_SHARE) {
             this.setTurnState(MatchTurnState.SELECTING_SECOND_SHARE);
             return;
         }
 
+        // if the player has more than 6 shares in his hand, the next turn state is REMOVING_SHARES_FROM_HAND
         if (this.currentTurnPlayer.getHand().size() > 6) {
             this.setTurnState(MatchTurnState.REMOVING_SHARES_FROM_HAND);
             return;
         }
 
-        int sharesInOpenDisplay = this.generalSupply.getOpenDisplay().size();
-        if (sharesInOpenDisplay < 5) {
-            // TODO Final round if IllegalStateException
-            this.generalSupply.revealConglomerateSharesToOpenDisplay(5 - sharesInOpenDisplay);
+        // now, refill the missing shares in the open display
+        int currentSharesInOpenDisplay = this.generalSupply.getOpenDisplay().size();
+        if (currentSharesInOpenDisplay < SHARES_IN_OPEN_DISPLAY) {
+            try {
+                this.generalSupply.revealConglomerateSharesToOpenDisplay(SHARES_IN_OPEN_DISPLAY - currentSharesInOpenDisplay);
+            } catch (IllegalStateException e) {
+                // TODO call final round
+            }
         }
 
         this.nextTurn();

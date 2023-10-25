@@ -1,6 +1,7 @@
 package us.lsi.dp1.newcorporder.match;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Multiset;
 import lombok.Getter;
 import us.lsi.dp1.newcorporder.match.company.CompanyMatrix;
 import us.lsi.dp1.newcorporder.match.player.MatchPlayer;
@@ -105,5 +106,26 @@ public class Match {
 
     public Collection<MatchPlayer> getMatchPlayers() {
         return this.players.values();
+    }
+
+    enum TakeOverConsultant {NONE, MILITARY_CONTRACTOR, DEAL_MAKER}
+    private TakeOverConsultant choosenTakeOverConsultant;
+    public void chooseConsultantToActivate(TakeOverConsultant choosenConsultant) throws IllegalStateException
+    {
+        if(currentTurnState != MatchTurnState.SELECTING_CONSULTANT)
+            throw new IllegalStateException();
+
+        choosenTakeOverConsultant = choosenConsultant;
+        setTurnState(MatchTurnState.ROTATING_CARDS);
+    }
+
+    public void rotatingCards(Conglomerate type, int quantityToRotate)
+    {
+        if(currentTurnState != MatchTurnState.ROTATING_CARDS)
+            throw new IllegalStateException();
+
+        currentTurnPlayer.getHeadquarter().rotateConglomerates(type, quantityToRotate);
+
+        setTurnState(MatchTurnState.CHOOSING_COMPANY_TAKEOVER);
     }
 }

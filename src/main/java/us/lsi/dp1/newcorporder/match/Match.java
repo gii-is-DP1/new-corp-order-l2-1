@@ -1,5 +1,6 @@
 package us.lsi.dp1.newcorporder.match;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import lombok.Getter;
 import us.lsi.dp1.newcorporder.match.company.CompanyMatrix;
@@ -92,9 +93,10 @@ public class Match {
     }
 
     /**
-     * Infiltrate with the hability of the "Media Advisor" (When the player infiltrates that turn the system will
+     * Infiltrate with the ability of the "Media Advisor" (When the player infiltrates that turn the system will
      * allow him to place a conglomerate share of a different color. The system will consider that it has the same
      * color as the rest of the conglomerate shares that the player places)
+     *
      * @param conglomerateType type of the conglomerate cards used.
      * @param conglomerateSharesUsed number of the conglomerate cards used.
      * @param x cord x of the Company Matrix
@@ -107,6 +109,35 @@ public class Match {
         this.currentTurnPlayer.useConglomerateShares(extraConglomerate, 1);
         this.currentTurnPlayer.getHeadquarter().addConglomerateShare(conglomerateType, conglomerateSharesUsed + 1);
         this.companyMatrix.addAgentsSpecificTile(x,y,conglomerateSharesUsed,conglomerateType);
+
+        //TODO: add the take consultant action
+    }
+
+    /**
+     *Infiltrate with the ability of the "Corporate lawyer" (When the player infiltrates that turn, the system will allow
+     * him to place cards from two different conglomerates and place agents of both colors)
+     *
+     * @param conglomerateType1 type of the 1º conglomerate cards used.
+     * @param conglomerateSharesUsed1 number of 1º the conglomerate cards used.
+     * @param x1 cord x of the Company Matrix
+     * @param y1 cord y of the Company Matrix
+     * @param conglomerateType2 type of the 2º conglomerate cards used.
+     * @param conglomerateSharesUsed2 number of 2º the conglomerate cards used.
+     * @param x2 cord x of the Company Matrix
+     * @param y2 cord y of the Company Matrix
+     */
+    public void infiltrateWithCorporateLawyer(Conglomerate conglomerateType1, int conglomerateSharesUsed1, int x1, int y1,
+                                              Conglomerate conglomerateType2, int conglomerateSharesUsed2, int x2, int y2){
+        Preconditions.checkArgument(conglomerateType1 != conglomerateType2, "the conglomerate types used have to be different");
+        //TODO: Cuando infiltrate este terminado, cambiar esto.
+        // 1º conglomerate type used
+        this.currentTurnPlayer.useConglomerateShares(conglomerateType1, conglomerateSharesUsed1);
+        this.currentTurnPlayer.getHeadquarter().addConglomerateShare(conglomerateType1, conglomerateSharesUsed1);
+        this.companyMatrix.addAgentsSpecificTile(x1,y1,conglomerateSharesUsed1,conglomerateType1);
+        // 2º conglomerate type used
+        this.currentTurnPlayer.useConglomerateShares(conglomerateType2, conglomerateSharesUsed2);
+        this.currentTurnPlayer.getHeadquarter().addConglomerateShare(conglomerateType2, conglomerateSharesUsed2);
+        this.companyMatrix.addAgentsSpecificTile(x2,y2,conglomerateSharesUsed2,conglomerateType2);
 
         //TODO: add the take consultant action
     }

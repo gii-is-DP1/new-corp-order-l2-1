@@ -41,6 +41,4 @@ public class Notification extends BaseEntity {
     @Column(name = "state")
     private NotificacionState state;
 
-    @ManyToOne
-    private User user;
 }

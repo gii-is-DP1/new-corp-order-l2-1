@@ -18,11 +18,9 @@ public class FriendshipRequest extends BaseEntity {
     @Column(name = "sent_at")
     private Instant sentAt;
 
-    @NotNull
     @ManyToOne
     private User sender;
 
-    @NotNull
     @ManyToOne
     private User receiver;
 

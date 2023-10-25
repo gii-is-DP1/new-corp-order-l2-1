@@ -31,17 +31,14 @@ public class User extends BaseEntity {
     @JoinColumn(name = "authority")
     Authority authority;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    private Set<Friendship> friendships;
-
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "sender")
     private Set<FriendshipRequest> sentFriendshipRequests;
 
-    @OneToMany(cascade = CascadeType.REMOVE)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "receiver")
     private Set<FriendshipRequest> receivedFriendshipRequests;
 
-    @OneToMany(cascade = CascadeType.REMOVE)
-    private Set<Notification> notifications;
+   @OneToMany(cascade = CascadeType.ALL)
+   private Set<Notification> notifications;
 
     public Boolean hasAuthority(String auth) {
         return authority.getName().equals(auth);

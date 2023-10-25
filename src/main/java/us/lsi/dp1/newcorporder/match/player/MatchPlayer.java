@@ -51,6 +51,7 @@ public class MatchPlayer {
      *
      * @param conglomerateType       conglomerate type to use
      * @param conglomerateSharesUsed number of conglomerate shares to use
+     * @throws IllegalArgumentException if there are not enought conglomerate shares of a type you cannot use it
      */
     public void useConglomerateShares(Conglomerate conglomerateType, Integer conglomerateSharesUsed) {
         Preconditions.checkArgument(this.hand.count(conglomerateType) <= conglomerateSharesUsed,

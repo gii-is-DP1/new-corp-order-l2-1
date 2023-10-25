@@ -91,6 +91,28 @@ public class Match {
         this.companyMatrix.addAgentsSpecificTile(x,y,conglomerateSharesUsed,conglomerateType);
     }
 
+    /**
+     * Infiltrate with the hability of the "Media Advisor" (When the player infiltrates that turn the system will
+     * allow him to place a conglomerate share of a different color. The system will consider that it has the same
+     * color as the rest of the conglomerate shares that the player places)
+     * @param conglomerateType type of the conglomerate cards used.
+     * @param conglomerateSharesUsed number of the conglomerate cards used.
+     * @param x cord x of the Company Matrix
+     * @param y cord y of the Company Matrix
+     * @param extraConglomerate type of the extra card.
+     */
+    public void infiltrateWithMediaAdvisor(Conglomerate conglomerateType, int conglomerateSharesUsed, int x, int y,
+                                           Conglomerate extraConglomerate){
+        this.currentTurnPlayer.useConglomerateShares(conglomerateType, conglomerateSharesUsed);
+        this.currentTurnPlayer.useConglomerateShares(extraConglomerate, 1);
+        this.currentTurnPlayer.getHeadquarter().addConglomerateShare(conglomerateType, conglomerateSharesUsed + 1);
+        this.companyMatrix.addAgentsSpecificTile(x,y,conglomerateSharesUsed,conglomerateType);
+
+        //TODO: add the take consultant action
+    }
+
+
+
     //
     // Turn system
     //

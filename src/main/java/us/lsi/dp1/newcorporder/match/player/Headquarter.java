@@ -43,6 +43,14 @@ public class Headquarter {
         this.conglomerateShares.add(conglomerate, num);
     }
 
+    public void AddConglomerate(Conglomerate conglomerate, Boolean isRotated)
+    {
+        addConglomerateShare(conglomerate, 1);
+        if(isRotated)
+            rotateConglomerates(conglomerate, 1);
+    }
+
+
     public void rotateConglomerates(Conglomerate type, int quantity) {
         Preconditions.checkArgument(
             this.conglomerateShares.count(type) >= quantity,

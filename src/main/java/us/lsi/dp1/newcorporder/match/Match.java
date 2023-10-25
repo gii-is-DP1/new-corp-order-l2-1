@@ -1,9 +1,11 @@
 package us.lsi.dp1.newcorporder.match;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import lombok.Getter;
 import us.lsi.dp1.newcorporder.match.company.CompanyMatrix;
 import us.lsi.dp1.newcorporder.match.company.CompanyTile;
+import us.lsi.dp1.newcorporder.match.player.Headquarter;
 import us.lsi.dp1.newcorporder.match.player.MatchPlayer;
 
 import java.util.*;
@@ -40,6 +42,7 @@ public class Match {
 
     @Getter private MatchPlayer currentTurnPlayer;
     @Getter private MatchTurnState currentTurnState;
+    private Headquarter currentHq;
 
     private Match(int maxPlayers, MatchMode matchMode, String inviteCode, GeneralSupply generalSupply, CompanyMatrix companyMatrix) {
         this.maxPlayers = maxPlayers;
@@ -97,6 +100,7 @@ public class Match {
 
     private void changeTurn(MatchPlayer player) {
         this.currentTurnPlayer = player;
+        currentHq = currentTurnPlayer.getHeadquarter();
         this.setTurnState(MatchTurnState.SELECTING_ACTION);
     }
 
@@ -112,6 +116,8 @@ public class Match {
     private TakeOverConsultant choosenTakeOverConsultant;
     private int takeOverAgents;
     private Conglomerate sourceConglomerate;
+
+    private CompanyTile takenOverCompany;
     public void chooseConsultantToActivate(TakeOverConsultant choosenConsultant) throws IllegalStateException
     {
         if(currentTurnState != MatchTurnState.SELECTING_CONSULTANT)
@@ -123,9 +129,7 @@ public class Match {
 
     public void rotateCards(Conglomerate type, int quantityToRotate)
     {
-        if(currentTurnState != MatchTurnState.ROTATING_CARDS)
-            throw new IllegalStateException();
-
+        Preconditions.checkState(currentTurnState == MatchTurnState.ROTATING_CARDS, "must be in the current state!");
         currentTurnPlayer.getHeadquarter().rotateConglomerates(type, quantityToRotate);
 
         takeOverAgents = quantityToRotate;
@@ -135,6 +139,7 @@ public class Match {
 
     public void chooseCompanyToTakeOver(CompanyTile sourceCompany, CompanyTile targetCompany)
     {
+        Preconditions.checkState(currentTurnState == MatchTurnState.CHOOSING_COMPANY_TAKEOVER, "must be in the current state!");
         if(targetCompany.getCurrentConglomerate() == sourceConglomerate)
                 targetCompany.addAgents(takeOverAgents);
         else if(targetCompany.getAgents() < sourceCompany.getAgents() ||
@@ -142,6 +147,8 @@ public class Match {
             {
                 targetCompany.takeOver(sourceConglomerate,targetCompany.getAgents());
                 currentTurnPlayer.getHeadquarter().addAgents(targetCompany.getCurrentConglomerate(),1);
+                takenOverCompany = targetCompany;
+                setTurnState(MatchTurnState.ACTIVATING_COMPANY_ABILITY);
                 // TODO company ability
             }
         else{
@@ -152,7 +159,62 @@ public class Match {
             Conglomerate share = this.generalSupply.takeConglomerateShareFromDeck();
             //TODO use addShareToHand method
         }
-
     }
 
+    public void activateCompanyAbility(Boolean wantsToActivateCompanyAbility)
+    {
+        Preconditions.checkState(currentTurnState == MatchTurnState.ACTIVATING_COMPANY_ABILITY, "must be in the current state!");
+        if(!wantsToActivateCompanyAbility) return;
+
+        switch (takenOverCompany.getCompany().getType())
+        {
+            case BROADCAST_NETWORK -> {
+                setTurnState(MatchTurnState.SELECTING_COMPANIES_FOR_BROADCAST_NETWORK_ABILITY);
+            }
+            case PRINT_MEDIA -> {
+                setTurnState(MatchTurnState.SELECTING_CONGLOMERATES_FOR_PRINT_MEDIA_ABILITY);
+            }
+            case GUERRILLA_MARKETING -> {
+                setTurnState(MatchTurnState.SELECTING_CONGLOMERATES_FOR_GUERRILLA_MARKETING_ABILITY);
+            }
+            case AMBIENT_ADVERTISING -> {
+                setTurnState(MatchTurnState.SELECTING_CONGLOMERATES_FOR_AMBIENT_ADVERTISING_ABILITY);
+            }
+            case ONLINE_MARKETING -> {
+                setTurnState(MatchTurnState.SELECTING_COMPANIES_FOR_ONLINE_MARKETING_ABILITY);
+            }
+            case SOCIAL_MEDIA -> {
+                setTurnState(MatchTurnState.SELECTING_CONGLOMERATE_FOR_SOCIAL_MEDIA_ABILITY);
+            }
+            default -> throw new IllegalStateException("Unexpected value: " + takenOverCompany);
+        }
+    }
+
+    public void selectCompaniesForBroadcastNetworkAbility(CompanyTile source, CompanyTile firstTarget, CompanyTile secondTarget, int agentsToMove)
+    {
+        Preconditions.checkState(currentTurnState == MatchTurnState.SELECTING_COMPANIES_FOR_BROADCAST_NETWORK_ABILITY, "must be in the current state!");
+        Preconditions.checkArgument(!(agentsToMove == 1 && secondTarget != null), "can't have second target with just one agent!");
+        Preconditions.checkArgument(agentsToMove == 1 || agentsToMove == 2, "must move one or two agents");
+
+        if(secondTarget == null)
+            firstTarget.addAgents(agentsToMove);
+        else
+        {
+            firstTarget.addAgents(1);
+            secondTarget.addAgents(1);
+        }
+
+        source.removeAgent(agentsToMove);
+
+        nextTurn();
+    }
+
+    public void selectConglomeratesForPrintMediaAbility(Conglomerate ownConglomerate, Boolean isOwnRotated, Headquarter otherHq, Conglomerate otherConglomerate, Boolean isOtherRotated)
+    {
+        Preconditions.checkState(currentTurnState == MatchTurnState.SELECTING_CONGLOMERATES_FOR_PRINT_MEDIA_ABILITY, "must be in the current state!");
+        Preconditions.checkArgument(currentHq != otherHq, "headquarters must be different!");
+
+        otherHq.AddConglomerate(ownConglomerate, isOwnRotated);
+        currentHq.AddConglomerate(otherConglomerate, isOtherRotated);
+    }
 }

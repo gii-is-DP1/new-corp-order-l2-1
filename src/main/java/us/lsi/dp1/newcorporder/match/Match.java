@@ -60,8 +60,8 @@ public class Match {
         this.generalSupply.init(this.matchMode, this.players.size());
         this.companyMatrix.init(this.players.size() > 2 ? MatchSize.GROUP : MatchSize.COUPLE);
 
-        this.initPlayers();
         this.playOrder.addAll(this.players.values());
+        this.initPlayers();
 
         this.changeTurn(this.playOrder.get(0));
         this.matchState = MatchState.PLAYING;
@@ -76,7 +76,7 @@ public class Match {
         }
 
         // init every player giving them a different consultant and the first 4 cards of the deck
-        for (MatchPlayer matchPlayer : this.getMatchPlayers()) {
+        for (MatchPlayer matchPlayer : this.playOrder) {
             List<Conglomerate> initialHand = this.generalSupply.takeConglomerateSharesFromDeck(INITIAL_CONGLOMERATE_SHARES_PER_PLAYER);
 
             ConsultantType initialConsultant = consultantTypes.get(0);

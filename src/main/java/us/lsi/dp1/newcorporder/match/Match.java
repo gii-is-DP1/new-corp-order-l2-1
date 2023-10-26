@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import lombok.Getter;
 import us.lsi.dp1.newcorporder.match.company.CompanyMatrix;
+import us.lsi.dp1.newcorporder.match.payload.request.DiscardShareRequest;
 import us.lsi.dp1.newcorporder.match.payload.request.TakeShareRequest;
 import us.lsi.dp1.newcorporder.match.player.MatchPlayer;
 
@@ -13,6 +14,7 @@ public class Match {
 
     public static final int INITIAL_CONGLOMERATE_SHARES_PER_PLAYER = 4;
     public static final int SHARES_IN_OPEN_DISPLAY = 4;
+    public static final int MAX_SHARES_IN_HAND = 6;
 
     /**
      * Creates a new match for the given configuration
@@ -90,7 +92,7 @@ public class Match {
 
     private void takeShare(TakeShareRequest takeShareRequest) {
         Preconditions.checkState(this.currentTurnState == MatchTurnState.SELECTING_FIRST_SHARE
-                                 || this.currentTurnState == MatchTurnState.SELECTING_SECOND_SHARE,
+                || this.currentTurnState == MatchTurnState.SELECTING_SECOND_SHARE,
             "illegal turn state");
 
         Conglomerate share = switch (takeShareRequest.getSource()) {
@@ -108,6 +110,19 @@ public class Match {
         this.nextPlotTurnState();
     }
 
+    private void discardShares(DiscardShareRequest discardShareRequest) {
+        Preconditions.checkState(this.currentTurnState == MatchTurnState.DISCARDING_SHARES_FROM_HAND,
+            "cannot discard a share on your turn state");
+        Preconditions.checkState(this.currentTurnPlayer.getHand().size() - discardShareRequest.getSharesToDiscard().size() == MAX_SHARES_IN_HAND,
+            "you have to discard the necessary number of shares to have exactly %d left on your hand",
+            MAX_SHARES_IN_HAND);
+
+        // for each given conglomerate and number of shares, discard them from the player's hand
+        discardShareRequest.getSharesToDiscard().forEachEntry(this.currentTurnPlayer::discardSharesFromHand);
+
+        this.nextPlotTurnState();
+    }
+
     private void nextPlotTurnState() {
         // if just took the first share, the next turn state is SELECTING_SECOND_SHARE
         if (this.currentTurnState == MatchTurnState.SELECTING_FIRST_SHARE) {
@@ -115,9 +130,9 @@ public class Match {
             return;
         }
 
-        // if the player has more than 6 shares in his hand, the next turn state is REMOVING_SHARES_FROM_HAND
-        if (this.currentTurnPlayer.getHand().size() > 6) {
-            this.setTurnState(MatchTurnState.REMOVING_SHARES_FROM_HAND);
+        // if the player has more than MAX_SHARES_IN_HAND shares in his hand, the next turn state is DISCARD_SHARES_FROM_HAND
+        if (this.currentTurnPlayer.getHand().size() > MAX_SHARES_IN_HAND) {
+            this.setTurnState(MatchTurnState.DISCARDING_SHARES_FROM_HAND);
             return;
         }
 

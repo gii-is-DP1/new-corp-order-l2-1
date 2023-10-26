@@ -1,5 +1,6 @@
 package us.lsi.dp1.newcorporder.match.player;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.*;
 import lombok.Getter;
 import us.lsi.dp1.newcorporder.match.Conglomerate;
@@ -41,6 +42,13 @@ public class MatchPlayer {
 
     public void addShareToHand(Conglomerate conglomerate) {
         this.hand.add(conglomerate);
+    }
+
+    public void discardSharesFromHand(Conglomerate conglomerate, int sharesToDiscard) {
+        Preconditions.checkState(this.hand.count(conglomerate) >= sharesToDiscard,
+            "cannot discard more shares than you have on your hand");
+
+        this.hand.remove(conglomerate, sharesToDiscard);
     }
 
     public Multiset<Conglomerate> getHand() {

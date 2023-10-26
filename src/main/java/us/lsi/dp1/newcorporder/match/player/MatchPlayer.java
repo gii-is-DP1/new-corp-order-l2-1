@@ -1,7 +1,7 @@
 package us.lsi.dp1.newcorporder.match.player;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
+import com.google.common.base.Preconditions;
+import com.google.common.collect.*;
 import lombok.Getter;
 import us.lsi.dp1.newcorporder.match.Conglomerate;
 import us.lsi.dp1.newcorporder.match.ConsultantType;
@@ -16,7 +16,7 @@ public class MatchPlayer {
     @Getter private final Integer playerId;
     @Getter private final Headquarter headquarter;
 
-    private final List<Conglomerate> hand = new ArrayList<>();
+    private final Multiset<Conglomerate> hand = HashMultiset.create();
     private final List<CompanyType> secretObjectives = new ArrayList<>(2);
 
     public MatchPlayer(Integer playerId, Headquarter headquarter) {
@@ -40,8 +40,19 @@ public class MatchPlayer {
         }
     }
 
-    public List<Conglomerate> getHand() {
-        return ImmutableList.copyOf(hand);
+    public void addShareToHand(Conglomerate conglomerate) {
+        this.hand.add(conglomerate);
+    }
+
+    public void discardSharesFromHand(Conglomerate conglomerate, int sharesToDiscard) {
+        Preconditions.checkState(this.hand.count(conglomerate) >= sharesToDiscard,
+            "cannot discard more shares than you have on your hand");
+
+        this.hand.remove(conglomerate, sharesToDiscard);
+    }
+
+    public Multiset<Conglomerate> getHand() {
+        return ImmutableMultiset.copyOf(hand);
     }
 
     public List<CompanyType> getSecretObjectives() {

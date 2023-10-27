@@ -12,7 +12,6 @@ import us.lsi.dp1.newcorporder.match.company.CompanyType;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Random;
 
 public class MatchPlayer {
@@ -23,6 +22,7 @@ public class MatchPlayer {
     private final Headquarter headquarter;
 
     private final Multiset<Conglomerate> hand = HashMultiset.create();
+
     private final List<CompanyType> secretObjectives = new ArrayList<>(2);
 
     public MatchPlayer(Integer playerId, Headquarter headquarter) {

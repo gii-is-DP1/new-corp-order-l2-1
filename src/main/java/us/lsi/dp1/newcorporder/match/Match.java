@@ -209,6 +209,13 @@ public class Match {
         nextTurn();
     }
 
+    public void selectConglomeratesForGuerillaMarketingAbility(Headquarter hq, Conglomerate conglomerateToRotate, Boolean rotatesTwoCards)
+    {
+        Preconditions.checkState(currentTurnState == MatchTurnState.SELECTING_CONGLOMERATES_FOR_GUERRILLA_MARKETING_ABILITY, "must be in the current state!");
+        Preconditions.checkArgument(currentHq != hq, "headquarter must be different than yours!");
+        hq.rotateConglomerates(conglomerateToRotate,rotatesTwoCards ? 2 : 1);
+    }
+
     public void selectConglomeratesForPrintMediaAbility(Conglomerate ownConglomerate, Boolean isOwnRotated, Headquarter otherHq, Conglomerate otherConglomerate, Boolean isOtherRotated)
     {
         Preconditions.checkState(currentTurnState == MatchTurnState.SELECTING_CONGLOMERATES_FOR_PRINT_MEDIA_ABILITY, "must be in the current state!");
@@ -216,5 +223,11 @@ public class Match {
 
         otherHq.AddConglomerate(ownConglomerate, isOwnRotated);
         currentHq.AddConglomerate(otherConglomerate, isOtherRotated);
+    }
+
+    public void selectConglomeratesForAmbientAdvertising(Headquarter hq, Conglomerate conglomerateToRotate, Boolean rotatesTwoCards)
+    {
+        Preconditions.checkState(currentTurnState == MatchTurnState.SELECTING_CONGLOMERATES_FOR_AMBIENT_ADVERTISING_ABILITY, "must be in the current state!");
+        currentHq.unrotateConglomerates(conglomerateToRotate, rotatesTwoCards ? 2 : 1);
     }
 }

@@ -37,13 +37,17 @@ public class Headquarter {
         this.consultants.remove(consultant);
     }
 
-    public void addConglomerateShare(Conglomerate conglomerate, int num) {
-        this.conglomerateShares.add(conglomerate, num);
+    public void addConglomerates(Conglomerate conglomerate, int quantity) {
+        this.conglomerateShares.add(conglomerate, quantity);
+    }
+
+    public void removeConglomerates(Conglomerate conglomerate, int quantity) {
+        this.conglomerateShares.remove(conglomerate, quantity);
     }
 
     public void AddConglomerate(Conglomerate conglomerate, Boolean isRotated)
     {
-        addConglomerateShare(conglomerate, 1);
+        addConglomerates(conglomerate, 1);
         if(isRotated)
             rotateConglomerates(conglomerate, 1);
     }

@@ -204,7 +204,7 @@ public class Match {
             secondTarget.addAgents(1);
         }
 
-        source.removeAgent(agentsToMove);
+        source.removeAgents(agentsToMove);
 
         nextTurn();
     }
@@ -214,6 +214,7 @@ public class Match {
         Preconditions.checkState(currentTurnState == MatchTurnState.SELECTING_CONGLOMERATES_FOR_GUERRILLA_MARKETING_ABILITY, "must be in the current state!");
         Preconditions.checkArgument(currentHq != hq, "headquarter must be different than yours!");
         hq.rotateConglomerates(conglomerateToRotate,rotatesTwoCards ? 2 : 1);
+        nextTurn();
     }
 
     public void selectConglomeratesForPrintMediaAbility(Conglomerate ownConglomerate, Boolean isOwnRotated, Headquarter otherHq, Conglomerate otherConglomerate, Boolean isOtherRotated)
@@ -223,11 +224,36 @@ public class Match {
 
         otherHq.AddConglomerate(ownConglomerate, isOwnRotated);
         currentHq.AddConglomerate(otherConglomerate, isOtherRotated);
+        nextTurn();
     }
 
-    public void selectConglomeratesForAmbientAdvertising(Headquarter hq, Conglomerate conglomerateToRotate, Boolean rotatesTwoCards)
+    public void selectConglomeratesForAmbientAdvertisingAbility(Headquarter hq, Conglomerate conglomerateToRotate, Boolean rotatesTwoCards)
     {
         Preconditions.checkState(currentTurnState == MatchTurnState.SELECTING_CONGLOMERATES_FOR_AMBIENT_ADVERTISING_ABILITY, "must be in the current state!");
         currentHq.unrotateConglomerates(conglomerateToRotate, rotatesTwoCards ? 2 : 1);
+        nextTurn();
     }
+
+    public void selectCompaniesForSocialMediaAbility(Headquarter hq, Conglomerate conglomerateToRemove)
+    {
+        Preconditions.checkState(currentTurnState == MatchTurnState.SELECTING_CONGLOMERATE_FOR_SOCIAL_MEDIA_ABILITY, "must be in the current state!");
+        hq.removeConglomerates(conglomerateToRemove, 1);
+        nextTurn();
+    }
+
+    public void selectCompaniesForOnlineMarketingAbility(CompanyTile a, CompanyTile b)
+    {
+        Preconditions.checkState(currentTurnState == MatchTurnState.SELECTING_COMPANIES_FOR_ONLINE_MARKETING_ABILITY, "must be in the current state!");
+
+        int aAgents = a.getAgents();
+        Conglomerate aConglomerate = a.getCurrentConglomerate();
+
+        a.setAgents(b.getAgents());
+        a.setCurrentConglomerate(b.getCurrentConglomerate());
+
+        b.setAgents(aAgents);
+        b.setCurrentConglomerate(aConglomerate);
+        nextTurn();
+    }
+
 }

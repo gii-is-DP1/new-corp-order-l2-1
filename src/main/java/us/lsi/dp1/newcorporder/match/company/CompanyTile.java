@@ -3,6 +3,7 @@ package us.lsi.dp1.newcorporder.match.company;
 import com.google.common.base.Preconditions;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.Setter;
 import us.lsi.dp1.newcorporder.match.Conglomerate;
 
 @Getter
@@ -11,7 +12,9 @@ public class CompanyTile {
 
     private final Company company;
 
+    @Setter
     private Conglomerate currentConglomerate;
+    @Setter
     private int agents = 1;
 
     public CompanyTile(Company company, Conglomerate currentConglomerate) {
@@ -24,7 +27,7 @@ public class CompanyTile {
         this.agents += quantity;
     }
 
-    public void removeAgent(int num) {
+    public void removeAgents(int num) {
         Preconditions.checkArgument(num > 0, "num cannot be zero");
         Preconditions.checkState(this.agents > 1, "cannot leave a tile empty");
         this.agents -= num;

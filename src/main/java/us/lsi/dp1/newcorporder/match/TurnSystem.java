@@ -13,14 +13,15 @@ public class TurnSystem
     @Getter private Headquarter currentHq;
 
     private List<MatchPlayer> players;
-    private int currentPlayerIndex = 0;
     public void init(List<MatchPlayer> players)
     {
         this.players = players;
+        currentPlayer = players.get(0);
     }
 
     public void passTurn()
     {
+        int currentPlayerIndex = players.indexOf(currentPlayer);
         currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
         MatchPlayer currentPlayer = players.get(currentPlayerIndex);
         passTurnTo(currentPlayer);

@@ -19,8 +19,8 @@ public class Headquarter {
     private Headquarter() {
     }
 
-    public void addAgents(Conglomerate conglomerate, int num) {
-        this.capturedAgents.add(conglomerate, num);
+    public void captureAgent(Conglomerate conglomerate) {
+        this.capturedAgents.add(conglomerate, 1);
     }
 
     public void removeAgents(Conglomerate conglomerate, int num) {

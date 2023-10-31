@@ -11,18 +11,20 @@ public class HeadquarterTest {
     public void getCapturedAgentsCountTest()
     {
         Headquarter hq = Headquarter.create();
-        hq.addAgents(Conglomerate.GENERIC_INC,5);
-        hq.addAgents(Conglomerate.OMNICORP,3);
-        hq.addAgents(Conglomerate.OMNIMEDIA,2);
-        Assert.assertEquals(10, hq.getCapturedAgentsCount());
+        for(int i = 0; i < 5; i++)
+            hq.captureAgent(Conglomerate.GENERIC_INC);
+        for(int i = 0; i < 3; i++)
+            hq.captureAgent(Conglomerate.OMNICORP);
+        hq.captureAgent(Conglomerate.OMNIMEDIA);
+        Assert.assertEquals(9, hq.getCapturedAgentsCount());
     }
 
     @Test
     public void addCapturedAgentTest()
     {
         Headquarter hq = Headquarter.create();
-        hq.addAgents(Conglomerate.GENERIC_INC,5);
-        hq.addAgents(Conglomerate.GENERIC_INC,1);
-        Assert.assertEquals(6,hq.getCapturedAgentsCount());
+        hq.captureAgent(Conglomerate.GENERIC_INC);
+        hq.captureAgent(Conglomerate.GENERIC_INC);
+        Assert.assertEquals(2,hq.getCapturedAgentsCount());
     }
 }

@@ -1,4 +1,4 @@
-package us.lsi.dp1.newcorporder.payload.request;
+package us.lsi.dp1.newcorporder.match.companyAbility;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;

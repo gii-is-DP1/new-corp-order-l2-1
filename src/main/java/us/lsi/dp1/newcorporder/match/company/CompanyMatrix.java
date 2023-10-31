@@ -9,6 +9,7 @@ import us.lsi.dp1.newcorporder.match.Conglomerate;
 import us.lsi.dp1.newcorporder.match.MatchSize;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -55,7 +56,12 @@ public class CompanyMatrix {
         Preconditions.checkArgument(x < this.matchSize.getRows(), "matrix has only %d rows (x = %d)", this.matchSize.getRows(), x);
         Preconditions.checkArgument(y < this.matchSize.getColumns(), "matrix has only %d columns (y = %d)", this.matchSize.getColumns(), y);
 
-        return tiles[x * this.matchSize.getColumns() + y];
+        return tiles[x * matchSize.getColumns() + y];
+    }
+
+    public int tilesWithConglomerate(Conglomerate conglomerate)
+    {
+        return (int)Arrays.stream(tiles).filter(t -> t.getCurrentConglomerate() == conglomerate).count();
     }
 
     private static List<Company> createCompanies(MatchSize matchSize) {

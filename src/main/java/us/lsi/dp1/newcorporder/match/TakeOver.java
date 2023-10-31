@@ -2,8 +2,9 @@ package us.lsi.dp1.newcorporder.match;
 
 import com.google.common.base.Preconditions;
 import us.lsi.dp1.newcorporder.match.company.CompanyTile;
-import us.lsi.dp1.newcorporder.payload.request.CompanyAbility;
+import us.lsi.dp1.newcorporder.match.companyAbility.CompanyAbility;
 import us.lsi.dp1.newcorporder.payload.request.ConsultantRequest;
+import us.lsi.dp1.newcorporder.payload.request.PostTakeOverRequest;
 import us.lsi.dp1.newcorporder.payload.request.TakeOverRequest;
 
 public class TakeOver extends Move {
@@ -23,19 +24,26 @@ public class TakeOver extends Move {
         turnSystem.setState(MatchTurnState.TAKING_OVER);
     }
 
-    public void takeOver(TakeOverRequest request) {
+    public void takeOver(TakeOverRequest request) throws Exception {
         checkState(MatchTurnState.TAKING_OVER);
         takeOverRequest = request;
-
+        
         rotateCards(request);
-        MatchTurnState nextState = chooseCompanyToTakeOver(request.getSourceCompany(), request.getTargetCompany());
+        MatchTurnState nextState = chooseCompanyToTakeOver(request);
+
         setStateOrPassTurn(nextState);
     }
 
-    public void activateCompanyAbility(CompanyAbility request) {
-        checkState(MatchTurnState.ACTIVATING_COMPANY_ABILITY);
-        if (request != null)
-            request.activate(match, takeOverRequest);
+    public void postTakeOver(PostTakeOverRequest request) {
+        checkState(MatchTurnState.POST_TAKING_OVER);
+        if (request.getCompanyAbility() != null)
+            request.getCompanyAbility().activate(match, takeOverRequest);
+
+        if(request.getChosenConsultant() != null)
+        {
+            ConsultantType chosenConsultant = request.getChosenConsultant();
+            turnSystem.getCurrentHq().addConsultant(chosenConsultant);
+        }
 
         turnSystem.passTurn();
     }
@@ -66,18 +74,27 @@ public class TakeOver extends Move {
         turnSystem.getCurrentHq().rotateConglomerates(type, quantityToRotate);
     }
 
-    private MatchTurnState chooseCompanyToTakeOver(CompanyTile source, CompanyTile target) {
+    private MatchTurnState chooseCompanyToTakeOver(TakeOverRequest request) throws Exception {
+        CompanyTile source = request.getSourceCompany();
+        CompanyTile target = request.getSourceCompany();
+
+        if(match.getCompanyMatrix().tilesWithConglomerate(request.getTargetCompany().getCurrentConglomerate()) == 1)
+            throw new Exception("Can't take over target company");
+
         if (haveSameConglomerate(source, target))
             moveAgentsTo(target);
         else if (isTakeOverSuccessful(source, target)) {
             takeOver(source, target);
-            return MatchTurnState.ACTIVATING_COMPANY_ABILITY;
+            return MatchTurnState.POST_TAKING_OVER;
         } else moveAgentsTo(source);
 
         if (consultantRequest.getConsultant() == ConsultantType.DEAL_MAKER) {
             Conglomerate share = match.getGeneralSupply().takeConglomerateShareFromDeck();
             //TODO use addShareToHand method
         }
+
+        if(request.getAgents()>=3)
+            return MatchTurnState.POST_TAKING_OVER;
         return MatchTurnState.SELECTING_ACTION;
     }
 

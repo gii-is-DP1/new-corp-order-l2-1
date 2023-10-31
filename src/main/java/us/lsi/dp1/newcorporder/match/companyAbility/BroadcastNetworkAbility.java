@@ -3,7 +3,6 @@ package us.lsi.dp1.newcorporder.match.companyAbility;
 import com.google.common.base.Preconditions;
 import us.lsi.dp1.newcorporder.match.Match;
 import us.lsi.dp1.newcorporder.match.company.CompanyTile;
-import us.lsi.dp1.newcorporder.payload.request.CompanyAbility;
 import us.lsi.dp1.newcorporder.payload.request.TakeOverRequest;
 
 public class BroadcastNetworkAbility implements CompanyAbility {

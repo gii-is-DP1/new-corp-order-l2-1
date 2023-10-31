@@ -12,7 +12,7 @@ public enum MatchTurnState {
     //TAKE OVER
     SELECTING_CONSULTANT,
     TAKING_OVER,
-    ACTIVATING_COMPANY_ABILITY,
+    POST_TAKING_OVER,
 
 
 }

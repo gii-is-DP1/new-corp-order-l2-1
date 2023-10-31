@@ -16,10 +16,8 @@ import java.util.Random;
 
 public class MatchPlayer {
 
-    @Getter
-    private final Integer playerId;
-    @Getter
-    private final Headquarter headquarter;
+    @Getter private final Integer playerId;
+    @Getter private final Headquarter headquarter;
 
     private final Multiset<Conglomerate> hand = HashMultiset.create();
 
@@ -54,8 +52,7 @@ public class MatchPlayer {
      * @throws IllegalArgumentException if there are not enought conglomerate shares of a type you cannot use it
      */
     public void useConglomerateShares(Conglomerate conglomerateType, Integer conglomerateSharesUsed) {
-        Preconditions.checkArgument(this.hand.count(conglomerateType) <= conglomerateSharesUsed,
-            "there are not enough conglomerate shares of that type");
+        Preconditions.checkArgument(this.hand.count(conglomerateType) <= conglomerateSharesUsed, "there are not enough conglomerate shares of that type");
         this.hand.remove(conglomerateType, conglomerateSharesUsed);
     }
 

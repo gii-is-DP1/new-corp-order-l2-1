@@ -27,27 +27,19 @@ public class Match {
         return new Match(maxPlayers, matchMode, inviteCode, generalSupply, companyMatrix);
     }
 
-    @Getter
-    private final int maxPlayers;
-    @Getter
-    private final MatchMode matchMode;
-    @Getter
-    private final String inviteCode;
+    @Getter private final int maxPlayers;
+    @Getter private final MatchMode matchMode;
+    @Getter private final String inviteCode;
 
-    @Getter
-    private final GeneralSupply generalSupply;
-    @Getter
-    private final CompanyMatrix companyMatrix;
+    @Getter private final GeneralSupply generalSupply;
+    @Getter private final CompanyMatrix companyMatrix;
 
-    @Getter
-    private MatchState matchState = MatchState.WAITING;
+    @Getter private MatchState matchState = MatchState.WAITING;
     private final Map<Integer, MatchPlayer> players = new HashMap<>();
     private final List<MatchPlayer> playOrder = new ArrayList<>();
 
-    @Getter
-    private MatchPlayer currentTurnPlayer;
-    @Getter
-    private MatchTurnState currentTurnState;
+    @Getter private MatchPlayer currentTurnPlayer;
+    @Getter private MatchTurnState currentTurnState;
 
     private Match(int maxPlayers, MatchMode matchMode, String inviteCode, GeneralSupply generalSupply, CompanyMatrix companyMatrix) {
         this.maxPlayers = maxPlayers;
@@ -107,7 +99,10 @@ public class Match {
     private void basicInfiltrate(Conglomerate conglomerateType, int conglomerateSharesUsed, int x, int y) {
         this.currentTurnPlayer.useConglomerateShares(conglomerateType, conglomerateSharesUsed);
         this.currentTurnPlayer.getHeadquarter().addConglomerateShare(conglomerateType, conglomerateSharesUsed);
-        this.companyMatrix.addAgentsSpecificTile(x, y, conglomerateSharesUsed, conglomerateType);
+        Preconditions.checkArgument(this.companyMatrix.getTile(x, y).getCurrentConglomerate() != conglomerateType,
+            "you cannot add agents to a box that has agents from a different conglomerate");
+        this.companyMatrix.getTile(x, y).addAgents(conglomerateSharesUsed);
+
     }
 
     /**
@@ -120,8 +115,7 @@ public class Match {
      */
     public void infiltrateNoConsultants(Conglomerate conglomerateType, int conglomerateSharesUsed, int x, int y) {
         basicInfiltrate(conglomerateType, conglomerateSharesUsed, x, y);
-        if (conglomerateSharesUsed >= 3)
-            this.currentTurnState = MatchTurnState.TAKE_A_CONSULTANT;
+        if (conglomerateSharesUsed >= 3) this.currentTurnState = MatchTurnState.TAKE_A_CONSULTANT;
     }
 
     /**
@@ -135,14 +129,15 @@ public class Match {
      * @param y                      cord y of the Company Matrix
      * @param extraConglomerate      type of the extra card.
      */
-    public void infiltrateWithMediaAdvisor(Conglomerate conglomerateType, int conglomerateSharesUsed, int x, int y,
-                                           Conglomerate extraConglomerate) {
+    public void infiltrateWithMediaAdvisor(Conglomerate conglomerateType, int conglomerateSharesUsed, int x, int y, Conglomerate extraConglomerate) {
         this.currentTurnPlayer.useConglomerateShares(conglomerateType, conglomerateSharesUsed);
         this.currentTurnPlayer.useConglomerateShares(extraConglomerate, 1);
         this.currentTurnPlayer.getHeadquarter().addConglomerateShare(conglomerateType, conglomerateSharesUsed + 1);
-        this.companyMatrix.addAgentsSpecificTile(x, y, conglomerateSharesUsed, conglomerateType);
-        if (conglomerateSharesUsed + 1 >= 3)
-            this.currentTurnState = MatchTurnState.TAKE_A_CONSULTANT;
+        Preconditions.checkArgument(this.companyMatrix.getTile(x, y).getCurrentConglomerate() != conglomerateType,
+            "you cannot add agents to a box that has agents from a different conglomerate");
+        this.companyMatrix.getTile(x, y).addAgents(conglomerateSharesUsed + 1);
+
+        if (conglomerateSharesUsed + 1 >= 3) this.currentTurnState = MatchTurnState.TAKE_A_CONSULTANT;
     }
 
     /**
@@ -158,10 +153,8 @@ public class Match {
      * @param x2                      cord x of the Company Matrix
      * @param y2                      cord y of the Company Matrix
      */
-    public void infiltrateWithCorporateLawyer(Conglomerate conglomerateType1, int conglomerateSharesUsed1, int x1, int y1,
-                                              Conglomerate conglomerateType2, int conglomerateSharesUsed2, int x2, int y2) {
-        Preconditions.checkArgument(conglomerateType1 != conglomerateType2,
-            "the conglomerate types used have to be different");
+    public void infiltrateWithCorporateLawyer(Conglomerate conglomerateType1, int conglomerateSharesUsed1, int x1, int y1, Conglomerate conglomerateType2, int conglomerateSharesUsed2, int x2, int y2) {
+        Preconditions.checkArgument(conglomerateType1 != conglomerateType2, "the conglomerate types used have to be different");
         basicInfiltrate(conglomerateType1, conglomerateSharesUsed1, x1, y1);
         basicInfiltrate(conglomerateType2, conglomerateSharesUsed2, x2, y2);
         if (conglomerateSharesUsed1 + conglomerateSharesUsed2 >= 3)
@@ -169,13 +162,10 @@ public class Match {
     }
 
     private void takeConsulant(ConsultantType consultantTaken, ConsultantType consultantUsed) {
-        Preconditions.checkArgument(this.currentTurnState == MatchTurnState.TAKE_A_CONSULTANT,
-            "You cannot take a consultant in " + this.currentTurnState);
-        Preconditions.checkArgument(consultantTaken != consultantUsed,
-            "You cannot take the same consultant that you play");
+        Preconditions.checkArgument(this.currentTurnState == MatchTurnState.TAKE_A_CONSULTANT, "You cannot take a consultant in " + this.currentTurnState);
+        Preconditions.checkArgument(consultantTaken != consultantUsed, "You cannot take the same consultant that you play");
         this.generalSupply.takeConsultant(consultantTaken);
-        if(consultantTaken != ConsultantType.NONE)
-            this.currentTurnPlayer.getHeadquarter().addConsultant(consultantTaken);
+        if (consultantTaken != null) this.currentTurnPlayer.getHeadquarter().addConsultant(consultantTaken);
     }
 
 

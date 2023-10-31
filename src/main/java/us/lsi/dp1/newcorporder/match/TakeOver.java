@@ -27,7 +27,7 @@ public class TakeOver extends Move {
     public void takeOver(TakeOverRequest request) throws Exception {
         checkState(MatchTurnState.TAKING_OVER);
         takeOverRequest = request;
-        
+
         rotateCards(request);
         MatchTurnState nextState = chooseCompanyToTakeOver(request);
 
@@ -90,7 +90,7 @@ public class TakeOver extends Move {
 
         if (consultantRequest.getConsultant() == ConsultantType.DEAL_MAKER) {
             Conglomerate share = match.getGeneralSupply().takeConglomerateShareFromDeck();
-            //TODO use addShareToHand method
+            turnSystem.getCurrentPlayer().addShareToHand(share);
         }
 
         if(request.getAgents()>=3)

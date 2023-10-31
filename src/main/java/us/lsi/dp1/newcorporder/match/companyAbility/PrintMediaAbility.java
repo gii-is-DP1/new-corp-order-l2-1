@@ -21,7 +21,7 @@ public class PrintMediaAbility implements CompanyAbility {
 
     @Override
     public void activate(Match match, TakeOverRequest takeOverRequest) {
-        otherHq.AddConglomerate(ownConglomerate, isOwnRotated);
-        match.getTurnSystem().getCurrentHq().AddConglomerate(otherConglomerate, isOtherRotated);
+        otherHq.addConglomerate(ownConglomerate, isOwnRotated);
+        match.getTurnSystem().getCurrentHq().addConglomerate(otherConglomerate, isOtherRotated);
     }
 }

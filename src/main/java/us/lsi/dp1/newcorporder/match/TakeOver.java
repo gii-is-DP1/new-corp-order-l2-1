@@ -22,12 +22,14 @@ public class TakeOver implements Move {
     public void useConsultant(ConsultantRequest request) {
         Preconditions.checkState(turnSystem.getCurrentState() == MatchTurnState.SELECTING_CONSULTANT, "must be in the current state!");
         consultantRequest = request;
-        chooseConsultantToActivate(request.getConsultant());
+        checkConsultantToActivate(request.getConsultant());
         turnSystem.setState(MatchTurnState.TAKING_OVER);
     }
 
     public void takeOver(TakeOverRequest request) {
         Preconditions.checkState(turnSystem.getCurrentState() == MatchTurnState.TAKING_OVER, "must be in the current state!");
+        takeOverRequest = request;
+
         rotateCards(request.getSourceCompany().getCurrentConglomerate(), request.getAgents());
         chooseCompanyToTakeOver(request.getSourceCompany(), request.getTargetCompany());
     }
@@ -41,13 +43,15 @@ public class TakeOver implements Move {
         turnSystem.passTurn();
     }
 
-    private void chooseConsultantToActivate(ConsultantType consultant) throws IllegalStateException {
-        boolean isValidConsultant = consultant == null ||
+    private void checkConsultantToActivate(ConsultantType consultant) throws IllegalStateException {
+        Preconditions.checkArgument(isValidConsultant(consultant), "must be a valid consultant");
+
+    }
+
+    private boolean isValidConsultant(ConsultantType consultant) {
+        return consultant == null ||
             consultant == ConsultantType.DEAL_MAKER ||
             consultant == ConsultantType.MILITARY_CONTRACTOR;
-        Preconditions.checkArgument(isValidConsultant, "must be a valid consultant");
-
-
     }
 
     private void rotateCards(Conglomerate type, int quantityToRotate) {

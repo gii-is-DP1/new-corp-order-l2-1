@@ -7,7 +7,6 @@ import us.lsi.dp1.newcorporder.match.companyAbility.CompanyAbility;
 import javax.annotation.Nullable;
 
 @Data
-@Getter
 public class CompanyAbilityRequest {
 
     @Nullable

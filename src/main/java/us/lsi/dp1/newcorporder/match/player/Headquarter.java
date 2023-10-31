@@ -45,11 +45,9 @@ public class Headquarter {
         this.conglomerateShares.remove(conglomerate, quantity);
     }
 
-    public void AddConglomerate(Conglomerate conglomerate, Boolean isRotated)
-    {
+    public void addConglomerate(Conglomerate conglomerate, Boolean isRotated) {
         addConglomerates(conglomerate, 1);
-        if(isRotated)
-            rotateConglomerates(conglomerate, 1);
+        if(isRotated) rotateConglomerates(conglomerate, 1);
     }
 
 

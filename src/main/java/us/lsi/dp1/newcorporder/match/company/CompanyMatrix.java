@@ -59,11 +59,6 @@ public class CompanyMatrix {
         return tiles[x * matchSize.getColumns() + y];
     }
 
-    public int tilesWithConglomerate(Conglomerate conglomerate)
-    {
-        return (int)Arrays.stream(tiles).filter(t -> t.getCurrentConglomerate() == conglomerate).count();
-    }
-
     private static List<Company> createCompanies(MatchSize matchSize) {
         List<Company> companies = Lists.newArrayList(Company.values()); // using Guava's Lists to get a mutable list
         Collections.shuffle(companies);
@@ -89,5 +84,9 @@ public class CompanyMatrix {
 
         Collections.shuffle(agents);
         return agents;
+    }
+
+    public int countTilesControlledBy(Conglomerate conglomerate) {
+        return (int) Arrays.stream(tiles).filter(t -> t.getCurrentConglomerate() == conglomerate).count();
     }
 }

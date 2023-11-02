@@ -11,6 +11,7 @@ public class Headquarter {
     public static Headquarter create() {
         return new Headquarter();
     }
+
     private final Multiset<Conglomerate> capturedAgents = HashMultiset.create();
     private final Multiset<ConsultantType> consultants = HashMultiset.create();
     private final Multiset<Conglomerate> conglomerateShares = HashMultiset.create();
@@ -27,7 +28,9 @@ public class Headquarter {
         this.capturedAgents.remove(conglomerate, num);
     }
 
-    public int getCapturedAgentsCount() {return capturedAgents.size();}
+    public int getCapturedAgentsCount() {
+        return capturedAgents.size();
+    }
 
     public void addConsultant(ConsultantType consultant) {
         this.consultants.add(consultant);
@@ -47,9 +50,8 @@ public class Headquarter {
 
     public void addConglomerate(Conglomerate conglomerate, Boolean isRotated) {
         addConglomerates(conglomerate, 1);
-        if(isRotated) rotateConglomerates(conglomerate, 1);
+        if (isRotated) rotateConglomerates(conglomerate, 1);
     }
-
 
     public void rotateConglomerates(Conglomerate type, int quantity) {
         Preconditions.checkArgument(

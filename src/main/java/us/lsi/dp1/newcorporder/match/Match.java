@@ -1,12 +1,12 @@
 package us.lsi.dp1.newcorporder.match;
 
 import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
 import lombok.Getter;
 import us.lsi.dp1.newcorporder.match.company.CompanyMatrix;
 import us.lsi.dp1.newcorporder.match.payload.request.DiscardShareRequest;
 import us.lsi.dp1.newcorporder.match.payload.request.TakeShareRequest;
 import us.lsi.dp1.newcorporder.match.player.MatchPlayer;
+import us.lsi.dp1.newcorporder.match.turn.TurnSystem;
 
 import java.util.*;
 
@@ -34,7 +34,6 @@ public class Match {
 
     @Getter private MatchState matchState = MatchState.WAITING;
     private final Map<Integer, MatchPlayer> players = new HashMap<>();
-    private final List<MatchPlayer> playOrder = new ArrayList<>();
 
     private Match(int maxPlayers, MatchMode matchMode, String inviteCode, GeneralSupply generalSupply, CompanyMatrix companyMatrix) {
         this.maxPlayers = maxPlayers;
@@ -42,7 +41,7 @@ public class Match {
         this.inviteCode = inviteCode;
         this.generalSupply = generalSupply;
         this.companyMatrix = companyMatrix;
-        turnSystem = new TurnSystem();
+        this.turnSystem = new TurnSystem(this);
     }
 
     public void init() {
@@ -50,10 +49,9 @@ public class Match {
         companyMatrix.init(players.size() > 2 ? MatchSize.GROUP : MatchSize.COUPLE);
 
         initPlayers();
-        playOrder.addAll(players.values());
 
+        turnSystem.init(new ArrayList<>(players.values()));
         matchState = MatchState.PLAYING;
-        turnSystem.init(playOrder);
     }
 
     private void initPlayers() {
@@ -75,7 +73,7 @@ public class Match {
 
     private void takeShare(TakeShareRequest takeShareRequest) {
         Preconditions.checkState(turnSystem.getCurrentState() == MatchTurnState.SELECTING_FIRST_SHARE
-                || turnSystem.getCurrentState() == MatchTurnState.SELECTING_SECOND_SHARE,
+                                 || turnSystem.getCurrentState() == MatchTurnState.SELECTING_SECOND_SHARE,
             "illegal turn state");
 
         Conglomerate share = switch (takeShareRequest.getSource()) {

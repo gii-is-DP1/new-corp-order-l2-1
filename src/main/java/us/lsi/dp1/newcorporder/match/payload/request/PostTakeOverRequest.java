@@ -1,8 +1,8 @@
-package us.lsi.dp1.newcorporder.payload.request;
+package us.lsi.dp1.newcorporder.match.payload.request;
 
 import lombok.Data;
 import us.lsi.dp1.newcorporder.match.ConsultantType;
-import us.lsi.dp1.newcorporder.match.companyAbility.CompanyAbility;
+import us.lsi.dp1.newcorporder.match.payload.request.ability.CompanyAbility;
 
 import javax.annotation.Nullable;
 

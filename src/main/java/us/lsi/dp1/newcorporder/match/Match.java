@@ -16,13 +16,6 @@ public class Match {
     public static final int SHARES_IN_OPEN_DISPLAY = 4;
     public static final int MAX_SHARES_IN_HAND = 6;
 
-    /**
-     * Creates a new match for the given configuration
-     *
-     * @param maxPlayers the max number of players that the match would hold
-     * @param matchMode  the mode of the match
-     * @return the new match
-     */
     public static Match create(int maxPlayers, MatchMode matchMode) {
         GeneralSupply generalSupply = GeneralSupply.create();
         CompanyMatrix companyMatrix = CompanyMatrix.create();
@@ -37,13 +30,11 @@ public class Match {
 
     @Getter private final GeneralSupply generalSupply;
     @Getter private final CompanyMatrix companyMatrix;
+    @Getter private final TurnSystem turnSystem;
 
     @Getter private MatchState matchState = MatchState.WAITING;
     private final Map<Integer, MatchPlayer> players = new HashMap<>();
     private final List<MatchPlayer> playOrder = new ArrayList<>();
-
-    @Getter private MatchPlayer currentTurnPlayer;
-    @Getter private MatchTurnState currentTurnState;
 
     private Match(int maxPlayers, MatchMode matchMode, String inviteCode, GeneralSupply generalSupply, CompanyMatrix companyMatrix) {
         this.maxPlayers = maxPlayers;
@@ -51,39 +42,31 @@ public class Match {
         this.inviteCode = inviteCode;
         this.generalSupply = generalSupply;
         this.companyMatrix = companyMatrix;
+        turnSystem = new TurnSystem();
     }
 
-    /**
-     * Initializes the match.
-     */
     public void init() {
-        this.generalSupply.init(this.matchMode, this.players.size());
-        this.companyMatrix.init(this.players.size() > 2 ? MatchSize.GROUP : MatchSize.COUPLE);
+        generalSupply.init(matchMode, players.size());
+        companyMatrix.init(players.size() > 2 ? MatchSize.GROUP : MatchSize.COUPLE);
 
-        this.playOrder.addAll(this.players.values());
-        this.initPlayers();
+        initPlayers();
+        playOrder.addAll(players.values());
 
-        this.changeTurn(this.playOrder.get(0));
-        this.matchState = MatchState.PLAYING;
+        matchState = MatchState.PLAYING;
+        turnSystem.init(playOrder);
     }
 
     private void initPlayers() {
-        List<ConsultantType> consultantTypes = Lists.newArrayList(ConsultantType.values());
+        ConsultantInitializer consultantInitializer = new ConsultantInitializer(players.size());
 
-        // if there are less than 3 players, CORPORATE_LAWYER is not used
-        if (players.size() < 3) {
-            consultantTypes.remove(ConsultantType.CORPORATE_LAWYER);
-        }
+        for (MatchPlayer player : getPlayers())
+            initPlayer(player, consultantInitializer);
+    }
 
-        // init every player giving them a different consultant and the first 4 cards of the deck
-        for (MatchPlayer matchPlayer : this.playOrder) {
-            List<Conglomerate> initialHand = this.generalSupply.takeConglomerateSharesFromDeck(INITIAL_CONGLOMERATE_SHARES_PER_PLAYER);
-
-            ConsultantType initialConsultant = consultantTypes.get(0);
-            consultantTypes.remove(initialConsultant);
-
-            matchPlayer.init(initialConsultant, initialHand);
-        }
+    private void initPlayer(MatchPlayer player, ConsultantInitializer consultantInitializer) {
+        List<Conglomerate> initialHand = drawInitialHand();
+        ConsultantType initialConsultant = consultantInitializer.getRandomUniqueConsultant();
+        player.init(initialConsultant, initialHand);
     }
 
     //
@@ -91,8 +74,8 @@ public class Match {
     //
 
     private void takeShare(TakeShareRequest takeShareRequest) {
-        Preconditions.checkState(this.currentTurnState == MatchTurnState.SELECTING_FIRST_SHARE
-                || this.currentTurnState == MatchTurnState.SELECTING_SECOND_SHARE,
+        Preconditions.checkState(turnSystem.getCurrentState() == MatchTurnState.SELECTING_FIRST_SHARE
+                || turnSystem.getCurrentState() == MatchTurnState.SELECTING_SECOND_SHARE,
             "illegal turn state");
 
         Conglomerate share = switch (takeShareRequest.getSource()) {
@@ -106,33 +89,33 @@ public class Match {
             }
         };
 
-        this.currentTurnPlayer.addShareToHand(share);
+        turnSystem.getCurrentPlayer().addShareToHand(share);
         this.nextPlotTurnState();
     }
 
     private void discardShares(DiscardShareRequest discardShareRequest) {
-        Preconditions.checkState(this.currentTurnState == MatchTurnState.DISCARDING_SHARES_FROM_HAND,
+        Preconditions.checkState(turnSystem.getCurrentState() == MatchTurnState.DISCARDING_SHARES_FROM_HAND,
             "cannot discard a share on your turn state");
-        Preconditions.checkState(this.currentTurnPlayer.getHand().size() - discardShareRequest.getSharesToDiscard().size() == MAX_SHARES_IN_HAND,
+        Preconditions.checkState(turnSystem.getCurrentPlayer().getHand().size() - discardShareRequest.getSharesToDiscard().size() == MAX_SHARES_IN_HAND,
             "you have to discard the necessary number of shares to have exactly %d left on your hand",
             MAX_SHARES_IN_HAND);
 
         // for each given conglomerate and number of shares, discard them from the player's hand
-        discardShareRequest.getSharesToDiscard().forEachEntry(this.currentTurnPlayer::discardSharesFromHand);
+        discardShareRequest.getSharesToDiscard().forEachEntry(turnSystem.getCurrentPlayer()::discardSharesFromHand);
 
         this.nextPlotTurnState();
     }
 
     private void nextPlotTurnState() {
         // if just took the first share, the next turn state is SELECTING_SECOND_SHARE
-        if (this.currentTurnState == MatchTurnState.SELECTING_FIRST_SHARE) {
-            this.setTurnState(MatchTurnState.SELECTING_SECOND_SHARE);
+        if (turnSystem.getCurrentState() == MatchTurnState.SELECTING_FIRST_SHARE) {
+            turnSystem.setState(MatchTurnState.SELECTING_SECOND_SHARE);
             return;
         }
 
         // if the player has more than MAX_SHARES_IN_HAND shares in his hand, the next turn state is DISCARD_SHARES_FROM_HAND
-        if (this.currentTurnPlayer.getHand().size() > MAX_SHARES_IN_HAND) {
-            this.setTurnState(MatchTurnState.DISCARDING_SHARES_FROM_HAND);
+        if (turnSystem.getCurrentPlayer().getHand().size() > MAX_SHARES_IN_HAND) {
+            turnSystem.setState(MatchTurnState.DISCARDING_SHARES_FROM_HAND);
             return;
         }
 
@@ -146,32 +129,14 @@ public class Match {
             }
         }
 
-        this.nextTurn();
+        turnSystem.passTurn();
     }
 
-    //
-    // Turn system
-    //
-
-    private void setTurnState(MatchTurnState nextTurnState) {
-        this.currentTurnState = nextTurnState;
+    private List<Conglomerate> drawInitialHand() {
+        return generalSupply.takeConglomerateSharesFromDeck(INITIAL_CONGLOMERATE_SHARES_PER_PLAYER);
     }
 
-    private void nextTurn() {
-        int currentTurnIndex = this.playOrder.indexOf(this.currentTurnPlayer);
-        this.changeTurn(this.playOrder.get(currentTurnIndex < this.playOrder.size() - 1 ? currentTurnIndex + 1 : 0));
-    }
-
-    private void changeTurn(MatchPlayer player) {
-        this.currentTurnPlayer = player;
-        this.setTurnState(MatchTurnState.SELECTING_ACTION);
-    }
-
-    public MatchPlayer getMatchPlayer(int playerId) {
-        return this.players.get(playerId);
-    }
-
-    public Collection<MatchPlayer> getMatchPlayers() {
-        return this.players.values();
+    private Collection<MatchPlayer> getPlayers() {
+        return players.values();
     }
 }

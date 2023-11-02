@@ -11,8 +11,7 @@ public class Headquarter {
     public static Headquarter create() {
         return new Headquarter();
     }
-
-    private final Multiset<Conglomerate> agents = HashMultiset.create();
+    private final Multiset<Conglomerate> capturedAgents = HashMultiset.create();
     private final Multiset<ConsultantType> consultants = HashMultiset.create();
     private final Multiset<Conglomerate> conglomerateShares = HashMultiset.create();
     private final Multiset<Conglomerate> usedConglomerateShares = HashMultiset.create();
@@ -20,13 +19,15 @@ public class Headquarter {
     private Headquarter() {
     }
 
-    public void addAgents(Conglomerate conglomerate, int num) {
-        this.agents.add(conglomerate, num);
+    public void captureAgent(Conglomerate conglomerate) {
+        this.capturedAgents.add(conglomerate, 1);
     }
 
     public void removeAgents(Conglomerate conglomerate, int num) {
-        this.agents.remove(conglomerate, num);
+        this.capturedAgents.remove(conglomerate, num);
     }
+
+    public int getCapturedAgentsCount() {return capturedAgents.size();}
 
     public void addConsultant(ConsultantType consultant) {
         this.consultants.add(consultant);
@@ -36,23 +37,33 @@ public class Headquarter {
         this.consultants.remove(consultant);
     }
 
-    public void addConglomerateShare(Conglomerate conglomerate, int num) {
-        this.conglomerateShares.add(conglomerate, num);
+    public void addConglomerates(Conglomerate conglomerate, int quantity) {
+        this.conglomerateShares.add(conglomerate, quantity);
     }
 
-    public void useConglomerateShare(Conglomerate conglomerate, int num) {
+    public void removeConglomerates(Conglomerate conglomerate, int quantity) {
+        this.conglomerateShares.remove(conglomerate, quantity);
+    }
+
+    public void addConglomerate(Conglomerate conglomerate, Boolean isRotated) {
+        addConglomerates(conglomerate, 1);
+        if(isRotated) rotateConglomerates(conglomerate, 1);
+    }
+
+
+    public void rotateConglomerates(Conglomerate type, int quantity) {
         Preconditions.checkArgument(
-            this.conglomerateShares.count(conglomerate) >= num,
+            this.conglomerateShares.count(type) >= quantity,
             "not enough conglomerate shares to use");
-        this.usedConglomerateShares.add(conglomerate, num);
-        this.conglomerateShares.remove(conglomerate, num);
+        this.usedConglomerateShares.add(type, quantity);
+        this.conglomerateShares.remove(type, quantity);
     }
 
-    public void unlockConglomerateShare(Conglomerate conglomerate, int num) {
+    public void unrotateConglomerates(Conglomerate type, int quantity) {
         Preconditions.checkArgument(
-            this.usedConglomerateShares.count(conglomerate) >= num,
+            this.usedConglomerateShares.count(type) >= quantity,
             "not enough used conglomerate shares");
-        this.conglomerateShares.add(conglomerate, num);
-        this.usedConglomerateShares.remove(conglomerate, num);
+        this.conglomerateShares.add(type, quantity);
+        this.usedConglomerateShares.remove(type, quantity);
     }
 }

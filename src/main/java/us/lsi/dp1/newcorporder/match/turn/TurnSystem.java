@@ -36,7 +36,7 @@ public class TurnSystem {
         Preconditions.checkState(this.currentTurn != null, "turn in progress");
 
         switch (action) {
-            case PLOT -> this.currentTurn = null; // TODO
+            case PLOT -> this.currentTurn = new PlotTurn(match);
             case INFILTRATE -> this.currentTurn = null; // TODO
             case TAKE_OVER -> this.currentTurn = new TakeOverTurn(match);
         }

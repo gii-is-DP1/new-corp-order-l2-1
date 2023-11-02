@@ -1,5 +1,5 @@
 package us.lsi.dp1.newcorporder.match.turn;
 
-public enum TurnType {
+public enum Action {
     PLOT, INFILTRATE, TAKE_OVER
 }

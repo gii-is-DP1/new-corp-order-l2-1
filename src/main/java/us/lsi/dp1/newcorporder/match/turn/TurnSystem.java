@@ -1,5 +1,6 @@
 package us.lsi.dp1.newcorporder.match.turn;
 
+import com.google.common.base.Preconditions;
 import jakarta.annotation.Nullable;
 import lombok.Getter;
 import us.lsi.dp1.newcorporder.match.Match;
@@ -31,8 +32,10 @@ public class TurnSystem {
         passTurnTo(currentPlayer);
     }
 
-    public void selectTurn(TurnType turnType) {
-        switch (turnType) {
+    public void selectAction(Action action) {
+        Preconditions.checkState(this.currentTurn != null, "turn in progress");
+
+        switch (action) {
             case PLOT -> this.currentTurn = null; // TODO
             case INFILTRATE -> this.currentTurn = null; // TODO
             case TAKE_OVER -> this.currentTurn = new TakeOverTurn(match);

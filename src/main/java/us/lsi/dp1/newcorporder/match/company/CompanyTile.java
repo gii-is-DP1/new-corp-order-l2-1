@@ -35,7 +35,6 @@ public class CompanyTile {
 
     public void takeOver(Conglomerate conglomerate, int agents) {
         Preconditions.checkArgument(conglomerate != this.currentConglomerate, "cannot attack with the current conglomerate");
-        Preconditions.checkArgument(agents > this.agents, "unsuccessful attack");
         this.currentConglomerate = conglomerate;
         this.agents = agents;
     }

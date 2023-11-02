@@ -8,6 +8,7 @@ import us.lsi.dp1.newcorporder.match.company.CompanyTile;
 import us.lsi.dp1.newcorporder.match.payload.request.CompanyAbilityRequest;
 import us.lsi.dp1.newcorporder.match.payload.request.ConsultantRequest;
 import us.lsi.dp1.newcorporder.match.payload.request.TakeOverRequest;
+import us.lsi.dp1.newcorporder.match.payload.request.ability.CompanyAbility;
 
 import java.util.List;
 
@@ -90,8 +91,12 @@ public class TakeOverTurn extends Turn {
     public void onCompanyAbilityRequest(CompanyAbilityRequest request) {
         checkState(State.CHOOSING_ABILITY_PROPERTIES);
 
-        if (request.getCompanyAbility() != null) { // TODO check if the chosen ability belongs to the taken company
-            request.getCompanyAbility().activate(match, takeOverRequest);
+        CompanyAbility ability = request.getCompanyAbility();
+        if (ability != null) {
+            Preconditions.checkState(ability.getCompanyType() == takeOverRequest.getTargetCompany().getCompany().getType(),
+                "the chosen ability must belong to the taken company type");
+
+            ability.activate(match, takeOverRequest);
         }
 
         turnSystem.passTurn();

@@ -1,14 +1,10 @@
 package us.lsi.dp1.newcorporder.match.payload.request;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import us.lsi.dp1.newcorporder.match.Conglomerate;
-import us.lsi.dp1.newcorporder.match.company.CompanyTile;
-
-import javax.annotation.Nullable;
+import us.lsi.dp1.newcorporder.match.payload.request.infiltrate.Infiltrate;
 
 @Data
 public class InfiltrateRequest {
-    @Nullable private Conglomerate conglomerateType;
-    @Nullable private int conglomerateShares;
-    @Nullable private CompanyTile tile;
+    @NotNull Infiltrate infiltrate;
 }

@@ -6,6 +6,7 @@ import us.lsi.dp1.newcorporder.match.Match;
 import us.lsi.dp1.newcorporder.match.payload.request.ConsultantRequest;
 import us.lsi.dp1.newcorporder.match.payload.request.InfiltrateRequest;
 import us.lsi.dp1.newcorporder.match.payload.request.TakeConsultantRequest;
+import us.lsi.dp1.newcorporder.match.payload.request.infiltrate.Infiltrate;
 
 public class InfiltrateTurn extends Turn {
 
@@ -21,8 +22,9 @@ public class InfiltrateTurn extends Turn {
     @Override
     public void onConsultantRequest(ConsultantRequest request) {
         checkState(State.SELECTING_CONSULTANT);
-        //TODO: hacer precondition para que compruebe q se tiene al menos 2 tipos diferentes de conglomerate shares
-        // si se usa al Media Advisor
+        long numDiferentConglomerates = turnSystem.getCurrentPlayer().getHand().size();
+        Preconditions.checkArgument(request.getConsultant() == ConsultantType.MEDIA_ADVISOR && numDiferentConglomerates > 1,
+            "you cannot use the Consultant 'Media Advisor' if you only have one type of conglomerate share in hand");
         Preconditions.checkArgument(isValidConsultant(request.getConsultant()), "invalid consultant for a infiltrate turn");
         consultantRequest = request;
         currentState = State.INFILTRATE;
@@ -32,14 +34,12 @@ public class InfiltrateTurn extends Turn {
     @Override
     public void onInfiltrateRequest(InfiltrateRequest request) {
         checkState(State.INFILTRATE);
-        turnSystem.getCurrentPlayer().discardSharesFromHand(request.getConglomerateType(), request.getConglomerateShares());
-        turnSystem.getCurrentPlayer().getHeadquarter().addConglomerates(request.getConglomerateType(), request.getConglomerateShares());
-        assert request.getTile() != null;   //FIXME: make in a better way
-        Preconditions.checkArgument(request.getTile().getCurrentConglomerate() != request.getConglomerateType(),
-            "you cannot add agents to a box that has agents from a different conglomerate");
-        request.getTile().addAgents(request.getConglomerateShares());
+        Infiltrate infiltrate = request.getInfiltrate();
+        Preconditions.checkState(infiltrate.getConsultant() == consultantRequest.getConsultant(),
+            "the infiltrate must be the same type as the consultant used");
+        infiltrate.infiltrate(match, consultantRequest);
 
-        if (request.getConglomerateShares() >= 3) {
+        if(infiltrate.getConglomerateSharesUsed() >= 3){
             currentState = State.TAKING_CONSULTANT;
         }
     }
@@ -60,6 +60,4 @@ public class InfiltrateTurn extends Turn {
     private void checkState(InfiltrateTurn.State state) {
         Preconditions.checkState(currentState == state, "invalid action for the current state (%s)", state);
     }
-
-
 }

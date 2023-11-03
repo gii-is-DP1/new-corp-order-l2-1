@@ -32,4 +32,13 @@ public abstract class Turn {
     public void onCompanyAbilityRequest(CompanyAbilityRequest request) {
         throw new IllegalStateException("invalid move for the current action");
     }
+
+    public void onInfiltrateRequest(InfiltrateRequest request) {
+        throw new IllegalStateException("invalid move for the current action");
+    }
+
+    public void takeConsultantRequest(TakeConsultantRequest request) {
+        throw new IllegalStateException("invalid move for the current action");
+    }
+
 }

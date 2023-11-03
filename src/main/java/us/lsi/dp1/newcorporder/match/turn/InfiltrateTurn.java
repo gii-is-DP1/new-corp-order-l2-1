@@ -21,6 +21,8 @@ public class InfiltrateTurn extends Turn {
     @Override
     public void onConsultantRequest(ConsultantRequest request) {
         checkState(State.SELECTING_CONSULTANT);
+        //TODO: hacer precondition para que compruebe q se tiene al menos 2 tipos diferentes de conglomerate shares
+        // si se usa al Media Advisor
         Preconditions.checkArgument(isValidConsultant(request.getConsultant()), "invalid consultant for a infiltrate turn");
         consultantRequest = request;
         currentState = State.INFILTRATE;

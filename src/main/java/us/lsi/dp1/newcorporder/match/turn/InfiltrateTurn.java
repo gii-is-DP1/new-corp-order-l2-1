@@ -26,9 +26,16 @@ public class InfiltrateTurn extends Turn {
         currentState = State.INFILTRATE;
     }
 
+
     @Override
     public void onInfiltrateRequest(InfiltrateRequest request) {
         checkState(State.INFILTRATE);
+        turnSystem.getCurrentPlayer().discardSharesFromHand(request.getConglomerateType(), request.getConglomerateShares());
+        turnSystem.getCurrentPlayer().getHeadquarter().addConglomerates(request.getConglomerateType(), request.getConglomerateShares());
+        assert request.getTile() != null;   //FIXME: make in a better way
+        Preconditions.checkArgument(request.getTile().getCurrentConglomerate() != request.getConglomerateType(),
+            "you cannot add agents to a box that has agents from a different conglomerate");
+        request.getTile().addAgents(request.getConglomerateShares());
         if (request.getConglomerateShares() >= 3) {
             currentState = State.TAKING_CONSULTANT;
         }

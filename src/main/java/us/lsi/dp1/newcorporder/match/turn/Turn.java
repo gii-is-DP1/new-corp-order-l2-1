@@ -37,7 +37,7 @@ public abstract class Turn {
         throw new IllegalStateException("invalid move for the current action");
     }
 
-    public void takeConsultantRequest(TakeConsultantRequest request) {
+    public void onTakeConsultantRequest(TakeConsultantRequest request) {
         throw new IllegalStateException("invalid move for the current action");
     }
 

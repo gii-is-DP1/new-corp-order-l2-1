@@ -36,6 +36,7 @@ public class InfiltrateTurn extends Turn {
         Preconditions.checkArgument(request.getTile().getCurrentConglomerate() != request.getConglomerateType(),
             "you cannot add agents to a box that has agents from a different conglomerate");
         request.getTile().addAgents(request.getConglomerateShares());
+
         if (request.getConglomerateShares() >= 3) {
             currentState = State.TAKING_CONSULTANT;
         }
@@ -57,4 +58,6 @@ public class InfiltrateTurn extends Turn {
     private void checkState(InfiltrateTurn.State state) {
         Preconditions.checkState(currentState == state, "invalid action for the current state (%s)", state);
     }
+
+
 }

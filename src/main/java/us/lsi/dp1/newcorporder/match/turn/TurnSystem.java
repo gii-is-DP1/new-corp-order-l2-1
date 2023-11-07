@@ -37,7 +37,7 @@ public class TurnSystem {
 
         switch (action) {
             case PLOT -> this.currentTurn = new PlotTurn(match);
-            case INFILTRATE -> this.currentTurn = null; // TODO
+            case INFILTRATE -> this.currentTurn = new InfiltrateTurn(match);
             case TAKE_OVER -> this.currentTurn = new TakeOverTurn(match);
         }
     }

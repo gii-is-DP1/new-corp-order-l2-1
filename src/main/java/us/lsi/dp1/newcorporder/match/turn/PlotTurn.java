@@ -73,7 +73,7 @@ public class PlotTurn extends Turn {
             try {
                 match.getGeneralSupply().revealConglomerateSharesToOpenDisplay(SHARES_IN_OPEN_DISPLAY - currentSharesInOpenDisplay);
             } catch (IllegalStateException e) {
-                // TODO call final round
+                this.turnSystem.setLastPlayerBeforeMatchEnds(this.turnSystem.getCurrentPlayer());
             }
         }
 

@@ -13,17 +13,14 @@ public class BasicInfiltrate implements Infiltrate {
     private CompanyTile tile;
 
     @Override
-    public ConsultantType getConsultant() {
-        return null;
-    }
-
-    @Override
     public int getConglomerateSharesUsed() {
         return conglomerateShares;
     }
 
     @Override
     public void infiltrate(Match match, ConsultantRequest consultantRequests) {
+        Preconditions.checkState(consultantRequests.getConsultant() == null,
+            "the infiltrate must be the same type as the consultant used");
         match.getTurnSystem().getCurrentPlayer().discardSharesFromHand(conglomerateType, conglomerateShares);
         match.getTurnSystem().getCurrentPlayer().getHeadquarter().addConglomerates(conglomerateType, conglomerateShares);
         Preconditions.checkArgument(tile.getCurrentConglomerate() != conglomerateType,

@@ -23,8 +23,7 @@ public class InfiltrateTurn extends Turn {
     public void onConsultantRequest(ConsultantRequest request) {
         checkState(State.SELECTING_CONSULTANT);
         long numDiferentConglomerates = turnSystem.getCurrentPlayer().getHand().size();
-        Preconditions.checkArgument(request.getConsultant() == ConsultantType.MEDIA_ADVISOR && numDiferentConglomerates > 1,
-            "you cannot use the Consultant 'Media Advisor' if you only have one type of conglomerate share in hand");
+        Preconditions.checkArgument(request.getConsultant() == ConsultantType.MEDIA_ADVISOR && numDiferentConglomerates > 1, "you cannot use the Consultant 'Media Advisor' if you only have one type of conglomerate share in hand");
         Preconditions.checkArgument(isValidConsultant(request.getConsultant()), "invalid consultant for a infiltrate turn");
         consultantRequest = request;
         currentState = State.INFILTRATE;
@@ -35,11 +34,8 @@ public class InfiltrateTurn extends Turn {
     public void onInfiltrateRequest(InfiltrateRequest request) {
         checkState(State.INFILTRATE);
         Infiltrate infiltrate = request.getInfiltrate();
-        Preconditions.checkState(infiltrate.getConsultant() == consultantRequest.getConsultant(),
-            "the infiltrate must be the same type as the consultant used");
         infiltrate.infiltrate(match, consultantRequest);
-
-        if(infiltrate.getConglomerateSharesUsed() >= 3){
+        if (infiltrate.getConglomerateSharesUsed() >= 3) {
             currentState = State.TAKING_CONSULTANT;
         }
     }
@@ -47,8 +43,7 @@ public class InfiltrateTurn extends Turn {
     @Override
     public void onTakeConsultantRequest(TakeConsultantRequest request) {
         checkState(State.TAKING_CONSULTANT);
-        Preconditions.checkArgument(request.getConsultant() != consultantRequest.getConsultant(),
-            "you cannot take the same consultant you used to infiltrate the company");
+        Preconditions.checkArgument(request.getConsultant() != consultantRequest.getConsultant(), "you cannot take the same consultant you used to infiltrate the company");
         match.getGeneralSupply().takeConsultant(request.getConsultant());
         turnSystem.getCurrentPlayer().getHeadquarter().addConsultant(request.getConsultant());
     }

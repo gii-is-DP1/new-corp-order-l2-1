@@ -15,12 +15,7 @@ public class CorporateLawyerInfiltrate implements Infiltrate {
     private Conglomerate conglomerateType2;
     private int conglomerateShares2;
     private CompanyTile tile2;
-
-
-    @Override
-    public ConsultantType getConsultant() {
-        return ConsultantType.CORPORATE_LAWYER;
-    }
+    
 
     @Override
     public int getConglomerateSharesUsed() {
@@ -29,6 +24,8 @@ public class CorporateLawyerInfiltrate implements Infiltrate {
 
     @Override
     public void infiltrate(Match match, ConsultantRequest consultantRequests) {
+        Preconditions.checkState(consultantRequests.getConsultant() == ConsultantType.CORPORATE_LAWYER,
+            "the infiltrate must be the same type as the consultant used");
         Preconditions.checkArgument(conglomerateType1 != conglomerateType2,
             "the conglomerate shares selected have to be of different type");
         basicInfiltrate(match, conglomerateType1, conglomerateShares1, tile1);

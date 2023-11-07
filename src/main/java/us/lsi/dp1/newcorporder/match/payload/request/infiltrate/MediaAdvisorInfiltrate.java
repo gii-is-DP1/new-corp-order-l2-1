@@ -16,17 +16,14 @@ public class MediaAdvisorInfiltrate implements Infiltrate {
     private Conglomerate extraConglomerate;
 
     @Override
-    public ConsultantType getConsultant() {
-        return ConsultantType.MEDIA_ADVISOR;
-    }
-
-    @Override
     public int getConglomerateSharesUsed() {
         return conglomerateShares + 1;
     }
 
     @Override
     public void infiltrate(Match match, ConsultantRequest consultantRequests) {
+        Preconditions.checkState(consultantRequests.getConsultant() == ConsultantType.MEDIA_ADVISOR,
+            "the infiltrate must be the same type as the consultant used");
         Preconditions.checkArgument(conglomerateType != extraConglomerate,
             "your extra conglomerate share cannot be the same type as your main conglomerate shares");
         match.getTurnSystem().getCurrentPlayer().discardSharesFromHand(conglomerateType, conglomerateShares);

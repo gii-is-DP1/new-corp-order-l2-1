@@ -2,10 +2,9 @@ package us.lsi.dp1.newcorporder.match.payload.request.infiltrate;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import us.lsi.dp1.newcorporder.match.ConsultantType;
 import us.lsi.dp1.newcorporder.match.Match;
 import us.lsi.dp1.newcorporder.match.payload.request.ConsultantRequest;
-import us.lsi.dp1.newcorporder.match.payload.request.ability.*;
+import us.lsi.dp1.newcorporder.match.payload.request.ability.AmbientAdvertisingAbility;
 
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
@@ -16,9 +15,8 @@ import us.lsi.dp1.newcorporder.match.payload.request.ability.*;
 })
 public interface Infiltrate {
 
-    ConsultantType getConsultant();
-
     int getConglomerateSharesUsed();
+
     void infiltrate(Match match, ConsultantRequest consultantRequests);
 
 }

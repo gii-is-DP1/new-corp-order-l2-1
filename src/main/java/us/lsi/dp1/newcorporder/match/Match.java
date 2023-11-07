@@ -64,11 +64,22 @@ public class Match {
         player.init(initialConsultant, initialHand);
     }
 
+    public void end() {
+        this.matchState = MatchState.FINISHED;
+        //TODO calculate VP, assign a winner
+        //TODO generate and save stats
+    }
+
     private List<Conglomerate> drawInitialHand() {
         return generalSupply.takeConglomerateSharesFromDeck(INITIAL_CONGLOMERATE_SHARES_PER_PLAYER);
+    }
+
+    public MatchPlayer getPlayer(int id) {
+        return players.get(id);
     }
 
     private Collection<MatchPlayer> getPlayers() {
         return players.values();
     }
+
 }

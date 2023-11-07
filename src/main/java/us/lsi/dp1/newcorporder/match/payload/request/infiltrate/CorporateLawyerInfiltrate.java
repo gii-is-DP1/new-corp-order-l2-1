@@ -17,8 +17,8 @@ public class CorporateLawyerInfiltrate implements Infiltrate {
     private List<BasicInfiltrate> actions;
 
     @Override
-    public int getConglomerateSharesUsed() {
-        return actions.stream().mapToInt(BasicInfiltrate::getConglomerateShares).sum();
+    public int getTotalNumberOfShares() {
+        return actions.stream().mapToInt(BasicInfiltrate::getNumberOfShares).sum();
     }
 
     @Override
@@ -30,7 +30,7 @@ public class CorporateLawyerInfiltrate implements Infiltrate {
         Preconditions.checkArgument(actions.stream().map(BasicInfiltrate::getConglomerateType).distinct().count() == 2,
             "the conglomerate shares selected have to be of different type");
 
-        actions.forEach(action -> infiltrate(match, action.getConglomerateType(), action.getConglomerateShares(), action.getTile()));
+        actions.forEach(action -> infiltrate(match, action.getConglomerateType(), action.getNumberOfShares(), action.getTile()));
     }
 
     private void infiltrate(Match match, Conglomerate conglomerateType, int conglomerateShares, CompanyTileReference tileReference) {

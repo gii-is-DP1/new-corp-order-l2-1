@@ -14,13 +14,13 @@ public class MediaAdvisorInfiltrate implements Infiltrate {
 
     private CompanyTileReference tile;
     private Conglomerate conglomerateType;
-    private int conglomerateShares;
+    private int numberOfShares;
 
     private Conglomerate extraConglomerate;
 
     @Override
-    public int getConglomerateSharesUsed() {
-        return conglomerateShares + 1;
+    public int getTotalNumberOfShares() {
+        return numberOfShares + 1;
     }
 
     @Override
@@ -34,9 +34,9 @@ public class MediaAdvisorInfiltrate implements Infiltrate {
         Preconditions.checkArgument(tile.getCurrentConglomerate() != conglomerateType,
             "you cannot add agents to a tile that has agents from a different conglomerate");
 
-        match.getTurnSystem().getCurrentPlayer().discardSharesFromHand(conglomerateType, conglomerateShares);
+        match.getTurnSystem().getCurrentPlayer().discardSharesFromHand(conglomerateType, numberOfShares);
         match.getTurnSystem().getCurrentPlayer().discardSharesFromHand(extraConglomerate, 1);
-        match.getTurnSystem().getCurrentPlayer().getHeadquarter().addConglomerates(conglomerateType, conglomerateShares + 1);
-        tile.addAgents(conglomerateShares + 1);
+        match.getTurnSystem().getCurrentPlayer().getHeadquarter().addConglomerates(conglomerateType, numberOfShares + 1);
+        tile.addAgents(numberOfShares + 1);
     }
 }

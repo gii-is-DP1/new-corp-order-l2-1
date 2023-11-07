@@ -13,11 +13,11 @@ public class BasicInfiltrate implements Infiltrate {
 
     private CompanyTileReference tile;
     private Conglomerate conglomerateType;
-    private int conglomerateShares;
+    private int numberOfShares;
 
     @Override
-    public int getConglomerateSharesUsed() {
-        return conglomerateShares;
+    public int getTotalNumberOfShares() {
+        return numberOfShares;
     }
 
     @Override
@@ -29,8 +29,8 @@ public class BasicInfiltrate implements Infiltrate {
         Preconditions.checkArgument(tile.getCurrentConglomerate() != conglomerateType,
             "you cannot add agents to a tile that has agents from a different conglomerate");
 
-        match.getTurnSystem().getCurrentPlayer().discardSharesFromHand(conglomerateType, conglomerateShares);
-        match.getTurnSystem().getCurrentPlayer().getHeadquarter().addConglomerates(conglomerateType, conglomerateShares);
-        tile.addAgents(conglomerateShares);
+        match.getTurnSystem().getCurrentPlayer().discardSharesFromHand(conglomerateType, numberOfShares);
+        match.getTurnSystem().getCurrentPlayer().getHeadquarter().addConglomerates(conglomerateType, numberOfShares);
+        tile.addAgents(numberOfShares);
     }
 }

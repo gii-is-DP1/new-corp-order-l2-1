@@ -37,7 +37,7 @@ public class InfiltrateTurn extends Turn {
         Infiltrate infiltrate = request.getInfiltrate();
         infiltrate.run(match, consultantRequest);
 
-        if (infiltrate.getConglomerateSharesUsed() >= 3) {
+        if (infiltrate.getTotalNumberOfShares() >= 3) {
             currentState = State.TAKING_CONSULTANT;
         }
     }

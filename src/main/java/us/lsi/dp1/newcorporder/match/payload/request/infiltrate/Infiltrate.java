@@ -15,6 +15,7 @@ import us.lsi.dp1.newcorporder.match.payload.request.ability.AmbientAdvertisingA
 })
 public interface Infiltrate {
 
+    @JsonIgnore
     int getConglomerateSharesUsed();
 
     void infiltrate(Match match, ConsultantRequest consultantRequests);

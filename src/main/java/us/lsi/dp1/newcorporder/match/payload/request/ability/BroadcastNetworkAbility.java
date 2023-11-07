@@ -1,11 +1,13 @@
 package us.lsi.dp1.newcorporder.match.payload.request.ability;
 
 import com.google.common.base.Preconditions;
+import lombok.Data;
 import us.lsi.dp1.newcorporder.match.Match;
 import us.lsi.dp1.newcorporder.match.company.CompanyTile;
 import us.lsi.dp1.newcorporder.match.company.CompanyType;
 import us.lsi.dp1.newcorporder.match.payload.request.TakeOverRequest;
 
+@Data
 public class BroadcastNetworkAbility implements CompanyAbility {
 
     private CompanyTile firstTarget;

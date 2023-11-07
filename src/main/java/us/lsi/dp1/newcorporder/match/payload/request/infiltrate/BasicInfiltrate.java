@@ -21,10 +21,10 @@ public class BasicInfiltrate implements Infiltrate {
     public void infiltrate(Match match, ConsultantRequest consultantRequests) {
         Preconditions.checkState(consultantRequests.getConsultant() == null,
             "the infiltrate must be the same type as the consultant used");
+        Preconditions.checkArgument(tile.getCurrentConglomerate() != conglomerateType,
+            "you cannot add agents to a tile that has agents from a different conglomerate");
         match.getTurnSystem().getCurrentPlayer().discardSharesFromHand(conglomerateType, conglomerateShares);
         match.getTurnSystem().getCurrentPlayer().getHeadquarter().addConglomerates(conglomerateType, conglomerateShares);
-        Preconditions.checkArgument(tile.getCurrentConglomerate() != conglomerateType,
-            "you cannot add agents to a box that has agents from a different conglomerate");
         tile.addAgents(conglomerateShares);
     }
 }

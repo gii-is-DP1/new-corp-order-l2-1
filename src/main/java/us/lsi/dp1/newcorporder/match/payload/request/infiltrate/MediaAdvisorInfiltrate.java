@@ -26,11 +26,11 @@ public class MediaAdvisorInfiltrate implements Infiltrate {
             "the infiltrate must be the same type as the consultant used");
         Preconditions.checkArgument(conglomerateType != extraConglomerate,
             "your extra conglomerate share cannot be the same type as your main conglomerate shares");
+        Preconditions.checkArgument(tile.getCurrentConglomerate() != conglomerateType,
+            "you cannot add agents to a tile that has agents from a different conglomerate");
         match.getTurnSystem().getCurrentPlayer().discardSharesFromHand(conglomerateType, conglomerateShares);
         match.getTurnSystem().getCurrentPlayer().discardSharesFromHand(extraConglomerate, 1);
         match.getTurnSystem().getCurrentPlayer().getHeadquarter().addConglomerates(conglomerateType, conglomerateShares + 1);
-        Preconditions.checkArgument(tile.getCurrentConglomerate() != conglomerateType,
-            "you cannot add agents to a box that has agents from a different conglomerate");
         tile.addAgents(conglomerateShares + 1);
     }
 

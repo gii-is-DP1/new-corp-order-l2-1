@@ -22,8 +22,8 @@ public class InfiltrateTurn extends Turn {
     @Override
     public void onConsultantRequest(ConsultantRequest request) {
         checkState(State.SELECTING_CONSULTANT);
-        long numDiferentConglomerates = turnSystem.getCurrentPlayer().getHand().size();
-        Preconditions.checkArgument(request.getConsultant() == ConsultantType.MEDIA_ADVISOR && numDiferentConglomerates > 1, "you cannot use the Consultant 'Media Advisor' if you only have one type of conglomerate share in hand");
+        long numDifferentConglomerates = turnSystem.getCurrentPlayer().getHand().size();
+        Preconditions.checkArgument(request.getConsultant() == ConsultantType.MEDIA_ADVISOR && numDifferentConglomerates > 1, "you cannot use the Consultant 'Media Advisor' if you only have one type of conglomerate share in hand");
         Preconditions.checkArgument(isValidConsultant(request.getConsultant()), "invalid consultant for a infiltrate turn");
         consultantRequest = request;
         currentState = State.INFILTRATE;

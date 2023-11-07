@@ -15,7 +15,7 @@ public class CorporateLawyerInfiltrate implements Infiltrate {
     private Conglomerate conglomerateType2;
     private int conglomerateShares2;
     private CompanyTile tile2;
-    
+
 
     @Override
     public int getConglomerateSharesUsed() {
@@ -33,10 +33,10 @@ public class CorporateLawyerInfiltrate implements Infiltrate {
     }
 
     private void basicInfiltrate(Match match, Conglomerate conglomerateType, int conglomerateShares, CompanyTile tile) {
+        Preconditions.checkArgument(tile.getCurrentConglomerate() != conglomerateType,
+            "you cannot add agents to a tile that has agents from a different conglomerate");
         match.getTurnSystem().getCurrentPlayer().discardSharesFromHand(conglomerateType, conglomerateShares);
         match.getTurnSystem().getCurrentPlayer().getHeadquarter().addConglomerates(conglomerateType, conglomerateShares);
-        Preconditions.checkArgument(tile.getCurrentConglomerate() != conglomerateType,
-            "you cannot add agents to a box that has agents from a different conglomerate");
         tile.addAgents(conglomerateShares);
     }
 

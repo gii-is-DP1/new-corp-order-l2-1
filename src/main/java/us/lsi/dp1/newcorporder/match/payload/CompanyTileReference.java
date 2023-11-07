@@ -1,4 +1,4 @@
-package us.lsi.dp1.newcorporder.match.payload.request;
+package us.lsi.dp1.newcorporder.match.payload;
 
 import lombok.Data;
 

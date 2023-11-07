@@ -24,7 +24,7 @@ public class MediaAdvisorInfiltrate implements Infiltrate {
     }
 
     @Override
-    public void infiltrate(Match match, ConsultantRequest consultantRequests) {
+    public void run(Match match, ConsultantRequest consultantRequests) {
         CompanyTile tile = match.getCompanyMatrix().getTile(this.tile.getX(), this.tile.getY());
 
         Preconditions.checkState(consultantRequests.getConsultant() == ConsultantType.MEDIA_ADVISOR,

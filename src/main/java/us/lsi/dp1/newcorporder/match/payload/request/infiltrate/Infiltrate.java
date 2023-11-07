@@ -1,5 +1,6 @@
 package us.lsi.dp1.newcorporder.match.payload.request.infiltrate;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import us.lsi.dp1.newcorporder.match.Match;
@@ -18,6 +19,6 @@ public interface Infiltrate {
     @JsonIgnore
     int getConglomerateSharesUsed();
 
-    void infiltrate(Match match, ConsultantRequest consultantRequests);
+    void run(Match match, ConsultantRequest consultantRequests);
 
 }

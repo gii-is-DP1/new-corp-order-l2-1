@@ -13,7 +13,7 @@ import static us.lsi.dp1.newcorporder.match.Match.SHARES_IN_OPEN_DISPLAY;
 
 public class PlotTurn extends Turn {
 
-    public enum State {SELECTING_FIRST_SHARE, SELECTING_SECOND_SHARE, DISCARDING_SHARES_FROM_HAND, NONE}
+    public enum State implements TurnState {SELECTING_FIRST_SHARE, SELECTING_SECOND_SHARE, DISCARDING_SHARES_FROM_HAND, NONE}
 
     private State currentState = State.SELECTING_FIRST_SHARE;
 

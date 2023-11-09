@@ -6,18 +6,19 @@ import us.lsi.dp1.newcorporder.match.ConsultantType;
 import us.lsi.dp1.newcorporder.match.Match;
 import us.lsi.dp1.newcorporder.match.company.CompanyTile;
 import us.lsi.dp1.newcorporder.match.payload.request.CompanyAbilityRequest;
-import us.lsi.dp1.newcorporder.match.payload.request.ConsultantRequest;
 import us.lsi.dp1.newcorporder.match.payload.request.TakeOverRequest;
+import us.lsi.dp1.newcorporder.match.payload.request.UseConsultantRequest;
 import us.lsi.dp1.newcorporder.match.payload.request.ability.CompanyAbility;
+import us.lsi.dp1.newcorporder.match.payload.response.UseConsultantResponse;
 
 import java.util.List;
 
 public class TakeOverTurn extends Turn {
 
-    private enum State {SELECTING_CONSULTANT, TAKING_OVER, CHOOSING_ABILITY_PROPERTIES}
+    private enum State implements TurnState {SELECTING_CONSULTANT, TAKING_OVER, CHOOSING_ABILITY_PROPERTIES}
 
     private State currentState = State.SELECTING_CONSULTANT;
-    private ConsultantRequest consultantRequest;
+    private UseConsultantRequest useConsultantRequest;
     private TakeOverRequest takeOverRequest;
 
     public TakeOverTurn(Match match) {
@@ -25,12 +26,14 @@ public class TakeOverTurn extends Turn {
     }
 
     @Override
-    public void onConsultantRequest(ConsultantRequest request) {
+    public UseConsultantResponse onUseConsultantRequest(UseConsultantRequest request) {
         checkState(State.SELECTING_CONSULTANT);
         Preconditions.checkArgument(isValidConsultant(request.getConsultant()), "invalid consultant for a take over turn");
 
-        consultantRequest = request;
+        useConsultantRequest = request;
         currentState = State.TAKING_OVER;
+
+        return new UseConsultantResponse(currentState);
     }
 
     private boolean isValidConsultant(ConsultantType consultant) {
@@ -76,14 +79,14 @@ public class TakeOverTurn extends Turn {
             currentState = State.CHOOSING_ABILITY_PROPERTIES;
         }
 
-        if (consultantRequest.getConsultant() == ConsultantType.DEAL_MAKER) {
+        if (useConsultantRequest.getConsultant() == ConsultantType.DEAL_MAKER) {
             List<Conglomerate> shares = match.getGeneralSupply().takeConglomerateSharesFromDeck(2);
             shares.forEach(share -> turnSystem.getCurrentPlayer().addShareToHand(share));
         }
     }
 
     private boolean isTakeOverSuccessful(CompanyTile source, CompanyTile target) {
-        boolean useMilitaryContractor = consultantRequest.getConsultant() == ConsultantType.MILITARY_CONTRACTOR;
+        boolean useMilitaryContractor = useConsultantRequest.getConsultant() == ConsultantType.MILITARY_CONTRACTOR;
         return target.getAgents() < source.getAgents() || (useMilitaryContractor && target.getAgents() <= source.getAgents());
     }
 

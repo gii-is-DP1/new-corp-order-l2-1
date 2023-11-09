@@ -4,6 +4,7 @@ import us.lsi.dp1.newcorporder.match.Match;
 import us.lsi.dp1.newcorporder.match.payload.request.*;
 import us.lsi.dp1.newcorporder.match.payload.response.DiscardShareResponse;
 import us.lsi.dp1.newcorporder.match.payload.response.TakeShareResponse;
+import us.lsi.dp1.newcorporder.match.payload.response.UseConsultantResponse;
 
 public abstract class Turn {
 
@@ -23,7 +24,7 @@ public abstract class Turn {
         throw new IllegalStateException("invalid move for the current action");
     }
 
-    public void onConsultantRequest(ConsultantRequest request) {
+    public UseConsultantResponse onUseConsultantRequest(UseConsultantRequest request) {
         throw new IllegalStateException("invalid move for the current action");
     }
 

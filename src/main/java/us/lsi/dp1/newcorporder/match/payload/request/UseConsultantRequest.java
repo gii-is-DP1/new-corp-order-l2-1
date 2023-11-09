@@ -6,6 +6,6 @@ import us.lsi.dp1.newcorporder.match.ConsultantType;
 import javax.annotation.Nullable;
 
 @Data
-public class ConsultantRequest {
+public class UseConsultantRequest {
     @Nullable private ConsultantType consultant;
 }

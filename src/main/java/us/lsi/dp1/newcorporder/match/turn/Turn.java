@@ -2,6 +2,7 @@ package us.lsi.dp1.newcorporder.match.turn;
 
 import us.lsi.dp1.newcorporder.match.Match;
 import us.lsi.dp1.newcorporder.match.payload.request.*;
+import us.lsi.dp1.newcorporder.match.payload.response.TakeShareResponse;
 
 public abstract class Turn {
 
@@ -13,7 +14,7 @@ public abstract class Turn {
         this.turnSystem = match.getTurnSystem();
     }
 
-    public void onTakeShareRequest(TakeShareRequest request) {
+    public TakeShareResponse onTakeShareRequest(TakeShareRequest request) {
         throw new IllegalStateException("invalid move for the current action");
     }
 

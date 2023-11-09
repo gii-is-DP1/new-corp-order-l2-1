@@ -2,7 +2,6 @@ package us.lsi.dp1.newcorporder.match;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.HashMultiset;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMultiset;
 import com.google.common.collect.Multiset;
 
@@ -164,7 +163,7 @@ public class GeneralSupply {
      *
      * @return an immutable view of the conglomerate shares in the open display
      */
-    public List<Conglomerate> getOpenDisplay() {
-        return ImmutableList.copyOf(openDisplay);
+    public Multiset<Conglomerate> getOpenDisplay() {
+        return ImmutableMultiset.copyOf(openDisplay);
     }
 }

@@ -10,8 +10,8 @@ import java.util.*;
 public class Match {
 
     public static final int INITIAL_CONGLOMERATE_SHARES_PER_PLAYER = 4;
-    public static final int SHARES_IN_OPEN_DISPLAY = 4;
     public static final int MAX_SHARES_IN_HAND = 6;
+    public static final int SHARES_IN_OPEN_DISPLAY = 4;
 
     public static Match create(int maxPlayers, MatchMode matchMode) {
         GeneralSupply generalSupply = GeneralSupply.create();

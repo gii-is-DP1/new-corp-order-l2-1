@@ -58,4 +58,9 @@ public class MatchPlayer {
     public List<CompanyType> getSecretObjectives() {
         return ImmutableList.copyOf(secretObjectives);
     }
+
+    public int getParticipationPoints(Conglomerate conglomerateType) {
+        return headquarter.getTotalConglomeratesSharesOfAType(conglomerateType) +
+            (headquarter.getAgentsCapturedOfAType(conglomerateType) * 2);
+    }
 }

@@ -68,4 +68,13 @@ public class Headquarter {
         this.conglomerateShares.add(type, quantity);
         this.usedConglomerateShares.remove(type, quantity);
     }
+
+    public int getTotalConglomeratesSharesOfAType(Conglomerate conglomerateType) {
+        return this.conglomerateShares.count(conglomerateType) + this.usedConglomerateShares.count(conglomerateType);
+    }
+
+    public int getAgentsCapturedOfAType(Conglomerate conglomerateType) {
+        return this.capturedAgents.count(conglomerateType);
+    }
+
 }

@@ -82,4 +82,15 @@ public class Match {
         return players.values();
     }
 
+    private List<MatchPlayer> rankPlayerParticipation(Conglomerate conglomerateType) {
+        List<MatchPlayer> players = new ArrayList<>(this.players.values());
+        return players.stream()
+            .sorted(Comparator.<MatchPlayer>comparingInt(x -> -x.getParticipationPoints(conglomerateType)).reversed())  //TODO: invertir la comparacion de mejor manera(ahora tiene un "-")
+            .toList();
+    }
+
+    private int getPlayerVP(MatchPlayer player) {
+        int pv = 0;
+        return pv; //TODO
+    }
 }

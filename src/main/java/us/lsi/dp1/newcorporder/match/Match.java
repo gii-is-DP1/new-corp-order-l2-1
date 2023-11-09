@@ -2,6 +2,7 @@ package us.lsi.dp1.newcorporder.match;
 
 import lombok.Getter;
 import us.lsi.dp1.newcorporder.match.company.CompanyMatrix;
+import us.lsi.dp1.newcorporder.match.company.CompanyType;
 import us.lsi.dp1.newcorporder.match.player.MatchPlayer;
 import us.lsi.dp1.newcorporder.match.turn.TurnSystem;
 
@@ -85,12 +86,33 @@ public class Match {
     private List<MatchPlayer> rankPlayerParticipation(Conglomerate conglomerateType) {
         List<MatchPlayer> players = new ArrayList<>(this.players.values());
         return players.stream()
-            .sorted(Comparator.<MatchPlayer>comparingInt(x -> -x.getParticipationPoints(conglomerateType)).reversed())  //TODO: invertir la comparacion de mejor manera(ahora tiene un "-")
+            .sorted(Comparator.<MatchPlayer>comparingInt(x -> x.getParticipationPoints(conglomerateType)).reversed())
             .toList();
+
+        //TODO añadir caso de empate (cambiar el Comparator)
     }
+
 
     private int getPlayerVP(MatchPlayer player) {
         int pv = 0;
+        List<MatchPlayer> participationRanking;
+        int numTilesControlled;
+        int numTilesControlledOfCompanyType;
+        for (Conglomerate conglomerate : Conglomerate.values()) {
+            participationRanking = rankPlayerParticipation(conglomerate);
+            numTilesControlled = companyMatrix.countTilesControlledBy(conglomerate);
+            if (participationRanking.get(0).equals(player))
+                pv *= 2 * numTilesControlled;
+            if (participationRanking.get(1).equals(player) && players.size() > 2)
+                pv += numTilesControlled;
+            if (participationRanking.get(0).equals(player) && participationRanking.get(1).equals(player)) {
+                for (CompanyType companyType : player.getSecretObjectives()) {
+                    numTilesControlledOfCompanyType = companyMatrix.countTilesControlledBy(conglomerate, companyType);
+                    pv += 2*numTilesControlledOfCompanyType;
+                }
+            }
+        }
+
         return pv; //TODO
     }
 }

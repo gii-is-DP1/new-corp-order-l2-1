@@ -2,6 +2,7 @@ package us.lsi.dp1.newcorporder.match.turn;
 
 import us.lsi.dp1.newcorporder.match.Match;
 import us.lsi.dp1.newcorporder.match.payload.request.*;
+import us.lsi.dp1.newcorporder.match.payload.response.DiscardShareResponse;
 import us.lsi.dp1.newcorporder.match.payload.response.TakeShareResponse;
 
 public abstract class Turn {
@@ -18,7 +19,7 @@ public abstract class Turn {
         throw new IllegalStateException("invalid move for the current action");
     }
 
-    public void onDiscardShareRequest(DiscardShareRequest request) {
+    public DiscardShareResponse onDiscardShareRequest(DiscardShareRequest request) {
         throw new IllegalStateException("invalid move for the current action");
     }
 

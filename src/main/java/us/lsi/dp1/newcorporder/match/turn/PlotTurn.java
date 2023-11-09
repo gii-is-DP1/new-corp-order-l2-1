@@ -5,6 +5,7 @@ import us.lsi.dp1.newcorporder.match.Conglomerate;
 import us.lsi.dp1.newcorporder.match.Match;
 import us.lsi.dp1.newcorporder.match.payload.request.DiscardShareRequest;
 import us.lsi.dp1.newcorporder.match.payload.request.TakeShareRequest;
+import us.lsi.dp1.newcorporder.match.payload.response.DiscardShareResponse;
 import us.lsi.dp1.newcorporder.match.payload.response.TakeShareResponse;
 
 import static us.lsi.dp1.newcorporder.match.Match.MAX_SHARES_IN_HAND;
@@ -23,7 +24,7 @@ public class PlotTurn extends Turn {
     @Override
     public TakeShareResponse onTakeShareRequest(TakeShareRequest takeShareRequest) {
         Preconditions.checkState(currentState == State.SELECTING_FIRST_SHARE
-                                 || currentState == State.SELECTING_SECOND_SHARE,
+                || currentState == State.SELECTING_SECOND_SHARE,
             "illegal turn state");
 
         Conglomerate share = this.takeShare(takeShareRequest);
@@ -69,7 +70,7 @@ public class PlotTurn extends Turn {
     }
 
     @Override
-    public void onDiscardShareRequest(DiscardShareRequest discardShareRequest) {
+    public DiscardShareResponse onDiscardShareRequest(DiscardShareRequest discardShareRequest) {
         Preconditions.checkState(currentState == State.DISCARDING_SHARES_FROM_HAND,
             "cannot discard a share on your turn state");
         Preconditions.checkState(turnSystem.getCurrentPlayer().getHand().size() - discardShareRequest.getSharesToDiscard().size() == MAX_SHARES_IN_HAND,
@@ -79,6 +80,8 @@ public class PlotTurn extends Turn {
         // for each given conglomerate and number of shares, discard them from the player's hand
         discardShareRequest.getSharesToDiscard().forEachEntry(turnSystem.getCurrentPlayer()::discardSharesFromHand);
         endTurn();
+
+        return new DiscardShareResponse(match.getGeneralSupply().getOpenDisplay());
     }
 
     private void endTurn() {

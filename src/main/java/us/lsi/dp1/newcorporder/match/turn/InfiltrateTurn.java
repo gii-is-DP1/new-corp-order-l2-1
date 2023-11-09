@@ -7,11 +7,12 @@ import us.lsi.dp1.newcorporder.match.payload.request.InfiltrateRequest;
 import us.lsi.dp1.newcorporder.match.payload.request.TakeConsultantRequest;
 import us.lsi.dp1.newcorporder.match.payload.request.UseConsultantRequest;
 import us.lsi.dp1.newcorporder.match.payload.request.infiltrate.Infiltrate;
+import us.lsi.dp1.newcorporder.match.payload.response.InfiltrateResponse;
 import us.lsi.dp1.newcorporder.match.payload.response.UseConsultantResponse;
 
 public class InfiltrateTurn extends Turn {
 
-    private enum State implements TurnState {SELECTING_CONSULTANT, INFILTRATE, TAKING_CONSULTANT}
+    private enum State implements TurnState {SELECTING_CONSULTANT, INFILTRATE, TAKING_CONSULTANT, NONE}
 
     private State currentState = InfiltrateTurn.State.SELECTING_CONSULTANT;
     private UseConsultantRequest useConsultantRequest;
@@ -34,7 +35,7 @@ public class InfiltrateTurn extends Turn {
     }
 
     @Override
-    public void onInfiltrateRequest(InfiltrateRequest request) {
+    public InfiltrateResponse onInfiltrateRequest(InfiltrateRequest request) {
         checkState(State.INFILTRATE);
 
         Infiltrate infiltrate = request.getInfiltrate();
@@ -42,7 +43,12 @@ public class InfiltrateTurn extends Turn {
 
         if (infiltrate.getTotalNumberOfShares() >= 3) {
             currentState = State.TAKING_CONSULTANT;
+        } else {
+            currentState = State.NONE;
+            turnSystem.passTurn();
         }
+
+        return new InfiltrateResponse(currentState);
     }
 
     @Override

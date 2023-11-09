@@ -1,17 +1,17 @@
 package us.lsi.dp1.newcorporder.match.payload.response;
 
 import com.google.common.collect.Multiset;
-import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.SuperBuilder;
 import us.lsi.dp1.newcorporder.match.Conglomerate;
-import us.lsi.dp1.newcorporder.match.turn.PlotTurn;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
-@Builder
-public class TakeShareResponse {
+@SuperBuilder
+public class TakeShareResponse extends TurnStateResponse {
 
     private Conglomerate shareTaken;
-    private PlotTurn.State nextState;
     private Multiset<Conglomerate> openDisplay;
 
 }

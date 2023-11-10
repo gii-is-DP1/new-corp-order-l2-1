@@ -101,18 +101,18 @@ public class Match {
         for (Conglomerate conglomerate : Conglomerate.values()) {
             participationRanking = rankPlayerParticipation(conglomerate);
             numTilesControlled = companyMatrix.countTilesControlledBy(conglomerate);
-            if (participationRanking.get(0).equals(player))
+            if (participationRanking.get(0).equals(player)) //Calcular puntuación 1º
                 pv *= 2 * numTilesControlled;
-            if (participationRanking.get(1).equals(player) && players.size() > 2)
+            if (participationRanking.get(1).equals(player) && players.size() > 2)   //Calcular puntuación 2º
                 pv += numTilesControlled;
-            if (participationRanking.get(0).equals(player) && participationRanking.get(1).equals(player)) {
+            if (participationRanking.get(0).equals(player) && participationRanking.get(1).equals(player)) { //Calcular puntuación Secret Objectives
                 for (CompanyType companyType : player.getSecretObjectives()) {
-                    numTilesControlledOfCompanyType = companyMatrix.countTilesControlledBy(conglomerate, companyType);
+                    numTilesControlledOfCompanyType = companyMatrix.countTilesControlledByWithCompany(conglomerate, companyType);
                     pv += 2*numTilesControlledOfCompanyType;
                 }
             }
         }
-
-        return pv; //TODO
+        pv += player.getHeadquarter().getConsultantsVP();
+        return pv;
     }
 }

@@ -6,6 +6,10 @@ import com.google.common.collect.Multiset;
 import us.lsi.dp1.newcorporder.match.Conglomerate;
 import us.lsi.dp1.newcorporder.match.ConsultantType;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
 public class Headquarter {
 
     public static Headquarter create() {
@@ -76,5 +80,33 @@ public class Headquarter {
     public int getAgentsCapturedOfAType(Conglomerate conglomerateType) {
         return this.capturedAgents.count(conglomerateType);
     }
+
+    public int getConsultantsVP() {
+        int vp = 0;
+        List<ConsultantType> bestMatchConsultants= rankBestConsultantToMatch();
+        if (this.consultants.elementSet().size() >= 4) vp++; //Punto extra por tener 4 consultores diferentes
+        while (this.consultants.size() > 1 && bestMatchConsultants != null && bestMatchConsultants.size() > 1) {
+            vp++;
+            this.consultants.remove(bestMatchConsultants.get(0), 1);
+            this.consultants.remove(bestMatchConsultants.get(1), 1);
+            bestMatchConsultants = rankBestConsultantToMatch();
+        }
+        return vp;
+    }
+
+    private List<ConsultantType> rankBestConsultantToMatch() {
+        List<ConsultantType> consultantList = new ArrayList<>();
+        for (ConsultantType c : ConsultantType.values()) {
+            if (this.consultants.count(c) > 0)
+                consultantList.add(c);
+        }
+        if (consultantList.isEmpty())
+            return null;
+        else
+            return consultantList.stream()
+                .sorted(Comparator.comparingInt(this.consultants::count).reversed())
+                .toList();
+    }
+
 
 }

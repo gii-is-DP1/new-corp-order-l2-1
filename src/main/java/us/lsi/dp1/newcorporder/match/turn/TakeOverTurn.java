@@ -9,6 +9,7 @@ import us.lsi.dp1.newcorporder.match.payload.request.CompanyAbilityRequest;
 import us.lsi.dp1.newcorporder.match.payload.request.TakeOverRequest;
 import us.lsi.dp1.newcorporder.match.payload.request.UseConsultantRequest;
 import us.lsi.dp1.newcorporder.match.payload.request.ability.CompanyAbility;
+import us.lsi.dp1.newcorporder.match.payload.response.CompanyAbilityResponse;
 import us.lsi.dp1.newcorporder.match.payload.response.TakeOverResponse;
 import us.lsi.dp1.newcorporder.match.payload.response.UseConsultantResponse;
 
@@ -95,7 +96,7 @@ public class TakeOverTurn extends Turn {
     }
 
     @Override
-    public void onCompanyAbilityRequest(CompanyAbilityRequest request) {
+    public CompanyAbilityResponse onCompanyAbilityRequest(CompanyAbilityRequest request) {
         checkState(State.CHOOSING_ABILITY_PROPERTIES);
 
         CompanyAbility ability = request.getCompanyAbility();
@@ -107,6 +108,10 @@ public class TakeOverTurn extends Turn {
         }
 
         this.endTurn();
+        return CompanyAbilityResponse.builder()
+            .hand(turnSystem.getCurrentPlayer().getHand())
+            .nextState(currentState)
+            .build();
     }
 
     private void endTurn() {

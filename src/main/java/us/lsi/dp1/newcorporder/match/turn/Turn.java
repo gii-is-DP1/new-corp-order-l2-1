@@ -38,7 +38,7 @@ public abstract class Turn {
         throw new IllegalStateException("invalid move for the current action");
     }
 
-    public void onCompanyAbilityRequest(CompanyAbilityRequest request) {
+    public CompanyAbilityResponse onCompanyAbilityRequest(CompanyAbilityRequest request) {
         throw new IllegalStateException("invalid move for the current action");
     }
 

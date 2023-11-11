@@ -2,6 +2,7 @@ package us.lsi.dp1.newcorporder.match.turn;
 
 import us.lsi.dp1.newcorporder.match.Match;
 import us.lsi.dp1.newcorporder.match.payload.request.*;
+import us.lsi.dp1.newcorporder.match.payload.response.*;
 
 public abstract class Turn {
 
@@ -13,31 +14,31 @@ public abstract class Turn {
         this.turnSystem = match.getTurnSystem();
     }
 
-    public void onTakeShareRequest(TakeShareRequest request) {
+    public TakeShareResponse onTakeShareRequest(TakeShareRequest request) {
         throw new IllegalStateException("invalid move for the current action");
     }
 
-    public void onDiscardShareRequest(DiscardShareRequest request) {
+    public DiscardShareResponse onDiscardShareRequest(DiscardShareRequest request) {
         throw new IllegalStateException("invalid move for the current action");
     }
 
-    public void onConsultantRequest(ConsultantRequest request) {
+    public UseConsultantResponse onUseConsultantRequest(UseConsultantRequest request) {
         throw new IllegalStateException("invalid move for the current action");
     }
 
-    public void onTakeOverRequest(TakeOverRequest request) {
-        throw new IllegalStateException("invalid move for the current action");
-    }
-
-    public void onCompanyAbilityRequest(CompanyAbilityRequest request) {
-        throw new IllegalStateException("invalid move for the current action");
-    }
-
-    public void onInfiltrateRequest(InfiltrateRequest request) {
+    public InfiltrateResponse onInfiltrateRequest(InfiltrateRequest request) {
         throw new IllegalStateException("invalid move for the current action");
     }
 
     public void onTakeConsultantRequest(TakeConsultantRequest request) {
+        throw new IllegalStateException("invalid move for the current action");
+    }
+
+    public TakeOverResponse onTakeOverRequest(TakeOverRequest request) {
+        throw new IllegalStateException("invalid move for the current action");
+    }
+
+    public CompanyAbilityResponse onCompanyAbilityRequest(CompanyAbilityRequest request) {
         throw new IllegalStateException("invalid move for the current action");
     }
 

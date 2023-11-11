@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import us.lsi.dp1.newcorporder.match.Match;
-import us.lsi.dp1.newcorporder.match.payload.request.ConsultantRequest;
+import us.lsi.dp1.newcorporder.match.payload.request.UseConsultantRequest;
 import us.lsi.dp1.newcorporder.match.payload.request.ability.AmbientAdvertisingAbility;
 
 
@@ -19,6 +19,6 @@ public interface Infiltrate {
     @JsonIgnore
     int getTotalNumberOfShares();
 
-    void run(Match match, ConsultantRequest consultantRequests);
+    void run(Match match, UseConsultantRequest useConsultantRequests);
 
 }

@@ -61,6 +61,8 @@ public class TakeOverTurn extends Turn {
         CompanyTile source = request.getSourceCompany();
         CompanyTile target = request.getTargetCompany();
 
+        Preconditions.checkState(source.getAgents() > request.getAgents(),
+            "cannot take the company over because the source company does not have the requested number of agents");
         Preconditions.checkState(match.getCompanyMatrix().countTilesControlledBy(target.getCurrentConglomerate()) > 1,
             "can't take the company over because it's controlled by the only agent of his conglomerate left");
 

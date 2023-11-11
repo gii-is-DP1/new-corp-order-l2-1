@@ -3,10 +3,12 @@ package us.lsi.dp1.newcorporder.match.turn;
 import com.google.common.base.Preconditions;
 import us.lsi.dp1.newcorporder.match.ConsultantType;
 import us.lsi.dp1.newcorporder.match.Match;
+import us.lsi.dp1.newcorporder.match.payload.request.DiscardShareRequest;
 import us.lsi.dp1.newcorporder.match.payload.request.InfiltrateRequest;
 import us.lsi.dp1.newcorporder.match.payload.request.TakeConsultantRequest;
 import us.lsi.dp1.newcorporder.match.payload.request.UseConsultantRequest;
 import us.lsi.dp1.newcorporder.match.payload.request.infiltrate.Infiltrate;
+import us.lsi.dp1.newcorporder.match.payload.response.DiscardShareResponse;
 import us.lsi.dp1.newcorporder.match.payload.response.InfiltrateResponse;
 import us.lsi.dp1.newcorporder.match.payload.response.UseConsultantResponse;
 
@@ -44,8 +46,7 @@ public class InfiltrateTurn extends Turn {
         if (infiltrate.getTotalNumberOfShares() >= 3) {
             currentState = State.TAKING_CONSULTANT;
         } else {
-            currentState = State.NONE;
-            turnSystem.passTurn();
+            this.endTurn();
         }
 
         return new InfiltrateResponse(currentState);
@@ -58,6 +59,17 @@ public class InfiltrateTurn extends Turn {
 
         match.getGeneralSupply().takeConsultant(request.getConsultant());
         turnSystem.getCurrentPlayer().getHeadquarter().addConsultant(request.getConsultant());
+    }
+
+    @Override
+    public DiscardShareResponse onDiscardShareRequest(DiscardShareRequest request) {
+        throw new IllegalStateException("invalid move for the current action");
+    }
+
+    @Override
+    public void endTurn() {
+        currentState = State.NONE;
+        turnSystem.passTurn();
     }
 
     private boolean isValidConsultant(ConsultantType consultant) {

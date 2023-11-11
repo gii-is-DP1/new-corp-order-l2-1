@@ -32,7 +32,7 @@ public class PlotTurn extends Turn {
         currentState = this.getNextState();
 
         if (currentState == State.NONE) {
-            endTurn();
+            this.endTurn();
         }
 
         return TakeShareResponse.builder()
@@ -71,20 +71,13 @@ public class PlotTurn extends Turn {
 
     @Override
     public DiscardShareResponse onDiscardShareRequest(DiscardShareRequest discardShareRequest) {
-        Preconditions.checkState(currentState == State.DISCARDING_SHARES_FROM_HAND,
+        Preconditions.checkState(currentState == PlotTurn.State.DISCARDING_SHARES_FROM_HAND,
             "cannot discard a share on your turn state");
-        Preconditions.checkState(turnSystem.getCurrentPlayer().getHand().size() - discardShareRequest.getSharesToDiscard().size() == MAX_SHARES_IN_HAND,
-            "you have to discard the necessary number of shares to have exactly %d left on your hand",
-            MAX_SHARES_IN_HAND);
-
-        // for each given conglomerate and number of shares, discard them from the player's hand
-        discardShareRequest.getSharesToDiscard().forEachEntry(turnSystem.getCurrentPlayer()::discardSharesFromHand);
-        endTurn();
-
-        return new DiscardShareResponse(match.getGeneralSupply().getOpenDisplay());
+        return super.onDiscardShareRequest(discardShareRequest);
     }
 
-    private void endTurn() {
+    @Override
+    public void endTurn() {
         // now, refill the missing shares in the open display
         int currentSharesInOpenDisplay = match.getGeneralSupply().getOpenDisplay().size();
         if (currentSharesInOpenDisplay < SHARES_IN_OPEN_DISPLAY) {

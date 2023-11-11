@@ -6,10 +6,12 @@ import us.lsi.dp1.newcorporder.match.ConsultantType;
 import us.lsi.dp1.newcorporder.match.Match;
 import us.lsi.dp1.newcorporder.match.company.CompanyTile;
 import us.lsi.dp1.newcorporder.match.payload.request.CompanyAbilityRequest;
+import us.lsi.dp1.newcorporder.match.payload.request.DiscardShareRequest;
 import us.lsi.dp1.newcorporder.match.payload.request.TakeOverRequest;
 import us.lsi.dp1.newcorporder.match.payload.request.UseConsultantRequest;
 import us.lsi.dp1.newcorporder.match.payload.request.ability.CompanyAbility;
 import us.lsi.dp1.newcorporder.match.payload.response.CompanyAbilityResponse;
+import us.lsi.dp1.newcorporder.match.payload.response.DiscardShareResponse;
 import us.lsi.dp1.newcorporder.match.payload.response.TakeOverResponse;
 import us.lsi.dp1.newcorporder.match.payload.response.UseConsultantResponse;
 
@@ -17,7 +19,7 @@ import java.util.List;
 
 public class TakeOverTurn extends Turn {
 
-    private enum State implements TurnState {SELECTING_CONSULTANT, TAKING_OVER, CHOOSING_ABILITY_PROPERTIES, NONE}
+    private enum State implements TurnState {SELECTING_CONSULTANT, TAKING_OVER, CHOOSING_ABILITY_PROPERTIES, DISCARDING_SHARES_FROM_HAND, NONE}
 
     private State currentState = State.SELECTING_CONSULTANT;
     private UseConsultantRequest useConsultantRequest;
@@ -40,8 +42,8 @@ public class TakeOverTurn extends Turn {
 
     private boolean isValidConsultant(ConsultantType consultant) {
         return consultant == null ||
-               consultant == ConsultantType.DEAL_MAKER ||
-               consultant == ConsultantType.MILITARY_CONTRACTOR;
+            consultant == ConsultantType.DEAL_MAKER ||
+            consultant == ConsultantType.MILITARY_CONTRACTOR;
     }
 
     @Override
@@ -114,10 +116,23 @@ public class TakeOverTurn extends Turn {
             .build();
     }
 
-    private void endTurn() {
+    @Override
+    public DiscardShareResponse onDiscardShareRequest(DiscardShareRequest discardShareRequest) {
+        Preconditions.checkState(currentState == State.DISCARDING_SHARES_FROM_HAND,
+            "cannot discard a share on your turn state");
+        return super.onDiscardShareRequest(discardShareRequest);
+    }
+
+    @Override
+    public void endTurn() {
         if (useConsultantRequest.getConsultant() == ConsultantType.DEAL_MAKER) {
             List<Conglomerate> shares = match.getGeneralSupply().takeConglomerateSharesFromDeck(2);
             shares.forEach(share -> turnSystem.getCurrentPlayer().addShareToHand(share));
+
+            if (turnSystem.getCurrentPlayer().getHand().size() > Match.MAX_SHARES_IN_HAND) {
+                currentState = State.DISCARDING_SHARES_FROM_HAND;
+                return;
+            }
         }
 
         currentState = State.NONE;

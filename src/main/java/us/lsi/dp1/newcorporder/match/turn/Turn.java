@@ -1,8 +1,11 @@
 package us.lsi.dp1.newcorporder.match.turn;
 
+import com.google.common.base.Preconditions;
 import us.lsi.dp1.newcorporder.match.Match;
 import us.lsi.dp1.newcorporder.match.payload.request.*;
 import us.lsi.dp1.newcorporder.match.payload.response.*;
+
+import static us.lsi.dp1.newcorporder.match.Match.MAX_SHARES_IN_HAND;
 
 public abstract class Turn {
 
@@ -19,7 +22,15 @@ public abstract class Turn {
     }
 
     public DiscardShareResponse onDiscardShareRequest(DiscardShareRequest request) {
-        throw new IllegalStateException("invalid move for the current action");
+        Preconditions.checkState(turnSystem.getCurrentPlayer().getHand().size() - request.getSharesToDiscard().size() == MAX_SHARES_IN_HAND,
+            "you have to discard the necessary number of shares to have exactly %d left on your hand",
+            MAX_SHARES_IN_HAND);
+
+        // for each given conglomerate and number of shares, discard them from the player's hand
+        request.getSharesToDiscard().forEachEntry(turnSystem.getCurrentPlayer()::discardSharesFromHand);
+        this.endTurn();
+
+        return new DiscardShareResponse(match.getGeneralSupply().getOpenDisplay());
     }
 
     public UseConsultantResponse onUseConsultantRequest(UseConsultantRequest request) {
@@ -42,4 +53,5 @@ public abstract class Turn {
         throw new IllegalStateException("invalid move for the current action");
     }
 
+    public abstract void endTurn();
 }

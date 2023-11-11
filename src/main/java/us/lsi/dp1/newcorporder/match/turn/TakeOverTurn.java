@@ -139,6 +139,11 @@ public class TakeOverTurn extends Turn {
         turnSystem.passTurn();
     }
 
+    @Override
+    public TurnState getCurrentState() {
+        return currentState;
+    }
+
     private void checkState(State state) {
         Preconditions.checkState(currentState == state, "invalid action for the current state (%s)", state);
     }

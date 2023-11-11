@@ -72,6 +72,11 @@ public class InfiltrateTurn extends Turn {
         turnSystem.passTurn();
     }
 
+    @Override
+    public TurnState getCurrentState() {
+        return currentState;
+    }
+
     private boolean isValidConsultant(ConsultantType consultant) {
         return consultant == null || consultant == ConsultantType.MEDIA_ADVISOR || consultant == ConsultantType.CORPORATE_LAWYER;
     }

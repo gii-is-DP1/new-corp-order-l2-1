@@ -9,13 +9,14 @@ import us.lsi.dp1.newcorporder.match.payload.request.CompanyAbilityRequest;
 import us.lsi.dp1.newcorporder.match.payload.request.TakeOverRequest;
 import us.lsi.dp1.newcorporder.match.payload.request.UseConsultantRequest;
 import us.lsi.dp1.newcorporder.match.payload.request.ability.CompanyAbility;
+import us.lsi.dp1.newcorporder.match.payload.response.TakeOverResponse;
 import us.lsi.dp1.newcorporder.match.payload.response.UseConsultantResponse;
 
 import java.util.List;
 
 public class TakeOverTurn extends Turn {
 
-    private enum State implements TurnState {SELECTING_CONSULTANT, TAKING_OVER, CHOOSING_ABILITY_PROPERTIES}
+    private enum State implements TurnState {SELECTING_CONSULTANT, TAKING_OVER, CHOOSING_ABILITY_PROPERTIES, NONE}
 
     private State currentState = State.SELECTING_CONSULTANT;
     private UseConsultantRequest useConsultantRequest;
@@ -43,21 +44,10 @@ public class TakeOverTurn extends Turn {
     }
 
     @Override
-    public void onTakeOverRequest(TakeOverRequest request) {
+    public TakeOverResponse onTakeOverRequest(TakeOverRequest request) {
         checkState(State.TAKING_OVER);
         takeOverRequest = request;
 
-        rotateCards(request);
-        takeOver(request);
-    }
-
-    private void rotateCards(TakeOverRequest request) {
-        Conglomerate type = request.getSourceCompany().getCurrentConglomerate();
-        int quantityToRotate = request.getAgents();
-        turnSystem.getCurrentPlayer().getHeadquarter().rotateConglomerates(type, quantityToRotate);
-    }
-
-    private void takeOver(TakeOverRequest request) {
         CompanyTile source = request.getSourceCompany();
         CompanyTile target = request.getTargetCompany();
 
@@ -66,25 +56,37 @@ public class TakeOverTurn extends Turn {
         Preconditions.checkState(match.getCompanyMatrix().countTilesControlledBy(target.getCurrentConglomerate()) > 1,
             "can't take the company over because it's controlled by the only agent of his conglomerate left");
 
+        return takeOver(source, target, request.getAgents());
+    }
+
+    private TakeOverResponse takeOver(CompanyTile source, CompanyTile target, int agents) {
         if (source.getCurrentConglomerate() == target.getCurrentConglomerate()) {
-            source.removeAgents(request.getAgents());
-            target.addAgents(request.getAgents());
-            turnSystem.passTurn();
+            this.rotateCards(source.getCurrentConglomerate(), agents);
+            source.removeAgents(agents);
+            target.addAgents(agents);
+
+            this.endTurn();
         } else {
             if (!isTakeOverSuccessful(source, target)) {
                 throw new IllegalArgumentException("unsuccessful attack");
             }
 
+            this.rotateCards(source.getCurrentConglomerate(), agents);
             target.takeOver(source.getCurrentConglomerate(), target.getAgents());
             turnSystem.getCurrentPlayer().getHeadquarter().captureAgent(target.getCurrentConglomerate());
 
             currentState = State.CHOOSING_ABILITY_PROPERTIES;
         }
 
-        if (useConsultantRequest.getConsultant() == ConsultantType.DEAL_MAKER) {
-            List<Conglomerate> shares = match.getGeneralSupply().takeConglomerateSharesFromDeck(2);
-            shares.forEach(share -> turnSystem.getCurrentPlayer().addShareToHand(share));
-        }
+        return TakeOverResponse.builder()
+            .hand(turnSystem.getCurrentPlayer().getHand())
+            .sourceConglomerate(source.getCurrentConglomerate())
+            .nextState(currentState)
+            .build();
+    }
+
+    private void rotateCards(Conglomerate conglomerate, int amount) {
+        turnSystem.getCurrentPlayer().getHeadquarter().rotateConglomerates(conglomerate, amount);
     }
 
     private boolean isTakeOverSuccessful(CompanyTile source, CompanyTile target) {
@@ -104,6 +106,16 @@ public class TakeOverTurn extends Turn {
             ability.activate(match, takeOverRequest);
         }
 
+        this.endTurn();
+    }
+
+    private void endTurn() {
+        if (useConsultantRequest.getConsultant() == ConsultantType.DEAL_MAKER) {
+            List<Conglomerate> shares = match.getGeneralSupply().takeConglomerateSharesFromDeck(2);
+            shares.forEach(share -> turnSystem.getCurrentPlayer().addShareToHand(share));
+        }
+
+        currentState = State.NONE;
         turnSystem.passTurn();
     }
 

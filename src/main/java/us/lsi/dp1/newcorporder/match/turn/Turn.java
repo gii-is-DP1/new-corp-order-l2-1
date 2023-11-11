@@ -30,7 +30,10 @@ public abstract class Turn {
         request.getSharesToDiscard().forEachEntry(turnSystem.getCurrentPlayer()::discardSharesFromHand);
         this.endTurn();
 
-        return new DiscardShareResponse(match.getGeneralSupply().getOpenDisplay());
+        return DiscardShareResponse.builder()
+            .openDisplay(match.getGeneralSupply().getOpenDisplay())
+            .nextState(this.getCurrentState())
+            .build();
     }
 
     public UseConsultantResponse onUseConsultantRequest(UseConsultantRequest request) {
@@ -54,4 +57,6 @@ public abstract class Turn {
     }
 
     public abstract void endTurn();
+
+    public abstract TurnState getCurrentState();
 }

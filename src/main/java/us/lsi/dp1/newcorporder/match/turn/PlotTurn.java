@@ -90,4 +90,9 @@ public class PlotTurn extends Turn {
 
         turnSystem.passTurn();
     }
+
+    @Override
+    public TurnState getCurrentState() {
+        return currentState;
+    }
 }

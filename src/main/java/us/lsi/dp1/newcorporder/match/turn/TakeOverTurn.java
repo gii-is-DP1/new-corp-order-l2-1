@@ -125,7 +125,7 @@ public class TakeOverTurn extends Turn {
 
     @Override
     public void endTurn() {
-        if (useConsultantRequest.getConsultant() == ConsultantType.DEAL_MAKER) {
+        if (this.isStateValidForDealMaker() && useConsultantRequest.getConsultant() == ConsultantType.DEAL_MAKER) {
             List<Conglomerate> shares = match.getGeneralSupply().takeConglomerateSharesFromDeck(2);
             shares.forEach(share -> turnSystem.getCurrentPlayer().addShareToHand(share));
 
@@ -137,6 +137,10 @@ public class TakeOverTurn extends Turn {
 
         currentState = State.NONE;
         turnSystem.passTurn();
+    }
+
+    private boolean isStateValidForDealMaker() {
+        return currentState == State.TAKING_OVER || currentState == State.CHOOSING_ABILITY_PROPERTIES;
     }
 
     @Override

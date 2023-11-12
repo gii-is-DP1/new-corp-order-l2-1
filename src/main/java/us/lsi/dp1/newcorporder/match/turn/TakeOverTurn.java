@@ -33,6 +33,7 @@ public class TakeOverTurn extends Turn {
     public UseConsultantResponse onUseConsultantRequest(UseConsultantRequest request) {
         checkState(State.SELECTING_CONSULTANT);
         Preconditions.checkArgument(isValidConsultant(request.getConsultant()), "invalid consultant for a take over turn");
+        checkValidConsultant(request.getConsultant());
 
         useConsultantRequest = request;
         currentState = State.TAKING_OVER;
@@ -42,8 +43,14 @@ public class TakeOverTurn extends Turn {
 
     private boolean isValidConsultant(ConsultantType consultant) {
         return consultant == null ||
-            consultant == ConsultantType.DEAL_MAKER ||
-            consultant == ConsultantType.MILITARY_CONTRACTOR;
+               consultant == ConsultantType.DEAL_MAKER ||
+               consultant == ConsultantType.MILITARY_CONTRACTOR;
+    }
+
+    private void checkValidConsultant(ConsultantType consultantType) {
+        if (consultantType == ConsultantType.DEAL_MAKER && match.getGeneralSupply().getConglomerateSharesLeftInDeck() < 2) {
+            throw new IllegalStateException("there are not enough shares left in deck to use the deal maker consultant");
+        }
     }
 
     @Override
@@ -53,32 +60,17 @@ public class TakeOverTurn extends Turn {
 
         CompanyTile source = request.getSourceCompany();
         CompanyTile target = request.getTargetCompany();
+        int agents = request.getAgents();
 
         Preconditions.checkState(source.getAgents() > request.getAgents(),
-            "cannot take the company over because the source company does not have the requested number of agents");
+            "cannot take over the company because the source company does not have the requested number of agents");
         Preconditions.checkState(match.getCompanyMatrix().countTilesControlledBy(target.getCurrentConglomerate()) > 1,
-            "can't take the company over because it's controlled by the only agent of his conglomerate left");
+            "can't take over the company because it's controlled by the only agent of their conglomerate left");
 
-        return takeOver(source, target, request.getAgents());
-    }
-
-    private TakeOverResponse takeOver(CompanyTile source, CompanyTile target, int agents) {
         if (source.getCurrentConglomerate() == target.getCurrentConglomerate()) {
-            this.rotateCards(source.getCurrentConglomerate(), agents);
-            source.removeAgents(agents);
-            target.addAgents(agents);
-
-            this.endTurn();
+            this.takeOverCompanyWithSameConglomerate(source, target, agents);
         } else {
-            if (!isTakeOverSuccessful(source, target)) {
-                throw new IllegalArgumentException("unsuccessful attack");
-            }
-
-            this.rotateCards(source.getCurrentConglomerate(), agents);
-            target.takeOver(source.getCurrentConglomerate(), target.getAgents());
-            turnSystem.getCurrentPlayer().getHeadquarter().captureAgent(target.getCurrentConglomerate());
-
-            currentState = State.CHOOSING_ABILITY_PROPERTIES;
+            this.takeOverCompanyWithDifferentConglomerate(source, target, agents);
         }
 
         return TakeOverResponse.builder()
@@ -88,13 +80,33 @@ public class TakeOverTurn extends Turn {
             .build();
     }
 
-    private void rotateCards(Conglomerate conglomerate, int amount) {
-        turnSystem.getCurrentPlayer().getHeadquarter().rotateConglomerates(conglomerate, amount);
+    private void takeOverCompanyWithSameConglomerate(CompanyTile source, CompanyTile target, int agents) {
+        this.rotateCards(source.getCurrentConglomerate(), agents);
+        source.removeAgents(agents);
+        target.addAgents(agents);
+
+        this.endTurn();
     }
 
-    private boolean isTakeOverSuccessful(CompanyTile source, CompanyTile target) {
+    private void takeOverCompanyWithDifferentConglomerate(CompanyTile source, CompanyTile target, int agents) {
+        if (!canTakeOver(source, target)) {
+            throw new IllegalArgumentException("unsuccessful attack");
+        }
+
+        this.rotateCards(source.getCurrentConglomerate(), agents);
+        target.takeOver(source.getCurrentConglomerate(), target.getAgents());
+        turnSystem.getCurrentPlayer().getHeadquarter().captureAgent(target.getCurrentConglomerate());
+
+        currentState = State.CHOOSING_ABILITY_PROPERTIES;
+    }
+
+    private boolean canTakeOver(CompanyTile source, CompanyTile target) {
         boolean useMilitaryContractor = useConsultantRequest.getConsultant() == ConsultantType.MILITARY_CONTRACTOR;
         return target.getAgents() < source.getAgents() || (useMilitaryContractor && target.getAgents() <= source.getAgents());
+    }
+
+    private void rotateCards(Conglomerate conglomerate, int amount) {
+        turnSystem.getCurrentPlayer().getHeadquarter().rotateConglomerates(conglomerate, amount);
     }
 
     @Override
@@ -125,7 +137,7 @@ public class TakeOverTurn extends Turn {
 
     @Override
     public void endTurn() {
-        if (useConsultantRequest.getConsultant() == ConsultantType.DEAL_MAKER) {
+        if (this.isStateValidForDealMaker() && useConsultantRequest.getConsultant() == ConsultantType.DEAL_MAKER) {
             List<Conglomerate> shares = match.getGeneralSupply().takeConglomerateSharesFromDeck(2);
             shares.forEach(share -> turnSystem.getCurrentPlayer().addShareToHand(share));
 
@@ -137,6 +149,10 @@ public class TakeOverTurn extends Turn {
 
         currentState = State.NONE;
         turnSystem.passTurn();
+    }
+
+    private boolean isStateValidForDealMaker() {
+        return currentState == State.TAKING_OVER || currentState == State.CHOOSING_ABILITY_PROPERTIES;
     }
 
     @Override

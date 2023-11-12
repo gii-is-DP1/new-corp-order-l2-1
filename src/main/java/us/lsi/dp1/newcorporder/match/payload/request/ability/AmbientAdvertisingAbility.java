@@ -1,19 +1,19 @@
 package us.lsi.dp1.newcorporder.match.payload.request.ability;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import us.lsi.dp1.newcorporder.match.Conglomerate;
 import us.lsi.dp1.newcorporder.match.Match;
 import us.lsi.dp1.newcorporder.match.company.CompanyType;
 import us.lsi.dp1.newcorporder.match.payload.request.TakeOverRequest;
-import us.lsi.dp1.newcorporder.match.player.Headquarter;
 import us.lsi.dp1.newcorporder.match.turn.TurnSystem;
 
 @Data
 public class AmbientAdvertisingAbility implements CompanyAbility {
 
-    private Headquarter hq;
-    private Conglomerate conglomerateToRotate;
-    private Boolean rotatesTwoCards;
+    @NotNull private Integer playerId;
+    @NotNull private Conglomerate conglomerateToRotate;
+    @NotNull private Boolean rotatesTwoCards;
 
     @Override
     public CompanyType getCompanyType() {
@@ -23,6 +23,6 @@ public class AmbientAdvertisingAbility implements CompanyAbility {
     @Override
     public void activate(Match match, TakeOverRequest takeOverRequest) {
         TurnSystem turnSystem = match.getTurnSystem();
-        hq.unrotateConglomerates(conglomerateToRotate, rotatesTwoCards ? 2 : 1);
+        match.getPlayer(this.playerId).getHeadquarter().unrotateConglomerates(conglomerateToRotate, rotatesTwoCards ? 2 : 1);
     }
 }

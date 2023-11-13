@@ -33,6 +33,8 @@ public class Match {
     @Getter private MatchState matchState = MatchState.WAITING;
     private final Map<Integer, MatchPlayer> players = new HashMap<>();
 
+    private MatchPlayer winner;
+
     private Match(int maxPlayers, MatchMode matchMode, String inviteCode, GeneralSupply generalSupply, CompanyMatrix companyMatrix) {
         this.maxPlayers = maxPlayers;
         this.matchMode = matchMode;
@@ -67,6 +69,7 @@ public class Match {
 
     public void end() {
         this.matchState = MatchState.FINISHED;
+        this.winner = this.players.values().stream().max(Comparator.comparingInt(this::getPlayerVP)).get();
         //TODO calculate VP, assign a winner
         //TODO generate and save stats
     }

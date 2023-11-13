@@ -6,7 +6,7 @@ import us.lsi.dp1.newcorporder.match.Conglomerate;
 import us.lsi.dp1.newcorporder.match.Match;
 import us.lsi.dp1.newcorporder.match.company.CompanyTile;
 import us.lsi.dp1.newcorporder.match.payload.CompanyTileReference;
-import us.lsi.dp1.newcorporder.match.payload.request.ConsultantRequest;
+import us.lsi.dp1.newcorporder.match.payload.request.UseConsultantRequest;
 
 @Data
 public class BasicInfiltrate implements Infiltrate {
@@ -21,10 +21,10 @@ public class BasicInfiltrate implements Infiltrate {
     }
 
     @Override
-    public void run(Match match, ConsultantRequest consultantRequests) {
-        CompanyTile tile = match.getCompanyMatrix().getTile(this.tile.getX(), this.tile.getY());
+    public void run(Match match, UseConsultantRequest useConsultantRequests) {
+        CompanyTile tile = this.tile.fromMatch(match);
 
-        Preconditions.checkState(consultantRequests.getConsultant() == null,
+        Preconditions.checkState(useConsultantRequests.getConsultant() == null,
             "the infiltrate must be the same type as the consultant used");
         Preconditions.checkArgument(tile.getCurrentConglomerate() != conglomerateType,
             "you cannot add agents to a tile that has agents from a different conglomerate");

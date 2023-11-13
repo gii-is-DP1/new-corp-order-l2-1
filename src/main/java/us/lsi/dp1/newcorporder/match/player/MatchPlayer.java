@@ -2,6 +2,7 @@ package us.lsi.dp1.newcorporder.match.player;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.*;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import us.lsi.dp1.newcorporder.match.Conglomerate;
 import us.lsi.dp1.newcorporder.match.ConsultantType;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+@EqualsAndHashCode(of = "playerId")
 public class MatchPlayer {
 
     @Getter private final Integer playerId;

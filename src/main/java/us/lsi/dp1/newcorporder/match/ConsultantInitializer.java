@@ -24,4 +24,9 @@ public class ConsultantInitializer {
         consultants.remove(randomIndex);
         return consultant;
     }
+
+    // for testing purposes
+    List<ConsultantType> getAvailableConsultants() {
+        return consultants;
+    }
 }

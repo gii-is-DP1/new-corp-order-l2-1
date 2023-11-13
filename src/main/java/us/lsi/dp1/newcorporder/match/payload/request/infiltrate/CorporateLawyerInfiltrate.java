@@ -7,7 +7,7 @@ import us.lsi.dp1.newcorporder.match.ConsultantType;
 import us.lsi.dp1.newcorporder.match.Match;
 import us.lsi.dp1.newcorporder.match.company.CompanyTile;
 import us.lsi.dp1.newcorporder.match.payload.CompanyTileReference;
-import us.lsi.dp1.newcorporder.match.payload.request.ConsultantRequest;
+import us.lsi.dp1.newcorporder.match.payload.request.UseConsultantRequest;
 
 import java.util.List;
 
@@ -22,8 +22,8 @@ public class CorporateLawyerInfiltrate implements Infiltrate {
     }
 
     @Override
-    public void run(Match match, ConsultantRequest consultantRequests) {
-        Preconditions.checkState(consultantRequests.getConsultant() == ConsultantType.CORPORATE_LAWYER,
+    public void run(Match match, UseConsultantRequest useConsultantRequests) {
+        Preconditions.checkState(useConsultantRequests.getConsultant() == ConsultantType.CORPORATE_LAWYER,
             "the infiltrate must be the same type as the consultant used");
         Preconditions.checkArgument(actions.size() == 2,
             "there must be 2 infiltrate actions when using the corporate lawyer consultant");
@@ -34,7 +34,7 @@ public class CorporateLawyerInfiltrate implements Infiltrate {
     }
 
     private void infiltrate(Match match, Conglomerate conglomerateType, int conglomerateShares, CompanyTileReference tileReference) {
-        CompanyTile tile = match.getCompanyMatrix().getTile(tileReference.getX(), tileReference.getY());
+        CompanyTile tile = tileReference.fromMatch(match);
 
         Preconditions.checkArgument(tile.getCurrentConglomerate() != conglomerateType,
             "you cannot add agents to a tile that has agents from a different conglomerate");

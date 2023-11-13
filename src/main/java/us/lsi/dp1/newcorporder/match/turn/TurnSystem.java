@@ -11,20 +11,24 @@ import java.util.List;
 
 public class TurnSystem {
 
-    private final Match match;
+    public static TurnSystem create() {
+        return new TurnSystem();
+    }
+
+    private Match match;
     @Getter private MatchPlayer currentPlayer;
     @Getter @Setter @Nullable private MatchPlayer lastPlayerBeforeMatchEnds = null;
     @Getter @Nullable private Turn currentTurn;
 
     private List<MatchPlayer> players;
 
-    public TurnSystem(Match match) {
-        this.match = match;
+    private TurnSystem() {
     }
 
-    public void init(List<MatchPlayer> players) {
+    public void init(Match match, List<MatchPlayer> players) {
+        this.match = match;
         this.players = players;
-        currentPlayer = players.get(0);
+        this.currentPlayer = players.get(0);
     }
 
     public void passTurn() {

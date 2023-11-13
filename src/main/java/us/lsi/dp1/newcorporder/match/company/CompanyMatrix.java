@@ -1,5 +1,7 @@
 package us.lsi.dp1.newcorporder.match.company;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Lists;
@@ -24,7 +26,10 @@ public class CompanyMatrix {
         return new CompanyMatrix();
     }
 
+    @JsonIgnore
     @Getter private MatchSize matchSize;
+
+    @JsonInclude
     private CompanyTile[] tiles;
 
     private CompanyMatrix() {
@@ -57,6 +62,10 @@ public class CompanyMatrix {
         Preconditions.checkArgument(y < this.matchSize.getColumns(), "matrix has only %d columns (y = %d)", this.matchSize.getColumns(), y);
 
         return tiles[x * matchSize.getColumns() + y];
+    }
+
+    public CompanyTile[] getTiles() {
+        return tiles.clone();
     }
 
     private static List<Company> createCompanies(MatchSize matchSize) {

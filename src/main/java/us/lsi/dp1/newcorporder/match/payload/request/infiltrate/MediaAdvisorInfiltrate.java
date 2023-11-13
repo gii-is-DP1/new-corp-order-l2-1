@@ -7,7 +7,7 @@ import us.lsi.dp1.newcorporder.match.ConsultantType;
 import us.lsi.dp1.newcorporder.match.Match;
 import us.lsi.dp1.newcorporder.match.company.CompanyTile;
 import us.lsi.dp1.newcorporder.match.payload.CompanyTileReference;
-import us.lsi.dp1.newcorporder.match.payload.request.ConsultantRequest;
+import us.lsi.dp1.newcorporder.match.payload.request.UseConsultantRequest;
 
 @Data
 public class MediaAdvisorInfiltrate implements Infiltrate {
@@ -24,10 +24,10 @@ public class MediaAdvisorInfiltrate implements Infiltrate {
     }
 
     @Override
-    public void run(Match match, ConsultantRequest consultantRequests) {
-        CompanyTile tile = match.getCompanyMatrix().getTile(this.tile.getX(), this.tile.getY());
+    public void run(Match match, UseConsultantRequest useConsultantRequests) {
+        CompanyTile tile = this.tile.fromMatch(match);
 
-        Preconditions.checkState(consultantRequests.getConsultant() == ConsultantType.MEDIA_ADVISOR,
+        Preconditions.checkState(useConsultantRequests.getConsultant() == ConsultantType.MEDIA_ADVISOR,
             "the infiltrate must be the same type as the consultant used");
         Preconditions.checkArgument(conglomerateType != extraConglomerate,
             "your extra conglomerate share cannot be the same type as your main conglomerate shares");

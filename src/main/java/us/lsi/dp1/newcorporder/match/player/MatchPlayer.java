@@ -60,7 +60,7 @@ public class MatchPlayer {
     }
 
     public int getParticipationPoints(Conglomerate conglomerateType) {
-        return headquarter.getTotalConglomeratesSharesOfAType(conglomerateType) +
-            (headquarter.getAgentsCapturedOfAType(conglomerateType) * 2);
+        return headquarter.getTotalConglomeratesShares(conglomerateType) +
+               (headquarter.getAgentsCaptured(conglomerateType) * 2);
     }
 }

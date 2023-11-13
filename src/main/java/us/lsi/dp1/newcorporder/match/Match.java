@@ -16,9 +16,10 @@ public class Match {
     public static Match create(int maxPlayers, MatchMode matchMode) {
         GeneralSupply generalSupply = GeneralSupply.create();
         CompanyMatrix companyMatrix = CompanyMatrix.create();
+        TurnSystem turnSystem = TurnSystem.create();
         String inviteCode = "foo"; // TODO make code random
 
-        return new Match(maxPlayers, matchMode, inviteCode, generalSupply, companyMatrix);
+        return new Match(maxPlayers, matchMode, inviteCode, generalSupply, companyMatrix, turnSystem);
     }
 
     @Getter private final int maxPlayers;
@@ -32,13 +33,17 @@ public class Match {
     @Getter private MatchState matchState = MatchState.WAITING;
     private final Map<Integer, MatchPlayer> players = new HashMap<>();
 
-    private Match(int maxPlayers, MatchMode matchMode, String inviteCode, GeneralSupply generalSupply, CompanyMatrix companyMatrix) {
+    Match(int maxPlayers, MatchMode matchMode, String inviteCode, GeneralSupply generalSupply, CompanyMatrix companyMatrix, TurnSystem turnSystem) {
         this.maxPlayers = maxPlayers;
         this.matchMode = matchMode;
         this.inviteCode = inviteCode;
         this.generalSupply = generalSupply;
         this.companyMatrix = companyMatrix;
-        this.turnSystem = new TurnSystem(this);
+        this.turnSystem = turnSystem;
+    }
+
+    public void addPlayer(MatchPlayer player) {
+        this.players.put(player.getPlayerId(), player);
     }
 
     public void init() {
@@ -47,7 +52,7 @@ public class Match {
 
         initPlayers();
 
-        turnSystem.init(new ArrayList<>(players.values()));
+        turnSystem.init(this, new ArrayList<>(players.values()));
         matchState = MatchState.PLAYING;
     }
 
@@ -64,22 +69,21 @@ public class Match {
         player.init(initialConsultant, initialHand);
     }
 
+    private List<Conglomerate> drawInitialHand() {
+        return generalSupply.takeConglomerateSharesFromDeck(INITIAL_CONGLOMERATE_SHARES_PER_PLAYER);
+    }
+
     public void end() {
         this.matchState = MatchState.FINISHED;
         //TODO calculate VP, assign a winner
         //TODO generate and save stats
     }
 
-    private List<Conglomerate> drawInitialHand() {
-        return generalSupply.takeConglomerateSharesFromDeck(INITIAL_CONGLOMERATE_SHARES_PER_PLAYER);
-    }
-
     public MatchPlayer getPlayer(int id) {
         return players.get(id);
     }
 
-    private Collection<MatchPlayer> getPlayers() {
+    public Collection<MatchPlayer> getPlayers() {
         return players.values();
     }
-
 }

@@ -64,6 +64,10 @@ public class CompanyMatrix {
         return tiles[x * matchSize.getColumns() + y];
     }
 
+    public CompanyTile[] getTiles() {
+        return tiles.clone();
+    }
+
     private static List<Company> createCompanies(MatchSize matchSize) {
         List<Company> companies = Lists.newArrayList(Company.values()); // using Guava's Lists to get a mutable list
         Collections.shuffle(companies);

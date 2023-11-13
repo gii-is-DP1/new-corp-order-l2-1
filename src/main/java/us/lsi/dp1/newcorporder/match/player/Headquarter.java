@@ -2,6 +2,7 @@ package us.lsi.dp1.newcorporder.match.player;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.HashMultiset;
+import com.google.common.collect.ImmutableMultiset;
 import com.google.common.collect.Multiset;
 import us.lsi.dp1.newcorporder.match.Conglomerate;
 import us.lsi.dp1.newcorporder.match.ConsultantType;
@@ -64,6 +65,13 @@ public class Headquarter {
      */
     public void removeConsultant(ConsultantType consultant) {
         this.consultants.remove(consultant);
+    }
+
+    /**
+     * Returns the consultants in this headquarter
+     */
+    public Multiset<ConsultantType> getConsultants() {
+        return ImmutableMultiset.copyOf(consultants);
     }
 
     /**

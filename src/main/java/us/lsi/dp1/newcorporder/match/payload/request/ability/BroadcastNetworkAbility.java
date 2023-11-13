@@ -26,23 +26,19 @@ public class BroadcastNetworkAbility implements CompanyAbility {
     public void activate(Match match, TakeOverRequest takeOverRequest) {
         CompanyTile firstTarget = this.firstTarget.fromMatch(match);
         CompanyTile sourceCompany = this.sourceCompany.fromMatch(match);
-        int agentsToMove = takeOverRequest.getAgents();
 
-        this.check(match, agentsToMove);
+        Preconditions.checkState(firstTarget.getCurrentConglomerate() == sourceCompany.getCurrentConglomerate(),
+            "the source company and targets must have agents of the same conglomerate type");
 
-        if (this.secondTarget == null)
-            firstTarget.addAgents(agentsToMove);
-        else {
+        firstTarget.addAgents(1);
+        if (this.secondTarget != null) {
             CompanyTile secondTarget = this.secondTarget.fromMatch(match);
-            firstTarget.addAgents(1);
+
+            Preconditions.checkState(secondTarget.getCurrentConglomerate() == sourceCompany.getCurrentConglomerate(),
+                "the source company and targets must have agents of the same conglomerate type");
+
             secondTarget.addAgents(1);
         }
-
-        sourceCompany.removeAgents(agentsToMove);
-    }
-
-    private void check(Match match, int agentsToMove) {
-        Preconditions.checkArgument(!(agentsToMove == 1 && this.secondTarget != null), "can't have second target with just one agent!");
-        Preconditions.checkArgument(agentsToMove == 1 || agentsToMove == 2, "must move one or two agents");
+        sourceCompany.removeAgents(this.secondTarget == null ? 1 : 2);
     }
 }

@@ -117,7 +117,7 @@ public class GeneralSupply {
      * @throws IllegalStateException if there are no enough conglomerate shares left in the deck to take
      */
     public List<Conglomerate> takeConglomerateSharesFromDeck(int sharesToTake) {
-        Preconditions.checkState(this.deck.size() < sharesToTake,
+        Preconditions.checkState(this.deck.size() >= sharesToTake,
             "there are no enough conglomerate shares left in the deck to take");
 
         List<Conglomerate> conglomerateShares = new ArrayList<>();
@@ -153,7 +153,7 @@ public class GeneralSupply {
      */
     public List<Conglomerate> revealConglomerateSharesToOpenDisplay(int sharesToTake) {
         Preconditions.checkArgument(sharesToTake > 0, "cannot reveal less than 1 share");
-        Preconditions.checkState(this.openDisplay.size() + sharesToTake > 5,
+        Preconditions.checkState(this.openDisplay.size() + sharesToTake <= 5,
             "open display size would be greater than 5");
 
         List<Conglomerate> sharesTaken = this.takeConglomerateSharesFromDeck(sharesToTake);

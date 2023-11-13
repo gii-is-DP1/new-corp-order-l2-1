@@ -86,10 +86,10 @@ public class Match {
     private List<MatchPlayer> rankPlayerParticipation(Conglomerate conglomerateType) {
         List<MatchPlayer> players = new ArrayList<>(this.players.values());
         return players.stream()
-            .sorted(Comparator.<MatchPlayer>comparingInt(x -> x.getParticipationPoints(conglomerateType)).reversed())
+            .sorted(Comparator.<MatchPlayer>comparingInt(x -> x.getParticipationPoints(conglomerateType))
+                .thenComparingInt(x -> x.getHeadquarter().getAgentsCapturedOfAType(conglomerateType))
+                .reversed())
             .toList();
-
-        //TODO añadir caso de empate (cambiar el Comparator)
     }
 
 
@@ -103,7 +103,7 @@ public class Match {
             numTilesControlled = companyMatrix.countTilesControlledBy(conglomerate);
             if (participationRanking.get(0).equals(player)) //Calcular puntuación 1º
                 pv *= 2 * numTilesControlled;
-            if (participationRanking.get(1).equals(player) && players.size() > 2)   //Calcular puntuación 2º
+            else if (participationRanking.get(1).equals(player) && players.size() > 2)   //Calcular puntuación 2º
                 pv += numTilesControlled;
             if (participationRanking.get(0).equals(player) && participationRanking.get(1).equals(player)) { //Calcular puntuación Secret Objectives
                 for (CompanyType companyType : player.getSecretObjectives()) {

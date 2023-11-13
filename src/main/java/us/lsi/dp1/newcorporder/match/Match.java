@@ -1,7 +1,10 @@
 package us.lsi.dp1.newcorporder.match;
 
+import com.google.common.collect.HashMultiset;
+import com.google.common.collect.Multiset;
 import lombok.Getter;
 import us.lsi.dp1.newcorporder.match.company.CompanyMatrix;
+import us.lsi.dp1.newcorporder.match.company.CompanyType;
 import us.lsi.dp1.newcorporder.match.player.MatchPlayer;
 import us.lsi.dp1.newcorporder.match.turn.TurnSystem;
 
@@ -75,7 +78,12 @@ public class Match {
 
     public void end() {
         this.matchState = MatchState.FINISHED;
-        //TODO calculate VP, assign a winner
+
+        Multiset<MatchPlayer> victoryPoints = this.calculateVictoryPoints();
+        MatchPlayer winner = victoryPoints.entrySet().stream()
+            .max(Comparator.comparingInt(Multiset.Entry::getCount))
+            .map(Multiset.Entry::getElement)
+            .orElseThrow();
         //TODO generate and save stats
     }
 
@@ -85,5 +93,40 @@ public class Match {
 
     public Collection<MatchPlayer> getPlayers() {
         return players.values();
+    }
+
+    private Multiset<MatchPlayer> calculateVictoryPoints() {
+        Multiset<MatchPlayer> points = HashMultiset.create();
+
+        for (Conglomerate conglomerate : Conglomerate.values()) {
+            List<MatchPlayer> participationRanking = rankPlayerParticipation(conglomerate)
+                .subList(0, players.size() > 2 ? 2 : 1);
+
+            int numTilesControlled = companyMatrix.countTilesControlledBy(conglomerate);
+
+            for (int i = 0; i < participationRanking.size(); i++) {
+                MatchPlayer player = participationRanking.get(i);
+                points.add(player, (2 - i) * numTilesControlled);
+
+                for (CompanyType companyType : player.getSecretObjectives()) {
+                    int numTilesControlledOfCompanyType = companyMatrix.countTilesControlledByWithCompany(conglomerate, companyType);
+                    points.add(player, 2 * numTilesControlledOfCompanyType);
+                }
+            }
+        }
+
+        for (MatchPlayer player : this.players.values()) {
+            points.add(player, player.getHeadquarter().getConsultantsVP());
+        }
+
+        return points;
+    }
+
+    private List<MatchPlayer> rankPlayerParticipation(Conglomerate conglomerateType) {
+        return this.players.values().stream()
+            .sorted(Comparator.<MatchPlayer>comparingInt(player -> player.getParticipationPoints(conglomerateType))
+                .thenComparingInt(x -> x.getHeadquarter().getAgentsCaptured(conglomerateType))
+                .reversed())
+            .toList();
     }
 }

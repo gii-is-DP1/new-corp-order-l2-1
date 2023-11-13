@@ -96,6 +96,15 @@ public class CompanyMatrix {
     }
 
     public int countTilesControlledBy(Conglomerate conglomerate) {
-        return (int) Arrays.stream(tiles).filter(t -> t.getCurrentConglomerate() == conglomerate).count();
+        return (int) Arrays.stream(tiles)
+            .filter(tile -> tile.getCurrentConglomerate() == conglomerate)
+            .count();
+    }
+
+    public int countTilesControlledByWithCompany(Conglomerate conglomerate, CompanyType companyType) {
+        return (int) Arrays.stream(tiles)
+            .filter(tile -> tile.getCurrentConglomerate() == conglomerate)
+            .filter(tile -> tile.getCompany().getType() == companyType)
+            .count();
     }
 }

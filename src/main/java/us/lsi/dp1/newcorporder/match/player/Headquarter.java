@@ -7,6 +7,9 @@ import com.google.common.collect.Multiset;
 import us.lsi.dp1.newcorporder.match.Conglomerate;
 import us.lsi.dp1.newcorporder.match.ConsultantType;
 
+import java.util.Comparator;
+import java.util.List;
+
 public class Headquarter {
 
     public static Headquarter create() {
@@ -168,5 +171,39 @@ public class Headquarter {
      */
     public int getUsedConglomerateShares(Conglomerate conglomerate) {
         return this.usedConglomerateShares.count(conglomerate);
+    }
+
+    public int getTotalConglomeratesShares(Conglomerate conglomerateType) {
+        return this.conglomerateShares.count(conglomerateType) + this.usedConglomerateShares.count(conglomerateType);
+    }
+
+    public int getAgentsCaptured(Conglomerate conglomerateType) {
+        return this.capturedAgents.count(conglomerateType);
+    }
+
+    public int getConsultantsVP() {
+        Multiset<ConsultantType> consultants = HashMultiset.create(this.consultants);
+        List<ConsultantType> bestMatchConsultants = rankBestConsultantToMatch(consultants);
+        int vp = 0;
+
+        // punto extra por tener 4 consultores diferentes
+        if (consultants.elementSet().size() >= 4) {
+            vp++;
+        }
+
+        while (consultants.size() > 1 && bestMatchConsultants.size() > 1) {
+            vp++;
+            consultants.remove(bestMatchConsultants.get(0), 1);
+            consultants.remove(bestMatchConsultants.get(1), 1);
+            bestMatchConsultants = rankBestConsultantToMatch(consultants);
+        }
+        return vp;
+    }
+
+    private List<ConsultantType> rankBestConsultantToMatch(Multiset<ConsultantType> consultants) {
+        return consultants.entrySet().stream()
+            .sorted(Comparator.<Multiset.Entry<ConsultantType>>comparingInt(Multiset.Entry::getCount).reversed())
+            .map(Multiset.Entry::getElement)
+            .toList();
     }
 }

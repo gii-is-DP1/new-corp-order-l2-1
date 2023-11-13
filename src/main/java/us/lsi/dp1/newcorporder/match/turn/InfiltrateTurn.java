@@ -27,11 +27,15 @@ public class InfiltrateTurn extends Turn {
     public UseConsultantResponse onUseConsultantRequest(UseConsultantRequest request) {
         checkState(State.SELECTING_CONSULTANT);
         long numDifferentConglomerates = turnSystem.getCurrentPlayer().getHand().entrySet().size();
-        Preconditions.checkArgument(request.getConsultant() == ConsultantType.MEDIA_ADVISOR && numDifferentConglomerates > 1, "you cannot use the Consultant 'Media Advisor' if you only have one type of conglomerate share in hand");
-        Preconditions.checkArgument(isValidConsultant(request.getConsultant()), "invalid consultant for an infiltrate turn");
 
-        useConsultantRequest = request;
-        currentState = State.INFILTRATE;
+        Preconditions.checkArgument(request.getConsultant() == ConsultantType.MEDIA_ADVISOR && numDifferentConglomerates > 1,
+            "you cannot use the Consultant 'Media Advisor' if you only have one type of conglomerate share in hand");
+        Preconditions.checkArgument(isValidConsultant(request.getConsultant()),
+            "invalid consultant for an infiltrate turn");
+
+        this.useConsultantRequest = request;
+        this.currentState = State.INFILTRATE;
+        this.turnSystem.getCurrentPlayer().getHeadquarter().removeConsultant(request.getConsultant());
 
         return new UseConsultantResponse(currentState);
     }
@@ -68,7 +72,7 @@ public class InfiltrateTurn extends Turn {
 
     @Override
     public void endTurn() {
-        currentState = State.NONE;
+        this.currentState = State.NONE;
         turnSystem.passTurn();
     }
 

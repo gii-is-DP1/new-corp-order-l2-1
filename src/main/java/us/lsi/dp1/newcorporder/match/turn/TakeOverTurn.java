@@ -32,19 +32,21 @@ public class TakeOverTurn extends Turn {
     @Override
     public UseConsultantResponse onUseConsultantRequest(UseConsultantRequest request) {
         checkState(State.SELECTING_CONSULTANT);
-        Preconditions.checkArgument(isValidConsultant(request.getConsultant()), "invalid consultant for a take over turn");
+        Preconditions.checkArgument(isValidConsultant(request.getConsultant()),
+            "invalid consultant for a take over turn");
         checkValidConsultant(request.getConsultant());
 
-        useConsultantRequest = request;
-        currentState = State.TAKING_OVER;
+        this.useConsultantRequest = request;
+        this.currentState = State.TAKING_OVER;
+        this.turnSystem.getCurrentPlayer().getHeadquarter().removeConsultant(request.getConsultant());
 
         return new UseConsultantResponse(currentState);
     }
 
     private boolean isValidConsultant(ConsultantType consultant) {
         return consultant == null ||
-               consultant == ConsultantType.DEAL_MAKER ||
-               consultant == ConsultantType.MILITARY_CONTRACTOR;
+            consultant == ConsultantType.DEAL_MAKER ||
+            consultant == ConsultantType.MILITARY_CONTRACTOR;
     }
 
     private void checkValidConsultant(ConsultantType consultantType) {
@@ -56,7 +58,7 @@ public class TakeOverTurn extends Turn {
     @Override
     public TakeOverResponse onTakeOverRequest(TakeOverRequest request) {
         checkState(State.TAKING_OVER);
-        takeOverRequest = request;
+        this.takeOverRequest = request;
 
         CompanyTile source = request.getSourceCompany();
         CompanyTile target = request.getTargetCompany();
@@ -95,9 +97,9 @@ public class TakeOverTurn extends Turn {
 
         this.rotateCards(source.getCurrentConglomerate(), agents);
         target.takeOver(source.getCurrentConglomerate(), target.getAgents());
-        turnSystem.getCurrentPlayer().getHeadquarter().captureAgent(target.getCurrentConglomerate());
+        this.turnSystem.getCurrentPlayer().getHeadquarter().captureAgent(target.getCurrentConglomerate());
 
-        currentState = State.CHOOSING_ABILITY_PROPERTIES;
+        this.currentState = State.CHOOSING_ABILITY_PROPERTIES;
     }
 
     private boolean canTakeOver(CompanyTile source, CompanyTile target) {
@@ -106,7 +108,7 @@ public class TakeOverTurn extends Turn {
     }
 
     private void rotateCards(Conglomerate conglomerate, int amount) {
-        turnSystem.getCurrentPlayer().getHeadquarter().rotateConglomerates(conglomerate, amount);
+        this.turnSystem.getCurrentPlayer().getHeadquarter().rotateConglomerates(conglomerate, amount);
     }
 
     @Override
@@ -147,8 +149,8 @@ public class TakeOverTurn extends Turn {
             }
         }
 
-        currentState = State.NONE;
-        turnSystem.passTurn();
+        this.currentState = State.NONE;
+        this.turnSystem.passTurn();
     }
 
     private boolean isStateValidForDealMaker() {

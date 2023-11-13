@@ -5,6 +5,7 @@ import us.lsi.dp1.newcorporder.match.Conglomerate;
 import us.lsi.dp1.newcorporder.match.ConsultantType;
 import us.lsi.dp1.newcorporder.match.Match;
 import us.lsi.dp1.newcorporder.match.company.CompanyTile;
+import us.lsi.dp1.newcorporder.match.payload.CompanyTileReference;
 import us.lsi.dp1.newcorporder.match.payload.request.CompanyAbilityRequest;
 import us.lsi.dp1.newcorporder.match.payload.request.DiscardShareRequest;
 import us.lsi.dp1.newcorporder.match.payload.request.TakeOverRequest;
@@ -60,10 +61,12 @@ public class TakeOverTurn extends Turn {
         checkState(State.TAKING_OVER);
         this.takeOverRequest = request;
 
-        CompanyTile source = request.getSourceCompany();
-        CompanyTile target = request.getTargetCompany();
+        CompanyTile source = request.getSourceCompany().fromMatch(match);
+        CompanyTile target = request.getTargetCompany().fromMatch(match);
         int agents = request.getAgents();
 
+        Preconditions.checkState(checkOrthogonalTile(request.getSourceCompany(), request.getTargetCompany()),
+            "the source and target tiles must be orthogonal");
         Preconditions.checkState(source.getAgents() > request.getAgents(),
             "cannot take over the company because the source company does not have the requested number of agents");
         Preconditions.checkState(match.getCompanyMatrix().countTilesControlledBy(target.getCurrentConglomerate()) > 1,
@@ -80,6 +83,12 @@ public class TakeOverTurn extends Turn {
             .sourceConglomerate(source.getCurrentConglomerate())
             .nextState(currentState)
             .build();
+    }
+
+    private boolean checkOrthogonalTile(CompanyTileReference tile1, CompanyTileReference tile2) {
+        int xJump = Math.abs(tile1.getX() - tile2.getX());
+        int yJump = Math.abs(tile1.getY() - tile2.getY());
+        return xJump <= 1 && yJump <= 1;
     }
 
     private void takeOverCompanyWithSameConglomerate(CompanyTile source, CompanyTile target, int agents) {
@@ -117,9 +126,8 @@ public class TakeOverTurn extends Turn {
 
         CompanyAbility ability = request.getCompanyAbility();
         if (ability != null) {
-            Preconditions.checkState(ability.getCompanyType() == takeOverRequest.getTargetCompany().getCompany().getType(),
+            Preconditions.checkState(ability.getCompanyType() == takeOverRequest.getTargetCompany().fromMatch(match).getCompany().getType(),
                 "the chosen ability must belong to the taken company type");
-
             ability.activate(match, takeOverRequest);
         }
 

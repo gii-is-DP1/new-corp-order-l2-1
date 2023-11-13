@@ -58,8 +58,8 @@ public class CompanyMatrix {
      * @return the tile at the given position
      */
     public CompanyTile getTile(int x, int y) {
-        Preconditions.checkArgument(x < this.matchSize.getRows(), "matrix has only %d rows (x = %d)", this.matchSize.getRows(), x);
-        Preconditions.checkArgument(y < this.matchSize.getColumns(), "matrix has only %d columns (y = %d)", this.matchSize.getColumns(), y);
+        Preconditions.checkArgument(x < this.matchSize.getRows() && x > 0, "matrix has only %d rows (x = %d)", this.matchSize.getRows(), x);
+        Preconditions.checkArgument(y < this.matchSize.getColumns() && y > 0, "matrix has only %d columns (y = %d)", this.matchSize.getColumns(), y);
 
         return tiles[x * matchSize.getColumns() + y];
     }

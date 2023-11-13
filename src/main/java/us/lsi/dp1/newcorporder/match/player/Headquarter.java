@@ -44,13 +44,42 @@ public class Headquarter {
         this.conglomerateShares.add(conglomerate, quantity);
     }
 
+    /**
+     * Add a share of the given conglomerate depending on whether it is rotated or not
+     *
+     * @param conglomerate the given conglomerate to add a share
+     * @param isRotated    if the given conglomerate is used
+     */
+    public void addConglomerate(Conglomerate conglomerate, Boolean isRotated) {
+        if (!isRotated) {
+            this.addConglomerates(conglomerate, 1);
+        } else {
+            this.usedConglomerateShares.add(conglomerate);
+        }
+    }
+
+    /**
+     * Remove the given quantity of shares to the given conglomerate
+     *
+     * @param conglomerate the given conglomerate to remove the given quantity of shares
+     * @param quantity the quantity of shares to remove
+     */
     public void removeConglomerates(Conglomerate conglomerate, int quantity) {
         this.conglomerateShares.remove(conglomerate, quantity);
     }
 
-    public void addConglomerate(Conglomerate conglomerate, Boolean isRotated) {
-        addConglomerates(conglomerate, 1);
-        if (isRotated) rotateConglomerates(conglomerate, 1);
+    /**
+     * Remove a share of the given conglomerate depending on whether it is rotated or not
+     *
+     * @param conglomerate the given conglomerate to remove a share
+     * @param isRotated    if the given conglomerate is used
+     */
+    public void removeConglomerate(Conglomerate conglomerate, Boolean isRotated) {
+        if (!isRotated) {
+            this.removeConglomerates(conglomerate, 1);
+        } else {
+            this.usedConglomerateShares.remove(conglomerate);
+        }
     }
 
     public void rotateConglomerates(Conglomerate type, int quantity) {
@@ -67,5 +96,25 @@ public class Headquarter {
             "not enough used conglomerate shares");
         this.conglomerateShares.add(type, quantity);
         this.usedConglomerateShares.remove(type, quantity);
+    }
+
+    /**
+     * Get how many shares are unused of the given conglomerate
+     *
+     * @param conglomerate the given conglomerate to get the quantity of shares unused
+     * @return how many shares are unused of the given conglomerate
+     */
+    public int getConglomerateShares(Conglomerate conglomerate) {
+        return this.conglomerateShares.count(conglomerate);
+    }
+
+    /**
+     * Get how many shares are used of the given conglomerate
+     *
+     * @param conglomerate the given conglomerate to get the quantity of shares used
+     * @return how many shares are used of the given conglomerate
+     */
+    public int getUsedConglomerateShares(Conglomerate conglomerate) {
+        return this.usedConglomerateShares.count(conglomerate);
     }
 }

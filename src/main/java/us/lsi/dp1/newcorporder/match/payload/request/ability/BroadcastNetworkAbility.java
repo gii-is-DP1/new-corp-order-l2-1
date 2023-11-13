@@ -22,18 +22,13 @@ public class BroadcastNetworkAbility implements CompanyAbility {
         return CompanyType.BROADCAST_NETWORK;
     }
 
-    private void check(Match match, int agentsToMove) {
-        Preconditions.checkArgument(!(agentsToMove == 1 && this.secondTarget != null), "can't have second target with just one agent!");
-        Preconditions.checkArgument(agentsToMove == 1 || agentsToMove == 2, "must move one or two agents");
-    }
-
     @Override
     public void activate(Match match, TakeOverRequest takeOverRequest) {
         CompanyTile firstTarget = this.firstTarget.fromMatch(match);
         CompanyTile sourceCompany = this.sourceCompany.fromMatch(match);
         int agentsToMove = takeOverRequest.getAgents();
 
-        check(match, agentsToMove);
+        this.check(match, agentsToMove);
 
         if (this.secondTarget == null)
             firstTarget.addAgents(agentsToMove);
@@ -44,5 +39,10 @@ public class BroadcastNetworkAbility implements CompanyAbility {
         }
 
         sourceCompany.removeAgents(agentsToMove);
+    }
+
+    private void check(Match match, int agentsToMove) {
+        Preconditions.checkArgument(!(agentsToMove == 1 && this.secondTarget != null), "can't have second target with just one agent!");
+        Preconditions.checkArgument(agentsToMove == 1 || agentsToMove == 2, "must move one or two agents");
     }
 }

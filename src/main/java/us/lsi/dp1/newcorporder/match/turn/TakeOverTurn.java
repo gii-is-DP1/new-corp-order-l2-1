@@ -66,7 +66,7 @@ public class TakeOverTurn extends Turn {
         int agents = request.getAgents();
 
         Preconditions.checkState(checkOrthogonalTile(request.getSourceCompany(), request.getTargetCompany()),
-            "the source and target tiles must be orthogonal");
+            "cannot take over a non-ortogonal tile");
         Preconditions.checkState(source.getAgents() > request.getAgents(),
             "cannot take over the company because the source company does not have the requested number of agents");
         Preconditions.checkState(match.getCompanyMatrix().countTilesControlledBy(target.getCurrentConglomerate()) > 1,
@@ -88,9 +88,8 @@ public class TakeOverTurn extends Turn {
     private boolean checkOrthogonalTile(CompanyTileReference tile1, CompanyTileReference tile2) {
         int xJump = Math.abs(tile1.getX() - tile2.getX());
         int yJump = Math.abs(tile1.getY() - tile2.getY());
-        return xJump <= 1 && yJump <= 1;
+        return (xJump == 0 && yJump == 1) || (xJump == 1 && yJump == 0);
     }
-
     private void takeOverCompanyWithSameConglomerate(CompanyTile source, CompanyTile target, int agents) {
         this.rotateCards(source.getCurrentConglomerate(), agents);
         source.removeAgents(agents);

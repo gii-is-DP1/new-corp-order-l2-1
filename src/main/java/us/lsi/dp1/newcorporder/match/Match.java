@@ -2,6 +2,7 @@ package us.lsi.dp1.newcorporder.match;
 
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
+import lombok.Builder;
 import lombok.Getter;
 import us.lsi.dp1.newcorporder.match.company.CompanyMatrix;
 import us.lsi.dp1.newcorporder.match.company.CompanyType;
@@ -36,6 +37,7 @@ public class Match {
     @Getter private MatchState matchState = MatchState.WAITING;
     private final Map<Integer, MatchPlayer> players = new HashMap<>();
 
+    @Builder
     Match(int maxPlayers, MatchMode matchMode, String inviteCode, GeneralSupply generalSupply, CompanyMatrix companyMatrix, TurnSystem turnSystem) {
         this.maxPlayers = maxPlayers;
         this.matchMode = matchMode;

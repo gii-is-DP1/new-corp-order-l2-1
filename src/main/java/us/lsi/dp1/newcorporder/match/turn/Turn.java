@@ -28,11 +28,9 @@ public abstract class Turn {
 
         // for each given conglomerate and number of shares, discard them from the player's hand
         request.getSharesToDiscard().forEachEntry(turnSystem.getCurrentPlayer()::discardSharesFromHand);
-        this.endTurn();
 
         return DiscardShareResponse.builder()
             .openDisplay(match.getGeneralSupply().getOpenDisplay())
-            .nextState(this.getCurrentState())
             .build();
     }
 
@@ -55,8 +53,4 @@ public abstract class Turn {
     public CompanyAbilityResponse onCompanyAbilityRequest(CompanyAbilityRequest request) {
         throw new IllegalStateException("invalid move for the current action");
     }
-
-    public abstract void endTurn();
-
-    public abstract TurnState getCurrentState();
 }

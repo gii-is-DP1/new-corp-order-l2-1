@@ -43,12 +43,16 @@ public class MatchPlayer {
     }
 
     public void addShareToHand(Conglomerate conglomerate) {
-        this.hand.add(conglomerate);
+        this.addSharesToHand(conglomerate, 1);
+    }
+
+    public void addSharesToHand(Conglomerate conglomerate, int amount) {
+        this.hand.add(conglomerate, amount);
     }
 
     public void discardSharesFromHand(Conglomerate conglomerate, int sharesToDiscard) {
         Preconditions.checkState(this.hand.count(conglomerate) >= sharesToDiscard,
-            "cannot discard more shares than you have on your hand");
+            "you don't have enough shares of the given conglomerate to discard");
 
         this.hand.remove(conglomerate, sharesToDiscard);
     }

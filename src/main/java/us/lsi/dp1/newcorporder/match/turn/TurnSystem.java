@@ -3,7 +3,6 @@ package us.lsi.dp1.newcorporder.match.turn;
 import com.google.common.base.Preconditions;
 import jakarta.annotation.Nullable;
 import lombok.Getter;
-import lombok.Setter;
 import us.lsi.dp1.newcorporder.match.Match;
 import us.lsi.dp1.newcorporder.match.player.MatchPlayer;
 
@@ -17,7 +16,7 @@ public class TurnSystem {
 
     private Match match;
     @Getter private MatchPlayer currentPlayer;
-    @Getter @Setter @Nullable private MatchPlayer lastPlayerBeforeMatchEnds = null;
+    @Getter @Nullable private MatchPlayer lastPlayerBeforeMatchEnds = null;
     @Getter @Nullable private Turn currentTurn;
 
     private List<MatchPlayer> players;
@@ -29,18 +28,6 @@ public class TurnSystem {
         this.match = match;
         this.players = players;
         this.currentPlayer = players.get(0);
-    }
-
-    public void passTurn() {
-        if (lastPlayerBeforeMatchEnds == currentPlayer) {
-            this.match.end();
-            return;
-        }
-
-        int currentPlayerIndex = players.indexOf(currentPlayer);
-        currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
-        MatchPlayer currentPlayer = players.get(currentPlayerIndex);
-        passTurnTo(currentPlayer);
     }
 
     public void selectAction(Action action) {
@@ -55,9 +42,31 @@ public class TurnSystem {
         }
     }
 
+    public void passTurn() {
+        if (lastPlayerBeforeMatchEnds == currentPlayer) {
+            this.match.end();
+            return;
+        }
+
+        int currentPlayerIndex = players.indexOf(currentPlayer);
+        currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
+        MatchPlayer currentPlayer = players.get(currentPlayerIndex);
+        passTurnTo(currentPlayer);
+    }
+
     private void passTurnTo(MatchPlayer player) {
         currentPlayer = player;
         currentTurn = null;
     }
 
+    public void activateFinalRound() {
+        Preconditions.checkState(this.lastPlayerBeforeMatchEnds == null,
+            "final round is already activated");
+        this.lastPlayerBeforeMatchEnds = this.currentPlayer;
+    }
+
+    // for testing purposes
+    void setCurrentPlayer(MatchPlayer currentPlayer) {
+        this.currentPlayer = currentPlayer;
+    }
 }

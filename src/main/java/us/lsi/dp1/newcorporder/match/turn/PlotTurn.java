@@ -71,13 +71,17 @@ public class PlotTurn extends Turn {
 
     @Override
     public DiscardShareResponse onDiscardShareRequest(DiscardShareRequest discardShareRequest) {
-        Preconditions.checkState(currentState == PlotTurn.State.DISCARDING_SHARES_FROM_HAND,
+        Preconditions.checkState(currentState == State.DISCARDING_SHARES_FROM_HAND,
             "cannot discard a share on your turn state");
-        return super.onDiscardShareRequest(discardShareRequest);
+
+        DiscardShareResponse response = super.onDiscardShareRequest(discardShareRequest);
+        this.endTurn();
+        response.setNextState(this.currentState);
+
+        return response;
     }
 
-    @Override
-    public void endTurn() {
+    void endTurn() {
         // now, refill the missing shares in the open display
         int currentSharesInOpenDisplay = match.getGeneralSupply().getOpenDisplay().size();
         if (currentSharesInOpenDisplay < SHARES_IN_OPEN_DISPLAY) {
@@ -88,11 +92,12 @@ public class PlotTurn extends Turn {
             }
         }
 
+        currentState = this.getNextState();
         turnSystem.passTurn();
     }
 
-    @Override
-    public TurnState getCurrentState() {
-        return currentState;
+    // for testing purposes
+    void setCurrentState(State state) {
+        this.currentState = state;
     }
 }

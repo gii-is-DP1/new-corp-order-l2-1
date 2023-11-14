@@ -70,15 +70,9 @@ public class InfiltrateTurn extends Turn {
         throw new IllegalStateException("invalid move for the current action");
     }
 
-    @Override
-    public void endTurn() {
+    void endTurn() {
         this.currentState = State.NONE;
         turnSystem.passTurn();
-    }
-
-    @Override
-    public TurnState getCurrentState() {
-        return currentState;
     }
 
     private boolean isValidConsultant(ConsultantType consultant) {

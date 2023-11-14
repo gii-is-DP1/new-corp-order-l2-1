@@ -46,8 +46,8 @@ public class TakeOverTurn extends Turn {
 
     private boolean isValidConsultant(ConsultantType consultant) {
         return consultant == null ||
-            consultant == ConsultantType.DEAL_MAKER ||
-            consultant == ConsultantType.MILITARY_CONTRACTOR;
+               consultant == ConsultantType.DEAL_MAKER ||
+               consultant == ConsultantType.MILITARY_CONTRACTOR;
     }
 
     private void checkValidConsultant(ConsultantType consultantType) {
@@ -90,6 +90,7 @@ public class TakeOverTurn extends Turn {
         int yJump = Math.abs(tile1.getY() - tile2.getY());
         return (xJump == 0 && yJump == 1) || (xJump == 1 && yJump == 0);
     }
+
     private void takeOverCompanyWithSameConglomerate(CompanyTile source, CompanyTile target, int agents) {
         this.rotateCards(source.getCurrentConglomerate(), agents);
         source.removeAgents(agents);
@@ -141,11 +142,15 @@ public class TakeOverTurn extends Turn {
     public DiscardShareResponse onDiscardShareRequest(DiscardShareRequest discardShareRequest) {
         Preconditions.checkState(currentState == State.DISCARDING_SHARES_FROM_HAND,
             "cannot discard a share on your turn state");
-        return super.onDiscardShareRequest(discardShareRequest);
+
+        DiscardShareResponse response = super.onDiscardShareRequest(discardShareRequest);
+        this.endTurn();
+        response.setNextState(this.currentState);
+
+        return response;
     }
 
-    @Override
-    public void endTurn() {
+    void endTurn() {
         if (this.isStateValidForDealMaker() && useConsultantRequest.getConsultant() == ConsultantType.DEAL_MAKER) {
             List<Conglomerate> shares = match.getGeneralSupply().takeConglomerateSharesFromDeck(2);
             shares.forEach(share -> turnSystem.getCurrentPlayer().addShareToHand(share));
@@ -162,11 +167,6 @@ public class TakeOverTurn extends Turn {
 
     private boolean isStateValidForDealMaker() {
         return currentState == State.TAKING_OVER || currentState == State.CHOOSING_ABILITY_PROPERTIES;
-    }
-
-    @Override
-    public TurnState getCurrentState() {
-        return currentState;
     }
 
     private void checkState(State state) {

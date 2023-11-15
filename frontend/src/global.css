@@ -1,4 +1,14 @@
-.handcontainer{
+.cardContainer{
     height: 200px;
     display: flex;
+}
+
+.cardElement{
+    height: 200px;
+    display: block;
+
+}
+
+.cardElement img{
+    max-height:100%;
 }

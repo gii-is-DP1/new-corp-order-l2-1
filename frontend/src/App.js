@@ -5,7 +5,7 @@ import {ErrorBoundary} from "react-error-boundary";
 import tokenService from "./services/token.service";
 import SwaggerDocs from "./public/swagger";
 import {AiFillCalculator} from "react-icons/ai";
-import Match from "./Match/Match"
+import Match from "./match/Match"
 //import {Match} from "msw";
 
 function ErrorFallback({error, resetErrorBoundary}) {

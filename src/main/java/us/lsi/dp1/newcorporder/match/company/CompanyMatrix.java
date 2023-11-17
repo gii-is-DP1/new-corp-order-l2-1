@@ -6,6 +6,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multiset;
+import lombok.Builder;
 import lombok.Getter;
 import us.lsi.dp1.newcorporder.match.Conglomerate;
 import us.lsi.dp1.newcorporder.match.MatchSize;
@@ -33,6 +34,19 @@ public class CompanyMatrix {
     private CompanyTile[] tiles;
 
     private CompanyMatrix() {
+    }
+
+    /*
+    @Builder
+    private CompanyMatrix(MatchSize matchSize, CompanyTile... tiles) {
+        this.matchSize = matchSize;
+        this.tiles = tiles;
+    }
+    */
+
+    @Builder CompanyMatrix(MatchSize matchSize, List<CompanyTile> tiles) {
+        this.matchSize = matchSize;
+        this.tiles = tiles.toArray(new CompanyTile[tiles.size()]);
     }
 
     public void init(MatchSize matchSize) {

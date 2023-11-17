@@ -6,7 +6,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class HeadquarterTest {
 
     @Test
-    void testGetConsultantsVP() {
+    void whenCalculatingConsultantVP_ExtraPointIsEarned() {
         Headquarter headquarter = Headquarter.create();
         headquarter.addConsultant(ConsultantType.CORPORATE_LAWYER);
         headquarter.addConsultant(ConsultantType.MEDIA_ADVISOR);
@@ -14,4 +14,15 @@ public class HeadquarterTest {
         headquarter.addConsultant(ConsultantType.DEAL_MAKER);
         assertThat(headquarter.getConsultantsVP()).isEqualTo(3);
     }
+
+    @Test
+    void whenCalculatingConsultantVP_CannotMatchTheSameConsultant(){
+        Headquarter headquarter = Headquarter.create();
+        headquarter.addConsultant(ConsultantType.CORPORATE_LAWYER);
+        headquarter.addConsultant(ConsultantType.MEDIA_ADVISOR);
+        headquarter.addConsultant(ConsultantType.MEDIA_ADVISOR);
+        headquarter.addConsultant(ConsultantType.MEDIA_ADVISOR);
+        assertThat(headquarter.getConsultantsVP()).isEqualTo(1);
+    }
+
 }

@@ -3,6 +3,7 @@ package us.lsi.dp1.newcorporder.match;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
 import lombok.Getter;
+import lombok.Setter;
 import us.lsi.dp1.newcorporder.match.company.CompanyMatrix;
 import us.lsi.dp1.newcorporder.match.company.CompanyType;
 import us.lsi.dp1.newcorporder.match.player.MatchPlayer;
@@ -30,7 +31,7 @@ public class Match {
     @Getter private final String inviteCode;
 
     @Getter private final GeneralSupply generalSupply;
-    @Getter private final CompanyMatrix companyMatrix;
+    @Getter @Setter private final CompanyMatrix companyMatrix;
     @Getter private final TurnSystem turnSystem;
 
     @Getter private MatchState matchState = MatchState.WAITING;
@@ -95,7 +96,7 @@ public class Match {
         return players.values();
     }
 
-    private Multiset<MatchPlayer> calculateVictoryPoints() {
+    public Multiset<MatchPlayer> calculateVictoryPoints() {
         Multiset<MatchPlayer> points = HashMultiset.create();
 
         for (Conglomerate conglomerate : Conglomerate.values()) {
@@ -112,6 +113,7 @@ public class Match {
                     int numTilesControlledOfCompanyType = companyMatrix.countTilesControlledByWithCompany(conglomerate, companyType);
                     points.add(player, 2 * numTilesControlledOfCompanyType);
                 }
+
             }
         }
 
@@ -122,11 +124,13 @@ public class Match {
         return points;
     }
 
-    private List<MatchPlayer> rankPlayerParticipation(Conglomerate conglomerateType) {
+    public List<MatchPlayer> rankPlayerParticipation(Conglomerate conglomerateType) {
         return this.players.values().stream()
             .sorted(Comparator.<MatchPlayer>comparingInt(player -> player.getParticipationPoints(conglomerateType))
                 .thenComparingInt(x -> x.getHeadquarter().getAgentsCaptured(conglomerateType))
                 .reversed())
             .toList();
     }
+
+
 }

@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.ImmutableMultiset;
 import com.google.common.collect.Multiset;
+import lombok.Builder;
 import us.lsi.dp1.newcorporder.match.Conglomerate;
 import us.lsi.dp1.newcorporder.match.ConsultantType;
 
@@ -23,6 +24,15 @@ public class Headquarter {
 
     private Headquarter() {
     }
+
+    @Builder
+    private Headquarter(Multiset<Conglomerate> capturedAgents, Multiset<ConsultantType> consultants, Multiset<Conglomerate> conglomerateShares, Multiset<Conglomerate> usedConglomerateShares) {
+        this.capturedAgents.addAll(capturedAgents);
+        this.consultants.addAll(consultants);
+        this.conglomerateShares.addAll(conglomerateShares);
+        this.usedConglomerateShares.addAll(usedConglomerateShares);
+    }
+
 
     /**
      * Add an agent of the given conglomerate to captured agents
@@ -105,7 +115,7 @@ public class Headquarter {
      * Remove the given quantity of shares to the given conglomerate
      *
      * @param conglomerate the given conglomerate to remove the given quantity of shares
-     * @param quantity the quantity of shares to remove
+     * @param quantity     the quantity of shares to remove
      */
     public void removeConglomerates(Conglomerate conglomerate, int quantity) {
         this.conglomerateShares.remove(conglomerate, quantity);
@@ -185,12 +195,10 @@ public class Headquarter {
         Multiset<ConsultantType> consultants = HashMultiset.create(this.consultants);
         List<ConsultantType> bestMatchConsultants = rankBestConsultantToMatch(consultants);
         int vp = 0;
-
         // punto extra por tener 4 consultores diferentes
         if (consultants.elementSet().size() >= 4) {
             vp++;
         }
-
         while (consultants.size() > 1 && bestMatchConsultants.size() > 1) {
             vp++;
             consultants.remove(bestMatchConsultants.get(0), 1);

@@ -35,7 +35,7 @@ function App() {
         <div>
             <ErrorBoundary FallbackComponent={ErrorFallback}>
                 <Routes>
-                    <Route path="/match" element={<Match/>}/>
+                    <Route path="/match/:id" element={<Match/>}/>
                     <Route path="/docs" element={<SwaggerDocs/>}/>
                 </Routes>
             </ErrorBoundary>

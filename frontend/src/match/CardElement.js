@@ -4,4 +4,3 @@ function CardElement(props) {
 }
 
 export default CardElement;
-1

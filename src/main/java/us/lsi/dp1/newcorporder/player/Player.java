@@ -1,22 +1,41 @@
 package us.lsi.dp1.newcorporder.player;
 
-import jakarta.persistence.*;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.Size;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import us.lsi.dp1.newcorporder.model.BaseEntity;
-import us.lsi.dp1.newcorporder.user.User;
+import lombok.experimental.SuperBuilder;
+import us.lsi.dp1.newcorporder.model.NamedEntity;
+
+import java.time.LocalDate;
 
 @Getter
 @Setter
-@Entity
+@EqualsAndHashCode(of = "id")
+@SuperBuilder
 @Table(name = "players")
+@Entity
+public class Player extends NamedEntity {
 
-public class Player extends BaseEntity {
+    @Size(max=32)
+    private String username;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user", referencedColumnName = "username") private User user;
+    @Size(max=32)
+    private String email;
 
-    public String toString() {return user.getUsername();}
+    private String picture;
 
+    private String password;
 
+    private LocalDate firstSeen;
+
+    private LocalDate lastSeen;
+
+    public Player() {
+    }
 }

@@ -1,12 +1,21 @@
 package us.lsi.dp1.newcorporder.player;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.dao.DataAccessException;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
+import us.lsi.dp1.newcorporder.user.User;
+
+import java.util.List;
+import java.util.Optional;
 
 public interface PlayerRepository extends CrudRepository<Player, Integer> {
-    Page<Player> findAllPlayers(Pageable pageable);
+    @Override
+    List<Player> findAll();
 
-    Player findPlayerByUsername(@Param("username") String username);
+    @Override
+    Optional<Player> findById(Integer integer);
+
+
 }

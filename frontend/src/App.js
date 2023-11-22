@@ -6,6 +6,7 @@ import tokenService from "./services/token.service";
 import SwaggerDocs from "./public/swagger";
 import {AiFillCalculator} from "react-icons/ai";
 import Match from "./match/Match"
+import AppNavbar from "./AppNavbar";
 //import {Match} from "msw";
 
 function ErrorFallback({error, resetErrorBoundary}) {
@@ -38,6 +39,7 @@ function App() {
                     <Route path="/match/:id" element={<Match/>}/>
                     <Route path="/docs" element={<SwaggerDocs/>}/>
                 </Routes>
+                <AppNavbar/>
             </ErrorBoundary>
         </div>
     );

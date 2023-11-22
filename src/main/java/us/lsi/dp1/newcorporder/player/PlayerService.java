@@ -1,35 +1,48 @@
 package us.lsi.dp1.newcorporder.player;
-
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.beans.BeanUtils;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import us.lsi.dp1.newcorporder.exceptions.ResourceNotFoundException;
 
 @Service
-
 public class PlayerService {
-    private PlayerRepository playerRepository;
 
-    @Autowired
+    private final PlayerRepository playerRepository;
+
     public PlayerService(PlayerRepository playerRepository) {
         this.playerRepository = playerRepository;
     }
 
-    public Player findByUsername(String username) {
-        return this.playerRepository.findPlayerByUsername(username);
+    @Transactional(readOnly = true)
+    public Iterable<Player> findAll() {
+        return this.playerRepository.findAll();
     }
 
-    public void save(@Valid Player player) {
-        this.playerRepository.save(player);
+    @Transactional(readOnly = true)
+    public Player findById(Integer id) {
+        return this.playerRepository
+            .findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Player", "id", id));
     }
 
-    public Page<Player> getAllPlayers(Pageable pageable) {
-        return playerRepository.findAllPlayers(pageable);
+    @Transactional
+    public Player save(@Valid Player player) throws DataAccessException {
+        return playerRepository.save(player);
     }
 
-    public Player findById(Integer playerId) {
-        return this.playerRepository.findById(playerId).get();
+    @Transactional
+    public Player updatePlayer(@Valid Player player, Integer idToUpdate) {
+        Player toUpdate = findById(idToUpdate);
+        BeanUtils.copyProperties(player, toUpdate, "id");
+        playerRepository.save(toUpdate);
+        return toUpdate;
     }
 
+    @Transactional
+    public void deletePlayer(Integer id) {
+        Player toDelete = findById(id);
+        playerRepository.delete(toDelete);
+    }
 }

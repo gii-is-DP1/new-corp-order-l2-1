@@ -2,6 +2,7 @@ import Hand from "./Hand"
 import {Link, useParams} from "react-router-dom";
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
+import BaseButton, {buttonContext, buttonContexts, buttonStyle, buttonStyles} from "../components/BaseButton";
 
 function Match() {
     const {id} = useParams();
@@ -100,7 +101,8 @@ function Player(props) {
                     : <p>{props.player.username}</p>
             }
             {props.isAdmin
-                ? <button className="btn btn-danger"> Kick</button>
+                ?
+                <BaseButton buttonStyle={buttonStyles.primary} buttonContext={buttonContexts.light}>Kick</BaseButton>
                 : <></>
             }
         </div>

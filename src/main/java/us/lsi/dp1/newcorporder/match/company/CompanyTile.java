@@ -1,6 +1,7 @@
 package us.lsi.dp1.newcorporder.match.company;
 
 import com.google.common.base.Preconditions;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,6 +17,14 @@ public class CompanyTile {
     private Conglomerate currentConglomerate;
     @Setter
     private int agents = 1;
+
+    @Builder
+    private CompanyTile(Conglomerate currentConglomerate, int agents) {
+        this.company = null;
+        this.currentConglomerate = currentConglomerate;
+        this.agents = agents;
+    }
+
 
     public CompanyTile(Company company, Conglomerate currentConglomerate) {
         this.company = company;

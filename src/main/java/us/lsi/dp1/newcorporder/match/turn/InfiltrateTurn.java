@@ -1,6 +1,7 @@
 package us.lsi.dp1.newcorporder.match.turn;
 
 import com.google.common.base.Preconditions;
+import lombok.Builder;
 import us.lsi.dp1.newcorporder.match.ConsultantType;
 import us.lsi.dp1.newcorporder.match.Match;
 import us.lsi.dp1.newcorporder.match.payload.request.DiscardShareRequest;
@@ -11,16 +12,23 @@ import us.lsi.dp1.newcorporder.match.payload.request.infiltrate.Infiltrate;
 import us.lsi.dp1.newcorporder.match.payload.response.DiscardShareResponse;
 import us.lsi.dp1.newcorporder.match.payload.response.InfiltrateResponse;
 import us.lsi.dp1.newcorporder.match.payload.response.UseConsultantResponse;
-
 public class InfiltrateTurn extends Turn {
 
-    private enum State implements TurnState {SELECTING_CONSULTANT, INFILTRATE, TAKING_CONSULTANT, NONE}
+    public enum State implements TurnState {SELECTING_CONSULTANT, INFILTRATE, TAKING_CONSULTANT, NONE}
 
     private State currentState = InfiltrateTurn.State.SELECTING_CONSULTANT;
     private UseConsultantRequest useConsultantRequest;
 
     public InfiltrateTurn(Match match) {
         super(match);
+    }
+
+
+    @Builder
+    private InfiltrateTurn(Match match, State currentState, UseConsultantRequest useConsultantRequest) {
+        super(match);
+        this.currentState = currentState;
+        this.useConsultantRequest = useConsultantRequest;
     }
 
     @Override

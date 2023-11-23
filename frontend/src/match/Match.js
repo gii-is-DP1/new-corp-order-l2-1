@@ -1,16 +1,23 @@
 import {useParams} from "react-router-dom";
 import {useState} from "react";
-import BaseButton, {black, buttonContext, buttonContexts, buttonStyle, buttonStyles, white} from "../components/Button";
+import BaseButton, {buttonContexts, buttonStyles} from "../components/Button";
 import GoBackButton from "../components/GoBackButton";
 import BaseModal from "../components/BaseModal";
 import ProfilePicture from "../components/ProfilePicture";
 import Chat from "../chat/chat";
+import {black} from "../util/Colors";
 
 const matchInfo = {
     maxPlayers: 4,
     players: [
-        {username: "Gioacchino", propic: "https://th.bing.com/th/id/OIG.brPoGXf3gGgrVkV9ixtc?w=173&h=173&c=6&r=0&o=5&dpr=1.3&pid=ImgGn"},
-        {username: "beluga", propic: "https://th.bing.com/th/id/OIG.oi__xz_IswoFyfQ60TwA?w=173&h=173&c=6&r=0&o=5&dpr=1.3&pid=ImgGn"}
+        {
+            username: "Gioacchino",
+            propic: "https://th.bing.com/th/id/OIG.brPoGXf3gGgrVkV9ixtc?w=173&h=173&c=6&r=0&o=5&dpr=1.3&pid=ImgGn"
+        },
+        {
+            username: "beluga",
+            propic: "https://th.bing.com/th/id/OIG.oi__xz_IswoFyfQ60TwA?w=173&h=173&c=6&r=0&o=5&dpr=1.3&pid=ImgGn"
+        }
     ]
 };
 const isAdmin = true;
@@ -34,7 +41,7 @@ function Match(/*{isAdmin, matchInfo}*/) {
 
 function Main({matchInfo, isAdmin, id}) {
     const style = {
-        backgroundColor: "#2c2c2c",
+        backgroundColor: black,
         flex: 0.7,
         display: "flex",
         flexDirection: "column",
@@ -52,11 +59,13 @@ function PlayersContainer({matchInfo, isAdmin}) {
     const [show, setShow] = useState(false);
     const [playerName, setPlayerName] = useState("");
     return <div className="players-container">
-        <BaseModal state = {[show, setShow]} title="Kicking player" body={"Are you sure you want to kick "+playerName+"?"}/>
+        <BaseModal state={[show, setShow]} title="Kicking player"
+                   body={"Are you sure you want to kick " + playerName + "?"}/>
         {[...Array(matchInfo.maxPlayers)].map((x, i) =>
-            <>
-                <Player player={matchInfo.players[i] ?? {}} isAdmin={isAdmin} nth={i} onKick={() =>{setPlayerName(matchInfo.players[i].username); setShow(true);}}/>
-            </>
+            <Player player={matchInfo.players[i] ?? {}} isAdmin={isAdmin} onKick={() => {
+                setPlayerName(matchInfo.players[i].username);
+                setShow(true);
+            }}/>
         )}
     </div>
 }
@@ -80,12 +89,13 @@ function MainMessage(props) {
         flex: 2.5,
         display: "flex",
         justifyContent: "center",
-        flexDirection: "column",
+        flexDirection: "column"
     }
-    return <h2 style = {style}> {props.matchInfo.players.length === props.matchInfo.maxPlayers
-        ? "Waiting for host..."
-        : "Waiting for players..."
-    } </h2>
+    const text = props.matchInfo.players.length === props.matchInfo.maxPlayers
+        ? "Starting..."
+        : "Waiting for players...";
+
+    return <h2 style={style}> {text}</h2>;
 }
 
 function MatchCode(props) {
@@ -116,31 +126,29 @@ function MatchCode(props) {
     </i>)
 }
 
-function Player({player, nth, isAdmin, onKick = () => {}}) {
+function Player({player, isAdmin, onKick}) {
     const style = {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
     }
+
+    let usernameParagraph;
+    if(player.username != null)
+        usernameParagraph = <p>{player.username}</p>;
+
     return (
-        <div style = {style}>
-            <ProfilePicture url={player.propic} isTransparent = {player.username == null}/>
-            {
-                player.username == null
-                    ? <></>//<p>waiting for player #{nth + 1} </p>
-                    : <p>{player.username}</p>
-            }
+        <div style={style}>
+            <ProfilePicture url={player.propic} isTransparent={player.username == null}/>
+            {usernameParagraph}
             {isAdmin && player.username != null
                 ?
-                <BaseButton buttonStyle={buttonStyles.primary} buttonContext={buttonContexts.light} onClick={() => onKick()}>Kick</BaseButton>
+                <BaseButton buttonStyle={buttonStyles.primary} buttonContext={buttonContexts.light}
+                            onClick={() => onKick()}>Kick</BaseButton>
                 : <></>
             }
         </div>
     );
 }
 
-
-
 export default Match;
-
-

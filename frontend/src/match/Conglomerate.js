@@ -4,16 +4,16 @@ export default function Conglomerate(p){
     let src;
     switch (p.state.type) {
         case conglomerateType.OMNICORP:
-            src = "/Images/Conglomerates/Omnicorp.png";
+            src = "/Images/Conglomerates/omnicorp.png";
             break;
         case conglomerateType.TOTAL_ENTERTAINMENT:
-            src = "/Images/Conglomerates/TotalEntertainment.png";
+            src = "/Images/Conglomerates/totalentertainment.png";
             break;
         case conglomerateType.GENERIC_INC:
-            src = "/Images/Conglomerates/GenericInc.png";
+            src = "/Images/Conglomerates/genericinc.png";
             break;
         case conglomerateType.MEGAMEDIA:
-            src = "/Images/Conglomerates/MegaMedia.png" ;
+            src = "/Images/Conglomerates/megamedia.png" ;
             break;
     }
     return(

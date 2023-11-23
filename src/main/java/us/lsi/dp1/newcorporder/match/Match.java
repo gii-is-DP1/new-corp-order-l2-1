@@ -3,6 +3,7 @@ package us.lsi.dp1.newcorporder.match;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import lombok.Getter;
+import org.apache.commons.lang3.RandomStringUtils;
 import us.lsi.dp1.newcorporder.match.company.CompanyMatrix;
 import us.lsi.dp1.newcorporder.match.payload.request.DiscardShareRequest;
 import us.lsi.dp1.newcorporder.match.payload.request.TakeShareRequest;
@@ -25,8 +26,11 @@ public class Match {
      */
     public static Match create(int maxPlayers, MatchMode matchMode) {
         GeneralSupply generalSupply = GeneralSupply.create();
+        String inviteCode;
         CompanyMatrix companyMatrix = CompanyMatrix.create();
-        String inviteCode = "foo"; // TODO make code random
+        do {
+             inviteCode = RandomStringUtils.random(6, "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+        }while (!inviteCodes.add(inviteCode));
 
         return new Match(maxPlayers, matchMode, inviteCode, generalSupply, companyMatrix);
     }
@@ -41,6 +45,8 @@ public class Match {
     @Getter private MatchState matchState = MatchState.WAITING;
     private final Map<Integer, MatchPlayer> players = new HashMap<>();
     private final List<MatchPlayer> playOrder = new ArrayList<>();
+
+    @Getter private static Set<String> inviteCodes = new TreeSet<>();
 
     @Getter private MatchPlayer currentTurnPlayer;
     @Getter private MatchTurnState currentTurnState;

@@ -1,24 +1,24 @@
-import Hand from "./Hand"
-import {Link, useParams} from "react-router-dom";
+import {useParams} from "react-router-dom";
 import {useState} from "react";
-import {useNavigate} from "react-router-dom";
 import BaseButton, {black, buttonContext, buttonContexts, buttonStyle, buttonStyles, white} from "../components/Button";
 import GoBackButton from "../components/GoBackButton";
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
 import BaseModal from "../components/BaseModal";
+import ProfilePicture from "../components/ProfilePicture";
+import Chat from "../chat/chat";
+
+const matchInfo = {
+    maxPlayers: 4,
+    players: [
+        {username: "Gioacchino", propic: "https://th.bing.com/th/id/OIG.brPoGXf3gGgrVkV9ixtc?w=173&h=173&c=6&r=0&o=5&dpr=1.3&pid=ImgGn"},
+        {username: "beluga", propic: "https://th.bing.com/th/id/OIG.oi__xz_IswoFyfQ60TwA?w=173&h=173&c=6&r=0&o=5&dpr=1.3&pid=ImgGn"}
+    ]
+};
+const isAdmin = true;
 
 function Match(/*{isAdmin, matchInfo}*/) {
     const {id} = useParams();
-    const isAdmin = true;
     const [count, setCount] = useState(0);
-    const matchInfo = {
-        maxPlayers: 4,
-        players: [
-            {username: "Gioacchino", propic: "https://th.bing.com/th/id/OIG.brPoGXf3gGgrVkV9ixtc?w=173&h=173&c=6&r=0&o=5&dpr=1.3&pid=ImgGn"},
-            {username: "beluga", propic: "https://th.bing.com/th/id/OIG.oi__xz_IswoFyfQ60TwA?w=173&h=173&c=6&r=0&o=5&dpr=1.3&pid=ImgGn"}
-        ]
-    };
+
     const style = {
         display: "flex",
         width: "100%",
@@ -27,7 +27,6 @@ function Match(/*{isAdmin, matchInfo}*/) {
 
     return (
         <div style={style}>
-
             <Main matchInfo={matchInfo} isAdmin={isAdmin} id={id} className="mainPart"/>
             <RightBar/>
         </div>)
@@ -74,18 +73,6 @@ function RightBar() {
         <GoBackButton/>
         <Chat/>
     </div>
-}
-
-function Chat() {
-    const style = {
-        background: "#a3a3a3",
-        width: "90%",
-        marginTop: "35%",
-        marginBottom: "5%",
-        borderRadius: "20px",
-        flex: 1,
-    }
-    return <div style={style}/>
 }
 
 function MainMessage(props) {
@@ -152,36 +139,7 @@ function Player({player, nth, isAdmin, onKick = () => {}}) {
     );
 }
 
-function ProfilePicture({url, isTransparent}) {
-    const style = {
-        width: "64px",
-        height: "64px",
-        borderRadius: "50%",
-        overflow: "hidden",
 
-    }
-
-    const backgroundStyle = {
-        backgroundColor: "#F8F8F8",
-        width: "64px",
-        height: "64px",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        opacity: isTransparent?0.2:1,
-    }
-    return <div style={style}>
-        {
-            url == null
-                ? <div style={backgroundStyle}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="#2C2C2C" class="bi bi-person-fill" viewBox="0 0 16 16">
-                        <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
-                    </svg>
-                </div>
-                : <img width="64px" height="64px" alt="profile image" src={url}/>
-        }
-    </div>
-}
 
 export default Match;
 

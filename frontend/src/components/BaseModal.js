@@ -1,6 +1,5 @@
 import BaseButton, {black, buttonContexts, buttonStyles, white} from "./Button";
 import Modal from "react-bootstrap/Modal";
-
 export default function BaseModal({title, state, body, onContinue = () => {}}) {
     const [show, setShow] = state;
     const handleClose = () => setShow(false);

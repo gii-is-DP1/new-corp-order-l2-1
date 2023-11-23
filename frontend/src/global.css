@@ -38,3 +38,8 @@
     flex:3;
     width: 100%;
 }
+
+.bg-navbar {
+    background: #2c2c2c !important;
+    --bs-bg-opacity: 1;
+}

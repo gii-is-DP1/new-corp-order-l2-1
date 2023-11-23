@@ -83,9 +83,6 @@ function AppNavbar() {
     } else {
         userLinks = (
             <>
-                <NavItem>
-                    <NavLink style={{ color: "white" }} tag={Link} to="/tmp">TMP</NavLink>
-                </NavItem>
             </>
         )
         userLogout = (
@@ -101,7 +98,7 @@ function AppNavbar() {
 
     return (
         <div>
-            <Navbar expand="md" dark color="dark">
+            <Navbar expand="md" className="bg-navbar">
                 <NavbarBrand href="/">
                     <img alt="logo" src="/Images/New-corp-order-logo.png" style={{ height: 40, width: 40 }} />
                 </NavbarBrand>

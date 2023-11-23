@@ -1,4 +1,4 @@
-export default function BaseButton({children, onClick, buttonStyle, buttonContext}) {
+export default function Button({children, onClick, buttonStyle, buttonContext}) {
     let backgroundColor = getBackgroundColor(buttonStyle, buttonContext);
     let textColor = getTextColor(backgroundColor);
 
@@ -9,8 +9,8 @@ export default function BaseButton({children, onClick, buttonStyle, buttonContex
         borderWidth:"0px",
         paddingTop:"3%",
         paddingBottom:"3%",
-        paddingLeft:"20%",
-        paddingRight:"20%",
+        paddingLeft:"13%",
+        paddingRight:"13%",
     };
 
     return <button
@@ -18,11 +18,11 @@ export default function BaseButton({children, onClick, buttonStyle, buttonContex
         style={style}
     >{children}</button>
 }
-const successBackground = "#1A7B66";
-const dangerBackground = "#D60000";
-const orange = "#FC7349";
-const white = "#F8F8F8";
-const black = "#2C2C2C";
+export const successBackground = "#1A7B66";
+export const dangerBackground = "#D60000";
+export const orange = "#FC7349";
+export const white = "#F8F8F8";
+export const black = "#2C2C2C";
 
 function getBackgroundColor(buttonStyle, context) {
     switch (buttonStyle) {

@@ -103,7 +103,7 @@ function AppNavbar() {
         <div>
             <Navbar expand="md" dark color="dark">
                 <NavbarBrand href="/">
-                    <img alt="logo" src="/Images/New-corp-order-logo.jpg" style={{ height: 40, width: 40 }} />
+                    <img alt="logo" src="/Images/New-corp-order-logo.png" style={{ height: 40, width: 40 }} />
                 </NavbarBrand>
                 <NavbarToggler onClick={toggleNavbar} className="ms-2" />
                 <Collapse isOpen={!collapsed} navbar>

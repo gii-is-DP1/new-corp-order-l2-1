@@ -1,6 +1,7 @@
 package us.lsi.dp1.newcorporder.match.payload.request.infiltrate;
 
 import com.google.common.base.Preconditions;
+import lombok.Builder;
 import lombok.Data;
 import us.lsi.dp1.newcorporder.match.Conglomerate;
 import us.lsi.dp1.newcorporder.match.ConsultantType;
@@ -10,6 +11,7 @@ import us.lsi.dp1.newcorporder.match.payload.CompanyTileReference;
 import us.lsi.dp1.newcorporder.match.payload.request.UseConsultantRequest;
 
 @Data
+@Builder
 public class MediaAdvisorInfiltrate implements Infiltrate {
 
     private CompanyTileReference tile;
@@ -31,7 +33,7 @@ public class MediaAdvisorInfiltrate implements Infiltrate {
             "the infiltrate must be the same type as the consultant used");
         Preconditions.checkArgument(conglomerateType != extraConglomerate,
             "your extra conglomerate share cannot be the same type as your main conglomerate shares");
-        Preconditions.checkArgument(tile.getCurrentConglomerate() != conglomerateType,
+        Preconditions.checkArgument(tile.getCurrentConglomerate() == conglomerateType,
             "you cannot add agents to a tile that has agents from a different conglomerate");
 
         match.getTurnSystem().getCurrentPlayer().discardSharesFromHand(conglomerateType, numberOfShares);

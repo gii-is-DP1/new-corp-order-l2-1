@@ -23,7 +23,6 @@ public class InfiltrateTurn extends Turn {
         super(match);
     }
 
-
     @Builder
     private InfiltrateTurn(Match match, State currentState, UseConsultantRequest useConsultantRequest) {
         super(match);

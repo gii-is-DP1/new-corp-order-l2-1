@@ -4,6 +4,8 @@ import jwt_decode from "jwt-decode";
 import {ErrorBoundary} from "react-error-boundary";
 import tokenService from "./services/token.service";
 import SwaggerDocs from "./public/swagger";
+import ListInput from "./components/ListInput";
+
 
 function ErrorFallback({error, resetErrorBoundary}) {
     return (
@@ -31,6 +33,7 @@ function App() {
     return (
         <div>
             <ErrorBoundary FallbackComponent={ErrorFallback}>
+                <ListInput />
                 <Routes>
                     <Route path="/docs" element={<SwaggerDocs/>}/>
                 </Routes>

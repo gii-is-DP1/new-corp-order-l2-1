@@ -1,4 +1,4 @@
-package us.lsi.dp1.newcorporder.match.turn;
+package us.lsi.dp1.newcorporder.match.payload.request.infiltrate;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,29 +11,22 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import us.lsi.dp1.newcorporder.match.*;
 import us.lsi.dp1.newcorporder.match.company.CompanyTile;
 import us.lsi.dp1.newcorporder.match.payload.CompanyTileReference;
-import us.lsi.dp1.newcorporder.match.payload.request.InfiltrateRequest;
 import us.lsi.dp1.newcorporder.match.payload.request.UseConsultantRequest;
-import us.lsi.dp1.newcorporder.match.payload.request.infiltrate.BasicInfiltrate;
-import us.lsi.dp1.newcorporder.match.payload.request.infiltrate.CorporateLawyerInfiltrate;
-import us.lsi.dp1.newcorporder.match.payload.request.infiltrate.Infiltrate;
 import us.lsi.dp1.newcorporder.match.player.Headquarter;
 import us.lsi.dp1.newcorporder.match.player.MatchPlayer;
-
-import java.util.List;
+import us.lsi.dp1.newcorporder.match.turn.TurnSystem;
 
 @MockitoSettings
-class InfiltrateTurnTest {
+class BasicInfiltrateTest {
 
     @Mock TurnSystem turnSystem;
 
     @Mock UseConsultantRequest useConsultantRequest;
     @Mock GeneralSupply generalSupply;
-    @Mock CompanyTileReference tileReference1;
-    @Mock CompanyTileReference tileReference2;
+    @Mock CompanyTileReference tileReference;
     CompanyTile companyTile;
     Match match;
     MatchPlayer currentPlayer;
-    InfiltrateRequest infiltrateRequest;
     Infiltrate infiltrate;
 
     @BeforeEach
@@ -46,34 +39,24 @@ class InfiltrateTurnTest {
             .build();
         currentPlayer = new MatchPlayer(1, Headquarter.create());
         currentPlayer.addSharesToHand(Conglomerate.TOTAL_ENTERTAINMENT, 4);
-        currentPlayer.addSharesToHand(Conglomerate.OMNICORP, 2);
         companyTile = CompanyTile.builder()
             .currentConglomerate(Conglomerate.TOTAL_ENTERTAINMENT)
             .agents(1)
             .build();
-        Mockito.when(tileReference1.fromMatch(match)).thenReturn(companyTile);
+        Mockito.when(tileReference.fromMatch(match)).thenReturn(companyTile);
+        infiltrate = BasicInfiltrate.builder()
+            .tile(tileReference)
+            .conglomerateType(Conglomerate.TOTAL_ENTERTAINMENT)
+            .numberOfShares(2)
+            .build();
     }
-
-    //
-    // Basic infiltrate
-    //
 
     @Test
     void whenBasicInfiltrate_usedConglomeratesSharesAreRemovedFromHandAndAddedToHeadquartersAndTile() {
-        // given
         Mockito.when(turnSystem.getCurrentPlayer()).thenReturn(currentPlayer);
-        infiltrate = basicInfiltrateBuilder();
-        infiltrateRequest = InfiltrateRequest.builder()
-            .infiltrate(infiltrate)
-            .build();
-        InfiltrateTurn infiltrateTurn = InfiltrateTurn.builder()
-            .match(match)
-            .currentState(InfiltrateTurn.State.INFILTRATE)
-            .useConsultantRequest(useConsultantRequest)
-            .build();
-        // when
-        infiltrateTurn.onInfiltrateRequest(infiltrateRequest);
-        // then
+
+        infiltrate.run(match, useConsultantRequest);
+
         Assertions.assertEquals(2, currentPlayer.getHand().count(Conglomerate.TOTAL_ENTERTAINMENT));
         Assertions.assertEquals(2, currentPlayer.getHeadquarter().getConglomerateShares(Conglomerate.TOTAL_ENTERTAINMENT));
         Assertions.assertEquals(3, companyTile.getAgents());
@@ -81,9 +64,10 @@ class InfiltrateTurnTest {
 
     @Test
     void givenBasicInfiltrate_whenTileIsFromDifferentConglomerate_ExceptionIsTrown() {
-        // given
-        infiltrate = basicInfiltrateBuilder();
-        // when
+        Mockito.when(tileReference.fromMatch(match)).thenReturn(CompanyTile.builder()
+            .currentConglomerate(Conglomerate.OMNICORP)
+            .agents(1)
+            .build());
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
             infiltrate.run(match, useConsultantRequest);
         }, "you cannot add agents to a tile that has agents from a different conglomerate");
@@ -97,24 +81,10 @@ class InfiltrateTurnTest {
     )
     void givenBasicInfiltrate_whenConsultantIsUsed_ExceptionIsTrown(ConsultantType consultantType) {
         // given
-        infiltrate = basicInfiltrateBuilder();
         Mockito.when(useConsultantRequest.getConsultant()).thenReturn(consultantType);
         Assertions.assertThrows(IllegalStateException.class, () -> {
             infiltrate.run(match, useConsultantRequest);
         }, "the infiltrate must be the same type as the consultant used");
     }
-
-
-
-
-
-    private BasicInfiltrate basicInfiltrateBuilder(){
-        return BasicInfiltrate.builder()
-            .tile(tileReference1)
-            .conglomerateType(Conglomerate.TOTAL_ENTERTAINMENT)
-            .numberOfShares(2)
-            .build();
-    }
-
 
 }

@@ -1,6 +1,7 @@
 package us.lsi.dp1.newcorporder.match.payload.request.infiltrate;
 
 import com.google.common.base.Preconditions;
+import lombok.Builder;
 import lombok.Data;
 import us.lsi.dp1.newcorporder.match.Conglomerate;
 import us.lsi.dp1.newcorporder.match.ConsultantType;
@@ -9,9 +10,11 @@ import us.lsi.dp1.newcorporder.match.company.CompanyTile;
 import us.lsi.dp1.newcorporder.match.payload.CompanyTileReference;
 import us.lsi.dp1.newcorporder.match.payload.request.UseConsultantRequest;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
+@Builder
 public class CorporateLawyerInfiltrate implements Infiltrate {
 
     private List<BasicInfiltrate> actions;
@@ -33,10 +36,22 @@ public class CorporateLawyerInfiltrate implements Infiltrate {
         actions.forEach(action -> infiltrate(match, action.getConglomerateType(), action.getNumberOfShares(), action.getTile()));
     }
 
+    private int getDifferentConglomerates() {
+        int res = 0;
+        List<Conglomerate> ls = new ArrayList<>();
+        for(BasicInfiltrate b: actions) {
+        	if(!ls.contains(b.getConglomerateType())) {
+        		ls.add(b.getConglomerateType());
+        		res++;
+        	}
+        }
+        return res;
+            }
+
     private void infiltrate(Match match, Conglomerate conglomerateType, int conglomerateShares, CompanyTileReference tileReference) {
         CompanyTile tile = tileReference.fromMatch(match);
 
-        Preconditions.checkArgument(tile.getCurrentConglomerate() != conglomerateType,
+        Preconditions.checkArgument(tile.getCurrentConglomerate() == conglomerateType,
             "you cannot add agents to a tile that has agents from a different conglomerate");
 
         match.getTurnSystem().getCurrentPlayer().discardSharesFromHand(conglomerateType, conglomerateShares);

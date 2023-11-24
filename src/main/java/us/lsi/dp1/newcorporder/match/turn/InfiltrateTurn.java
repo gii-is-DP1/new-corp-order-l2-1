@@ -66,7 +66,8 @@ public class InfiltrateTurn extends Turn {
     @Override
     public void onTakeConsultantRequest(TakeConsultantRequest request) {
         checkState(State.TAKING_CONSULTANT);
-        Preconditions.checkArgument(request.getConsultant() != useConsultantRequest.getConsultant(), "you cannot take the same consultant you used to infiltrate the company");
+        Preconditions.checkArgument(request.getConsultant() != useConsultantRequest.getConsultant(),
+            "you cannot take the same consultant you used to infiltrate the company");
 
         match.getGeneralSupply().takeConsultant(request.getConsultant());
         turnSystem.getCurrentPlayer().getHeadquarter().addConsultant(request.getConsultant());

@@ -10,6 +10,7 @@ import us.lsi.dp1.newcorporder.match.*;
 import us.lsi.dp1.newcorporder.match.company.CompanyTile;
 import us.lsi.dp1.newcorporder.match.payload.CompanyTileReference;
 import us.lsi.dp1.newcorporder.match.payload.request.InfiltrateRequest;
+import us.lsi.dp1.newcorporder.match.payload.request.TakeConsultantRequest;
 import us.lsi.dp1.newcorporder.match.payload.request.UseConsultantRequest;
 import us.lsi.dp1.newcorporder.match.payload.request.infiltrate.BasicInfiltrate;
 import us.lsi.dp1.newcorporder.match.payload.request.infiltrate.Infiltrate;
@@ -30,6 +31,7 @@ class InfiltrateTurnTest {
     MatchPlayer currentPlayer;
     @Mock InfiltrateRequest infiltrateRequest;
     Infiltrate infiltrate;
+    @Mock TakeConsultantRequest takeConsultantRequest;
 
     @BeforeEach
     void setUp() {
@@ -74,7 +76,7 @@ class InfiltrateTurnTest {
     }
 
     //
-    // onUseConsultantRequest
+    // Use Consultant Request
     //
     @Test
     void whenUseConsultantRequest_responseIsSendCorrectly() {
@@ -118,6 +120,39 @@ class InfiltrateTurnTest {
 
         Assertions.assertThrows(IllegalArgumentException.class, () -> infiltrateTurn.onUseConsultantRequest(useConsultantRequest));
     }
+
+    //
+    // Take Consultant Request
+    //
+
+    @Test
+    void givenTakeConsultantRequest_ConsultantIsTaken(){
+        Mockito.when(turnSystem.getCurrentPlayer()).thenReturn(currentPlayer);
+        Mockito.when(takeConsultantRequest.getConsultant()).thenReturn(ConsultantType.MILITARY_CONTRACTOR);
+        InfiltrateTurn infiltrateTurn = InfiltrateTurn.builder()
+            .match(match)
+            .currentState(InfiltrateTurn.State.TAKING_CONSULTANT)
+            .useConsultantRequest(useConsultantRequest)
+            .build();
+
+        infiltrateTurn.onTakeConsultantRequest(takeConsultantRequest);
+
+        Assertions.assertEquals(1, currentPlayer.getHeadquarter().getConsultants().count(ConsultantType.MILITARY_CONTRACTOR));
+    }
+
+    @Test
+    void givenTakeConsultantRequest_whenUsedConsultantIsTaken_throwsException(){
+        Mockito.when(takeConsultantRequest.getConsultant()).thenReturn(ConsultantType.MEDIA_ADVISOR);
+        Mockito.when(useConsultantRequest.getConsultant()).thenReturn(ConsultantType.MEDIA_ADVISOR);
+        InfiltrateTurn infiltrateTurn = InfiltrateTurn.builder()
+            .match(match)
+            .currentState(InfiltrateTurn.State.TAKING_CONSULTANT)
+            .useConsultantRequest(useConsultantRequest)
+            .build();
+
+        Assertions.assertThrows(IllegalArgumentException.class, () -> infiltrateTurn.onTakeConsultantRequest(takeConsultantRequest));
+    }
+
 
     private BasicInfiltrate basicInfiltrateBuilder() {
         return BasicInfiltrate.builder()

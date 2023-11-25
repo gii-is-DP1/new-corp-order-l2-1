@@ -17,10 +17,11 @@ package us.lsi.dp1.newcorporder.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @Setter
+@SuperBuilder
 @MappedSuperclass
 public abstract class BaseEntity implements Model {
 
@@ -32,6 +33,13 @@ public abstract class BaseEntity implements Model {
     )
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "entity_seq")
     protected Integer id;
+
+    public BaseEntity() {
+    }
+
+    public BaseEntity(Integer id) {
+        this.id = id;
+    }
 
     @Override
     public Integer getId() {

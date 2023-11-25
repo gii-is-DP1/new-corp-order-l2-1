@@ -1,85 +1,134 @@
 package us.lsi.dp1.newcorporder.match;
 
-import com.google.common.collect.Lists;
+import com.google.common.collect.HashMultiset;
+import com.google.common.collect.Multiset;
+import lombok.Builder;
 import lombok.Getter;
 import us.lsi.dp1.newcorporder.match.company.CompanyMatrix;
+import us.lsi.dp1.newcorporder.match.company.CompanyType;
 import us.lsi.dp1.newcorporder.match.player.MatchPlayer;
+import us.lsi.dp1.newcorporder.match.turn.TurnSystem;
 
 import java.util.*;
 
 public class Match {
 
-    private static final int INITIAL_CONGLOMERATE_SHARES_PER_PLAYER = 4;
+    public static final int INITIAL_CONGLOMERATE_SHARES_PER_PLAYER = 4;
+    public static final int MAX_SHARES_IN_HAND = 6;
+    public static final int SHARES_IN_OPEN_DISPLAY = 4;
 
-    /**
-     * Creates a new match for the given configuration
-     *
-     * @param maxPlayers the max number of players that the match would hold
-     * @param matchMode  the mode of the match
-     * @return the new match
-     */
     public static Match create(int maxPlayers, MatchMode matchMode) {
         GeneralSupply generalSupply = GeneralSupply.create();
         CompanyMatrix companyMatrix = CompanyMatrix.create();
+        TurnSystem turnSystem = TurnSystem.create();
         String inviteCode = "foo"; // TODO make code random
 
-        return new Match(maxPlayers, matchMode, inviteCode, generalSupply, companyMatrix);
+        return new Match(maxPlayers, matchMode, inviteCode, generalSupply, companyMatrix, turnSystem);
     }
 
     @Getter private final int maxPlayers;
     @Getter private final MatchMode matchMode;
     @Getter private final String inviteCode;
 
+    @Getter private final GeneralSupply generalSupply;
+    @Getter private final CompanyMatrix companyMatrix;
+    @Getter private final TurnSystem turnSystem;
+
     @Getter private MatchState matchState = MatchState.WAITING;
     private final Map<Integer, MatchPlayer> players = new HashMap<>();
 
-    @Getter private final GeneralSupply generalSupply;
-    @Getter private final CompanyMatrix companyMatrix;
-
-    private Match(int maxPlayers, MatchMode matchMode, String inviteCode, GeneralSupply generalSupply, CompanyMatrix companyMatrix) {
+    @Builder
+    Match(int maxPlayers, MatchMode matchMode, String inviteCode, GeneralSupply generalSupply, CompanyMatrix companyMatrix, TurnSystem turnSystem) {
         this.maxPlayers = maxPlayers;
         this.matchMode = matchMode;
         this.inviteCode = inviteCode;
         this.generalSupply = generalSupply;
         this.companyMatrix = companyMatrix;
+        this.turnSystem = turnSystem;
     }
 
-    /**
-     * Initializes the match.
-     */
+    public void addPlayer(MatchPlayer player) {
+        this.players.put(player.getPlayerId(), player);
+    }
+
     public void init() {
-        this.generalSupply.init(this.matchMode, this.players.size());
-        this.companyMatrix.init(players.size() > 2 ? MatchSize.GROUP : MatchSize.COUPLE);
+        generalSupply.init(matchMode, players.size());
+        companyMatrix.init(players.size() > 2 ? MatchSize.GROUP : MatchSize.COUPLE);
 
-        this.initPlayers();
+        initPlayers();
 
-        this.matchState = MatchState.PLAYING;
+        turnSystem.init(this, new ArrayList<>(players.values()));
+        matchState = MatchState.PLAYING;
     }
 
     private void initPlayers() {
-        List<ConsultantType> consultantTypes = Lists.newArrayList(ConsultantType.values());
+        ConsultantInitializer consultantInitializer = new ConsultantInitializer(players.size());
 
-        // if there are less than 3 players, CORPORATE_LAWYER is not used
-        if (players.size() < 3) {
-            consultantTypes.remove(ConsultantType.CORPORATE_LAWYER);
-        }
-
-        // init every player giving them a different consultant and the first 4 cards of the deck
-        for (MatchPlayer matchPlayer : this.getMatchPlayers()) {
-            List<Conglomerate> initialHand = this.generalSupply.takeConglomerateSharesFromDeck(INITIAL_CONGLOMERATE_SHARES_PER_PLAYER);
-
-            ConsultantType initialConsultant = consultantTypes.get(0);
-            consultantTypes.remove(initialConsultant);
-
-            matchPlayer.init(initialConsultant, initialHand);
-        }
+        for (MatchPlayer player : getPlayers())
+            initPlayer(player, consultantInitializer);
     }
 
-    public MatchPlayer getMatchPlayer(int playerId) {
-        return this.players.get(playerId);
+    private void initPlayer(MatchPlayer player, ConsultantInitializer consultantInitializer) {
+        List<Conglomerate> initialHand = drawInitialHand();
+        ConsultantType initialConsultant = consultantInitializer.getRandomUniqueConsultant();
+        player.init(initialConsultant, initialHand);
     }
 
-    public Collection<MatchPlayer> getMatchPlayers() {
-        return this.players.values();
+    private List<Conglomerate> drawInitialHand() {
+        return generalSupply.takeConglomerateSharesFromDeck(INITIAL_CONGLOMERATE_SHARES_PER_PLAYER);
+    }
+
+    public void end() {
+        this.matchState = MatchState.FINISHED;
+
+        Multiset<MatchPlayer> victoryPoints = this.calculateVictoryPoints();
+        MatchPlayer winner = victoryPoints.entrySet().stream()
+            .max(Comparator.comparingInt(Multiset.Entry::getCount))
+            .map(Multiset.Entry::getElement)
+            .orElseThrow();
+        //TODO generate and save stats
+    }
+
+    public MatchPlayer getPlayer(int id) {
+        return players.get(id);
+    }
+
+    public Collection<MatchPlayer> getPlayers() {
+        return players.values();
+    }
+
+    private Multiset<MatchPlayer> calculateVictoryPoints() {
+        Multiset<MatchPlayer> points = HashMultiset.create();
+
+        for (Conglomerate conglomerate : Conglomerate.values()) {
+            List<MatchPlayer> participationRanking = rankPlayerParticipation(conglomerate)
+                .subList(0, players.size() > 2 ? 2 : 1);
+
+            int numTilesControlled = companyMatrix.countTilesControlledBy(conglomerate);
+
+            for (int i = 0; i < participationRanking.size(); i++) {
+                MatchPlayer player = participationRanking.get(i);
+                points.add(player, (2 - i) * numTilesControlled);
+
+                for (CompanyType companyType : player.getSecretObjectives()) {
+                    int numTilesControlledOfCompanyType = companyMatrix.countTilesControlledByWithCompany(conglomerate, companyType);
+                    points.add(player, 2 * numTilesControlledOfCompanyType);
+                }
+            }
+        }
+
+        for (MatchPlayer player : this.players.values()) {
+            points.add(player, player.getHeadquarter().getConsultantsVP());
+        }
+
+        return points;
+    }
+
+    private List<MatchPlayer> rankPlayerParticipation(Conglomerate conglomerateType) {
+        return this.players.values().stream()
+            .sorted(Comparator.<MatchPlayer>comparingInt(player -> player.getParticipationPoints(conglomerateType))
+                .thenComparingInt(x -> x.getHeadquarter().getAgentsCaptured(conglomerateType))
+                .reversed())
+            .toList();
     }
 }

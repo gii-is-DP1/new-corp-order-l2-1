@@ -8,19 +8,27 @@ import jakarta.validation.constraints.Size;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import us.lsi.dp1.newcorporder.model.BaseEntity;
+import lombok.experimental.SuperBuilder;
 import us.lsi.dp1.newcorporder.model.NamedEntity;
 
 @Getter
 @Setter
 @EqualsAndHashCode(of = "id")
+@SuperBuilder
 @Table(name = "achievements")
 @Entity
 public class Achievement extends NamedEntity {
+
     @Size(max=256)
-    String description;
-    String imageUrl;
+    private String description;
+
+    private String imageUrl;
+
     @Enumerated(EnumType.STRING)
-    Stat stat;
-    Integer threshold;
+    private Stat stat;
+
+    private Integer threshold;
+
+    public Achievement() {
+    }
 }

@@ -23,24 +23,20 @@ import java.util.Set;
 @Table(name = "users")
 public class User extends BaseEntity {
 
-    @Size(max=32)
+    @Size(max=32) @Column(unique = true) @NotNull
     private String username;
 
-    @Size(max=32)
+    @Size(max=32) @Column(unique = true) @NotNull
     private String email;
 
     private String picture;
 
+    @NotNull
     private String password;
 
     private LocalDate firstSeen;
 
     private LocalDate lastSeen;
-
-    @Column(unique = true)
-    String username;
-
-    String password;
 
     @NotNull
     @ManyToOne(optional = false)

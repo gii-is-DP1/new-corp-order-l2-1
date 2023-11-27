@@ -30,6 +30,7 @@ public class AuthService {
         User user = new User();
         user.setUsername(request.getUsername());
         user.setPassword(encoder.encode(request.getPassword()));
+        user.setEmail(request.getEmail());
 
         Authority authority = authorityService.findByName(request.getAuthority());
         user.setAuthority(authority);

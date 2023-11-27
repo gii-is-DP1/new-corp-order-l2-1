@@ -4,6 +4,8 @@ import jwt_decode from "jwt-decode";
 import {ErrorBoundary} from "react-error-boundary";
 import tokenService from "./services/token.service";
 import SwaggerDocs from "./public/swagger";
+import Login from "./auth/login/index";
+import Register from "./auth/register/index"
 
 function ErrorFallback({error, resetErrorBoundary}) {
     return (
@@ -33,6 +35,8 @@ function App() {
             <ErrorBoundary FallbackComponent={ErrorFallback}>
                 <Routes>
                     <Route path="/docs" element={<SwaggerDocs/>}/>
+                    <Route path="/login" element={<Login/>}/>
+                    <Route path="/register" element={<Register/>}/>
                 </Routes>
             </ErrorBoundary>
         </div>

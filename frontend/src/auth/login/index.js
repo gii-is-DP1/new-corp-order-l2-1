@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import {Alert} from "reactstrap";
 import FormGenerator from "../../components/formGenerator/formGenerator";
 import tokenService from "../../services/token.service";
-import "../../static/css/auth/authButton.css";
+//import "../../static/css/auth/authButton.css";
 import {loginFormInputs} from "./form/loginFormInputs";
 
 export default function Login() {

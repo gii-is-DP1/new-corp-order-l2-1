@@ -4,6 +4,7 @@ import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.beans.factory.annotation.Autowired;
 import us.lsi.dp1.newcorporder.match.company.CompanyMatrix;
 import us.lsi.dp1.newcorporder.match.company.CompanyType;
 import us.lsi.dp1.newcorporder.match.player.MatchPlayer;
@@ -12,6 +13,9 @@ import us.lsi.dp1.newcorporder.match.turn.TurnSystem;
 import java.util.*;
 
 public class Match {
+
+    @Autowired
+    public MatchService matchService;
 
     public static final int INITIAL_CONGLOMERATE_SHARES_PER_PLAYER = 4;
     public static final int MAX_SHARES_IN_HAND = 6;
@@ -23,7 +27,11 @@ public class Match {
         TurnSystem turnSystem = TurnSystem.create();
         String inviteCode = "foo"; // TODO make code random
 
-        return new Match(maxPlayers, matchMode, inviteCode, generalSupply, companyMatrix, turnSystem);
+        Match match = new Match(maxPlayers, matchMode, inviteCode, generalSupply, companyMatrix, turnSystem);
+
+        match.matchService.matchList.add(match);
+
+        return match;
     }
 
     @Getter private final int maxPlayers;

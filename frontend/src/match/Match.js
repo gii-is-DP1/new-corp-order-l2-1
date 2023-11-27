@@ -43,7 +43,7 @@ const matchInfo = {
     ]
 };
 const isAdmin = true;
-const inLobby = true;
+const inLobby = false;
 let matchCode;
 
 function Match(/*{isAdmin, matchInfo}*/) {

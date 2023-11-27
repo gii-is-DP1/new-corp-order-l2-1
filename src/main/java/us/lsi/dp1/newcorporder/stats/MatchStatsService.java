@@ -14,28 +14,31 @@ import java.util.stream.Collectors;
 @Service
 public class MatchStatsService {
 
-    private final List<MatchStats> matchStatsList;
+    private MatchStats matchStatsList;
 
-    @Autowired
-    public MatchStatsService(List<MatchStats> matchStatsList) {this.matchStatsList = matchStatsList;}
+    public MatchStatsService() {this.matchStatsList = new MatchStats();}
+
+    public MatchStatsService withMode(MatchMode mode) {matchStatsList.setMode(mode);return this;}
+
+    public MatchStatsService withStartedAt(Instant startedAt) {matchStatsList.setStartedAt(startedAt);return this;}
+
+    public MatchStatsService withEndedAt(Instant endedAt) {matchStatsList.setEndedAt(endedAt);return this;}
+
+    public MatchStatsService withPlayerMatchStats(Set<PlayerMatchStats> playerMatchStats) {matchStatsList.setPlayerMatchStats(playerMatchStats);return this;}
+
+    public MatchStats build() {return matchStatsList;}
+
+    public MatchStats createMatchStats(MatchMode mode, Instant startedAt, Instant endedAt) {
+        return new MatchStatsService()
+            .withMode(mode)
+            .withStartedAt(startedAt)
+            .withEndedAt(endedAt)
+            .build();
+    }
 
     @Transactional
-    public Optional<MatchStats> getMatchStatsById(Long id) {return matchStatsList.stream().filter(matchStats -> false).findFirst();}
-
-    @Transactional
-    public MatchStats createMatchStats(MatchMode mode, Instant startedAt, Instant endedAt,
-                                       Set<PlayerMatchStats> playerMatchStats,
-                                       Set<ConsultantPlayerMatchStats> consultantPlayerMatchStats,
-                                       Set<ConglomeratePlayerMatchStats> conglomeratePlayerMatchStats,
-                                       Set<CompanyPlayerMatchStats> companyPlayerMatchStats) {
-        MatchStats matchStats = new MatchStats();
-        matchStats.setMode(mode);
-        matchStats.setStartedAt(startedAt);
-        matchStats.setEndedAt(endedAt);
-        matchStats.setPlayerMatchStats(playerMatchStats);
-
-        matchStatsList.add(matchStats);
-        return matchStats;
+    public Optional<MatchStats> getMatchStatsById(Integer id) {
+        return matchStatsList.stream().filter(matchStats -> matchStats.getId().equals(id)).findFirst();
     }
 
     public List<MatchStats> getAllMatchStats() {return new ArrayList<>(matchStatsList);}
@@ -51,6 +54,7 @@ public class MatchStatsService {
     }
 
     @Transactional
-    public void deleteMatchStatsById(Long id) {matchStatsList.removeIf(stats -> false);}
-
+    public void deleteMatchStatsById(Integer id) {
+        matchStatsList.removeIf(stats -> stats.getId().equals(updatedMatchStats.getId()));
+    }
 }

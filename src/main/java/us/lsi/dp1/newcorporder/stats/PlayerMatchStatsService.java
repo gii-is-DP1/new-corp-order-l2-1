@@ -17,11 +17,11 @@ public class PlayerMatchStatsService {
         this.matchStatsService = matchStatsService;
     }
 
-    public Optional<MatchStats> getMatchStatsById(Long matchId) {
+    public Optional<MatchStats> getMatchStatsById(Integer matchId) {
         return matchStatsService.getMatchStatsById(matchId);
     }
 
-    public Set<PlayerMatchStats> getPlayerMatchStats(Long matchId) {
+    public Set<PlayerMatchStats> getPlayerMatchStats(Integer matchId) {
         Optional<MatchStats> matchStatsOptional = matchStatsService.getMatchStatsById(matchId);
         return matchStatsOptional.map(MatchStats::getPlayerMatchStats).orElse(Collections.emptySet());
     }

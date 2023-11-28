@@ -36,12 +36,10 @@ public class AuthServiceTests {
 	private SignupRequest createRequest(String auth, String username) {
 		SignupRequest request = new SignupRequest();
 		request.setAuthority(auth);
-		request.setFirstName("prueba");
-		request.setLastName("prueba");
 		request.setPassword("prueba");
 		request.setUsername(username);
 
-		if(auth == "OWNER") {
+		if(auth.equals("OWNER")) {
 			User clinicOwnerUser = new User();
 			clinicOwnerUser.setUsername("clinicOwnerTest");
 			clinicOwnerUser.setPassword("clinicOwnerTest");

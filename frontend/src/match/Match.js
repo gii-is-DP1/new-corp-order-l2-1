@@ -11,7 +11,7 @@ import {Game} from "./Game";
     1 Select n conglomerates of the same color from hand (Infiltrate)
     2 Select n conglomerates of any color from hand (To discard)
     3 Select n conglomerates of the same color from hq (Takeover)
-    4 Select card from deck and/or Open Display (Plot)
+    4 Select a card from deck and/or Open Display (Plot)
     16 Select two cards from deck (Takeover -> Dealmaker)
     5 Select (a not used in this turn) consultant from General Supply (Infiltrate)
 2) Simple View
@@ -27,6 +27,40 @@ import {Game} from "./Game";
     13 Select n (one or two) conglomerates from a specific HQ (Guerrilla Marketing, Ambient Advertising, Social Media)
     14 Select one conglomerate from your HQ and one from everyone else's HQ Conglomerate (Print Media)
     15 Select two different company tiles
+
+    In general:
+    1) Select n conglomerates of a selection of (any / the same) color from card set (hand / hq)
+    2) Select a card from deck and/or Open Display
+    3) Select (a not used in this turn) consultant from Consultants of general supply
+    4) Select a company tile from a selection
+    5) Select one or two company tiles from a selection
+    6) Select yes or no with a company ability image
+    7) Select HQ viewing conglomerates from a HQ selection
+    8) Select (one / two) conglomerates from a specific HQ
+    9) Select Conglomerate from everyone's HQ
+    10) View secret objectives
+        - Button that shows you Secret Objectives
+    11) View General Supply (!1, !3)
+        - Button that shows open display
+        - Button that shows Consultants
+    12) View everyone's HQ (!9)
+        - Button to select HQ
+    13) View everyone's profile
+    14) Connect to Backend
+    Match frontend: match state
+    Sub-Branch 1)
+        -Select n cards from card set (1,2,3)
+        -(6)
+        -Add button that hides the chat
+        -Backend
+    Sub-Branch 2)
+        -Select company tiles (4, 5)
+        -Backend
+    Sub-Branch 3)
+        - 7, 8, 9, 12
+        -Backend
+    Sub-Branch 4) 10, 11, 13
+        -Backend
  */
 
 const matchInfo = {

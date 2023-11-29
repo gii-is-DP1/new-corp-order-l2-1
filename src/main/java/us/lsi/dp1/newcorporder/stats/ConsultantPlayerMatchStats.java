@@ -18,6 +18,11 @@ import us.lsi.dp1.newcorporder.model.BaseEntity;
 @Entity
 public class ConsultantPlayerMatchStats extends BaseEntity {
 
+    public ConsultantPlayerMatchStats() {}
+    public ConsultantPlayerMatchStats(ConsultantType consultantType, Integer used) {
+        this.consultantType = consultantType;
+        this.used = used;
+    }
     @Enumerated(EnumType.STRING)
     @NotNull private ConsultantType consultantType;
 

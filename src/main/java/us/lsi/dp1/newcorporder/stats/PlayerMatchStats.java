@@ -16,6 +16,20 @@ import java.util.Set;
 @Entity
 public class PlayerMatchStats extends BaseEntity {
 
+    public PlayerMatchStats() {}
+    public PlayerMatchStats(MatchStats matchStats, MatchResult result, Integer totalVP, Integer timesPlotted,
+                            Integer timesInfiltrated, Integer timesTakenOver, Set<CompanyPlayerMatchStats> companyStats,
+                            Set<ConglomeratePlayerMatchStats> conglomerateStats, Set<ConsultantPlayerMatchStats> consultantStats) {
+        this.matchStats = matchStats;
+        this.result = result;
+        this.totalVP = totalVP;
+        this.timesPlotted = timesPlotted;
+        this.timesInfiltrated = timesInfiltrated;
+        this.timesTakenOver = timesTakenOver;
+        this.companyStats = companyStats;
+        this.conglomerateStats = conglomerateStats;
+        this.consultantStats = consultantStats;
+    }
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "match_stats_id")
     @NotNull private MatchStats matchStats;

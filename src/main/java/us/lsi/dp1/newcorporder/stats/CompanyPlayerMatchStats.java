@@ -18,6 +18,13 @@ import us.lsi.dp1.newcorporder.model.BaseEntity;
 @Entity
 public class CompanyPlayerMatchStats extends BaseEntity {
 
+    public CompanyPlayerMatchStats() {}
+
+    public CompanyPlayerMatchStats(CompanyType companyType, Integer abilityUsed) {
+        this.companyType = companyType;
+        this.abilityUsed = abilityUsed;
+    }
+
     @Enumerated(EnumType.STRING)
     @NotNull private CompanyType companyType;
 

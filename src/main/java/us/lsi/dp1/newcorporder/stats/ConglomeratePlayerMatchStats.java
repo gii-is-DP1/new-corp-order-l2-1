@@ -18,6 +18,13 @@ import us.lsi.dp1.newcorporder.model.BaseEntity;
 @Entity
 public class ConglomeratePlayerMatchStats extends BaseEntity {
 
+    public ConglomeratePlayerMatchStats() {}
+    public ConglomeratePlayerMatchStats(Conglomerate conglomerate, Integer shares, Integer agents) {
+        this.conglomerate = conglomerate;
+        this.shares = shares;
+        this.agents = agents;
+    }
+
     @Enumerated(EnumType.STRING)
     @NotNull private Conglomerate conglomerate;
 

@@ -9,6 +9,7 @@ import us.lsi.dp1.newcorporder.match.company.CompanyMatrix;
 import us.lsi.dp1.newcorporder.match.company.CompanyType;
 import us.lsi.dp1.newcorporder.match.player.MatchPlayer;
 import us.lsi.dp1.newcorporder.match.turn.TurnSystem;
+import us.lsi.dp1.newcorporder.player.Player;
 
 import java.util.*;
 
@@ -83,10 +84,7 @@ public class Match {
         this.matchState = MatchState.FINISHED;
 
         Multiset<MatchPlayer> victoryPoints = this.calculateVictoryPoints();
-        MatchPlayer winner = victoryPoints.entrySet().stream()
-            .max(Comparator.comparingInt(Multiset.Entry::getCount))
-            .map(Multiset.Entry::getElement)
-            .orElseThrow();
+        List<MatchPlayer> winners = getWinners();
         //TODO generate and save stats
     }
 
@@ -134,5 +132,19 @@ public class Match {
             .toList();
     }
 
+    public List<MatchPlayer> getWinners() {
+        Multiset<MatchPlayer> victoryPoints = this.calculateVictoryPoints();
+        int maxVictoryPoints = 0;
+        List<MatchPlayer> winners = new ArrayList<>();
+        for (MatchPlayer player : victoryPoints.elementSet()) {
+            if (victoryPoints.count(player) >= maxVictoryPoints) {
+                maxVictoryPoints = victoryPoints.count(player);
+                if (victoryPoints.count(player) > maxVictoryPoints)
+                    winners.clear();
+                winners.add(player);
+            }
+        }
+        return winners;
+    }
 
 }

@@ -9,6 +9,7 @@ import us.lsi.dp1.newcorporder.match.MatchMode;
 import us.lsi.dp1.newcorporder.model.BaseEntity;
 
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -17,6 +18,18 @@ import java.util.Set;
 @Table(name = "match_stats")
 @Entity
 public class MatchStats extends BaseEntity {
+
+    public MatchStats() {}
+    public MatchStats(MatchMode mode, Instant startedAt, Instant endedAt) {
+        this.mode = mode;
+        this.startedAt = startedAt;
+        this.endedAt = endedAt;
+        this.playerMatchStats = new HashSet<>();
+    }
+
+    public void addPlayerMatchStats(PlayerMatchStats playerMatchStats) {
+        this.playerMatchStats.add(playerMatchStats);
+    }
 
     @Enumerated(EnumType.STRING)
     @NotNull private MatchMode mode;

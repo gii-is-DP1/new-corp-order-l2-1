@@ -1,14 +1,19 @@
 package us.lsi.dp1.newcorporder.stats;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import us.lsi.dp1.newcorporder.match.Match;
 import us.lsi.dp1.newcorporder.match.MatchMode;
+import us.lsi.dp1.newcorporder.match.player.MatchPlayer;
+
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -56,5 +61,17 @@ public class MatchStatsService {
     @Transactional
     public void deleteMatchStatsById(Integer id) {
         matchStatsList.removeIf(stats -> stats.getId().equals(updatedMatchStats.getId()));
+    }
+
+    public MatchStats createMatchStats(Match match ) {
+        MatchMode mode = match.getMatchMode();
+        Instant startedAt = null;   // TODO
+        Instant endedAt = Instant.now();
+        MatchStats res =  new MatchStats(mode, startedAt, endedAt);
+
+        for(MatchPlayer player : match.getPlayers()) {
+            res.addPlayerMatchStats(PlayerMatchStatsService.createPlayerMatchStats(match, player));
+        }
+        return res;
     }
 }

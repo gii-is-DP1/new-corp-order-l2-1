@@ -16,7 +16,10 @@ import us.lsi.dp1.newcorporder.match.player.MatchPlayer;
 import us.lsi.dp1.newcorporder.match.turn.TurnSystem;
 import us.lsi.dp1.newcorporder.util.RandomUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -168,8 +171,8 @@ class MatchTest {
 
         when(match.rankPlayerParticipation(Conglomerate.MEGA_MEDIA)).thenReturn(List.of(player1, player2, player3));
         when(match.rankPlayerParticipation(Conglomerate.TOTAL_ENTERTAINMENT)).thenReturn(List.of(player2, player3, player1));
-        when(match.rankPlayerParticipation(Conglomerate.OMNICORP)).thenReturn(Collections.emptyList());
-        when(match.rankPlayerParticipation(Conglomerate.GENERIC_INC)).thenReturn(Collections.emptyList());
+        when(match.rankPlayerParticipation(Conglomerate.OMNICORP)).thenReturn(List.of(player1, player2, player3));
+        when(match.rankPlayerParticipation(Conglomerate.GENERIC_INC)).thenReturn(List.of(player1, player2, player3));
 
         match.addPlayer(player1);
         match.addPlayer(player2);

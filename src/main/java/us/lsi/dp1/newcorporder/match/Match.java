@@ -18,11 +18,10 @@ public class Match {
     public static final int MAX_SHARES_IN_HAND = 6;
     public static final int SHARES_IN_OPEN_DISPLAY = 4;
 
-    public static Match create(int maxPlayers, MatchMode matchMode) {
+    public static Match create(int maxPlayers, MatchMode matchMode, String inviteCode) {
         GeneralSupply generalSupply = GeneralSupply.create();
         CompanyMatrix companyMatrix = CompanyMatrix.create();
         TurnSystem turnSystem = TurnSystem.create();
-        String inviteCode = "foo"; // TODO make code random
 
         return new Match(maxPlayers, matchMode, inviteCode, generalSupply, companyMatrix, turnSystem);
     }

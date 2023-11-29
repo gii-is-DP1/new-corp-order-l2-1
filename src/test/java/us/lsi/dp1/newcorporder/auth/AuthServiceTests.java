@@ -26,18 +26,19 @@ public class AuthServiceTests {
 	@Test
 	@Transactional
 	public void shouldCreateAdminUser() {
-		SignupRequest request = createRequest("ADMIN", "admin2");
+        SignupRequest request = createRequest("ADMIN", "admin2", "email@gmail.com");
 		int userFirstCount = ((Collection<User>) this.userService.findAll()).size();
 		this.authService.createUser(request);
 		int userLastCount = ((Collection<User>) this.userService.findAll()).size();
 		assertEquals(userFirstCount + 1, userLastCount);
 	}
 
-	private SignupRequest createRequest(String auth, String username) {
+    private SignupRequest createRequest(String auth, String username, String email) {
 		SignupRequest request = new SignupRequest();
 		request.setAuthority(auth);
 		request.setPassword("prueba");
 		request.setUsername(username);
+        request.setEmail(email);
 
 		if(auth.equals("OWNER")) {
 			User clinicOwnerUser = new User();

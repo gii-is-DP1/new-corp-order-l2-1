@@ -1,19 +1,6 @@
 package us.lsi.dp1.newcorporder.user;
 
-import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.util.List;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,19 +9,28 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
-import us.lsi.dp1.newcorporder.authority.Authority;
-import us.lsi.dp1.newcorporder.authority.AuthorityService;
-import us.lsi.dp1.newcorporder.configuration.SecurityConfiguration;
-import us.lsi.dp1.newcorporder.exceptions.AccessDeniedException;
-import us.lsi.dp1.newcorporder.exceptions.ResourceNotFoundException;
 import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import us.lsi.dp1.newcorporder.authority.Authority;
+import us.lsi.dp1.newcorporder.authority.AuthorityService;
+import us.lsi.dp1.newcorporder.configuration.SecurityConfiguration;
+import us.lsi.dp1.newcorporder.exceptions.AccessDeniedException;
+import us.lsi.dp1.newcorporder.exceptions.ResourceNotFoundException;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.List;
+
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * Test class for the {@link UserRestController}
@@ -174,6 +170,7 @@ class UserControllerTests {
         User aux = new User();
         aux.setUsername("Prueba");
         aux.setPassword("Prueba");
+        aux.setEmail("prueba@gmail.com");
         aux.setAuthority(auth);
 
         mockMvc.perform(post(BASE_URL).with(csrf()).contentType(MediaType.APPLICATION_JSON)
@@ -185,6 +182,7 @@ class UserControllerTests {
     void shouldUpdateUser() throws Exception {
         user.setUsername("UPDATED");
         user.setPassword("CHANGED");
+        user.setEmail("email@gmail.com");
 
         when(this.userService.findUser(TEST_USER_ID)).thenReturn(user);
         when(this.userService.updateUser(any(User.class), any(Integer.class))).thenReturn(user);
@@ -199,6 +197,7 @@ class UserControllerTests {
     void shouldReturnNotFoundUpdateUser() throws Exception {
         user.setUsername("UPDATED");
         user.setPassword("UPDATED");
+        user.setEmail("email@gmail.com");
 
         when(this.userService.findUser(TEST_USER_ID)).thenThrow(ResourceNotFoundException.class);
         when(this.userService.updateUser(any(User.class), any(Integer.class))).thenReturn(user);

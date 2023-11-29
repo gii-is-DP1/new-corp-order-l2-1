@@ -1,3 +1,41 @@
+@import url(https://db.onlinewebfonts.com/c/755ac4a5c4a3144f96657f6f555ab38e?family=Core+Magic+W00+Regular);
+
 * {
     margin: 5px
+}
+
+.cardContainer {
+    height: 200px;
+    display: flex;
+}
+
+.cardElement {
+    height: 200px;
+    display: block;
+}
+
+.cardElement img {
+    max-height: 100%;
+}
+
+.matchCode {
+    margin: auto;
+    font-size: 36px;
+    opacity: 0.7;
+    flex: 0.5;
+}
+
+* {
+    color: #cbcbcb;
+    font-family: "Core Magic W00 Regular", serif;
+}
+
+.modal-content {
+    background: none !important;
+}
+
+
+.bg-navbar {
+    background: #2c2c2c !important;
+    --bs-bg-opacity: 1;
 }

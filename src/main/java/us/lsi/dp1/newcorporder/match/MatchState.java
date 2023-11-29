@@ -15,5 +15,5 @@ public enum MatchState {
     /**
      * Match ended, waiting for players to leave.
      */
-    ENDED
+    FINISHED
 }

@@ -1,4 +1,9 @@
-export const conglomerateType = {OMNICORP: "OMNICORP",TOTAL_ENTERTAINMENT: "TOTAL_ENTERTAINMENT", GENERIC_INC: "GENERIC_INC", MEGAMEDIA: "MEGAMEDIA" };
+export const conglomerateType = {
+    OMNICORP: "OMNICORP",
+    TOTAL_ENTERTAINMENT: "TOTAL_ENTERTAINMENT",
+    GENERIC_INC: "GENERIC_INC",
+    MEGA_MEDIA: "MEGAMEDIA"
+};
 
 export default function Conglomerate(p){
     let src;
@@ -12,7 +17,7 @@ export default function Conglomerate(p){
         case conglomerateType.GENERIC_INC:
             src = "/Images/Conglomerates/genericinc.png";
             break;
-        case conglomerateType.MEGAMEDIA:
+        case conglomerateType.MEGA_MEDIA:
             src = "/Images/Conglomerates/megamedia.png" ;
             break;
     }

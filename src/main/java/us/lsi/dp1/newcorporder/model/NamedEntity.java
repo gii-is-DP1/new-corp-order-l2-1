@@ -17,13 +17,14 @@ package us.lsi.dp1.newcorporder.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
+@SuperBuilder
 @MappedSuperclass
 public abstract class NamedEntity extends BaseEntity {
 

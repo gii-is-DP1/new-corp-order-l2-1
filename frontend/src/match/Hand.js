@@ -7,7 +7,7 @@ class Hand extends React.Component{
         [conglomerateType.TOTAL_ENTERTAINMENT]: 1,
         [conglomerateType.GENERIC_INC]: 2,
         [conglomerateType.OMNICORP]: 3,
-        [conglomerateType.MEGAMEDIA]: 4
+        [conglomerateType.MEGA_MEDIA]: 4
     };
 
 
@@ -20,7 +20,7 @@ class Hand extends React.Component{
                         ...this.showConglomerates(conglomerateType.OMNICORP),
                         ...this.showConglomerates(conglomerateType.TOTAL_ENTERTAINMENT),
                         ...this.showConglomerates(conglomerateType.GENERIC_INC),
-                        ...this.showConglomerates(conglomerateType.MEGAMEDIA)
+                        ...this.showConglomerates(conglomerateType.MEGA_MEDIA)
                     ]}
                 />
             </div>

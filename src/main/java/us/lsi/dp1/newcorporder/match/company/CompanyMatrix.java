@@ -1,5 +1,7 @@
 package us.lsi.dp1.newcorporder.match.company;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Lists;
@@ -9,6 +11,7 @@ import us.lsi.dp1.newcorporder.match.Conglomerate;
 import us.lsi.dp1.newcorporder.match.MatchSize;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -23,10 +26,22 @@ public class CompanyMatrix {
         return new CompanyMatrix();
     }
 
+    public static CompanyMatrixBuilder builder() {
+        return new CompanyMatrixBuilder();
+    }
+
+    @JsonIgnore
     @Getter private MatchSize matchSize;
+
+    @JsonInclude
     private CompanyTile[] tiles;
 
     private CompanyMatrix() {
+    }
+
+    private CompanyMatrix(MatchSize matchSize, CompanyTile... tiles) {
+        this.matchSize = matchSize;
+        this.tiles = tiles;
     }
 
     public void init(MatchSize matchSize) {
@@ -52,10 +67,14 @@ public class CompanyMatrix {
      * @return the tile at the given position
      */
     public CompanyTile getTile(int x, int y) {
-        Preconditions.checkArgument(x < this.matchSize.getRows(), "matrix has only %d rows (x = %d)", this.matchSize.getRows(), x);
-        Preconditions.checkArgument(y < this.matchSize.getColumns(), "matrix has only %d columns (y = %d)", this.matchSize.getColumns(), y);
+        Preconditions.checkArgument(x < this.matchSize.getRows() && x > 0, "matrix has only %d rows (x = %d)", this.matchSize.getRows(), x);
+        Preconditions.checkArgument(y < this.matchSize.getColumns() && y > 0, "matrix has only %d columns (y = %d)", this.matchSize.getColumns(), y);
 
-        return tiles[x * this.matchSize.getColumns() + y];
+        return tiles[x * matchSize.getColumns() + y];
+    }
+
+    public CompanyTile[] getTiles() {
+        return tiles.clone();
     }
 
     private static List<Company> createCompanies(MatchSize matchSize) {
@@ -84,4 +103,37 @@ public class CompanyMatrix {
         Collections.shuffle(agents);
         return agents;
     }
+
+    public int countTilesControlledBy(Conglomerate conglomerate) {
+        return (int) Arrays.stream(tiles)
+            .filter(tile -> tile.getCurrentConglomerate() == conglomerate)
+            .count();
+    }
+
+    public int countTilesControlledByWithCompany(Conglomerate conglomerate, CompanyType companyType) {
+        return (int) Arrays.stream(tiles)
+            .filter(tile -> tile.getCurrentConglomerate() == conglomerate)
+            .filter(tile -> tile.getCompany().getType() == companyType)
+            .count();
+    }
+
+    public static class CompanyMatrixBuilder {
+        private MatchSize matchSize;
+        private CompanyTile[] tiles;
+
+        public CompanyMatrixBuilder matchSize(MatchSize matchSize) {
+            this.matchSize = matchSize;
+            return this;
+        }
+
+        public CompanyMatrixBuilder tiles(CompanyTile... tiles) {
+            this.tiles = tiles;
+            return this;
+        }
+
+        public CompanyMatrix build() {
+            return new CompanyMatrix(matchSize, tiles);
+        }
+    }
+
 }

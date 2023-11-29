@@ -2,7 +2,6 @@ package us.lsi.dp1.newcorporder.match;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.HashMultiset;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMultiset;
 import com.google.common.collect.Multiset;
 
@@ -118,7 +117,7 @@ public class GeneralSupply {
      * @throws IllegalStateException if there are no enough conglomerate shares left in the deck to take
      */
     public List<Conglomerate> takeConglomerateSharesFromDeck(int sharesToTake) {
-        Preconditions.checkState(this.deck.size() < sharesToTake,
+        Preconditions.checkState(this.deck.size() >= sharesToTake,
             "there are no enough conglomerate shares left in the deck to take");
 
         List<Conglomerate> conglomerateShares = new ArrayList<>();
@@ -146,17 +145,20 @@ public class GeneralSupply {
      * Polls the given number of conglomerate shares from the deck and places them into the open display.
      *
      * @param sharesToTake the number of conglomerate shares to take from the deck and place them into the open display
+     * @return the shares taken from the deck
      * @throws IllegalArgumentException if the given number of shares to take is not greater than 0
      * @throws IllegalStateException    if there are no enough conglomerate shares left in the deck to take, or the current
      *                                  number of shares in the open display + the given number of shares to take is grater
      *                                  than 5
      */
-    public void revealConglomerateSharesToOpenDisplay(int sharesToTake) {
+    public List<Conglomerate> revealConglomerateSharesToOpenDisplay(int sharesToTake) {
         Preconditions.checkArgument(sharesToTake > 0, "cannot reveal less than 1 share");
-        Preconditions.checkState(this.openDisplay.size() + sharesToTake > 5,
+        Preconditions.checkState(this.openDisplay.size() + sharesToTake <= 5,
             "open display size would be greater than 5");
 
-        this.openDisplay.addAll(this.takeConglomerateSharesFromDeck(sharesToTake));
+        List<Conglomerate> sharesTaken = this.takeConglomerateSharesFromDeck(sharesToTake);
+        this.openDisplay.addAll(sharesTaken);
+        return sharesTaken;
     }
 
     /**
@@ -164,7 +166,7 @@ public class GeneralSupply {
      *
      * @return an immutable view of the conglomerate shares in the open display
      */
-    public List<Conglomerate> getOpenDisplay() {
-        return ImmutableList.copyOf(openDisplay);
+    public Multiset<Conglomerate> getOpenDisplay() {
+        return ImmutableMultiset.copyOf(openDisplay);
     }
 }

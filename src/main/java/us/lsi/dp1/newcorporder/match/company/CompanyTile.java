@@ -18,6 +18,14 @@ public class CompanyTile {
     @Setter
     private int agents = 1;
 
+    @Builder
+    private CompanyTile(Conglomerate currentConglomerate, int agents) {
+        this.company = null;
+        this.currentConglomerate = currentConglomerate;
+        this.agents = agents;
+    }
+
+
     public CompanyTile(Company company, Conglomerate currentConglomerate) {
         this(company, currentConglomerate, 1);
     }

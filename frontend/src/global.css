@@ -2,7 +2,8 @@
 @import url(https://db.onlinewebfonts.com/c/691548bdb28878b6980b20ad51fe6d8e?family=DIN+Next+Slab+W04+Regular);
 
 * {
-    margin: 5px
+    margin: 5px;
+    color: #F8F8F8;
 }
 
 h1 {

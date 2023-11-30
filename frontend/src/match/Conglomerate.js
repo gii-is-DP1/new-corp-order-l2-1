@@ -1,4 +1,4 @@
-import {conglomerate} from "./CompanyMatrix";
+import {conglomerate} from "./MatchEnums";
 
 export default function Conglomerate(p){
     let src;

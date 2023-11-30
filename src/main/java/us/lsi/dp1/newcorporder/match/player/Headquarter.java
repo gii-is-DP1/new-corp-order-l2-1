@@ -55,10 +55,20 @@ public class Headquarter {
     /**
      * Add a consultant of the given type
      *
-     * @param consultant the given consultant to add
+     * @param consultant the consultant to add
      */
     public void addConsultant(ConsultantType consultant) {
-        this.consultants.add(consultant);
+        this.addConsultant(consultant, 1);
+    }
+
+    /**
+     * Add a consultant of the given type
+     *
+     * @param consultant the consultant to add
+     * @param amount     the amount of consultants of the given type to add
+     */
+    public void addConsultant(ConsultantType consultant, int amount) {
+        this.consultants.add(consultant, amount);
     }
 
     /**
@@ -105,7 +115,7 @@ public class Headquarter {
      * Remove the given quantity of shares to the given conglomerate
      *
      * @param conglomerate the given conglomerate to remove the given quantity of shares
-     * @param quantity the quantity of shares to remove
+     * @param quantity     the quantity of shares to remove
      */
     public void removeConglomerates(Conglomerate conglomerate, int quantity) {
         this.conglomerateShares.remove(conglomerate, quantity);

@@ -1,10 +1,8 @@
 package us.lsi.dp1.newcorporder.match.payload.request.infiltrate;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoSettings;
 import us.lsi.dp1.newcorporder.match.*;
 import us.lsi.dp1.newcorporder.match.company.CompanyTile;
@@ -37,7 +35,7 @@ class CorporateLawyerInfiltrateTest {
     InfiltrateRequest infiltrateRequest;
     Infiltrate infiltrate;
 
-    @Mock BasicInfiltrate basicInfiltrateMock;
+    @Mock DefaultInfiltrate defaultInfiltrateMock;
 
     @BeforeEach
     void setUp() {
@@ -65,12 +63,12 @@ class CorporateLawyerInfiltrateTest {
         // given
         infiltrate = CorporateLawyerInfiltrate.builder()
             .actions(List.of(
-                BasicInfiltrate.builder()
+                DefaultInfiltrate.builder()
                     .tile(tileReference1)
                     .conglomerateType(Conglomerate.TOTAL_ENTERTAINMENT)
                     .numberOfShares(2)
                     .build(),
-                BasicInfiltrate.builder()
+                DefaultInfiltrate.builder()
                     .tile(tileReference2)
                     .conglomerateType(Conglomerate.OMNICORP)
                     .numberOfShares(1)
@@ -98,12 +96,12 @@ class CorporateLawyerInfiltrateTest {
         // given
         infiltrate = CorporateLawyerInfiltrate.builder()
             .actions(List.of(
-                BasicInfiltrate.builder()
+                DefaultInfiltrate.builder()
                     .tile(tileReference1)
                     .conglomerateType(Conglomerate.TOTAL_ENTERTAINMENT)
                     .numberOfShares(2)
                     .build(),
-                BasicInfiltrate.builder()
+                DefaultInfiltrate.builder()
                     .tile(tileReference2)
                     .conglomerateType(Conglomerate.TOTAL_ENTERTAINMENT)
                     .numberOfShares(1)
@@ -122,10 +120,10 @@ class CorporateLawyerInfiltrateTest {
     void givenCorporateLawyerInfiltrate_whenThereAreNot2DifferentBasicInfiltrate_trowsException() {
         // given
         CorporateLawyerInfiltrate infiltrateWith1 = CorporateLawyerInfiltrate.builder()
-            .actions(List.of(basicInfiltrateMock))
+            .actions(List.of(defaultInfiltrateMock))
             .build();
         CorporateLawyerInfiltrate infiltrateWith3 = CorporateLawyerInfiltrate.builder()
-            .actions(List.of(basicInfiltrateMock, basicInfiltrateMock, basicInfiltrateMock))
+            .actions(List.of(defaultInfiltrateMock, defaultInfiltrateMock, defaultInfiltrateMock))
             .build();
         when(useConsultantRequest.getConsultant()).thenReturn(ConsultantType.CORPORATE_LAWYER);
         // then
@@ -142,7 +140,7 @@ class CorporateLawyerInfiltrateTest {
     void givenCorporateLawyerInfiltrate_whenTheConsultantIsntCorporateLawyer_trowsException() {
     	// given
     	infiltrate = CorporateLawyerInfiltrate.builder()
-                .actions(List.of(basicInfiltrateMock, basicInfiltrateMock))
+            .actions(List.of(defaultInfiltrateMock, defaultInfiltrateMock))
                 .build();;
         when(useConsultantRequest.getConsultant()).thenReturn(ConsultantType.MEDIA_ADVISOR);
         // then

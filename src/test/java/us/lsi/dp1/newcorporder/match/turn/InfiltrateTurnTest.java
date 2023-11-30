@@ -1,41 +1,34 @@
 package us.lsi.dp1.newcorporder.match.turn;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoSettings;
 import us.lsi.dp1.newcorporder.match.*;
-import us.lsi.dp1.newcorporder.match.company.CompanyTile;
-import us.lsi.dp1.newcorporder.match.payload.CompanyTileReference;
+import us.lsi.dp1.newcorporder.match.payload.request.DiscardShareRequest;
 import us.lsi.dp1.newcorporder.match.payload.request.InfiltrateRequest;
 import us.lsi.dp1.newcorporder.match.payload.request.TakeConsultantRequest;
 import us.lsi.dp1.newcorporder.match.payload.request.UseConsultantRequest;
-import us.lsi.dp1.newcorporder.match.payload.request.infiltrate.BasicInfiltrate;
 import us.lsi.dp1.newcorporder.match.payload.request.infiltrate.Infiltrate;
 import us.lsi.dp1.newcorporder.match.payload.response.InfiltrateResponse;
 import us.lsi.dp1.newcorporder.match.payload.response.UseConsultantResponse;
 import us.lsi.dp1.newcorporder.match.player.Headquarter;
 import us.lsi.dp1.newcorporder.match.player.MatchPlayer;
+import us.lsi.dp1.newcorporder.match.turn.InfiltrateTurn.State;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.when;
+import static org.assertj.core.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @MockitoSettings
 class InfiltrateTurnTest {
 
     @Mock TurnSystem turnSystem;
-    @Mock UseConsultantRequest useConsultantRequest;
     @Mock GeneralSupply generalSupply;
-    @Mock CompanyTileReference tileReference;
-    CompanyTile companyTile;
+
     Match match;
     MatchPlayer currentPlayer;
-    @Mock InfiltrateRequest infiltrateRequest;
-    Infiltrate infiltrate;
-    @Mock TakeConsultantRequest takeConsultantRequest;
 
     @BeforeEach
     void setUp() {
@@ -45,126 +38,187 @@ class InfiltrateTurnTest {
             .generalSupply(generalSupply)
             .turnSystem(turnSystem)
             .build();
+
         currentPlayer = new MatchPlayer(1, Headquarter.create());
+        lenient().when(turnSystem.getCurrentPlayer()).thenReturn(currentPlayer);
+    }
+
+    //
+    // InfiltrateTurn#onUseConsultantRequest
+    //
+
+    @ParameterizedTest
+    @EnumSource(value = State.class, names = "SELECTING_CONSULTANT", mode = EnumSource.Mode.EXCLUDE)
+    void givenStateOtherThanSelectingConsultant_whenUsingConsultant_exceptionIsThrown(State state) {
+        InfiltrateTurn turn = InfiltrateTurn.builder()
+            .match(match)
+            .currentState(state)
+            .build();
+
+        assertThatThrownBy(() -> turn.onUseConsultantRequest(new UseConsultantRequest(null)))
+            .hasMessageContaining("invalid action for the current state (%s)", State.SELECTING_CONSULTANT);
+    }
+
+    @Test
+    void givenMediaAdvisorConsultantAndOnlyOneTypeOfConglomerateInHand_whenUsingConsultant_exceptionIsThrown() {
+        InfiltrateTurn turn = InfiltrateTurn.builder()
+            .match(match)
+            .currentState(State.SELECTING_CONSULTANT)
+            .build();
+
+        UseConsultantRequest request = new UseConsultantRequest(ConsultantType.MEDIA_ADVISOR);
+        currentPlayer.addSharesToHand(Conglomerate.TOTAL_ENTERTAINMENT, 4);
+        currentPlayer.getHeadquarter().addConsultant(ConsultantType.MEDIA_ADVISOR, 2);
+
+        assertThatThrownBy(() -> turn.onUseConsultantRequest(request))
+            .hasMessageContaining("you cannot use the Consultant 'Media Advisor' if you only have one type of conglomerate share in hand");
+    }
+
+    @ParameterizedTest
+    @EnumSource(value = ConsultantType.class, names = {"MEDIA_ADVISOR", "CORPORATE_LAWYER"}, mode = EnumSource.Mode.EXCLUDE)
+    void givenSelectingConsultantStateAndInvalidConsultant_whenUsingConsultant_exceptionIsThrown(ConsultantType consultantType) {
+        InfiltrateTurn turn = InfiltrateTurn.builder()
+            .match(match)
+            .currentState(State.SELECTING_CONSULTANT)
+            .build();
+
+        assertThatThrownBy(() -> turn.onUseConsultantRequest(new UseConsultantRequest(consultantType)))
+            .hasMessageContaining("invalid consultant for an infiltrate turn");
+    }
+
+    @ParameterizedTest
+    @EnumSource(value = ConsultantType.class, names = {"MEDIA_ADVISOR", "CORPORATE_LAWYER"})
+    void givenSelectingConsultantStateAndValidConsultant_whenUsingConsultant_consultantIsUsedAndRemovedFromHand(ConsultantType consultantType) {
+        InfiltrateTurn turn = InfiltrateTurn.builder()
+            .match(match)
+            .currentState(State.SELECTING_CONSULTANT)
+            .build();
+
+        UseConsultantRequest request = new UseConsultantRequest(consultantType);
         currentPlayer.addSharesToHand(Conglomerate.TOTAL_ENTERTAINMENT, 4);
         currentPlayer.addSharesToHand(Conglomerate.OMNICORP, 2);
-        currentPlayer.getHeadquarter().addConsultant(ConsultantType.MEDIA_ADVISOR);
-        companyTile = CompanyTile.builder()
-            .currentConglomerate(Conglomerate.TOTAL_ENTERTAINMENT)
-            .agents(1)
-            .build();
+        currentPlayer.getHeadquarter().addConsultant(consultantType, 2);
+
+        UseConsultantResponse response = turn.onUseConsultantRequest(request);
+
+        assertThat(response.getNextState()).isEqualTo(State.INFILTRATE);
+        assertThat(currentPlayer.getHeadquarter().getConsultants().count(consultantType)).isEqualTo(1);
+        assertThat(turn.getUseConsultantRequest()).isEqualTo(request);
     }
 
     //
-    // Basic infiltrate
+    // InfiltrateTurn#onInfiltrateRequest
     //
 
-    @Test
-    void whenInfiltrateRequest_usedConglomeratesSharesAreRemovedFromHandAndAddedToHeadquartersAndTile_responseIsSendCorrectly() {
-        infiltrate = basicInfiltrateBuilder();
-        when(tileReference.fromMatch(match)).thenReturn(companyTile);
-        when(turnSystem.getCurrentPlayer()).thenReturn(currentPlayer);
-        when(infiltrateRequest.getInfiltrate()).thenReturn(infiltrate);
-        InfiltrateTurn infiltrateTurn = InfiltrateTurn.builder()
+    @ParameterizedTest
+    @EnumSource(value = State.class, names = "INFILTRATE", mode = EnumSource.Mode.EXCLUDE)
+    void givenStateOtherThanInfiltrate_whenInfiltrating_exceptionIsThrown(State state) {
+        Infiltrate action = mock(Infiltrate.class);
+
+        InfiltrateTurn turn = InfiltrateTurn.builder()
             .match(match)
-            .currentState(InfiltrateTurn.State.INFILTRATE)
-            .useConsultantRequest(useConsultantRequest)
+            .currentState(state)
             .build();
 
-        InfiltrateResponse response = infiltrateTurn.onInfiltrateRequest(infiltrateRequest);
-
-        assertEquals(new InfiltrateResponse(InfiltrateTurn.State.TAKING_CONSULTANT), response);
-        assertEquals(1, currentPlayer.getHand().count(Conglomerate.TOTAL_ENTERTAINMENT));
-        assertEquals(3, currentPlayer.getHeadquarter().getConglomerateShares(Conglomerate.TOTAL_ENTERTAINMENT));
-        assertEquals(4, companyTile.getAgents());
-    }
-
-    //
-    // Use Consultant Request
-    //
-    @Test
-    void whenUseConsultantRequest_responseIsSendCorrectly() {
-        when(useConsultantRequest.getConsultant()).thenReturn(ConsultantType.MEDIA_ADVISOR);
-        when(turnSystem.getCurrentPlayer()).thenReturn(currentPlayer);
-        InfiltrateTurn infiltrateTurn = InfiltrateTurn.builder()
-            .match(match)
-            .currentState(InfiltrateTurn.State.SELECTING_CONSULTANT)
-            .useConsultantRequest(useConsultantRequest)
-            .build();
-
-        UseConsultantResponse response = infiltrateTurn.onUseConsultantRequest(useConsultantRequest);
-
-        assertEquals(new UseConsultantResponse(InfiltrateTurn.State.INFILTRATE), response);
-        assertEquals(0, currentPlayer.getHeadquarter().getConsultants().count(ConsultantType.MEDIA_ADVISOR));
+        assertThatThrownBy(() -> turn.onInfiltrateRequest(new InfiltrateRequest(action)))
+            .hasMessageContaining("invalid action for the current state (%s)", State.INFILTRATE);
     }
 
     @Test
-    void givenUseConsultantRequest_whenMediaAdvisorIsUsedAndOnlyOneConglomerateTypeInHand_throwsException() {
-        when(useConsultantRequest.getConsultant()).thenReturn(ConsultantType.MEDIA_ADVISOR);
-        when(turnSystem.getCurrentPlayer()).thenReturn(currentPlayer);
-        currentPlayer.discardSharesFromHand(Conglomerate.OMNICORP, 2);
-        InfiltrateTurn infiltrateTurn = InfiltrateTurn.builder()
+    void givenInfiltrateStateWithLessThan3Shares_whenInfiltrating_actionIsExecutedAndTurnIsPassed() {
+        Infiltrate action = mock(Infiltrate.class);
+        when(action.getTotalNumberOfShares()).thenReturn(2);
+
+        UseConsultantRequest useConsultantRequest = new UseConsultantRequest();
+        InfiltrateTurn turn = InfiltrateTurn.builder()
             .match(match)
-            .currentState(InfiltrateTurn.State.SELECTING_CONSULTANT)
+            .currentState(State.INFILTRATE)
             .useConsultantRequest(useConsultantRequest)
             .build();
 
-        assertThrows(IllegalArgumentException.class, () -> infiltrateTurn.onUseConsultantRequest(useConsultantRequest));
+        InfiltrateResponse response = turn.onInfiltrateRequest(new InfiltrateRequest(action));
+
+        verify(action).run(eq(match), eq(useConsultantRequest));
+        assertThat(response.getNextState()).isEqualTo(State.NONE);
+        verify(turnSystem).passTurn();
     }
 
     @Test
-    void givenUseConsultantRequest_whenInvalidConsultantIsUsed_throwsException() {
-        when(useConsultantRequest.getConsultant()).thenReturn(ConsultantType.MILITARY_CONTRACTOR);
-        when(turnSystem.getCurrentPlayer()).thenReturn(currentPlayer);
-        InfiltrateTurn infiltrateTurn = InfiltrateTurn.builder()
+    void givenInfiltrateStateWith3Shares_whenInfiltrating_actionIsExecutedAndNextStateIsTakingConsultant() {
+        Infiltrate action = mock(Infiltrate.class);
+        when(action.getTotalNumberOfShares()).thenReturn(3);
+
+        UseConsultantRequest useConsultantRequest = new UseConsultantRequest();
+        InfiltrateTurn turn = InfiltrateTurn.builder()
             .match(match)
-            .currentState(InfiltrateTurn.State.SELECTING_CONSULTANT)
+            .currentState(State.INFILTRATE)
             .useConsultantRequest(useConsultantRequest)
             .build();
 
-        assertThrows(IllegalArgumentException.class, () -> infiltrateTurn.onUseConsultantRequest(useConsultantRequest));
+        InfiltrateResponse response = turn.onInfiltrateRequest(new InfiltrateRequest(action));
+
+        verify(action).run(eq(match), eq(useConsultantRequest));
+        assertThat(response.getNextState()).isEqualTo(State.TAKING_CONSULTANT);
+        verify(turnSystem, never()).passTurn();
     }
 
     //
-    // Take Consultant Request
+    // InfiltrateTurn#onTakeConsultantRequest
+    //
+
+    @ParameterizedTest
+    @EnumSource(value = State.class, names = "TAKING_CONSULTANT", mode = EnumSource.Mode.EXCLUDE)
+    void givenStateOtherThanTakingConsultant_whenTakingConsultant_exceptionIsThrown(State state) {
+        InfiltrateTurn turn = InfiltrateTurn.builder()
+            .match(match)
+            .currentState(state)
+            .build();
+
+        assertThatThrownBy(() -> turn.onTakeConsultantRequest(new TakeConsultantRequest()))
+            .hasMessageContaining("invalid action for the current state (%s)", State.TAKING_CONSULTANT);
+    }
+
+    @ParameterizedTest
+    @EnumSource(value = ConsultantType.class, names = {"MEDIA_ADVISOR", "CORPORATE_LAWYER"})
+    void givenTakingConsultantStateAndSameConsultantAsUsed_whenTakingConsultant_exceptionIsThrown(ConsultantType consultantType) {
+        UseConsultantRequest useConsultantRequest = new UseConsultantRequest(consultantType);
+
+        InfiltrateTurn turn = InfiltrateTurn.builder()
+            .match(match)
+            .currentState(State.TAKING_CONSULTANT)
+            .useConsultantRequest(useConsultantRequest)
+            .build();
+
+        assertThatThrownBy(() -> turn.onTakeConsultantRequest(new TakeConsultantRequest(consultantType)))
+            .hasMessageContaining("you cannot take the same consultant you used to infiltrate the company");
+    }
+
+    @ParameterizedTest
+    @EnumSource(value = ConsultantType.class, names = {"MEDIA_ADVISOR", "CORPORATE_LAWYER"})
+    void givenTakingConsultantStateAndDifferentConsultantThanUsed_whenTakingConsultant_consultantIsTaken(ConsultantType consultantType) {
+        InfiltrateTurn turn = InfiltrateTurn.builder()
+            .match(match)
+            .currentState(State.TAKING_CONSULTANT)
+            .useConsultantRequest(new UseConsultantRequest())
+            .build();
+
+        turn.onTakeConsultantRequest(new TakeConsultantRequest(consultantType));
+
+        verify(generalSupply).takeConsultant(consultantType);
+        assertThat(currentPlayer.getHeadquarter().getConsultants()).containsExactly(consultantType);
+    }
+
+    //
+    // InfiltrateTurn#onDiscardShareRequest
     //
 
     @Test
-    void givenTakeConsultantRequest_ConsultantIsTaken(){
-        when(turnSystem.getCurrentPlayer()).thenReturn(currentPlayer);
-        when(takeConsultantRequest.getConsultant()).thenReturn(ConsultantType.MILITARY_CONTRACTOR);
-        InfiltrateTurn infiltrateTurn = InfiltrateTurn.builder()
+    void whenDiscardingShare_exceptionIsThrown() {
+        InfiltrateTurn turn = InfiltrateTurn.builder()
             .match(match)
-            .currentState(InfiltrateTurn.State.TAKING_CONSULTANT)
-            .useConsultantRequest(useConsultantRequest)
             .build();
 
-        infiltrateTurn.onTakeConsultantRequest(takeConsultantRequest);
-
-        assertEquals(1, currentPlayer.getHeadquarter().getConsultants().count(ConsultantType.MILITARY_CONTRACTOR));
+        assertThatCode(() -> turn.onDiscardShareRequest(new DiscardShareRequest()))
+            .hasMessageContaining("invalid move for the current action");
     }
-
-    @Test
-    void givenTakeConsultantRequest_whenUsedConsultantIsTaken_throwsException(){
-        when(takeConsultantRequest.getConsultant()).thenReturn(ConsultantType.MEDIA_ADVISOR);
-        when(useConsultantRequest.getConsultant()).thenReturn(ConsultantType.MEDIA_ADVISOR);
-        InfiltrateTurn infiltrateTurn = InfiltrateTurn.builder()
-            .match(match)
-            .currentState(InfiltrateTurn.State.TAKING_CONSULTANT)
-            .useConsultantRequest(useConsultantRequest)
-            .build();
-
-        assertThrows(IllegalArgumentException.class, () -> infiltrateTurn.onTakeConsultantRequest(takeConsultantRequest));
-    }
-
-
-    private BasicInfiltrate basicInfiltrateBuilder() {
-        return BasicInfiltrate.builder()
-            .tile(tileReference)
-            .conglomerateType(Conglomerate.TOTAL_ENTERTAINMENT)
-            .numberOfShares(3)
-            .build();
-    }
-
-
 }

@@ -1,12 +1,10 @@
 package us.lsi.dp1.newcorporder.match.payload.request.infiltrate;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoSettings;
 import us.lsi.dp1.newcorporder.match.*;
 import us.lsi.dp1.newcorporder.match.company.CompanyTile;
@@ -21,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 @MockitoSettings
-class BasicInfiltrateTest {
+class DefaultInfiltrateTest {
 
     @Mock TurnSystem turnSystem;
     @Mock UseConsultantRequest useConsultantRequest;
@@ -47,7 +45,7 @@ class BasicInfiltrateTest {
             .agents(1)
             .build();
         when(tileReference.fromMatch(match)).thenReturn(companyTile);
-        infiltrate = BasicInfiltrate.builder()
+        infiltrate = DefaultInfiltrate.builder()
             .tile(tileReference)
             .conglomerateType(Conglomerate.TOTAL_ENTERTAINMENT)
             .numberOfShares(2)

@@ -11,7 +11,7 @@ import us.lsi.dp1.newcorporder.match.payload.request.UseConsultantRequest;
 
 @Data
 @Builder
-public class BasicInfiltrate implements Infiltrate {
+public class DefaultInfiltrate implements Infiltrate {
 
     private CompanyTileReference tile;
     private Conglomerate conglomerateType;

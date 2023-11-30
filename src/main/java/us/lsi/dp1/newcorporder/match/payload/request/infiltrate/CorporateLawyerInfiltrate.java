@@ -17,11 +17,11 @@ import java.util.List;
 @Builder
 public class CorporateLawyerInfiltrate implements Infiltrate {
 
-    private List<BasicInfiltrate> actions;
+    private List<DefaultInfiltrate> actions;
 
     @Override
     public int getTotalNumberOfShares() {
-        return actions.stream().mapToInt(BasicInfiltrate::getNumberOfShares).sum();
+        return actions.stream().mapToInt(DefaultInfiltrate::getNumberOfShares).sum();
     }
 
     @Override
@@ -30,7 +30,7 @@ public class CorporateLawyerInfiltrate implements Infiltrate {
             "the infiltrate must be the same type as the consultant used");
         Preconditions.checkArgument(actions.size() == 2,
             "there must be 2 infiltrate actions when using the corporate lawyer consultant");
-        Preconditions.checkArgument(actions.stream().map(BasicInfiltrate::getConglomerateType).distinct().count() == 2,
+        Preconditions.checkArgument(actions.stream().map(DefaultInfiltrate::getConglomerateType).distinct().count() == 2,
             "the conglomerate shares selected have to be of different type");
 
         actions.forEach(action -> infiltrate(match, action.getConglomerateType(), action.getNumberOfShares(), action.getTile()));
@@ -39,7 +39,7 @@ public class CorporateLawyerInfiltrate implements Infiltrate {
     private int getDifferentConglomerates() {
         int res = 0;
         List<Conglomerate> ls = new ArrayList<>();
-        for(BasicInfiltrate b: actions) {
+        for (DefaultInfiltrate b : actions) {
         	if(!ls.contains(b.getConglomerateType())) {
         		ls.add(b.getConglomerateType());
         		res++;

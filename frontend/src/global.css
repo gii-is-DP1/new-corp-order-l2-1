@@ -1,0 +1,47 @@
+@import url(https://db.onlinewebfonts.com/c/755ac4a5c4a3144f96657f6f555ab38e?family=Core+Magic+W00+Regular);
+@import url(https://db.onlinewebfonts.com/c/691548bdb28878b6980b20ad51fe6d8e?family=DIN+Next+Slab+W04+Regular);
+
+* {
+    margin: 5px
+}
+
+h1 {
+    color: #F8F8F8;
+    font-family: "Core Magic W00 Regular", serif;
+}
+
+h2 {
+    color: #F8F8F8;
+    font-family: "DIN Next Slab W04 Regular";
+}
+
+.cardContainer {
+    height: 200px;
+    display: flex;
+}
+
+.cardElement {
+    height: 200px;
+    display: block;
+}
+
+.cardElement img {
+    max-height: 100%;
+}
+
+.matchCode {
+    margin: auto;
+    font-size: 36px;
+    opacity: 0.7;
+    flex: 0.5;
+}
+
+.modal-content {
+    background: none !important;
+}
+
+
+.bg-navbar {
+    background: #2c2c2c !important;
+    --bs-bg-opacity: 1;
+}

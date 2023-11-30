@@ -76,9 +76,8 @@ class AuthControllerTests {
 		signupRequest = new SignupRequest();
 		signupRequest.setUsername("username");
 		signupRequest.setPassword("password");
-		signupRequest.setFirstName("Test");
-		signupRequest.setLastName("Test");
 		signupRequest.setAuthority("OWNER");
+        signupRequest.setEmail("email@gmail.com");
 
 		userDetails = new UserDetailsImpl(1, loginRequest.getUsername(), loginRequest.getPassword(),
 				List.of(new SimpleGrantedAuthority("OWNER")));

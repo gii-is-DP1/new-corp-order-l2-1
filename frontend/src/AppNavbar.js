@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { Navbar, NavbarBrand, NavLink, NavItem, Nav, NavbarText, NavbarToggler, Collapse } from 'reactstrap';
-import { Link } from 'react-router-dom';
+import React, {useEffect, useState} from 'react';
+import {Collapse, Nav, Navbar, NavbarBrand, NavbarText, NavbarToggler, NavItem, NavLink} from 'reactstrap';
+import {Link} from 'react-router-dom';
 import tokenService from './services/token.service';
 import jwt_decode from "jwt-decode";
+import * as Colors from "./util/Colors";
 
 function AppNavbar() {
     const [roles, setRoles] = useState([]);
@@ -25,60 +26,36 @@ function AppNavbar() {
     let userLogout = <></>;
     let publicLinks = <></>;
 
-
     roles.forEach((role) => {
         if (role === "ADMIN") {
             adminLinks = (
-                <>
-                    <NavItem>
-                        <NavLink style={{ color: "white" }} tag={Link} to="/matches">MATCHES</NavLink>
-                    </NavItem>
-                    <NavItem>
-                        <NavLink style={{ color: "white" }} tag={Link} to="/moderation">MODERATION</NavLink>
-                    </NavItem>
-                    <NavItem>
-                        <NavLink style={{ color: "white" }} tag={Link} to="/achievements">ACHIEVEMENTS</NavLink>
-                    </NavItem>
-                    <NavItem>
-                        <NavLink style={{ color: "white" }} tag={Link} to="/stats">STATS</NavLink>
-                    </NavItem>
-                    <NavItem>
-                        <NavLink style={{ color: "white" }} tag={Link} to="/boh">LEAVE ADMIN PANEL</NavLink>
-                    </NavItem>
-                </>
+                createNavLinks([
+                    {link: "/matches", text: "MATCHES"},
+                    {link: "/moderation", text: "MODERATION"},
+                    {link: "/achievements", text: "ACHIEVEMENTS"},
+                    {link: "/stats", text: "STATS"},
+                    {link: "/boh", text: "LEAVE ADMIN PANEL"}
+                ])
             )
         }
         if (role === "PLAYER") {
             ownerLinks = (
-                <>
-                    <NavItem>
-                        <NavLink style={{ color: "white" }} tag={Link} to="/stats">STATS</NavLink>
-                    </NavItem>
-                    <NavItem>
-                        <NavLink style={{ color: "white" }} tag={Link} to="/friends">FRIENDS</NavLink>
-                    </NavItem>
-                    <NavItem>
-                        <NavLink style={{ color: "white" }} tag={Link} to="/boh">PLAY NOW</NavLink>
-                    </NavItem>
-
-                </>
+                createNavLinks([
+                    {link: "/stats", text: "STATS"},
+                    {link: "/friends", text: "FRIENDS"},
+                    {link: "/boh", text: "PLAY NOW"}
+                ])
             )
         }
     })
 
     if (!jwt) {
         publicLinks = (
-            <>
-                <NavItem>
-                    <NavLink style={{ color: "white" }} id="home" tag={Link} to="/home">HOME</NavLink>
-                </NavItem>
-                <NavItem>
-                    <NavLink style={{ color: "white" }} id="register" tag={Link} to="/register">REGISTER</NavLink>
-                </NavItem>
-                <NavItem>
-                    <NavLink style={{ color: "white" }} id="login" tag={Link} to="/login">LOGIN</NavLink>
-                </NavItem>
-            </>
+            createNavLinks([
+                {link: "/home", text: "HOME"},
+                {link: "/register", text: "REGISTER"},
+                {link: "/login", text: "LOGIN"}
+            ])
         )
     } else {
         userLinks = (
@@ -87,29 +64,33 @@ function AppNavbar() {
         )
         userLogout = (
             <>
-                <NavbarText style={{ color: "white" }} className="justify-content-end">{username}</NavbarText>
+                <NavbarText style={{color: "white"}} className="justify-content-end">{username}</NavbarText>
                 <NavItem className="d-flex">
-                    <NavLink style={{ color: "white" }} id="logout" tag={Link} to="/logout">Logout</NavLink>
+                    <NavLink style={{color: "white"}} id="logout" tag={Link} to="/logout">Logout</NavLink>
                 </NavItem>
             </>
         )
 
     }
 
+    const navBarStyle = {
+        height: "75px"
+    }
+
     return (
-        <div>
-            <Navbar expand="md" className="bg-navbar">
-                <NavbarBrand href="/">
-                    <img alt="logo" src="/Images/New-corp-order-logo.png" style={{ height: 40, width: 40 }} />
+        <div style={{margin: "0"}}>
+            <Navbar expand={true} className="bg-navbar" style={navBarStyle}>
+                <NavbarBrand href="/" style={navBarStyle}>
+                    <img src="/Images/New-corp-order-logo.png" alt="logo" style={{maxHeight: "100%"}}/>
                 </NavbarBrand>
-                <NavbarToggler onClick={toggleNavbar} className="ms-2" />
-                <Collapse isOpen={!collapsed} navbar>
-                    <Nav className="me-auto mb-2 mb-lg-0" navbar>
+                <NavbarToggler onClick={toggleNavbar} className="ms-2"/>
+                <Collapse style={{justifyContent: "flex-end"}} isOpen={!collapsed} navbar>
+                    <Nav navbar>
                         {userLinks}
                         {adminLinks}
                         {ownerLinks}
                     </Nav>
-                    <Nav className="ms-auto mb-2 mb-lg-0" navbar>
+                    <Nav navbar>
                         {publicLinks}
                         {userLogout}
                     </Nav>
@@ -117,6 +98,21 @@ function AppNavbar() {
             </Navbar>
         </div>
     );
+}
+
+function createNavLinks(navItem) {
+
+    const items = navItem.map(item => (
+        <NavItem>
+            <NavLink style={{color: Colors.white}} tag={Link} to={item.link}>
+                <h2 style={{fontSize: "14px"}}>{item.text}</h2>
+            </NavLink>
+        </NavItem>
+    ));
+
+    return <>
+        {items}
+    </>;
 }
 
 export default AppNavbar;

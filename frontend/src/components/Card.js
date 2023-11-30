@@ -1,8 +1,10 @@
+import * as Colors from "../util/Colors";
+
 export default function Card({style, title, subtitle, icon, children}) {
 
     const cardStyle = {
-        minWidth: "200px",
-        minHeight: "200px",
+        minWidth: "350px",
+        minHeight: "150px",
         width: "fit-content",
         borderRadius: "25px",
         boxShadow: "0 0 25px #592c2c2c",
@@ -23,7 +25,7 @@ export default function Card({style, title, subtitle, icon, children}) {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        padding: "10px 0 10px",
+        padding: "5px",
         flex: 1
     }
 
@@ -40,14 +42,16 @@ export default function Card({style, title, subtitle, icon, children}) {
         <div style={{...cardStyle, ...style}}>
             <header style={headerStyle}>
                 <div style={headerTextStyle}>
-                    <h1 style={{fontSize: "32px"}}>
+                    <h1 style={{fontSize: "26px", color: Colors.white}}>
                         {title}
                     </h1>
-                    <h2 style={{fontSize: "24px"}}>
+                    <h2 style={{fontSize: "18px", color: Colors.white}}>
                         {subtitle}
                     </h2>
                 </div>
-                <img src={icon} alt={"icon"} style={iconStyle}/>
+                <div style={iconStyle}>
+                    {icon}
+                </div>
             </header>
             {children}
         </div>

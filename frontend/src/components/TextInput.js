@@ -1,5 +1,6 @@
 import {useState} from 'react';
 import * as Colors from "../util/Colors";
+import SendIcon from '@mui/icons-material/Send';
 
 export default function TextInput({name, placeholder, onClick}) {
 
@@ -10,8 +11,6 @@ export default function TextInput({name, placeholder, onClick}) {
         backgroundColor: Colors.gray,
         display: "flex",
         alignItems: "center",
-        height: "50px",
-        width: "300px",
         borderRadius: "0.4em",
         border: "none"
     }
@@ -29,16 +28,17 @@ export default function TextInput({name, placeholder, onClick}) {
     const buttonStyle = {
         backgroundColor: "transparent",
         border: "none",
-        height: "50px",
-        width: "50px"
+        padding: "10px"
     }
 
-
     return (
-         <div style={divStyle}>
+        <div style={divStyle}>
             <input name={name} placeholder={placeholder} style={inputStyle} value={inputValue}
                    onChange={e => setInputValue(e.target.value)}/>
-            {onClick && <button onClick={onClick} style={buttonStyle}>></button>}
-         </div>
-)
+            {onClick &&
+                <button onClick={onClick} style={buttonStyle}>
+                    <SendIcon/>
+                </button>}
+        </div>
+    )
 }

@@ -11,6 +11,7 @@ import us.lsi.dp1.newcorporder.match.player.MatchPlayer;
 import us.lsi.dp1.newcorporder.match.turn.TurnSystem;
 import us.lsi.dp1.newcorporder.player.Player;
 
+import java.time.Instant;
 import java.util.*;
 
 public class Match {
@@ -18,6 +19,8 @@ public class Match {
     public static final int INITIAL_CONGLOMERATE_SHARES_PER_PLAYER = 4;
     public static final int MAX_SHARES_IN_HAND = 6;
     public static final int SHARES_IN_OPEN_DISPLAY = 4;
+
+    private Instant startTime;
 
     public static Match create(int maxPlayers, MatchMode matchMode) {
         GeneralSupply generalSupply = GeneralSupply.create();
@@ -146,5 +149,20 @@ public class Match {
         }
         return winners;
     }
+    public Instant determineStartTime() {
+        if (matchState == MatchState.PLAYING) {
+            System.out.println("The match has already started. Not possible to determine the start of the match.");
+            return null;
+        } else if (matchState == MatchState.WAITING) {
+            startTime = Instant.now();
+            System.out.println("The match is starting. Start Time: " + startTime);
+            return startTime;
+        } else {
+            System.out.println("The match has already ended.Not possible to determine the start of the match ");
+            return null;
+        }
+    }
+
+
 
 }

@@ -1,4 +1,5 @@
 import {useState} from 'react';
+import * as Colors from "../util/Colors";
 
 export default function TextInput({name, placeholder, onClick}) {
 
@@ -6,7 +7,7 @@ export default function TextInput({name, placeholder, onClick}) {
 
 
     const divStyle = {
-        backgroundColor: "#E0E0E0",
+        backgroundColor: Colors.gray,
         display: "flex",
         alignItems: "center",
         height: "50px",
@@ -16,11 +17,10 @@ export default function TextInput({name, placeholder, onClick}) {
     }
 
     const inputStyle = {
-        color: "#2C2C2C",
-        placeholderColor: "#2C2C2C",
+        color: Colors.black,
+        placeholderColor: Colors.black,
         backgroundColor: "transparent",
         padding: "15px",
-        marginRight: "-0.5em",
         outline: "none",
         border: "none",
         flex: 1

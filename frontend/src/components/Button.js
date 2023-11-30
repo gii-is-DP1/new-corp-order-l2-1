@@ -10,17 +10,16 @@ export default function Button({buttonText, onClick, buttonColor, buttonContext}
         color: textColor,
         borderRadius: "8px",
         borderWidth: "0px",
-        minWidth: "194px",
-        maxHeight: "65px",
-        padding: "15px 25px 15px",
+        minWidth: "150px",
+        maxHeight: "40px",
+        padding: "10px",
         margin: "10px"
     };
 
     const textStyle = {
-        fontSize: "24px",
+        fontSize: "20px",
         color: Colors.white,
         margin: "0px",
-
     }
 
     return (
@@ -31,7 +30,6 @@ export default function Button({buttonText, onClick, buttonColor, buttonContext}
         </button>
     )
 }
-
 
 function getBackgroundColor(buttonColor, context) {
     switch (buttonColor) {

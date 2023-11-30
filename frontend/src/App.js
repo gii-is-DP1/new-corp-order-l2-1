@@ -6,6 +6,7 @@ import tokenService from "./services/token.service";
 import SwaggerDocs from "./public/swagger";
 import Match from "./match/Match"
 import AppNavbar from "./AppNavbar";
+import CardSelectView from "./match/CardSelectView";
 
 //import {Match} from "msw";
 

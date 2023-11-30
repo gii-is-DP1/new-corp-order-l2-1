@@ -1,9 +1,16 @@
 import {CompanyMatrix} from "./CompanyMatrix";
 import {Company, CompanyType, conglomerate} from "./MatchEnums";
+import CardSelectView from "./CardSelectView";
+import Conglomerate, {conglomerateType} from "./Conglomerate";
+import React from "react";
 
 export function getCompanyImageSrc(company) {
     return "/images/companies/" + company.type + "/" + company.name + ".png";
 }
+/*
+export function getCompany(company){
+    return [...Array(this.conglomerates[conglomerate.OMNICORP])].map(()=>(<C state = {{type : type}}/>))
+}*/
 
 export function Game() {
     const companyTiles = [
@@ -24,11 +31,12 @@ export function Game() {
         Company.XCURBR,
         Company.PIX_CHIX,
     ];
-
+    // <CompanyMatrix companyTiles={companyTiles}/> TO PUT IN RETURN
     return <>
         <p>GAME IN PROGRESS</p>
-        <CompanyMatrix companyTiles={companyTiles}/>
-    </>;
+
+        <CardSelectView cards={gameState.player.hand}/>
+        </>;
 }
 
 const hqConglomerate = {

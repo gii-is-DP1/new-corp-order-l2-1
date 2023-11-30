@@ -1,8 +1,8 @@
 export const conglomerate = { //TODO make color a gradient
-    OMNICORP: {name: "Omnicorp", color: "#c6c2a9"},
-    TOTAL_ENTERTAINMENT: {name: "Total Entertainment", color: "#258b9f"},
-    GENERIC_INC: {name: "Generic Inc", color: "#3e2f21"},
-    MEGAMEDIA: {name: "Megamedia", color: "#f74c1e"},
+    OMNICORP: {name: "Omnicorp", color: "#c6c2a9", src:"/Images/Conglomerates/omnicorp.png"},
+    TOTAL_ENTERTAINMENT: {name: "Total Entertainment", color: "#258b9f", src:"/Images/Conglomerates/totalentertainment.png"},
+    GENERIC_INC: {name: "Generic Inc", color: "#3e2f21", src:"/Images/Conglomerates/genericinc.png"},
+    MEGAMEDIA: {name: "Megamedia", color: "#f74c1e", src:"/Images/Conglomerates/megamedia.png"},
 }
 
 export const CompanyType = {

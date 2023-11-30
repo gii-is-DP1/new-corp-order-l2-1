@@ -23,11 +23,11 @@ public class DefaultInfiltrate implements Infiltrate {
     }
 
     @Override
-    public void run(Match match, UseConsultantRequest useConsultantRequests) {
-        CompanyTile tile = this.tile.fromMatch(match);
+    public void apply(Match match, UseConsultantRequest useConsultantRequests) {
+        Preconditions.checkArgument(useConsultantRequests.getConsultant() == null,
+            "invalid request for the selected consultant: %s", useConsultantRequests.getConsultant());
 
-        Preconditions.checkState(useConsultantRequests.getConsultant() == null,
-            "the infiltrate must be the same type as the consultant used");
+        CompanyTile tile = this.tile.fromMatch(match);
         Preconditions.checkArgument(tile.getCurrentConglomerate() == conglomerateType,
             "you cannot add agents to a tile that has agents from a different conglomerate");
 

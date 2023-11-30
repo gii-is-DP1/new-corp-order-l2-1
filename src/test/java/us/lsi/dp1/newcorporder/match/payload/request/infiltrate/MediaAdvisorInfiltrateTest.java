@@ -1,10 +1,8 @@
 package us.lsi.dp1.newcorporder.match.payload.request.infiltrate;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoSettings;
 import us.lsi.dp1.newcorporder.match.*;
 import us.lsi.dp1.newcorporder.match.company.CompanyTile;
@@ -29,7 +27,7 @@ public class MediaAdvisorInfiltrateTest {
     CompanyTile companyTile;
     Match match;
     MatchPlayer currentPlayer;
-    Infiltrate infiltrate;
+    Infiltrate action;
 
     @BeforeEach
     void setUp() {
@@ -47,7 +45,7 @@ public class MediaAdvisorInfiltrateTest {
             .agents(1)
             .build();
         when(tileReference.fromMatch(match)).thenReturn(companyTile);
-        infiltrate = MediaAdvisorInfiltrate.builder()
+        action = MediaAdvisorInfiltrate.builder()
             .tile(tileReference)
             .conglomerateType(Conglomerate.TOTAL_ENTERTAINMENT)
             .numberOfShares(2)
@@ -59,7 +57,7 @@ public class MediaAdvisorInfiltrateTest {
     void whenMediaAdvisorInfiltrate_usedConglomeratesSharesAreRemovedFromHandAndAddedToHeadquartersAndTile() {
         when(turnSystem.getCurrentPlayer()).thenReturn(currentPlayer);
         when(useConsultantRequest.getConsultant()).thenReturn(ConsultantType.MEDIA_ADVISOR);
-        infiltrate.run(match, useConsultantRequest);
+        action.apply(match, useConsultantRequest);
 
         assertEquals(2, currentPlayer.getHand().count(Conglomerate.TOTAL_ENTERTAINMENT));
         assertEquals(1, currentPlayer.getHand().count(Conglomerate.OMNICORP));
@@ -75,7 +73,7 @@ public class MediaAdvisorInfiltrateTest {
             .build());
         when(useConsultantRequest.getConsultant()).thenReturn(ConsultantType.MEDIA_ADVISOR);
         assertThrows(IllegalArgumentException.class, () -> {
-            infiltrate.run(match, useConsultantRequest);
+            action.apply(match, useConsultantRequest);
         }, "you cannot add agents to a tile that has agents from a different conglomerate");
 
         assertIfNothingChange();
@@ -84,14 +82,14 @@ public class MediaAdvisorInfiltrateTest {
     @Test
     void givenMediaAdvisorInfiltrate_whenExtraConglomerateIsSameAsMain_ExceptionIsTrown() {
         when(useConsultantRequest.getConsultant()).thenReturn(ConsultantType.MEDIA_ADVISOR);
-        infiltrate = MediaAdvisorInfiltrate.builder()
+        action = MediaAdvisorInfiltrate.builder()
             .tile(tileReference)
             .conglomerateType(Conglomerate.TOTAL_ENTERTAINMENT)
             .numberOfShares(2)
             .extraConglomerate(Conglomerate.TOTAL_ENTERTAINMENT)
             .build();
         assertThrows(IllegalArgumentException.class, () -> {
-            infiltrate.run(match, useConsultantRequest);
+            action.apply(match, useConsultantRequest);
         }, "your extra conglomerate share cannot be the same type as your main conglomerate shares");
 
         assertIfNothingChange();
@@ -101,7 +99,7 @@ public class MediaAdvisorInfiltrateTest {
     void givenMediaAdvisorInfiltrate_whenMediaAdvisorIsNotUsed_ExceptionIsTrown() {
         when(useConsultantRequest.getConsultant()).thenReturn(ConsultantType.CORPORATE_LAWYER);
         assertThrows(IllegalStateException.class, () -> {
-            infiltrate.run(match, useConsultantRequest);
+            action.apply(match, useConsultantRequest);
         }, "the infiltrate must be the same type as the consultant used");
 
         assertIfNothingChange();

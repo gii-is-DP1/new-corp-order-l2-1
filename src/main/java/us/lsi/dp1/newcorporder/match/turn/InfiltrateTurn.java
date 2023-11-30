@@ -52,10 +52,10 @@ public class InfiltrateTurn extends Turn {
     public InfiltrateResponse onInfiltrateRequest(InfiltrateRequest request) {
         checkState(State.INFILTRATE);
 
-        Infiltrate infiltrate = request.getAction();
-        infiltrate.run(match, useConsultantRequest);
+        Infiltrate action = request.getAction();
+        action.apply(match, useConsultantRequest);
 
-        if (infiltrate.getTotalNumberOfShares() >= 3) {
+        if (action.getTotalNumberOfShares() >= 3) {
             currentState = State.TAKING_CONSULTANT;
         } else {
             this.endTurn();

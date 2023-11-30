@@ -33,7 +33,7 @@ class CorporateLawyerInfiltrateTest {
     Match match;
     MatchPlayer currentPlayer;
     InfiltrateRequest infiltrateRequest;
-    Infiltrate infiltrate;
+    Infiltrate action;
 
     @Mock DefaultInfiltrate defaultInfiltrateMock;
 
@@ -61,7 +61,7 @@ class CorporateLawyerInfiltrateTest {
     @Test
     void givenCorporateLawyerInfiltrate_usedConglomeratesSharesAreRemovedFromHandAndAddedToHeadquartersAndTile(){
         // given
-        infiltrate = CorporateLawyerInfiltrate.builder()
+        action = CorporateLawyerInfiltrate.builder()
             .actions(List.of(
                 DefaultInfiltrate.builder()
                     .tile(tileReference1)
@@ -74,13 +74,14 @@ class CorporateLawyerInfiltrateTest {
                     .numberOfShares(1)
                     .build()
             ))
-            .build();;
+            .build();
+
         when(tileReference1.fromMatch(match)).thenReturn(companyTile1);
         when(tileReference2.fromMatch(match)).thenReturn(companyTile2);
         when(turnSystem.getCurrentPlayer()).thenReturn(currentPlayer);
         // when
         when(useConsultantRequest.getConsultant()).thenReturn(ConsultantType.CORPORATE_LAWYER);
-        infiltrate.run(match, useConsultantRequest);
+        action.apply(match, useConsultantRequest);
         // then
         assertEquals(2, currentPlayer.getHand().count(Conglomerate.TOTAL_ENTERTAINMENT));
         assertEquals(2, currentPlayer.getHeadquarter().getConglomerateShares(Conglomerate.TOTAL_ENTERTAINMENT));
@@ -94,7 +95,7 @@ class CorporateLawyerInfiltrateTest {
     @Test
     void givenCorporateLawyerInfiltrate_whenTileIsFromSameConglomerate_ExceptionIsTrown() {
         // given
-        infiltrate = CorporateLawyerInfiltrate.builder()
+        action = CorporateLawyerInfiltrate.builder()
             .actions(List.of(
                 DefaultInfiltrate.builder()
                     .tile(tileReference1)
@@ -111,7 +112,7 @@ class CorporateLawyerInfiltrateTest {
         when(useConsultantRequest.getConsultant()).thenReturn(ConsultantType.CORPORATE_LAWYER);
         // then
         assertThrows(IllegalArgumentException.class, () -> {
-            infiltrate.run(match, useConsultantRequest);
+            action.apply(match, useConsultantRequest);
         }, "the conglomerate shares selected have to be of different type");
         assertIfNothingChange();
     }
@@ -128,10 +129,10 @@ class CorporateLawyerInfiltrateTest {
         when(useConsultantRequest.getConsultant()).thenReturn(ConsultantType.CORPORATE_LAWYER);
         // then
         assertThrows(IllegalArgumentException.class, () -> {
-            infiltrateWith1.run(match, useConsultantRequest);
+            infiltrateWith1.apply(match, useConsultantRequest);
         }, "there must be 2 infiltrate actions when using the corporate lawyer consultant");
         assertThrows(IllegalArgumentException.class, () -> {
-            infiltrateWith3.run(match, useConsultantRequest);
+            infiltrateWith3.apply(match, useConsultantRequest);
         }, "there must be 2 infiltrate actions when using the corporate lawyer consultant");
         assertIfNothingChange();
     }
@@ -139,13 +140,13 @@ class CorporateLawyerInfiltrateTest {
     @Test
     void givenCorporateLawyerInfiltrate_whenTheConsultantIsntCorporateLawyer_trowsException() {
     	// given
-    	infiltrate = CorporateLawyerInfiltrate.builder()
+        action = CorporateLawyerInfiltrate.builder()
             .actions(List.of(defaultInfiltrateMock, defaultInfiltrateMock))
                 .build();;
         when(useConsultantRequest.getConsultant()).thenReturn(ConsultantType.MEDIA_ADVISOR);
         // then
         assertThrows(IllegalStateException.class, () -> {
-            infiltrate.run(match, useConsultantRequest);
+            action.apply(match, useConsultantRequest);
         }, "the infiltrate must be the same type as the consultant used");
         assertIfNothingChange();
     }

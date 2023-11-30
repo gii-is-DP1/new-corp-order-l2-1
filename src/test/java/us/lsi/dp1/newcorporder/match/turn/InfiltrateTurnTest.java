@@ -138,7 +138,7 @@ class InfiltrateTurnTest {
 
         InfiltrateResponse response = turn.onInfiltrateRequest(new InfiltrateRequest(action));
 
-        verify(action).run(eq(match), eq(useConsultantRequest));
+        verify(action).apply(match, useConsultantRequest);
         assertThat(response.getNextState()).isEqualTo(State.NONE);
         verify(turnSystem).passTurn();
     }
@@ -157,7 +157,7 @@ class InfiltrateTurnTest {
 
         InfiltrateResponse response = turn.onInfiltrateRequest(new InfiltrateRequest(action));
 
-        verify(action).run(eq(match), eq(useConsultantRequest));
+        verify(action).apply(match, useConsultantRequest);
         assertThat(response.getNextState()).isEqualTo(State.TAKING_CONSULTANT);
         verify(turnSystem, never()).passTurn();
     }

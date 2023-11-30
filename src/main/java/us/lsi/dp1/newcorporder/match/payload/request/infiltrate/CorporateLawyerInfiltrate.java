@@ -25,9 +25,9 @@ public class CorporateLawyerInfiltrate implements Infiltrate {
     }
 
     @Override
-    public void run(Match match, UseConsultantRequest useConsultantRequests) {
-        Preconditions.checkState(useConsultantRequests.getConsultant() == ConsultantType.CORPORATE_LAWYER,
-            "the infiltrate must be the same type as the consultant used");
+    public void apply(Match match, UseConsultantRequest useConsultantRequests) {
+        Preconditions.checkArgument(useConsultantRequests.getConsultant() == ConsultantType.CORPORATE_LAWYER,
+            "invalid request for the selected consultant: %s", useConsultantRequests.getConsultant());
         Preconditions.checkArgument(actions.size() == 2,
             "there must be 2 infiltrate actions when using the corporate lawyer consultant");
         Preconditions.checkArgument(actions.stream().map(DefaultInfiltrate::getConglomerateType).distinct().count() == 2,

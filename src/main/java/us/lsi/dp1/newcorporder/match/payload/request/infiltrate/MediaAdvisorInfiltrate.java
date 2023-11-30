@@ -26,11 +26,11 @@ public class MediaAdvisorInfiltrate implements Infiltrate {
     }
 
     @Override
-    public void run(Match match, UseConsultantRequest useConsultantRequests) {
+    public void apply(Match match, UseConsultantRequest useConsultantRequests) {
         CompanyTile tile = this.tile.fromMatch(match);
 
-        Preconditions.checkState(useConsultantRequests.getConsultant() == ConsultantType.MEDIA_ADVISOR,
-            "the infiltrate must be the same type as the consultant used");
+        Preconditions.checkArgument(useConsultantRequests.getConsultant() == ConsultantType.MEDIA_ADVISOR,
+            "invalid request for the selected consultant: %s", useConsultantRequests.getConsultant());
         Preconditions.checkArgument(conglomerateType != extraConglomerate,
             "your extra conglomerate share cannot be the same type as your main conglomerate shares");
         Preconditions.checkArgument(tile.getCurrentConglomerate() == conglomerateType,

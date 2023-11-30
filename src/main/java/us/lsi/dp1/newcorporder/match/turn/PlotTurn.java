@@ -1,6 +1,7 @@
 package us.lsi.dp1.newcorporder.match.turn;
 
 import com.google.common.base.Preconditions;
+import lombok.Builder;
 import us.lsi.dp1.newcorporder.match.Conglomerate;
 import us.lsi.dp1.newcorporder.match.Match;
 import us.lsi.dp1.newcorporder.match.payload.request.DiscardShareRequest;
@@ -21,10 +22,16 @@ public class PlotTurn extends Turn {
         super(match);
     }
 
+    @Builder
+    public PlotTurn(Match match, State currentState) {
+        super(match);
+        this.currentState = currentState;
+    }
+
     @Override
     public TakeShareResponse onTakeShareRequest(TakeShareRequest takeShareRequest) {
         Preconditions.checkState(currentState == State.SELECTING_FIRST_SHARE
-                || currentState == State.SELECTING_SECOND_SHARE,
+                                 || currentState == State.SELECTING_SECOND_SHARE,
             "illegal turn state");
 
         Conglomerate share = this.takeShare(takeShareRequest);
@@ -94,10 +101,5 @@ public class PlotTurn extends Turn {
 
         currentState = this.getNextState();
         turnSystem.passTurn();
-    }
-
-    // for testing purposes
-    void setCurrentState(State state) {
-        this.currentState = state;
     }
 }

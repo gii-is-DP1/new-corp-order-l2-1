@@ -1,29 +1,40 @@
+import * as Colors from "../util/Colors";
 import {black, dangerBackground, orange, successBackground, white} from "../util/Colors";
 
-export default function Button({children, onClick, buttonStyle, buttonContext}) {
-    let backgroundColor = getBackgroundColor(buttonStyle, buttonContext);
+export default function Button({buttonText, onClick, buttonColor, buttonContext}) {
+    let backgroundColor = getBackgroundColor(buttonColor, buttonContext);
     let textColor = getTextColor(backgroundColor);
 
     const style = {
         backgroundColor: backgroundColor,
         color: textColor,
-        borderRadius:"0.4em",
-        borderWidth:"0px",
-        paddingTop:"3%",
-        paddingBottom:"3%",
-        paddingLeft:"13%",
-        paddingRight:"13%",
+        borderRadius: "8px",
+        borderWidth: "0px",
+        minWidth: "194px",
+        maxHeight: "65px",
+        padding: "15px 25px 15px",
+        margin: "10px"
     };
 
-    return <button
-        onClick={onClick}
-        style={style}
-    >{children}</button>
+    const textStyle = {
+        fontSize: "24px",
+        color: Colors.white,
+        margin: "0px",
+
+    }
+
+    return (
+        <button onClick={onClick} style={style}>
+            <h1 style={textStyle}>
+                {buttonText}
+            </h1>
+        </button>
+    )
 }
 
 
-function getBackgroundColor(buttonStyle, context) {
-    switch (buttonStyle) {
+function getBackgroundColor(buttonColor, context) {
+    switch (buttonColor) {
         case buttonStyles.success:
             return successBackground;
         case buttonStyles.danger:

@@ -1,33 +1,5 @@
 import {CompanyMatrix} from "./CompanyMatrix";
-
-const CompanyType = {
-    BROADCAST_NETWORK: "broadcast-network",
-    PRINT_MEDIA: "print-media",
-    GUERRILLA_MARKETING:"guerrilla-marketing",
-    AMBIENT_ADVERTISING: "ambient-advertising",
-    ONLINE_MARKETING: "online-marketing",
-    SOCIAL_MEDIA: "social-media"
-}
-
-const Company = {
-    SLIMGROTZ_INC: {name:"slimgrotz-inc", type: CompanyType.BROADCAST_NETWORK},
-    FLICKERING_LIGHTS:  {name:"flickering-lights", type: CompanyType.BROADCAST_NETWORK},
-    GLOBAL_CORP:  {name:"global-corp", type:CompanyType.BROADCAST_NETWORK},
-    PAGE_ONE_CORP:  {name:"page-one-corp", type:CompanyType.PRINT_MEDIA},
-    READALOT:  {name:"readalot", type:CompanyType.PRINT_MEDIA},
-    GENERIC_SUB_INC:  {name:"generic-sub-inc", type:CompanyType.PRINT_MEDIA},
-    SUBLIMINAL_SUBSIDIARY:  {name:"subliminal-subsidiary", type:CompanyType.GUERRILLA_MARKETING},
-    VISUAL_TERROR_INC:  {name:"visual-terror-inc", type:CompanyType.GUERRILLA_MARKETING},
-    WORDOFMOUTH:  {name:"wordofmouth", type:CompanyType.GUERRILLA_MARKETING},
-    WALLPAPER:  {name:"wallpaper", type:CompanyType.AMBIENT_ADVERTISING},
-    HOLOGRAFX:  {name:"holografx", type:CompanyType.AMBIENT_ADVERTISING},
-    ALL_AROUND_YOU:  {name:"all-around-you", type:CompanyType.AMBIENT_ADVERTISING},
-    PIX_CHIX:  {name:"pix-chix", type:CompanyType.ONLINE_MARKETING},
-    PRETTY_OBSCURE_INC:  {name:"pretty-obscure-inc", type:CompanyType.ONLINE_MARKETING},
-    ANONYMOUS_CROWD:  {name:"anonymous-crowd", type:CompanyType.SOCIAL_MEDIA},
-    LEADERBOARDER:  {name:"leaderboarder", type:CompanyType.SOCIAL_MEDIA},
-    XCURBR:  {name:"xcurbr", type:CompanyType.SOCIAL_MEDIA},
-}
+import {Company, CompanyType, conglomerate, handConglomerates} from "./MatchEnums";
 
 export function getCompanyImageSrc(company) {
     return "/images/companies/" + company.type + "/" + company.name + ".png";
@@ -51,10 +23,70 @@ export function Game() {
         Company.WALLPAPER,
         Company.XCURBR,
         Company.PIX_CHIX,
-    ]
+    ];
 
     return <>
         <p>GAME IN PROGRESS</p>
         <CompanyMatrix companyTiles={companyTiles}/>
     </>;
+}
+
+const opponent = {
+    conglomeratesInHand: 4,
+    hq: {
+        conglomerates: [
+            hqConglomerate,
+            hqConglomerate,
+        ],
+        consultants: playerConsultants
+    }
+}
+
+const hqConglomerate = {
+    type: conglomerate.OMNICORP,
+    isRotated: true,
+}
+
+const handConglomerates = {
+    OMNICORP: 1,
+    MEGAMEDIA: 2,
+    TOTAL_ENTERTAINMENT: 4,
+    GENERIC_INC: 9
+};
+
+const playerConsultants = {
+    MEDIA_ADVISOR: 1,
+    DEALMAKER: 0,
+    CORPORATE_LAWYER: 2,
+    MILITARY_CONTRACTOR: 0,
+}
+
+const gameState = {
+    companies: [{company: Company.READALOT, agents: 1, type: conglomerate.OMNICORP}],
+    player: {
+        hand: handConglomerates,
+        secretObjectives: [
+            CompanyType.AMBIENT_ADVERTISING,
+            CompanyType.BROADCAST_NETWORK
+        ],
+        consultants: playerConsultants,
+    },
+    generalSupply: {
+        conglomeratesLeftInDeck: 30,
+        openDisplay: [
+            conglomerate.GENERIC_INC,
+            conglomerate.MEGAMEDIA,
+        ],
+        consultants: {
+            MEDIA_ADVISOR: 2,
+            DEALMAKER: 3,
+            CORPORATE_LAWYER: 1,
+            MILITARY_CONTRACTOR: 6,
+        },
+    },
+    opponents: [
+        opponent,
+        opponent,
+        opponent
+    ],
 }

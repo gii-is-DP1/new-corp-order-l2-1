@@ -1,5 +1,6 @@
 import {getCompanyImageSrc} from "./Game";
 import {useState} from "react";
+import {conglomerate} from "./MatchEnums";
 
 export function CompanyMatrix({companyTiles}) {
     const style = {display: "flex", flexWrap: "wrap", width: "50%"}
@@ -26,13 +27,6 @@ export function CompanyMatrix({companyTiles}) {
     return <div style={style}>
         {companyTiles.map((company, i) => <CompanyTile company={company} state={companies[i]}/>)}
     </div>;
-}
-
-const conglomerate = { //TODO make color a gradient
-    OMNICORP: {name: "Omnicorp", color: "#c6c2a9"},
-    TOTAL_ENTERTAINMENT: {name: "Total Entertainment", color: "#258b9f"},
-    GENERIC_INC: {name: "Generic Inc", color: "#3e2f21"},
-    MEGAMEDIA: {name: "Megamedia", color: "#f74c1e"},
 }
 
 export function CompanyTile({company, state}) {

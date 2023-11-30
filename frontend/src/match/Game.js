@@ -3,10 +3,14 @@ import {Company, CompanyType, conglomerate} from "./MatchEnums";
 import CardSelectView from "./CardSelectView";
 import Conglomerate, {conglomerateType} from "./Conglomerate";
 import React from "react";
+import Selector from "./Selector/Selector";
+import {onlySelectOfSameColor} from "./Selector/ChangeSelectableItemsFunctions";
+import {selectAtLeastOne} from "./Selector/OnConfirmFunctions";
 
 export function getCompanyImageSrc(company) {
     return "/images/companies/" + company.type + "/" + company.name + ".png";
 }
+
 /*
 export function getCompany(company){
     return [...Array(this.conglomerates[conglomerate.OMNICORP])].map(()=>(<C state = {{type : type}}/>))
@@ -31,12 +35,37 @@ export function Game() {
         Company.XCURBR,
         Company.PIX_CHIX,
     ];
-    // <CompanyMatrix companyTiles={companyTiles}/> TO PUT IN RETURN
+
+    const selection = [
+        <Conglomerate conglomerate={conglomerate.OMNICORP} />,
+        <Conglomerate conglomerate={conglomerate.OMNICORP} />,
+        <Conglomerate conglomerate={conglomerate.OMNICORP} />,
+        <Conglomerate conglomerate={conglomerate.OMNICORP} />,
+    ];
+
+    const currentState = "plot";
+    let selector;
+    switch (currentState){
+        case "plot":
+            selector = <Selector
+                selection={selection}
+                selectableElements={[...Array(selection.length).keys()]}
+                canConfirm = {selectAtLeastOne}
+                changeSelectableItems={onlySelectOfSameColor}
+                onConfirm = {(selectedElements) => { alert(selectedElements)}}
+                containerStyle={{}}
+                itemStyle={{}}
+            />
+    }
+
     return <>
         <p>GAME IN PROGRESS</p>
+        {selector}
+    </>;//  <CardSelectView cards={gameState.player.hand}/>
 
-        <CardSelectView cards={gameState.player.hand}/>
-        </>;
+    const conglomerateContainerStyle = {
+
+    }
 }
 
 const hqConglomerate = {

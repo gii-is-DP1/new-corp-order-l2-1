@@ -8,25 +8,25 @@ import {Game} from "./Game";
 
 /* Possible actions
 1) Card Select View
-    1 Select n conglomerates of the same color from hand (Infiltrate)
-    2 Select n conglomerates of any color from hand (To discard)
-    3 Select n conglomerates of the same color from hq (Takeover)
-    4 Select a card from deck and/or Open Display (Plot)
-    16 Select two cards from deck (Takeover -> Dealmaker)
-    5 Select (a not used in this turn) consultant from General Supply (Infiltrate)
+    DONE 1 Select n conglomerates of the same color from hand (Infiltrate)
+    DONE 2 Select n conglomerates of any color from hand (To discard)
+    DONE 3 Select n conglomerates of the same color from hq (Takeover)
+    DONE 4 Select a card from deck or Open Display (Plot)
+    DONE 16 Select two cards from deck (Takeover -> Dealmaker)
+    DONE 5 Select (a not used in this turn) consultant from General Supply (Infiltrate)
 2) Simple View
     6 View secret objectives
     7 View General Supply
 3) Company tile Select View
-    8 Select a company tile with agents of a specific color (Infiltrate, Takeover)
-    9 Select a company tile orthogonally adjacent at a specific one (Takeover)
+    DONE 8 Select a company tile with agents of a specific color (Infiltrate, Takeover)
+    DONE 9 Select a company tile orthogonally adjacent at a specific one (Takeover)
 4) Company Abilities
     10 Select if you want to use a specific company ability (Takeover)
-    11 Select one or two company tiles with agents of a specific color (Broadcast Network)
-    12 Select one HQ from everyone's HQ conglomerates (Guerrilla Marketing, Ambient Advertising, Social Media)
-    13 Select n (one or two) conglomerates from a specific HQ (Guerrilla Marketing, Ambient Advertising, Social Media)
-    14 Select one conglomerate from your HQ and one from everyone else's HQ Conglomerate (Print Media)
-    15 Select two different company tiles
+    DONE 11 Select one or two company tiles with agents of a specific color (Broadcast Network)
+    DONE 12 Select one HQ from everyone's HQ conglomerates (Guerrilla Marketing, Ambient Advertising, Social Media)
+    DONE 13 Select n (one or two) conglomerates from a specific HQ (Guerrilla Marketing, Ambient Advertising, Social Media)
+    DONE 14 Select one conglomerate from your HQ and one from everyone else's HQ Conglomerate (Print Media)
+    DONE 15 Select two different company tiles
 
     In general:
     1) Select n conglomerates of a selection of (any / the same) color from card set (hand / hq)

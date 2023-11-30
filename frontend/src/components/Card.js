@@ -1,3 +1,5 @@
+import * as Colors from "../util/Colors";
+
 export default function Card({style, title, subtitle, icon, children}) {
 
     const cardStyle = {
@@ -40,10 +42,10 @@ export default function Card({style, title, subtitle, icon, children}) {
         <div style={{...cardStyle, ...style}}>
             <header style={headerStyle}>
                 <div style={headerTextStyle}>
-                    <h1 style={{fontSize: "32px"}}>
+                    <h1 style={{fontSize: "32px", color: Colors.white}}>
                         {title}
                     </h1>
-                    <h2 style={{fontSize: "24px"}}>
+                    <h2 style={{fontSize: "24px", color: Colors.white}}>
                         {subtitle}
                     </h2>
                 </div>

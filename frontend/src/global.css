@@ -1,18 +1,12 @@
 @import url(https://db.onlinewebfonts.com/c/755ac4a5c4a3144f96657f6f555ab38e?family=Core+Magic+W00+Regular);
-@import url(https://db.onlinewebfonts.com/c/691548bdb28878b6980b20ad51fe6d8e?family=DIN+Next+Slab+W04+Regular);
-
-* {
-    margin: 5px
-}
+@import url(https://db.onlinewebfonts.com/c/54f4891696ad7a79999d5e22d33672f0?family=DIN+Next+Slab+Pro);
 
 h1 {
-    color: #F8F8F8;
     font-family: "Core Magic W00 Regular", serif;
 }
 
 h2 {
-    color: #F8F8F8;
-    font-family: "DIN Next Slab W04 Regular";
+    font-family: "DIN Next Slab Pro";
 }
 
 .cardContainer {

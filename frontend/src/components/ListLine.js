@@ -4,7 +4,7 @@ export default function ListLine({children, icon, buttons, profileImages}) {
 
 
     const containerStyle = {
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.gray,
         color: Colors.black,
         display: "flex",
         flexDirection: "row",
@@ -29,11 +29,6 @@ export default function ListLine({children, icon, buttons, profileImages}) {
         padding:"5px",
         margin:"5px",
         flex: "0.5"
-    }
-
-    const fontStyle = {
-        alignItems: "center",
-        margin:"0px"
     }
 
     const profileImageStyle = {

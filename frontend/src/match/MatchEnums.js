@@ -5,7 +5,14 @@ export const conglomerate = { //TODO make color a gradient
     MEGAMEDIA: {name: "Megamedia", color: "#f74c1e"},
 }
 
-
+export const CompanyType = {
+    BROADCAST_NETWORK: "broadcast-network",
+    PRINT_MEDIA: "print-media",
+    GUERRILLA_MARKETING: "guerrilla-marketing",
+    AMBIENT_ADVERTISING: "ambient-advertising",
+    ONLINE_MARKETING: "online-marketing",
+    SOCIAL_MEDIA: "social-media"
+}
 
 export const Company = {
     SLIMGROTZ_INC: {name: "slimgrotz-inc", type: CompanyType.BROADCAST_NETWORK},
@@ -25,13 +32,4 @@ export const Company = {
     ANONYMOUS_CROWD: {name: "anonymous-crowd", type: CompanyType.SOCIAL_MEDIA},
     LEADERBOARDER: {name: "leaderboarder", type: CompanyType.SOCIAL_MEDIA},
     XCURBR: {name: "xcurbr", type: CompanyType.SOCIAL_MEDIA},
-}
-
-export const CompanyType = {
-    BROADCAST_NETWORK: "broadcast-network",
-    PRINT_MEDIA: "print-media",
-    GUERRILLA_MARKETING: "guerrilla-marketing",
-    AMBIENT_ADVERTISING: "ambient-advertising",
-    ONLINE_MARKETING: "online-marketing",
-    SOCIAL_MEDIA: "social-media"
 }

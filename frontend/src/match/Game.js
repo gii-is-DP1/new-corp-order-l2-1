@@ -1,5 +1,5 @@
 import {CompanyMatrix} from "./CompanyMatrix";
-import {Company, CompanyType, conglomerate, handConglomerates} from "./MatchEnums";
+import {Company, CompanyType, conglomerate} from "./MatchEnums";
 
 export function getCompanyImageSrc(company) {
     return "/images/companies/" + company.type + "/" + company.name + ".png";
@@ -31,6 +31,18 @@ export function Game() {
     </>;
 }
 
+const hqConglomerate = {
+    type: conglomerate.OMNICORP,
+    isRotated: true,
+};
+
+const playerConsultants = {
+    MEDIA_ADVISOR: 1,
+    DEALMAKER: 0,
+    CORPORATE_LAWYER: 2,
+    MILITARY_CONTRACTOR: 0,
+};
+
 const opponent = {
     conglomeratesInHand: 4,
     hq: {
@@ -42,10 +54,6 @@ const opponent = {
     }
 }
 
-const hqConglomerate = {
-    type: conglomerate.OMNICORP,
-    isRotated: true,
-}
 
 const handConglomerates = {
     OMNICORP: 1,
@@ -54,12 +62,6 @@ const handConglomerates = {
     GENERIC_INC: 9
 };
 
-const playerConsultants = {
-    MEDIA_ADVISOR: 1,
-    DEALMAKER: 0,
-    CORPORATE_LAWYER: 2,
-    MILITARY_CONTRACTOR: 0,
-}
 
 const gameState = {
     companies: [{company: Company.READALOT, agents: 1, type: conglomerate.OMNICORP}],

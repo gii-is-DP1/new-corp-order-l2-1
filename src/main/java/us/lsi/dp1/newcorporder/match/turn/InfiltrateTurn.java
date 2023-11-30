@@ -49,6 +49,7 @@ public class InfiltrateTurn extends Turn {
 
         if (infiltrate.getTotalNumberOfShares() >= 3) {
             currentState = State.TAKING_CONSULTANT;
+            turnSystem.getCurrentPlayer().infiltrateSomething();
         } else {
             this.endTurn();
         }

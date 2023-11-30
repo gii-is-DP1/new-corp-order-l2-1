@@ -7,9 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import us.lsi.dp1.newcorporder.match.Conglomerate;
 import us.lsi.dp1.newcorporder.match.ConsultantType;
-import us.lsi.dp1.newcorporder.match.MatchState;
 import us.lsi.dp1.newcorporder.match.company.CompanyType;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -17,6 +15,9 @@ import java.util.Random;
 @EqualsAndHashCode(of = "playerId")
 public class MatchPlayer {
 
+    @Getter private int timesPlotted = 0;
+    @Getter private int timesInfiltrated = 0;
+    @Getter private int timesTakenOver=0;
     @Getter private final Integer playerId;
     @Getter private final Headquarter headquarter;
 
@@ -77,5 +78,14 @@ public class MatchPlayer {
         return headquarter.getTotalConglomeratesShares(conglomerateType) +
             (headquarter.getAgentsCaptured(conglomerateType) * 2);
     }
+    public int calculateTimesPlotted() { return this.timesPlotted++;}
+
+    public void infiltrateSomething() {this.timesInfiltrated++;}
+
+    public int calculateTimesInfiltrated() {return timesInfiltrated;}
+
+    public int calculateTimesTakenOver() {return timesTakenOver;}
+
+    public void takeOverWithAbility() {this.timesTakenOver++;}
 
 }

@@ -2,39 +2,36 @@ package us.lsi.dp1.newcorporder.stats;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.Optional;
+import java.util.Set;
 import us.lsi.dp1.newcorporder.match.Conglomerate;
 import us.lsi.dp1.newcorporder.match.ConsultantType;
 import us.lsi.dp1.newcorporder.match.Match;
 import us.lsi.dp1.newcorporder.match.company.CompanyType;
 import us.lsi.dp1.newcorporder.match.player.MatchPlayer;
-
 import java.util.*;
 
 @Service
 public class PlayerMatchStatsService {
 
-    private final MatchStatsService matchStatsService;
-
     @Autowired
-    public PlayerMatchStatsService(MatchStatsService matchStatsService) {
-        this.matchStatsService = matchStatsService;
+    private static PlayerMatchStatsRepository playerMatchStatsRepository;
+    private final MatchStatsRepository matchStatsRepository;
+
+    public PlayerMatchStatsService(MatchStatsRepository matchStatsRepository, PlayerMatchStatsRepository playerMatchStatsRepository) {
+        this.matchStatsRepository = matchStatsRepository;
+        this.playerMatchStatsRepository=playerMatchStatsRepository;
     }
 
-    public Optional<MatchStats> getMatchStatsById(Integer matchId) {
-        return matchStatsService.getMatchStatsById(matchId);
-    }
+    public Optional<MatchStats> getMatchStatsById(Integer id) {return matchStatsRepository.findById(id);}
 
-    public Set<PlayerMatchStats> getPlayerMatchStats(Integer matchId) {
-        Optional<MatchStats> matchStatsOptional = matchStatsService.getMatchStatsById(matchId);
-        return matchStatsOptional.map(MatchStats::getPlayerMatchStats).orElse(Collections.emptySet());
-    }
+    public Set<PlayerMatchStats> getPlayerMatchStats(Integer matchId) {return playerMatchStatsRepository.findByMatchId(matchId);}
 
     public static PlayerMatchStats createPlayerMatchStats(Match match, MatchPlayer player) {
         List<MatchPlayer> winners = match.getWinners();
 
         MatchStats matchStats = null;//FIXME: es un bucle infinito
-
-        MatchResult result;      //TODO: se ocupa Juan
+        MatchResult result;
         if (winners.contains(player)) {
             if (winners.size() > 1)
                 result = MatchResult.TIED;
@@ -44,14 +41,15 @@ public class PlayerMatchStatsService {
             result = MatchResult.LOST;
         }
         Integer totalVP = match.calculateVictoryPoints().count(player);
-        Integer timesPlotted = null;    //TODO
-        Integer timesInfiltrated = null;//TODO
-        Integer timesTakenOver = null;   //TODO
+        Integer timesPlotted = player.calculateTimesPlotted();
+        Integer timesInfiltrated = player.calculateTimesInfiltrated();
+        Integer timesTakenOver = player.calculateTimesTakenOver();
         Set<CompanyPlayerMatchStats> companyStats = new HashSet<>();
         for (CompanyType companyType : CompanyType.values()) {
-            Integer abilityUsed = 0;     //TODO
+            Integer abilityUsed = null; // TODO: calculateAbilityUsed(match, player, companyType);
             companyStats.add(new CompanyPlayerMatchStats(companyType, abilityUsed));
         }
+
         Set<ConglomeratePlayerMatchStats> conglomerateStats = new HashSet<>();
         for (Conglomerate conglomerate : Conglomerate.values()) {
             Integer shares = player.getHeadquarter().getTotalConglomeratesShares(conglomerate);
@@ -60,11 +58,20 @@ public class PlayerMatchStatsService {
         }
         Set<ConsultantPlayerMatchStats> consultantStats = new HashSet<>();
         for (ConsultantType consultantType : ConsultantType.values()) {
-            Integer used = null;    //TODO
+            Integer used = null; // TODO: calculateConsultantUsed(match, player, consultantType);
             consultantStats.add(new ConsultantPlayerMatchStats(consultantType, used));
         }
 
+        PlayerMatchStats playerMatchStats = new PlayerMatchStats(
+        matchStats, result, totalVP, timesPlotted, timesInfiltrated, timesTakenOver,
+        companyStats, conglomerateStats, consultantStats);
+        playerMatchStatsRepository.save(playerMatchStats);
+
         return new PlayerMatchStats(matchStats, result, totalVP, timesPlotted, timesInfiltrated, timesTakenOver, companyStats, conglomerateStats, consultantStats);
     }
+
+
+
+
 
 }

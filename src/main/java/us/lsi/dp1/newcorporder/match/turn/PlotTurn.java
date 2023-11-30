@@ -29,6 +29,10 @@ public class PlotTurn extends Turn {
 
         Conglomerate share = this.takeShare(takeShareRequest);
         turnSystem.getCurrentPlayer().addShareToHand(share);
+        if (currentState == State.SELECTING_FIRST_SHARE || currentState == State.SELECTING_SECOND_SHARE) {
+            turnSystem.getCurrentPlayer().plotSomething();
+        }
+
         currentState = this.getNextState();
 
         if (currentState == State.NONE) {

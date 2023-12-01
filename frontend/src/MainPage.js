@@ -10,19 +10,25 @@ import React from "react";
 
 export function MainPage({}) {
 
-    const sectionStyle = {
+    const content = {
+        flex: 1,
         display: "flex",
-        flexDirection: "row",
-        width: "100vh",
-        height: "100vh"
+        flexDirection: "row"
     }
 
-    const divStyle = {
+    const columnStyle = {
+        marginLeft: "auto",
+        marginRight: "auto",
         display: "flex",
-        flexDirection: "column"
+        flexDirection: "column",
+        justifyContent: "space-evenly",
+        alignItems: "center"
     }
 
-    const rowStyle = {
+    const cardStyle = {
+    }
+
+    const cardRowStyle = {
         display: "flex",
         flexDirection: "row",
         alignItems: "center",
@@ -32,23 +38,24 @@ export function MainPage({}) {
     }
 
     return (
-        <>
+        <div style={{display: "flex", flexDirection: "column", height: "100%"}}>
             <AppNavbar/>
-            <body>
-            <section style={sectionStyle}>
-                <div style={divStyle}>
-                    <Card title={"PLAY NOW"} subtitle={"JOIN PUBLIC MATCH"}
-                          icon={<PublicIcon style={{fontSize: "45px"}}/>}>
 
-                        <section style={rowStyle}>
+            <div style={content}>
+                <div style={columnStyle}>
+                    <Card style={cardStyle}
+                          title={"PLAY NOW"}
+                          subtitle={"JOIN PUBLIC MATCH"}
+                          icon={<PublicIcon style={{fontSize: "45px"}}/>}
+                    >
+                        <section style={cardRowStyle}>
                             <p>GAME MODE</p>
                             <div style={{display: "flex", flexDirection: "row", gap: "15px"}}>
                                 <p>NORMAL</p>
                                 <p>QUICK</p>
                             </div>
                         </section>
-
-                        <section style={rowStyle}>
+                        <section style={cardRowStyle}>
                             <p>NUMBER OF PLAYERS</p>
                             <div style={{display: "flex", flexDirection: "row", gap: "15px"}}>
                                 <p>1<GroupIcon/></p>
@@ -56,14 +63,16 @@ export function MainPage({}) {
                                 <p>3<GroupIcon/></p>
                             </div>
                         </section>
-
                         <div style={{display: "flex", flexDirection: "row", justifyContent: "center"}}>
                             <Button buttonText={"PLAY"} buttonColor={buttonStyles.secondary}></Button>
                         </div>
-
                     </Card>
-                    <Card title={"JOIN GAME"} subtitle={"WITH MATCH CODE"}
-                          icon={<InsertLinkIcon style={{fontSize: "45px"}}/>}>
+
+                    <Card style={cardStyle}
+                          title={"JOIN GAME"}
+                          subtitle={"WITH MATCH CODE"}
+                          icon={<InsertLinkIcon style={{fontSize: "45px"}}/>}
+                    >
                         <div style={{margin: "10px"}}>
                             <TextInput placeholder={"ENTER MATCH CODE..."} onClick={() => {
                             }}></TextInput>
@@ -71,16 +80,18 @@ export function MainPage({}) {
                     </Card>
                 </div>
 
-                <div style={divStyle}>
-                    <Card title={"PRIVATE GAME"} subtitle={"PLAY SOLO OR WITH FRIENDS"}
-                          icon={<LockIcon style={{fontSize: "45px"}}/>}>
+                <div style={columnStyle}>
+                    <Card title={"PRIVATE GAME"}
+                          subtitle={"PLAY SOLO OR WITH FRIENDS"}
+                          icon={<LockIcon style={{fontSize: "45px"}}/>}
+                          style={cardStyle}
+                    >
 
                     </Card>
                 </div>
-            </section>
-            </body>
-        </>
-    );
+            </div>
+        </div>
+    )
 }
 
 

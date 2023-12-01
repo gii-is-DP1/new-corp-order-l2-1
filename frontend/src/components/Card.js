@@ -25,7 +25,7 @@ export default function Card({style, title, subtitle, icon, children}) {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        padding: "5px",
+        padding: "10px 25px 10px",
         flex: 1
     }
 
@@ -42,10 +42,10 @@ export default function Card({style, title, subtitle, icon, children}) {
         <div style={{...cardStyle, ...style}}>
             <header style={headerStyle}>
                 <div style={headerTextStyle}>
-                    <h1 style={{fontSize: "26px", color: Colors.white}}>
+                    <h1 style={{fontSize: "26px", margin: 0, color: Colors.white}}>
                         {title}
                     </h1>
-                    <h2 style={{fontSize: "18px", color: Colors.white}}>
+                    <h2 style={{fontSize: "18px", margin: 0, color: Colors.white}}>
                         {subtitle}
                     </h2>
                 </div>

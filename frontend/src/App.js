@@ -40,10 +40,10 @@ function App() {
                     <Route path="/match/:id" element={<Match/>}/>
                     <Route path="/docs" element={<SwaggerDocs/>}/>
                 </Routes>
-                <AppNavbar/>
+
             </ErrorBoundary>
         </div>
-    );
+    );// <AppNavbar/>
 }
 
 export default App;

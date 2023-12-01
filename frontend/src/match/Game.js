@@ -1,42 +1,18 @@
 import {CompanyMatrix} from "./CompanyMatrix";
-import {Company, CompanyType, conglomerate, consultant, secretObjective} from "./MatchEnums";
-import CardSelectView from "./CardSelectView";
-import Conglomerate, {conglomerateType} from "./Conglomerate";
-import React from "react";
+import {Company, conglomerate, consultant, secretObjective} from "./MatchEnums";
+import Conglomerate from "./Conglomerate";
+import React, {useState} from "react";
 import Selector from "./Selector/Selector";
 import {onlySelectOfSameColor} from "./Selector/ChangeSelectableItemsFunctions";
 import {selectAtLeastOne} from "./Selector/OnConfirmFunctions";
-import Viewer, {ViewerContainer} from "./Viewer";
+import {ViewerContainer} from "./Viewer";
+import CompanyTileSelector from "./CompanyTileSelector";
 
 export function getCompanyImageSrc(company) {
     return "/images/companies/" + company.type + "/" + company.name + ".png";
 }
 
-/*
-export function getCompany(company){
-    return [...Array(this.conglomerates[conglomerate.OMNICORP])].map(()=>(<C state = {{type : type}}/>))
-}*/
-
 export function Game() {
-    const companyTiles = [
-        Company.GLOBAL_CORP,
-        Company.WORDOFMOUTH,
-        Company.SLIMGROTZ_INC,
-        Company.VISUAL_TERROR_INC,
-        Company.SUBLIMINAL_SUBSIDIARY,
-        Company.GENERIC_SUB_INC,
-        Company.ALL_AROUND_YOU,
-        Company.HOLOGRAFX,
-        Company.ANONYMOUS_CROWD,
-        Company.PAGE_ONE_CORP,
-        Company.READALOT,
-        Company.LEADERBOARDER,
-        Company.FLICKERING_LIGHTS,
-        Company.WALLPAPER,
-        Company.XCURBR,
-        Company.PIX_CHIX,
-    ];
-
     const selection = [
         <Conglomerate conglomerate={conglomerate.OMNICORP}/>,
         <Conglomerate conglomerate={conglomerate.OMNICORP}/>,
@@ -48,7 +24,6 @@ export function Game() {
     const conglomerateContainerStyle = {
         display: "flex",
     }
-
 
     const currentState = "Infiltrate";
     let selector;
@@ -76,6 +51,7 @@ export function Game() {
         ...[...Array(gameState.player.hand.TOTAL_ENTERTAINMENT)].map(() => <Conglomerate
             conglomerate={conglomerate.TOTAL_ENTERTAINMENT}/>)
     ];
+
     const hqConsultants = [
         ...[...Array(gameState.player.hq.consultants.DEALMAKER)].map(() => <img height={"200px"}
                                                                                 src={consultant.DEALMAKER}/>),
@@ -90,23 +66,34 @@ export function Game() {
                                                                                           isRotated={item.isRotated}/>);
     const secretObjectives = gameState.player.hq.secretObjectives.map((item) => <img height={"200px"} src={item}
                                                                                      alt={item}/>)
-    const openDisplay = gameState.generalSupply.openDisplay.map((item) => <Conglomerate conglomerate={item}/> )
+    const openDisplay = gameState.generalSupply.openDisplay.map((item) => <Conglomerate conglomerate={item}/>)
 
-    const deck = <img height={"200px"} src={"/images/card-back.jpg"} />
+    const deck = <img height={"200px"} src={"/images/card-back.jpg"}/>
 
     const generalSupplyConsultants = [
         ...[...Array(gameState.generalSupply.consultants.DEALMAKER)].map(() => <img height={"200px"}
-                                                                                src={consultant.DEALMAKER}/>),
+                                                                                    src={consultant.DEALMAKER}/>),
         ...[...Array(gameState.generalSupply.consultants.CORPORATE_LAWYER)].map(() => <img height={"200px"}
-                                                                                       src={consultant.CORPORATE_LAWYER}/>),
+                                                                                           src={consultant.CORPORATE_LAWYER}/>),
         ...[...Array(gameState.generalSupply.consultants.MEDIA_ADVISOR)].map(() => <img height={"200px"}
-                                                                                    src={consultant.MEDIA_ADVISOR}/>),
+                                                                                        src={consultant.MEDIA_ADVISOR}/>),
         ...[...Array(gameState.generalSupply.consultants.MILITARY_CONTRACTOR)].map(() => <img height={"200px"}
-                                                                                          src={consultant.MILITARY_CONTRACTOR}/>),
+                                                                                              src={consultant.MILITARY_CONTRACTOR}/>),
     ];
-
-    return <>
-        <p>GAME IN PROGRESS</p>
+    const [selectedCompany, setSelectedCompany] = useState(1);
+    return <div style={{display:"flex"}}>
+        <div>
+            <CompanyMatrix companyTiles={gameState.companies}/>
+            {selectedCompany === -1
+                ? <CompanyTileSelector companies={gameState.companies}
+                                       selectableCompanies={[...Array(16).keys()]}
+                                       title="Select a company tile"
+                                       onConfirmSelection={(i) => setSelectedCompany(i)}
+                                       needsDoubleSelect={true}
+                />
+                : <p> You selected {gameState.companies[selectedCompany].company.name}</p>
+            }
+        </div>
 
         <ViewerContainer title="Your Hand" containerStyle={{display: "flex", flexWrap: "wrap"}}
                          buttonContent={<p>View Hand</p>}
@@ -117,31 +104,31 @@ export function Game() {
 
         <ViewerContainer title="General Supply" containerStyle={{display: "flex", flexWrap: "wrap"}}
                          buttonContent={<p>View General Supply</p>}
-                         items={[...openDisplay,deck,...generalSupplyConsultants]}/>
+                         items={[...openDisplay, deck, ...generalSupplyConsultants]}/>
 
         {gameState.opponents.map((opponent) => {
             const opponentHqConglomerates = opponent.hq.conglomerates.map((item) => <Conglomerate
                 conglomerate={item.type} isRotated={item.isRotated}/>);
             const opponentHqConsultants = [
                 ...[...Array(opponent.hq.consultants.DEALMAKER)].map(() => <img height={"200px"}
-                                                                                        src={consultant.DEALMAKER}/>),
+                                                                                src={consultant.DEALMAKER}/>),
                 ...[...Array(opponent.hq.consultants.CORPORATE_LAWYER)].map(() => <img height={"200px"}
-                                                                                               src={consultant.CORPORATE_LAWYER}/>),
+                                                                                       src={consultant.CORPORATE_LAWYER}/>),
                 ...[...Array(opponent.hq.consultants.MEDIA_ADVISOR)].map(() => <img height={"200px"}
-                                                                                            src={consultant.MEDIA_ADVISOR}/>),
+                                                                                    src={consultant.MEDIA_ADVISOR}/>),
                 ...[...Array(opponent.hq.consultants.MILITARY_CONTRACTOR)].map(() => <img height={"200px"}
-                                                                                                  src={consultant.MILITARY_CONTRACTOR}/>),
+                                                                                          src={consultant.MILITARY_CONTRACTOR}/>),
             ];
 
             return <>
                 <ViewerContainer title={opponent.username + "'s HQ"}
                                  containerStyle={{display: "flex", flexWrap: "wrap"}}
                                  buttonContent={<p>View {opponent.username}'s HQ</p>}
-                                 items={[...opponentHqConglomerates,...opponentHqConsultants]}/>
+                                 items={[...opponentHqConglomerates, ...opponentHqConsultants]}/>
 
             </>
         })}
-    </>;
+    </div>;
 }
 
 const hqConglomerate = {
@@ -229,23 +216,3 @@ const gameState = {
         opponent
     ],
 }
-
-
-export function Game() {
-    const [selectedCompany, setSelectedCompany] = useState(-1);
-    return <>
-        <p>GAME IN PROGRESS</p>
-        <CompanyMatrix companyTiles={gameState.companies}/>
-        {selectedCompany === -1
-            ? <CompanyTileSelector companies={gameState.companies}
-                                   selectableCompanies={[...Array(16).keys()]}
-                                   title="Select a company tile"
-                                   onConfirmSelection={(i) => setSelectedCompany(i)}
-                                   needsDoubleSelect={true}
-            />
-            : <p> You selected {gameState.companies[selectedCompany].company.name}</p>
-        }
-    </>;
-}
-
-const companyTiles = [];

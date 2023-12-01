@@ -1,9 +1,14 @@
 export const conglomerate = { //TODO make color a gradient
-    OMNICORP: {name: "Omnicorp", color: "#c6c2a9", src:"/Images/Conglomerates/omnicorp.png"},
-    TOTAL_ENTERTAINMENT: {name: "Total Entertainment", color: "#258b9f", src:"/Images/Conglomerates/totalentertainment.png"},
-    GENERIC_INC: {name: "Generic Inc", color: "#3e2f21", src:"/Images/Conglomerates/genericinc.png"},
-    MEGAMEDIA: {name: "Megamedia", color: "#f74c1e", src:"/Images/Conglomerates/megamedia.png"},
+    OMNICORP: {name: "Omnicorp", color: "#c6c2a9", src: "/Images/Conglomerates/omnicorp.png"},
+    TOTAL_ENTERTAINMENT: {
+        name: "Total Entertainment",
+        color: "#258b9f",
+        src: "/Images/Conglomerates/totalentertainment.png"
+    },
+    GENERIC_INC: {name: "Generic Inc", color: "#3e2f21", src: "/Images/Conglomerates/genericinc.png"},
+    MEGAMEDIA: {name: "Megamedia", color: "#f74c1e", src: "/Images/Conglomerates/megamedia.png"},
 }
+
 
 export const CompanyType = {
     BROADCAST_NETWORK: "broadcast-network",
@@ -12,6 +17,22 @@ export const CompanyType = {
     AMBIENT_ADVERTISING: "ambient-advertising",
     ONLINE_MARKETING: "online-marketing",
     SOCIAL_MEDIA: "social-media"
+}
+
+export const consultant = {
+    MEDIA_ADVISOR: "/images/consultants/media-advisor.png",
+    DEALMAKER: "/images/consultants/dealmaker.png",
+    CORPORATE_LAWYER: "/images/consultants/corporate-lawyer.png",
+    MILITARY_CONTRACTOR: "/images/consultants/military-contractor.png",
+};
+
+export const secretObjective = {
+    BROADCAST_NETWORK: "/Images/secret-objectives/broadcast-network.png",
+    PRINT_MEDIA: "/Images/secret-objectives/print-media.png",
+    GUERRILLA_MARKETING: "/Images/secret-objectives/guerrilla-marketing.png",
+    AMBIENT_ADVERTISING: "/Images/secret-objectives/ambient-advertising.png",
+    ONLINE_MARKETING: "/Images/secret-objectives/online-marketing.png",
+    SOCIAL_MEDIA: "/Images/secret-objectives/social-media.png",
 }
 
 export const Company = {

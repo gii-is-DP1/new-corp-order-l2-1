@@ -9,10 +9,10 @@ export default function Button({children, onClick, buttonStyle, buttonContext, d
         color: textColor,
         borderRadius: "0.4em",
         borderWidth: "0px",
-        paddingTop: "3%",
-        paddingBottom: "3%",
-        paddingLeft: "13%",
-        paddingRight: "13%",
+        paddingTop: "0.5em",
+        paddingBottom: "0.5em",
+        paddingLeft: "1em",
+        paddingRight: "1em",
     };
 
     return <button

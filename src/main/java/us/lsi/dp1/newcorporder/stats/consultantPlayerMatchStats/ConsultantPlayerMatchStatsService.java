@@ -29,13 +29,9 @@ public class ConsultantPlayerMatchStatsService {
         return statsRepository.findByConsultantTypeAndUsedGreaterThan(consultantType, usedThreshold);
     }
 
-    public Optional<ConsultantPlayerMatchStats> getStatsById(Integer id) {
-        return statsRepository.findById(id);
-    }
+    public Optional<ConsultantPlayerMatchStats> getStatsById(Integer id) {return statsRepository.findById(id);}
 
-    public List<ConsultantPlayerMatchStats> getStatsOrderedByUsedDesc() {
-        return statsRepository.findByOrderByUsedDesc();
-    }
+    public List<ConsultantPlayerMatchStats> getStatsOrderedByUsedDesc() {return statsRepository.findByOrderByUsedDesc();}
 
 
 }

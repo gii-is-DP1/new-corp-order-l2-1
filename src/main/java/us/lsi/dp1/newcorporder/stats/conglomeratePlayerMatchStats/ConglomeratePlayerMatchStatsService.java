@@ -18,17 +18,11 @@ public class ConglomeratePlayerMatchStatsService {
         this.repository = repository;
     }
 
-    public List<ConglomeratePlayerMatchStats> getStatsByConglomerate(Conglomerate conglomerate) {
-        return repository.findByConglomerate(conglomerate);
-    }
+    public List<ConglomeratePlayerMatchStats> getStatsByConglomerate(Conglomerate conglomerate) {return repository.findByConglomerate(conglomerate);}
 
-    public List<ConglomeratePlayerMatchStats> getStatsBySharesGreaterThan(int minShares) {
-        return repository.findBySharesGreaterThan(minShares);
-    }
+    public List<ConglomeratePlayerMatchStats> getStatsBySharesGreaterThan(int minShares) {return repository.findBySharesGreaterThan(minShares);}
 
-    public List<ConglomeratePlayerMatchStats> getStatsByAgentsGreaterThan(int minAgents) {
-        return repository.findByAgentsGreaterThan(minAgents);
-    }
+    public List<ConglomeratePlayerMatchStats> getStatsByAgentsGreaterThan(int minAgents) {return repository.findByAgentsGreaterThan(minAgents);}
     public List<ConglomeratePlayerMatchStats> getStatsByConglomerateAndSharesGreaterThan(Conglomerate conglomerate, int minShares) {
         return repository.findByConglomerateAndSharesGreaterThan(conglomerate, minShares);
     }

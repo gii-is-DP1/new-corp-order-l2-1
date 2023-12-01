@@ -1,4 +1,4 @@
-package us.lsi.dp1.newcorporder.stats;
+package us.lsi.dp1.newcorporder.stats.consultantPlayerMatchStats;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

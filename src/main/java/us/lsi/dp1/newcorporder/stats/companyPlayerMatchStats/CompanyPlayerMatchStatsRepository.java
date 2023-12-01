@@ -26,5 +26,7 @@ public interface CompanyPlayerMatchStatsRepository extends JpaRepository<Company
     Optional<CompanyPlayerMatchStats> findById(Integer id);
 
     List<CompanyPlayerMatchStats> findByOrderByAbilityUsedDesc();
+
+
 }
 

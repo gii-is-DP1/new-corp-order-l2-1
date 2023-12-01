@@ -20,6 +20,6 @@ public interface ConglomeratePlayerMatchStatsRepository extends JpaRepository<Co
     @Query("SELECT c FROM ConglomeratePlayerMatchStats c WHERE c.conglomerate = :conglomerate AND c.shares > :minShares")
     List<ConglomeratePlayerMatchStats> findByConglomerateAndSharesGreaterThan(Conglomerate conglomerate, int minShares);
 
-//
+
 
 }

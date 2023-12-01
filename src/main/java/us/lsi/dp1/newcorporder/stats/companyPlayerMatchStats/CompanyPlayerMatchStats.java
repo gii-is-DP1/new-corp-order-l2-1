@@ -29,4 +29,6 @@ public class CompanyPlayerMatchStats extends BaseEntity {
     @NotNull private CompanyType companyType;
 
     @NotNull private Integer abilityUsed;
+
+
 }

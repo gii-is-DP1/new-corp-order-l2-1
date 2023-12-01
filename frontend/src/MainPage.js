@@ -7,6 +7,7 @@ import InsertLinkIcon from "@mui/icons-material/InsertLink";
 import TextInput from "./components/TextInput";
 import LockIcon from "@mui/icons-material/Lock";
 import React from "react";
+import {Text} from "./components/Text";
 
 export function MainPage({}) {
 
@@ -44,33 +45,33 @@ export function MainPage({}) {
             <div style={content}>
                 <div style={columnStyle}>
                     <Card style={cardStyle}
-                          title={"PLAY NOW"}
-                          subtitle={"JOIN PUBLIC MATCH"}
+                          title={"Play now"}
+                          subtitle={"Join public match"}
                           icon={<PublicIcon style={{fontSize: "45px"}}/>}
                     >
                         <section style={cardRowStyle}>
-                            <p>GAME MODE</p>
+                            <Text>Game mode</Text>
                             <div style={{display: "flex", flexDirection: "row", gap: "15px"}}>
-                                <p>NORMAL</p>
-                                <p>QUICK</p>
+                                <Text>Normal</Text>
+                                <Text>Quick</Text>
                             </div>
                         </section>
                         <section style={cardRowStyle}>
-                            <p>NUMBER OF PLAYERS</p>
+                            <Text>Number of players</Text>
                             <div style={{display: "flex", flexDirection: "row", gap: "15px"}}>
-                                <p>1<GroupIcon/></p>
-                                <p>2<GroupIcon/></p>
-                                <p>3<GroupIcon/></p>
+                                <Text>2<GroupIcon/></Text>
+                                <Text>3<GroupIcon/></Text>
+                                <Text>4<GroupIcon/></Text>
                             </div>
                         </section>
                         <div style={{display: "flex", flexDirection: "row", justifyContent: "center"}}>
-                            <Button buttonText={"PLAY"} buttonColor={buttonStyles.secondary}></Button>
+                            <Button buttonText={"Play"} buttonColor={buttonStyles.secondary}></Button>
                         </div>
                     </Card>
 
                     <Card style={cardStyle}
-                          title={"JOIN GAME"}
-                          subtitle={"WITH MATCH CODE"}
+                          title={"Join game"}
+                          subtitle={"With match code"}
                           icon={<InsertLinkIcon style={{fontSize: "45px"}}/>}
                     >
                         <div style={{margin: "10px"}}>
@@ -81,8 +82,8 @@ export function MainPage({}) {
                 </div>
 
                 <div style={columnStyle}>
-                    <Card title={"PRIVATE GAME"}
-                          subtitle={"PLAY SOLO OR WITH FRIENDS"}
+                    <Card title={"Private game"}
+                          subtitle={"Create a private match"}
                           icon={<LockIcon style={{fontSize: "45px"}}/>}
                           style={cardStyle}
                     >

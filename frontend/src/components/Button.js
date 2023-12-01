@@ -1,5 +1,6 @@
 import * as Colors from "../util/Colors";
 import {black, dangerBackground, orange, successBackground, white} from "../util/Colors";
+import {Title} from "./Title";
 
 export default function Button({buttonText, onClick, buttonColor, buttonContext}) {
     let backgroundColor = getBackgroundColor(buttonColor, buttonContext);
@@ -24,9 +25,9 @@ export default function Button({buttonText, onClick, buttonColor, buttonContext}
 
     return (
         <button onClick={onClick} style={style}>
-            <h1 style={textStyle}>
+            <Title style={textStyle}>
                 {buttonText}
-            </h1>
+            </Title>
         </button>
     )
 }

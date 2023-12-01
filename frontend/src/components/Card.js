@@ -1,4 +1,6 @@
-import * as Colors from "../util/Colors";
+import {white} from "../util/Colors";
+import {Title} from "./Title";
+import {Subtitle} from "./Subtitle";
 
 export default function Card({style, title, subtitle, icon, children}) {
 
@@ -14,18 +16,19 @@ export default function Card({style, title, subtitle, icon, children}) {
         display: "flex",
         flexDirection: "row",
         backgroundColor: "#2c2c2c",
-        margin: "0px",
         borderTopLeftRadius: "25px",
         borderTopRightRadius: "25px",
-        color: "white"
+        color: white
     }
 
-    const headerTextStyle = {
+    const headerContentStyle = {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        padding: "10px 25px 10px",
+        textAlign: "center",
+        padding: "15px 25px 15px",
+        gap: "5px",
         flex: 1
     }
 
@@ -41,13 +44,9 @@ export default function Card({style, title, subtitle, icon, children}) {
     return (
         <div style={{...cardStyle, ...style}}>
             <header style={headerStyle}>
-                <div style={headerTextStyle}>
-                    <h1 style={{fontSize: "26px", margin: 0, color: Colors.white}}>
-                        {title}
-                    </h1>
-                    <h2 style={{fontSize: "18px", margin: 0, color: Colors.white}}>
-                        {subtitle}
-                    </h2>
+                <div style={headerContentStyle}>
+                    <Title>{title}</Title>
+                    <Subtitle>{subtitle}</Subtitle>
                 </div>
                 <div style={iconStyle}>
                     {icon}

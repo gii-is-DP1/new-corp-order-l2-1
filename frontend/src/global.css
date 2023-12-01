@@ -1,19 +1,26 @@
-@import url(https://db.onlinewebfonts.com/c/bad57c8c062c082f5c04a4c7fc0a3c74?family=Core+Magic);
 @import url(https://db.onlinewebfonts.com/c/54f4891696ad7a79999d5e22d33672f0?family=DIN+Next+Slab+Pro);
 
+@font-face {
+    font-family: 'Core Magic';
+    src: url(./fonts/core-magic.ttf) format('truetype');
+}
+
+@font-face {
+    font-family: 'DIN Next Slab Pro';
+    src: url(./fonts/din-next-slab-pro.ttf) format('truetype');
+}
+
 h1 {
-    margin: 0;
-    font-family: "Core Magic";
+    font-family: "Core Magic", serif;
+    letter-spacing: -4px;
 }
 
 h2 {
-    margin: 0;
-    font-family: "DIN Next Slab Pro";
+    font-family: "DIN Next Slab Pro", serif;
 }
 
 p {
-    margin: 0 0 0;
-    font-family: "DIN Next Slab Pro";
+    font-family: "DIN Next Slab Pro", serif;
 }
 
 .cardContainer {

@@ -27,7 +27,7 @@ public class CompanyPlayerMatchStatsService {
         return statsRepository.findByCompanyTypeAndAbilityUsedGreaterThan(companyType, abilityUsedThreshold);
     }
 
-    public Optional<CompanyPlayerMatchStats> getStatsById(Long id) {return statsRepository.findById(id);}
+    public Optional<CompanyPlayerMatchStats> getStatsById(Integer id) {return statsRepository.findById(id);}
 
     public List<CompanyPlayerMatchStats> getStatsOrderedByAbilityUsedDesc() {return statsRepository.findByOrderByAbilityUsedDesc();}
 

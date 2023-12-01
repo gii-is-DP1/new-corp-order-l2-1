@@ -1,11 +1,11 @@
 export function Title({children, style}) {
 
     const textStyle = {
-        margin: 0,
-        fontSize: "24px",
+        fontSize: "22px",
         textTransform: "uppercase",
         fontFamily: "Core Magic",
-        letterSpacing: "-4px"
+        letterSpacing: "-4px",
+        margin: "-2px 0px -8px 0px"
     }
 
     return (

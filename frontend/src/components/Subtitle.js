@@ -1,10 +1,10 @@
 export function Subtitle({children, style}) {
 
     const textStyle = {
-        margin: 0,
-        fontSize: "18px",
+        fontSize: "16px",
         textTransform: "uppercase",
-        fontFamily: "DIN Next Slab Pro"
+        fontFamily: "DIN Next Slab Pro",
+        margin: "-3px 0px"
     }
 
     return (

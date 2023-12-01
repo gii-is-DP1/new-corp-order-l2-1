@@ -4,6 +4,7 @@
 * {
     margin: 5px;
     color: #F8F8F8;
+    font-family: "Core Magic W00 Regular", serif;
 }
 
 h1 {
@@ -13,7 +14,7 @@ h1 {
 
 h2 {
     color: #F8F8F8;
-    font-family: "DIN Next Slab W04 Regular";
+    font-family: "DIN Next Slab W04 Regular", serif;
 }
 
 .cardContainer {

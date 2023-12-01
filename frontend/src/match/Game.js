@@ -39,21 +39,29 @@ export function Game() {
     const selection = [
         <Conglomerate conglomerate={conglomerate.OMNICORP} />,
         <Conglomerate conglomerate={conglomerate.OMNICORP} />,
-        <Conglomerate conglomerate={conglomerate.OMNICORP} />,
-        <Conglomerate conglomerate={conglomerate.OMNICORP} />,
+        <Conglomerate conglomerate={conglomerate.GENERIC_INC} />,
+        <Conglomerate conglomerate={conglomerate.TOTAL_ENTERTAINMENT} />,
+        <Conglomerate conglomerate={conglomerate.MEGAMEDIA} />,
+        <Conglomerate conglomerate={conglomerate.MEGAMEDIA} />,
     ];
+    const conglomerateContainerStyle = {
+        display:"flex",
+    }
 
-    const currentState = "plot";
+
+    const currentState = "Infiltrate";
     let selector;
     switch (currentState){
-        case "plot":
+        case "Infiltrate":
             selector = <Selector
+                title={"Infiltrate"}
+                subtitle={"Select n cards of the same color"}
                 selection={selection}
                 selectableElements={[...Array(selection.length).keys()]}
                 canConfirm = {selectAtLeastOne}
                 changeSelectableItems={onlySelectOfSameColor}
                 onConfirm = {(selectedElements) => { alert(selectedElements)}}
-                containerStyle={{}}
+                containerStyle={conglomerateContainerStyle}
                 itemStyle={{}}
             />
     }
@@ -61,11 +69,7 @@ export function Game() {
     return <>
         <p>GAME IN PROGRESS</p>
         {selector}
-    </>;//  <CardSelectView cards={gameState.player.hand}/>
-
-    const conglomerateContainerStyle = {
-
-    }
+    </>;
 }
 
 const hqConglomerate = {

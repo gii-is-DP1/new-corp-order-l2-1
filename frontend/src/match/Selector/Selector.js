@@ -1,38 +1,53 @@
 import {Children, useState} from "react";
 import Button, {buttonContexts, buttonStyles} from "../../components/Button";
 
-export default function Selector({selection, selectableElements, canConfirm, changeSelectableItems, onConfirm, containerStyle, itemStyle}) {
+export default function Selector({
+                                     title,
+                                     subtitle,
+                                     selection,
+                                     selectableElements,
+                                     canConfirm,
+                                     changeSelectableItems,
+                                     onConfirm,
+                                     containerStyle,
+                                     itemStyle
+                                 }) {
     let [selectedElements, setSelectedElements] = useState([]);
     const [selectableItems, setSelectableItems] = useState(selectableElements);
-    return <div style={containerStyle}>
-        {selection.map((item, i) =>
-            <Selectable
-                style ={itemStyle}
-                item={item}
-                isSelectable={selectableItems.includes(i)}
-                isSelected={selectedElements.includes(i)}
-                onClick={() => {
-                    if (!selectableItems.includes(i))
-                        return;
+    return <>
+        <h1>{title} </h1>
+        <h2>{subtitle}</h2>
+        <div style={containerStyle}>
 
-                    if (selectedElements.includes(i))
-                        selectedElements = selectedElements.filter((j) => j !== i);
-                    else
-                        selectedElements = [...selectedElements, i];
+            {selection.map((item, i) =>
+                <Selectable
+                    style={itemStyle}
+                    item={item}
+                    isSelectable={selectableItems.includes(i)}
+                    isSelected={selectedElements.includes(i)}
+                    onClick={() => {
+                        if (!selectableItems.includes(i))
+                            return;
 
-                    setSelectedElements(selectedElements);
+                        if (selectedElements.includes(i))
+                            selectedElements = selectedElements.filter((j) => j !== i);
+                        else
+                            selectedElements = [...selectedElements, i];
 
-                    changeSelectableItems(selection, selectedElements, selectableElements, setSelectableItems);
-                }}
-            />
-        )}
+                        setSelectedElements(selectedElements);
+
+                        changeSelectableItems(selection, selectedElements, selectableElements, setSelectableItems);
+                    }}
+                />
+            )}
+        </div>
         <Button buttonContext={buttonContexts.light} buttonStyle={buttonStyles.primary}
                 disabled={!canConfirm(selection, selectedElements)}
                 onClick={() => onConfirm(selectedElements)}
         >
             Confirm
         </Button>
-    </div>
+    </>
 }
 
 export function Selectable({item, isSelectable, isSelected, onClick, style}) {

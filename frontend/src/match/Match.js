@@ -102,7 +102,7 @@ function Match(/*{isAdmin, matchInfo}*/) {
 function Main() {
     const style = {
         backgroundColor: black,
-        flex: 0.7,
+        flex: 10,
         display: "flex",
         flexDirection: "column",
         alignItems: "center",

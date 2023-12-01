@@ -29,7 +29,7 @@ public class ConsultantPlayerMatchStatsService {
         return statsRepository.findByConsultantTypeAndUsedGreaterThan(consultantType, usedThreshold);
     }
 
-    public Optional<ConsultantPlayerMatchStats> getStatsById(Long id) {
+    public Optional<ConsultantPlayerMatchStats> getStatsById(Integer id) {
         return statsRepository.findById(id);
     }
 

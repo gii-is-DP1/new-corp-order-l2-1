@@ -31,4 +31,6 @@ public class ConglomeratePlayerMatchStats extends BaseEntity {
     @NotNull private Integer shares;
 
     @NotNull private Integer agents;
+
+    //
 }

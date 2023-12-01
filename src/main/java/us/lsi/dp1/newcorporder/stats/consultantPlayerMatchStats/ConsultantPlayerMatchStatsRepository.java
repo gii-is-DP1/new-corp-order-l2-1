@@ -21,4 +21,6 @@ public interface ConsultantPlayerMatchStatsRepository extends JpaRepository<Cons
     Optional<ConsultantPlayerMatchStats> findById(Integer id);
 
     List<ConsultantPlayerMatchStats> findByOrderByUsedDesc();
+
+    //
 }

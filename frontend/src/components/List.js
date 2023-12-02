@@ -7,7 +7,8 @@ export default function List({children, style}) {
         width: "100%",
         padding: "5px",
         borderRadius: "8px",
-        overflow: "scroll",
+        overflowY: "auto",
+        overflowX: "auto",
         display: "flex",
         flexDirection: "column",
         gap: "5px"

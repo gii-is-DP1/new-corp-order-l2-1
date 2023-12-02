@@ -29,7 +29,7 @@ export function MainPage() {
     }
 
     const cardStyle = {
-        overflow: "scroll"
+        overflowY: "auto"
     }
 
     const cardContentStyle = {

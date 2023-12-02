@@ -10,13 +10,18 @@ import React from "react";
 import {Text} from "./components/Text";
 import List from "./components/List";
 import ListLine from "./components/ListLine";
+import QueueIcon from '@mui/icons-material/Queue';
+import {black} from "./util/Colors";
 
 export function MainPage() {
 
     const content = {
         flex: 1,
         display: "flex",
-        flexDirection: "row"
+        flexDirection: "row",
+        backgroundImage: "url(/Images/BackgroundImage.svg)",
+        backgroundSize: "cover",
+        backgroundPosition: "center"
     }
 
     const columnStyle = {
@@ -52,10 +57,12 @@ export function MainPage() {
         items.push(
             <ListLine iconSrc={"/Images/Consultants/Dealmaker.png"}
                       sideContent={(
-                          <Button>+</Button>
-                      )}
+                          <button style={{backgroundColor: "transparent", border: "none", padding: "3px"}}>
+                              <QueueIcon style={{color: black}}/>
+                          </button>)}
             >
-                AmigoAmigui{i}</ListLine>
+                <Text>AmigoAmigui{i}</Text>
+            </ListLine>
         );
     }
 

@@ -5,6 +5,7 @@ import {Subtitle} from "./Subtitle";
 export default function Card({style, title, subtitle, icon, children}) {
 
     const cardStyle = {
+        backgroundColor: white,
         minWidth: "350px",
         minHeight: "150px",
         width: "fit-content",

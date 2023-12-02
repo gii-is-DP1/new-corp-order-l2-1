@@ -1,6 +1,6 @@
 import {black, dangerBackground, orange, successBackground, white} from "../util/Colors";
 
-export default function Button({children, onClick, buttonStyle, buttonContext, disabled}) {
+export default function Button({children, onClick, buttonStyle = buttonStyles.primary, buttonContext = buttonContexts.light, disabled}) {
     let backgroundColor = getBackgroundColor(buttonStyle, buttonContext);
     let textColor = getTextColor(backgroundColor);
 

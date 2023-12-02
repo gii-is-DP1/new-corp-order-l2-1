@@ -7,6 +7,7 @@ import {onlySelectOfSameColor} from "./Selector/ChangeSelectableItemsFunctions";
 import {selectAtLeastOne} from "./Selector/OnConfirmFunctions";
 import {ViewerContainer} from "./Viewer";
 import CompanyTileSelector from "./CompanyTileSelector";
+import Button from "../components/Button";
 
 export function getCompanyImageSrc(company) {
     return "/images/companies/" + company.type + "/" + company.name + ".png";
@@ -81,7 +82,31 @@ export function Game() {
                                                                                               src={consultant.MILITARY_CONTRACTOR}/>),
     ];
     const [selectedCompany, setSelectedCompany] = useState(1);
+
+    const PLOT = "plot";
+    const INFILTRATE = "infiltrate";
+    const TAKEOVER = "takeover";
+
+    const [state, setState] = useState({action:null})
+    const setMoveState = (action) => {
+        state.action = action;
+        setState({...state});
+    }
+
     return <div style={{display:"flex"}}>
+        <p>Current action: {state.action}</p>
+        {state.action == null
+            ? <div>
+                <h1>Pick an action</h1>
+                <Button onClick={() => setMoveState(PLOT)}>PLOT</Button>
+                <Button onClick={() => setMoveState(INFILTRATE)}>INFILTRATE</Button>
+                <Button onClick={() => setMoveState(TAKEOVER)}>TAKEOVER</Button>
+
+            </div>
+            : <></>
+        }
+
+
         <div>
             <CompanyMatrix companyTiles={gameState.companies}/>
             {selectedCompany === -1

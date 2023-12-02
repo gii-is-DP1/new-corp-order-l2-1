@@ -6,12 +6,12 @@ import Button, {ButtonType} from "./components/Button";
 import InsertLinkIcon from "@mui/icons-material/InsertLink";
 import TextInput from "./components/TextInput";
 import LockIcon from "@mui/icons-material/Lock";
-import React from "react";
+import React, {useState} from "react";
 import {Text} from "./components/Text";
 import List from "./components/List";
 import ListLine from "./components/ListLine";
 import QueueIcon from '@mui/icons-material/Queue';
-import {black} from "./util/Colors";
+import {black, orange} from "./util/Colors";
 
 export function MainPage() {
 
@@ -52,6 +52,12 @@ export function MainPage() {
         gap: "30px"
     }
 
+    const buttonTextStyle = {
+        backgroundColor: "transparent",
+        border: "none",
+        cursor: "pointer"
+    }
+
     let items = []
     for (let i = 0; i < 20; i++) {
         items.push(
@@ -66,6 +72,20 @@ export function MainPage() {
         );
     }
 
+    function PressableText({children}) {
+        const [colorText, setColorText] = useState(black)
+
+        function coloringText() {
+            const color = colorText === black ? orange : black;
+            setColorText(color);
+        }
+
+        return (
+            <button onClick={coloringText} style={buttonTextStyle}>
+                <Text style={{color: colorText}}>{children}</Text>
+            </button>)
+    }
+
     function PlayCard({title, subtitle, icon, style, privateGame = false}) {
         return (
             <Card style={{...cardStyle, ...style}}
@@ -77,16 +97,16 @@ export function MainPage() {
                     <section style={cardContentRowStyle}>
                         <Text>Game mode</Text>
                         <div style={{display: "flex", flexDirection: "row", gap: "15px"}}>
-                            <Text>Normal</Text>
-                            <Text>Quick</Text>
+                            <PressableText> Normal</PressableText>
+                            <PressableText> Quick</PressableText>
                         </div>
                     </section>
                     <section style={cardContentRowStyle}>
                         <Text>Number of players</Text>
                         <div style={{display: "flex", flexDirection: "row", gap: "15px"}}>
-                            <Text>2<GroupIcon/></Text>
-                            <Text>3<GroupIcon/></Text>
-                            <Text>4<GroupIcon/></Text>
+                            <PressableText> 2<GroupIcon/></PressableText>
+                            <PressableText> 3<GroupIcon/></PressableText>
+                            <PressableText> 4<GroupIcon/></PressableText>
                         </div>
                     </section>
                     {privateGame &&

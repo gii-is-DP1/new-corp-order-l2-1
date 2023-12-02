@@ -3,9 +3,14 @@ import * as Colors from "../util/Colors";
 export default function List({children, style}) {
 
     const listStyle = {
-        overflowY: "scroll",
+        backgroundColor: Colors.gray,
+        width: "100%",
+        padding: "5px",
         borderRadius: "8px",
-        backgroundColor: Colors.grayDarker
+        overflow: "scroll",
+        display: "flex",
+        flexDirection: "column",
+        gap: "5px"
     }
 
     return(

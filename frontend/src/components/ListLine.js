@@ -1,10 +1,9 @@
-
 import * as Colors from "../util/Colors";
-export default function ListLine({children, icon, buttons, profileImages}) {
 
+export default function ListLine({iconSrc, children, sideContent}) {
 
     const containerStyle = {
-        backgroundColor: Colors.gray,
+        backgroundColor: Colors.white,
         color: Colors.black,
         display: "flex",
         flexDirection: "row",
@@ -12,30 +11,12 @@ export default function ListLine({children, icon, buttons, profileImages}) {
         height: "50px",
     }
 
-    const leftDivStyle = {
+    const columnStyle = {
         display: "flex",
         flexDirection: "row",
-        justifyContent: "flex-start",
         alignItems: "center",
-        padding:"5px",
-        flex: "0.5"
-    }
-
-    const rightDivStyle = {
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "flex-end",
-        alignItems: "center",
-        padding:"5px",
-        margin:"5px",
-        flex: "0.5"
-    }
-
-    const profileImageStyle = {
-        borderRadius: "50%",
-        width: "30px",
-        height: "30px",
-        margin: "0px",
+        padding: "5px",
+        gap: "5px"
     }
 
     const iconStyle = {
@@ -48,7 +29,7 @@ export default function ListLine({children, icon, buttons, profileImages}) {
         width: "30px",
     }
 
-    const listStyle = {
+    const sideContentStyle = {
         display: "flex",
         flexDirection: "row",
         justifyContent: "flex-end",
@@ -57,21 +38,18 @@ export default function ListLine({children, icon, buttons, profileImages}) {
         margin: "0px",
     }
 
-    let listIcons = profileImages.map(image =>
-        <li>
-            <img src={image} alt={"profileImage"} style={profileImageStyle} />
-        </li>)
+    return (
+        <div style={containerStyle}>
+            <div style={{...columnStyle, flex: 1}}>
+                {iconSrc && <img src={iconSrc} alt={"icon"} style={iconStyle}/>}
+                {children}
+            </div>
 
-    return <div style={containerStyle}>
-        <div style={leftDivStyle}>
-            {icon && <img src={icon} alt={"icon"} style={iconStyle}/>}
-            {children}
-
+            {sideContent &&
+                <div style={columnStyle}>
+                    {sideContent}
+                </div>
+            }
         </div>
-        <div style={rightDivStyle}>
-            {profileImages && <ul style={listStyle}>{listIcons}</ul>}
-            {buttons}
-        </div>
-    </div>
-
+    )
 }

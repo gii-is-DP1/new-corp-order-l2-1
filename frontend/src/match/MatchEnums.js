@@ -1,3 +1,7 @@
+export const PLOT = "plot";
+export const INFILTRATE = "infiltrate";
+export const TAKEOVER = "takeover";
+
 export const conglomerate = { //TODO make color a gradient
     OMNICORP: {name: "Omnicorp", color: "#c6c2a9", src: "/Images/Conglomerates/omnicorp.png"},
     TOTAL_ENTERTAINMENT: {
@@ -18,6 +22,7 @@ export const CompanyType = {
     ONLINE_MARKETING: "online-marketing",
     SOCIAL_MEDIA: "social-media"
 }
+
 
 export const consultant = {
     MEDIA_ADVISOR: "/images/consultants/media-advisor.png",
@@ -54,3 +59,36 @@ export const Company = {
     LEADERBOARDER: {name: "leaderboarder", type: CompanyType.SOCIAL_MEDIA},
     XCURBR: {name: "xcurbr", type: CompanyType.SOCIAL_MEDIA},
 }
+
+export const frontendState = {
+    plot: {
+        DRAW_FIRST_CONGLOMERATE: 0,
+        DRAW_SECOND_CONGLOMERATE: 1,
+    },
+    infiltrate: {
+        PICK_CONGLOMERATES: 2,
+        PICK_CONSULTANT: 3,
+        MEDIA_ADVISOR_PICK_CONGLOMERATE: 4,
+        CORPORATE_LAWYER_PICK_CONGLOMERATES: 5,
+        CORPORATE_LAWYER_PICK_COMPANY: 6,
+        PICK_COMPANY: 7,
+        TAKE_CONSULTANT: 8,
+    },
+    takeover: {
+        PICK_CONSULTANT: 9,
+        PICK_CONGLOMERATES: 10,
+        PICK_TWO_COMPANY_TILES: 11,
+        ACTIVATE_ABILITY: 12,
+        DEALMAKER_DRAW_TWO_CARDS_FROM_DECK: 12,
+    },
+    BROADCAST_NETWORK_PICK_COMPANIES: 13,
+    GUERRILLA_MARKETING_PICK_CONGLOMERATES: 14,
+    PRINT_MEDIA_PICK_YOUR_CONGLOMERATE: 15,
+    PRINT_MEDIA_PICK_OTHER_CONGLOMERATE: 16,
+    AMBIENT_ADVERTISING_PICK_CONGLOMERATES: 17,
+    SOCIAL_MEDIA_PICK_CONGLOMERATE: 18,
+    ONLINE_MARKETING_PICK_COMPANIES: 19,
+    DISCARD: 20,
+    DONE: 21,
+    CHOOSE_ACTION:22
+};

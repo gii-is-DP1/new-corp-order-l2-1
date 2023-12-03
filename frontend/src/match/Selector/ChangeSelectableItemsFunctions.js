@@ -9,3 +9,11 @@ export function onlySelectOfSameColor(selection, selectedElements, selectableEle
 }
 
 export const selectAny = (selection, selectedElements, selectableElements, setSelectableItems) => {}
+
+export function selectQuantity(n){
+    return  (selection, selectedElements, selectableElements, setSelectableItems) => {
+        if(selectedElements.length === n)
+            setSelectableItems(selectedElements);
+        else setSelectableItems(selectableElements);
+    }
+}

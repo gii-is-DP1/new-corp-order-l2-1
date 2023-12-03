@@ -5,7 +5,7 @@ export default function Selector({
                                      title,
                                      subtitle,
                                      selection,
-                                     selectableElements,
+                                     selectableElements = [...Array(selection.length).keys()],
                                      canConfirm,
                                      changeSelectableItems,
                                      onConfirm,

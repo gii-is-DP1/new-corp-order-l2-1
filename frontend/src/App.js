@@ -4,6 +4,8 @@ import jwt_decode from "jwt-decode";
 import {ErrorBoundary} from "react-error-boundary";
 import tokenService from "./services/token.service";
 import SwaggerDocs from "./public/swagger";
+import Login from "./auth/login/index";
+import Register from "./auth/register/index"
 import Match from "./match/Match"
 import {MainPage} from "./MainPage";
 import AppNavbar from "./AppNavbar";
@@ -36,7 +38,7 @@ function App() {
     }
 
     return (
-        <>
+        <div>
             <ErrorBoundary FallbackComponent={ErrorFallback}>
                 <Routes>
                     <Route path="/" element={<MainPage/>}/>
@@ -46,7 +48,7 @@ function App() {
                     <Route path="/register" element={<Register/>}/>
                 </Routes>
             </ErrorBoundary>
-        </>
+        </div>
     );
 }
 

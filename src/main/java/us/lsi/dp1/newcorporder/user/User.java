@@ -26,7 +26,7 @@ public class User extends BaseEntity {
     @Size(max=32) @Column(unique = true) @NotNull
     private String username;
 
-    @Size(max=32) @Column(unique = true) @NotNull
+    @Size(max=32) @NotNull
     private String email;
 
     private String picture;
@@ -37,6 +37,7 @@ public class User extends BaseEntity {
     private LocalDate firstSeen;
 
     private LocalDate lastSeen;
+
 
     @NotNull
     @ManyToOne(optional = false)

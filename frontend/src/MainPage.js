@@ -2,68 +2,144 @@ import AppNavbar from "./AppNavbar";
 import Card from "./components/Card";
 import PublicIcon from "@mui/icons-material/Public";
 import GroupIcon from "@mui/icons-material/Group";
-import Button, {buttonStyles} from "./components/Button";
+import Button, {ButtonType} from "./components/Button";
 import InsertLinkIcon from "@mui/icons-material/InsertLink";
 import TextInput from "./components/TextInput";
 import LockIcon from "@mui/icons-material/Lock";
-import React from "react";
+import React, {useState} from "react";
+import {Text} from "./components/Text";
+import List from "./components/List";
+import ListLine from "./components/ListLine";
+import QueueIcon from '@mui/icons-material/Queue';
+import {black, orange} from "./util/Colors";
 
-export function MainPage({}) {
+export function MainPage() {
 
-    const sectionStyle = {
+    const content = {
+        flex: 1,
         display: "flex",
         flexDirection: "row",
-        width: "100vh",
-        height: "100vh"
+        backgroundImage: "url(/Images/BackgroundImage.svg)",
+        backgroundSize: "cover",
+        backgroundPosition: "center"
     }
 
-    const divStyle = {
+    const columnStyle = {
+        marginLeft: "auto",
+        marginRight: "auto",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-evenly",
+        alignItems: "center"
+    }
+
+    const cardStyle = {
+        overflowY: "auto"
+    }
+
+    const cardContentStyle = {
+        height: "100%",
         display: "flex",
         flexDirection: "column"
     }
 
-    const rowStyle = {
+    const cardContentRowStyle = {
+        margin: "10px",
         display: "flex",
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
-        margin: "10px",
         gap: "30px"
     }
 
-    return (
-        <>
-            <AppNavbar/>
-            <body>
-            <section style={sectionStyle}>
-                <div style={divStyle}>
-                    <Card title={"PLAY NOW"} subtitle={"JOIN PUBLIC MATCH"}
-                          icon={<PublicIcon style={{fontSize: "45px"}}/>}>
+    const buttonTextStyle = {
+        backgroundColor: "transparent",
+        border: "none",
+        cursor: "pointer"
+    }
 
-                        <section style={rowStyle}>
-                            <p>GAME MODE</p>
-                            <div style={{display: "flex", flexDirection: "row", gap: "15px"}}>
-                                <p>NORMAL</p>
-                                <p>QUICK</p>
-                            </div>
-                        </section>
+    let items = []
+    for (let i = 0; i < 20; i++) {
+        items.push(
+            <ListLine iconSrc={"/Images/Consultants/Dealmaker.png"}
+                      sideContent={(
+                          <button style={{backgroundColor: "transparent", border: "none", padding: "3px"}}>
+                              <QueueIcon style={{color: black}}/>
+                          </button>)}
+            >
+                <Text>AmigoAmigui{i}</Text>
+            </ListLine>
+        );
+    }
 
-                        <section style={rowStyle}>
-                            <p>NUMBER OF PLAYERS</p>
-                            <div style={{display: "flex", flexDirection: "row", gap: "15px"}}>
-                                <p>1<GroupIcon/></p>
-                                <p>2<GroupIcon/></p>
-                                <p>3<GroupIcon/></p>
-                            </div>
-                        </section>
+    function PressableText({children}) {
+        const [colorText, setColorText] = useState(black)
 
-                        <div style={{display: "flex", flexDirection: "row", justifyContent: "center"}}>
-                            <Button buttonText={"PLAY"} buttonColor={buttonStyles.secondary}></Button>
+        function coloringText() {
+            const color = colorText === black ? orange : black;
+            setColorText(color);
+        }
+
+        return (
+            <button onClick={coloringText} style={buttonTextStyle}>
+                <Text style={{color: colorText}}>{children}</Text>
+            </button>)
+    }
+
+    function PlayCard({title, subtitle, icon, style, privateGame = false}) {
+        return (
+            <Card style={{...cardStyle, ...style}}
+                  title={title}
+                  subtitle={subtitle}
+                  icon={icon}
+            >
+                <div style={cardContentStyle}>
+                    <section style={cardContentRowStyle}>
+                        <Text>Game mode</Text>
+                        <div style={{display: "flex", flexDirection: "row", gap: "15px"}}>
+                            <PressableText> Normal</PressableText>
+                            <PressableText> Quick</PressableText>
                         </div>
+                    </section>
+                    <section style={cardContentRowStyle}>
+                        <Text>Number of players</Text>
+                        <div style={{display: "flex", flexDirection: "row", gap: "15px"}}>
+                            <PressableText> 2<GroupIcon/></PressableText>
+                            <PressableText> 3<GroupIcon/></PressableText>
+                            <PressableText> 4<GroupIcon/></PressableText>
+                        </div>
+                    </section>
+                    {privateGame &&
+                        <section style={cardContentRowStyle}>
+                            <List style={{height: "256px"}}>
+                                {items}
+                            </List>
+                        </section>
+                    }
+                    <section style={{...cardContentRowStyle, justifyContent: "center"}}>
+                        <Button buttonType={ButtonType.secondaryLight}>
+                            Play
+                        </Button>
+                    </section>
+                </div>
+            </Card>)
+    }
 
-                    </Card>
-                    <Card title={"JOIN GAME"} subtitle={"WITH MATCH CODE"}
-                          icon={<InsertLinkIcon style={{fontSize: "45px"}}/>}>
+    return (
+        <div style={{display: "flex", flexDirection: "column", height: "100%"}}>
+            <AppNavbar/>
+
+            <div style={content}>
+                <div style={columnStyle}>
+                    <PlayCard title={"Play now"}
+                              subtitle={"Join public match"}
+                              icon={<PublicIcon style={{fontSize: "45px"}}/>}
+                    />
+                    <Card style={cardStyle}
+                          title={"Join game"}
+                          subtitle={"With match code"}
+                          icon={<InsertLinkIcon style={{fontSize: "45px"}}/>}
+                    >
                         <div style={{margin: "10px"}}>
                             <TextInput placeholder={"ENTER MATCH CODE..."} onClick={() => {
                             }}></TextInput>
@@ -71,16 +147,15 @@ export function MainPage({}) {
                     </Card>
                 </div>
 
-                <div style={divStyle}>
-                    <Card title={"PRIVATE GAME"} subtitle={"PLAY SOLO OR WITH FRIENDS"}
-                          icon={<LockIcon style={{fontSize: "45px"}}/>}>
-
-                    </Card>
+                <div style={columnStyle}>
+                    <PlayCard title={"Private game"}
+                              subtitle={"Create a private match"}
+                              icon={<LockIcon style={{fontSize: "45px"}}/>}
+                              style={cardStyle}
+                              privateGame={true}
+                    />
                 </div>
-            </section>
-            </body>
-        </>
-    );
+            </div>
+        </div>
+    )
 }
-
-

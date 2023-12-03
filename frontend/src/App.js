@@ -31,7 +31,7 @@ function App() {
     }
 
     return (
-        <div>
+        <>
             <ErrorBoundary FallbackComponent={ErrorFallback}>
                 <Routes>
                     <Route path="/" element={<MainPage/>}/>
@@ -39,7 +39,7 @@ function App() {
                     <Route path="/docs" element={<SwaggerDocs/>}/>
                 </Routes>
             </ErrorBoundary>
-        </div>
+        </>
     );
 }
 

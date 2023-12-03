@@ -21,7 +21,7 @@ export function MainPage() {
         flexDirection: "row",
         backgroundImage: "url(/Images/BackgroundImage.svg)",
         backgroundSize: "cover",
-        backgroundPosition: "center"
+        backgroundPosition: "bottom",
     }
 
     const columnStyle = {

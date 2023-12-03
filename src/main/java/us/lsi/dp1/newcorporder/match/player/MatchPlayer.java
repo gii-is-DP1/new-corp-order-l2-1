@@ -2,6 +2,7 @@ package us.lsi.dp1.newcorporder.match.player;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.*;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import us.lsi.dp1.newcorporder.match.Conglomerate;
@@ -19,11 +20,17 @@ public class MatchPlayer {
     @Getter private final Headquarter headquarter;
 
     private final Multiset<Conglomerate> hand = HashMultiset.create();
-    private final List<CompanyType> secretObjectives = new ArrayList<>(2);
+    private final List<CompanyType> secretObjectives;
 
     public MatchPlayer(Integer playerId, Headquarter headquarter) {
+        this(playerId, headquarter, new ArrayList<>(2));
+    }
+
+    @Builder
+    private MatchPlayer(Integer playerId, Headquarter headquarter, List<CompanyType> secretObjectives) {
         this.playerId = playerId;
         this.headquarter = headquarter;
+        this.secretObjectives = secretObjectives;
     }
 
     public void init(ConsultantType initialConsultant, List<Conglomerate> initialHand) {
@@ -67,6 +74,6 @@ public class MatchPlayer {
 
     public int getParticipationPoints(Conglomerate conglomerateType) {
         return headquarter.getTotalConglomeratesShares(conglomerateType) +
-               (headquarter.getAgentsCaptured(conglomerateType) * 2);
+            (headquarter.getAgentsCaptured(conglomerateType) * 2);
     }
 }

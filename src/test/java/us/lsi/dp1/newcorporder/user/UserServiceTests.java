@@ -6,7 +6,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.transaction.annotation.Transactional;
-import us.lsi.dp1.newcorporder.authority.Authority;
 import us.lsi.dp1.newcorporder.authority.AuthorityService;
 import us.lsi.dp1.newcorporder.exceptions.ResourceNotFoundException;
 
@@ -28,10 +27,10 @@ class UserServiceTests {
 	private AuthorityService authService;
 
 	@Test
-	@WithMockUser(username = "owner1", password = "0wn3r")
+    @WithMockUser(username = "user1", password = "0wn3r")
 	void shouldFindCurrentUser() {
 		User user = this.userService.findCurrentUser();
-		assertEquals("owner1", user.getUsername());
+        assertEquals("user1", user.getUsername());
 	}
 
 	@Test
@@ -48,25 +47,23 @@ class UserServiceTests {
 	@Test
 	void shouldFindAllUsers() {
 		List<User> users = (List<User>) this.userService.findAll();
-		assertEquals(19, users.size());
+        assertEquals(3, users.size());
 	}
 
 	@Test
 	void shouldFindUsersByUsername() {
-		User user = this.userService.findUser("owner1");
-		assertEquals("owner1", user.getUsername());
+        User user = this.userService.findUser("user1");
+        assertEquals("user1", user.getUsername());
 	}
 
 	@Test
 	void shouldFindUsersByAuthority() {
-		List<User> owners = (List<User>) this.userService.findAllByAuthority("OWNER");
-		assertEquals(10, owners.size());
+        List<User> owners = (List<User>) this.userService.findAllByAuthority("USER");
+        assertEquals(2, owners.size());
 
 		List<User> admins = (List<User>) this.userService.findAllByAuthority("ADMIN");
 		assertEquals(1, admins.size());
 
-		List<User> vets = (List<User>) this.userService.findAllByAuthority("VET");
-		assertEquals(6, vets.size());
 	}
 
 	@Test
@@ -76,8 +73,8 @@ class UserServiceTests {
 
 	@Test
 	void shouldFindSingleUser() {
-		User user = this.userService.findUser(4);
-		assertEquals("owner1", user.getUsername());
+        User user = this.userService.findUser(3);
+        assertEquals("user1", user.getUsername());
 	}
 
 	@Test
@@ -87,7 +84,7 @@ class UserServiceTests {
 
 	@Test
 	void shouldExistUser() {
-		assertEquals(true, this.userService.existsUser("owner1"));
+        assertEquals(true, this.userService.existsUser("user1"));
 	}
 
 	@Test
@@ -113,6 +110,7 @@ class UserServiceTests {
 		User user = new User();
 		user.setUsername("Sam");
 		user.setPassword("password");
+        user.setEmail("sam@gmail.com");
 		user.setAuthority(authService.findByName("ADMIN"));
 
 		this.userService.saveUser(user);
@@ -121,25 +119,6 @@ class UserServiceTests {
 
 		int finalCount = ((Collection<User>) this.userService.findAll()).size();
 		assertEquals(count + 1, finalCount);
-	}
-
-
-	@Test
-	@Transactional
-	void shouldDeleteUserWithoutOwner() {
-		Integer firstCount = ((Collection<User>) userService.findAll()).size();
-		User user = new User();
-		user.setUsername("Sam");
-		user.setPassword("password");
-		Authority auth = authService.findByName("OWNER");
-		user.setAuthority(auth);
-		this.userService.saveUser(user);
-
-		Integer secondCount = ((Collection<User>) userService.findAll()).size();
-		assertEquals(firstCount + 1, secondCount);
-		userService.deleteUser(user.getId());
-		Integer lastCount = ((Collection<User>) userService.findAll()).size();
-		assertEquals(firstCount, lastCount);
 	}
 
 //	@Test
@@ -167,24 +146,6 @@ class UserServiceTests {
 //		Integer lastCount = ((Collection<User>) userService.findAll()).size();
 //		assertEquals(firstCount, lastCount);
 //	}
-
-	@Test
-	@Transactional
-	void shouldDeleteUserWithoutVet() {
-		Integer firstCount = ((Collection<User>) userService.findAll()).size();
-		User user = new User();
-		user.setUsername("Sam");
-		user.setPassword("password");
-		Authority auth = authService.findByName("VET");
-		user.setAuthority(auth);
-		this.userService.saveUser(user);
-
-		Integer secondCount = ((Collection<User>) userService.findAll()).size();
-		assertEquals(firstCount + 1, secondCount);
-		userService.deleteUser(user.getId());
-		Integer lastCount = ((Collection<User>) userService.findAll()).size();
-		assertEquals(firstCount, lastCount);
-	}
 
 //	@Test
 //	@Transactional

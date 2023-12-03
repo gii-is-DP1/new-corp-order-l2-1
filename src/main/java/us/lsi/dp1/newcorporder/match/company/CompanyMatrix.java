@@ -26,6 +26,10 @@ public class CompanyMatrix {
         return new CompanyMatrix();
     }
 
+    public static CompanyMatrixBuilder builder() {
+        return new CompanyMatrixBuilder();
+    }
+
     @JsonIgnore
     @Getter private MatchSize matchSize;
 
@@ -33,6 +37,11 @@ public class CompanyMatrix {
     private CompanyTile[] tiles;
 
     private CompanyMatrix() {
+    }
+
+    private CompanyMatrix(MatchSize matchSize, CompanyTile... tiles) {
+        this.matchSize = matchSize;
+        this.tiles = tiles;
     }
 
     public void init(MatchSize matchSize) {
@@ -107,4 +116,24 @@ public class CompanyMatrix {
             .filter(tile -> tile.getCompany().getType() == companyType)
             .count();
     }
+
+    public static class CompanyMatrixBuilder {
+        private MatchSize matchSize;
+        private CompanyTile[] tiles;
+
+        public CompanyMatrixBuilder matchSize(MatchSize matchSize) {
+            this.matchSize = matchSize;
+            return this;
+        }
+
+        public CompanyMatrixBuilder tiles(CompanyTile... tiles) {
+            this.tiles = tiles;
+            return this;
+        }
+
+        public CompanyMatrix build() {
+            return new CompanyMatrix(matchSize, tiles);
+        }
+    }
+
 }

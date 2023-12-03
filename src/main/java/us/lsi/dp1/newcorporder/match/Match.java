@@ -4,7 +4,7 @@ import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
 import lombok.Builder;
 import lombok.Getter;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.Setter;
 import us.lsi.dp1.newcorporder.match.company.CompanyMatrix;
 import us.lsi.dp1.newcorporder.match.company.CompanyType;
 import us.lsi.dp1.newcorporder.match.player.MatchPlayer;
@@ -14,24 +14,16 @@ import java.util.*;
 
 public class Match {
 
-    @Autowired
-    public MatchService matchService;
-
     public static final int INITIAL_CONGLOMERATE_SHARES_PER_PLAYER = 4;
     public static final int MAX_SHARES_IN_HAND = 6;
     public static final int SHARES_IN_OPEN_DISPLAY = 4;
 
-    public static Match create(int maxPlayers, MatchMode matchMode) {
+    public static Match create(int maxPlayers, MatchMode matchMode, String inviteCode) {
         GeneralSupply generalSupply = GeneralSupply.create();
         CompanyMatrix companyMatrix = CompanyMatrix.create();
         TurnSystem turnSystem = TurnSystem.create();
-        String inviteCode = "foo"; // TODO make code random
 
-        Match match = new Match(maxPlayers, matchMode, inviteCode, generalSupply, companyMatrix, turnSystem);
-
-        match.matchService.matchList.add(match);
-
-        return match;
+        return new Match(maxPlayers, matchMode, inviteCode, generalSupply, companyMatrix, turnSystem);
     }
 
     @Getter private final int maxPlayers;
@@ -39,7 +31,7 @@ public class Match {
     @Getter private final String inviteCode;
 
     @Getter private final GeneralSupply generalSupply;
-    @Getter private final CompanyMatrix companyMatrix;
+    @Getter @Setter private final CompanyMatrix companyMatrix;
     @Getter private final TurnSystem turnSystem;
 
     @Getter private MatchState matchState = MatchState.WAITING;
@@ -105,7 +97,7 @@ public class Match {
         return players.values();
     }
 
-    private Multiset<MatchPlayer> calculateVictoryPoints() {
+    public Multiset<MatchPlayer> calculateVictoryPoints() {
         Multiset<MatchPlayer> points = HashMultiset.create();
 
         for (Conglomerate conglomerate : Conglomerate.values()) {
@@ -122,6 +114,7 @@ public class Match {
                     int numTilesControlledOfCompanyType = companyMatrix.countTilesControlledByWithCompany(conglomerate, companyType);
                     points.add(player, 2 * numTilesControlledOfCompanyType);
                 }
+
             }
         }
 
@@ -132,11 +125,13 @@ public class Match {
         return points;
     }
 
-    private List<MatchPlayer> rankPlayerParticipation(Conglomerate conglomerateType) {
+    public List<MatchPlayer> rankPlayerParticipation(Conglomerate conglomerateType) {
         return this.players.values().stream()
             .sorted(Comparator.<MatchPlayer>comparingInt(player -> player.getParticipationPoints(conglomerateType))
                 .thenComparingInt(x -> x.getHeadquarter().getAgentsCaptured(conglomerateType))
                 .reversed())
             .toList();
     }
+
+
 }

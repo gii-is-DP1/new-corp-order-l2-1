@@ -3,11 +3,62 @@
 import tokenService from "../../services/token.service";
 import FormGenerator from "../../components/formGenerator/formGenerator";
 import { registerFormInputs } from "./form/registerFormInputs";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import Card from "../../components/Card";
+import LoginIcon from "@mui/icons-material/Login";
+import FormInput from "../../components/FormInput";
+import Button, {ButtonType} from "../../components/Button";
+import {Text} from "../../components/Text";
 
 export default function Register() {
     let [type, setType] = useState(null);
     let [authority, setAuthority] = useState(null);
+
+    const content = {
+        height: "100%",
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-evenly",
+        alignItems: "space-between",
+        backgroundImage: "url(/Images/BackgroundImage.svg)",
+        backgroundSize: "cover",
+        backgroundPositionY: "bottom"
+    }
+
+    const columnStyle = {
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center"
+    }
+
+    const cardStyle = {
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        margin: "15px"
+    }
+
+    const lineTextStyle = {
+        whiteSpace: "nowrap",
+        paddingTop: "5px",
+        fontSize: "15px",
+        paddingLeft: "10px",
+        paddingRight: "10px",
+    }
+
+    const lineStyle = {
+        flex: "1",
+        border: "none",
+        borderTop: "2px solid #2C2C2C"
+    }
+
+    const buttonStyle = {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        margin: "10px"
+    }
 
     const registerFormRef = useRef();
 
@@ -71,52 +122,42 @@ export default function Register() {
                 alert(message);
             });
     }
-
-    if (type) {
         return (
-            <div className="auth-page-container">
-                <h1>Register</h1>
-                <div className="auth-form-container">
-                    <FormGenerator
-                        ref={registerFormRef}
-                        inputs={
-                            registerFormInputs
-                        }
-                        onSubmit={handleSubmit}
-                        numberOfColumns={1}
-                        listenEnterKey
-                        buttonText="Save"
-                        buttonClassName="auth-button"
-                    />
+            <div style={content}>
+                <div style={columnStyle}>
+                    <img src={"Images/New-corp-order-logo.png"} alt={"New Corp Order logo"}></img>
+                </div>
+                <div style={columnStyle}>
+                    <Card style={cardStyle}
+                          title={"sign up"}
+                          subtitle={"Feeling like playing?"}
+                          icon={<LoginIcon style={{fontSize: "45px"}}/>}
+                    >
+                        <div style={{margin: "15px"}}>
+                            <form style={{display: 'flex', flexDirection: 'column'}} onSubmit={handleSubmit}>
+                                <FormInput name={"email"} placeholder={"Type your email here"}></FormInput>
+                                <FormInput name={"username"} placeholder={"Type your username here"}></FormInput>
+                                <FormInput name={"password"} placeholder={"**********"} type={"password"}></FormInput>
+                                <FormInput name={"repeat password"} placeholder={"**********"} type={"password"}></FormInput>
+                            </form>
+                            <div style={buttonStyle}>
+                                <Button buttonType={ButtonType.primary} type="submit">Register</Button>
+                            </div>
+                            <div style={{display: "flex", flexDirection: "row"}}>
+                                <hr style={lineStyle}/>
+                                <Text style={lineTextStyle}> Do you have an account? </Text>
+                                <hr style={lineStyle}/>
+                            </div>
+                            <div style={buttonStyle}>
+                                <a style={{textDecoration: "none"}} href={"/login"}>
+                                    <Button buttonType={ButtonType.secondaryLight}>
+                                        Log in instead
+                                    </Button>
+                                </a>
+                            </div>
+                        </div>
+                    </Card>
                 </div>
             </div>
         );
-    } else {
-        return (
-            <div className="auth-page-container">
-                <div className="auth-form-container">
-                    <h1>Register</h1>
-                    <h2 className="text-center text-md">
-                        What type of user will you be?
-                    </h2>
-                    <div className="options-row">
-                        <button
-                            className="auth-button"
-                            value="ADMIN"
-                            onClick={handleButtonClick}
-                        >
-                            Admin
-                        </button>
-                        <button
-                            className="auth-button"
-                            value="USER"
-                            onClick={handleButtonClick}
-                        >
-                            User
-                        </button>
-                    </div>
-                </div>
-            </div>
-        );
-    }
 }

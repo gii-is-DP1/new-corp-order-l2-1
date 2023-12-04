@@ -3,7 +3,7 @@ import * as Colors from "../util/Colors";
 import SendIcon from "@mui/icons-material/Send";
 import TextInput from "./TextInput";
 
-export default function FormInput({name, placeholder}) {
+export default function FormInput({name, placeholder, type}) {
 
     const textStyle = {
         margin: 0,
@@ -17,7 +17,7 @@ export default function FormInput({name, placeholder}) {
             <label style={textStyle} htmlFor={name}>
                 {name}
             </label>
-            <TextInput name={name} placeholder={placeholder}/>
+            <TextInput name={name} placeholder={placeholder} type={type}/>
         </div>
 
     )

@@ -8,6 +8,8 @@ import {Text} from "../../components/Text";
 
 export default function Login() {
 
+    const [message, setMessage] = React.useState(null);
+
     const content = {
         height: "100%",
         display: "flex",
@@ -91,7 +93,7 @@ export default function Login() {
                     <div style={{margin: "15px"}}>
                         <form style={{display: 'flex', flexDirection: 'column'}} onSubmit={handleSubmit}>
                             <FormInput name={"email"} placeholder={"Type your email here"}></FormInput>
-                            <FormInput name={"password"} placeholder={"**********"}></FormInput>
+                            <FormInput name={"password"} placeholder={"**********"} type={"password"}></FormInput>
                         </form>
                         <div style={buttonStyle}>
                             <Button buttonType={ButtonType.primary} type="submit">Login</Button>
@@ -113,4 +115,5 @@ export default function Login() {
             </div>
         </div>
     );
+
 }

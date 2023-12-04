@@ -2,7 +2,7 @@ import {useState} from 'react';
 import * as Colors from "../util/Colors";
 import SendIcon from '@mui/icons-material/Send';
 
-export default function TextInput({name, placeholder, onClick}) {
+export default function TextInput({name, placeholder, onClick, type}) {
 
     const [inputValue, setInputValue] = useState('');
 
@@ -34,7 +34,7 @@ export default function TextInput({name, placeholder, onClick}) {
 
     return (
         <div style={divStyle}>
-            <input id={name} name={name} placeholder={placeholder} style={inputStyle} value={inputValue}
+            <input type={type} id={name} name={name} placeholder={placeholder} style={inputStyle} value={inputValue}
                    onChange={e => setInputValue(e.target.value)}/>
             {onClick &&
                 <button onClick={onClick} style={buttonStyle}>

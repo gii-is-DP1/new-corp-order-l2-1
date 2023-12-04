@@ -21,6 +21,7 @@ export default function Selector({
 
             {selection.map((item, i) =>
                 <Selectable
+                    key = {i}
                     style={itemStyle}
                     item={item}
                     isSelectable={selectableItems.includes(i)}

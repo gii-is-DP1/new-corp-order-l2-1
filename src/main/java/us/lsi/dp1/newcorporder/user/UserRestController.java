@@ -53,6 +53,20 @@ class UserRestController {
 		return new ResponseEntity<>(res, HttpStatus.OK);
 	}
 
+    @GetMapping("login")
+    public ResponseEntity<User> login(@RequestParam String username, @RequestParam String password){
+        try{
+            User requestUser = userService.findUser(username);
+            if(requestUser.getPassword().equals(password)){
+                return new ResponseEntity<>(requestUser, HttpStatus.OK);
+            }else{
+                throw new AccessDeniedException("the password is not correct");
+            }
+        }catch(Throwable err){
+            throw err;
+        }
+    }
+
 	@GetMapping("authorities")
 	public ResponseEntity<List<Authority>> findAllAuths() {
 		List<Authority> res = (List<Authority>) authService.findAll();

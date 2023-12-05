@@ -8,7 +8,7 @@ import {Text} from "../../components/Text";
 
 export default function Login() {
 
-    const [message, setMessage] = React.useState(null);
+    const [message, setMessage] = React.useState();
 
     const content = {
         height: "100%",
@@ -60,9 +60,9 @@ export default function Login() {
 
         const reqBody = values;
         setMessage(null);
-        await fetch("/api/v1/auth/signin", {
+        await fetch("/api/v1/users/login", {
             headers: {"Content-Type": "application/json"},
-            method: "POST",
+            method: "GET",
             body: JSON.stringify(reqBody),
         })
             .then(function (response) {
@@ -72,7 +72,7 @@ export default function Login() {
             .then(function (data) {
                 tokenService.setUser(data);
                 tokenService.updateLocalAccessToken(data.token);
-                window.location.href = "/dashboard";
+                // window.location.href = "/dashboard";
             })
             .catch((error) => {
                 setMessage(error);
@@ -92,12 +92,13 @@ export default function Login() {
                 >
                     <div style={{margin: "15px"}}>
                         <form style={{display: 'flex', flexDirection: 'column'}} onSubmit={handleSubmit}>
-                            <FormInput name={"email"} placeholder={"Type your email here"}></FormInput>
+                            <FormInput name={"username"} placeholder={"Type your username here"}></FormInput>
                             <FormInput name={"password"} placeholder={"**********"} type={"password"}></FormInput>
+                            <div style={buttonStyle}>
+                                {message && <Text style={{textTransform: "none", color: "red"} }>{message}</Text>}
+                                <Button buttonType={ButtonType.primary} type="submit">Login</Button>
+                            </div>
                         </form>
-                        <div style={buttonStyle}>
-                            <Button buttonType={ButtonType.primary} type="submit">Login</Button>
-                        </div>
                         <div style={{display: "flex", flexDirection: "row"}}>
                             <hr style={lineStyle}/>
                             <Text style={lineTextStyle}> Don't have an account yet? </Text>

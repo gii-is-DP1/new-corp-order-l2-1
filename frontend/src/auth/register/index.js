@@ -13,6 +13,7 @@ import {Text} from "../../components/Text";
 export default function Register() {
     let [type, setType] = useState(null);
     let [authority, setAuthority] = useState(null);
+    let [message, setMessage] = useState(null);
 
     const content = {
         height: "100%",
@@ -139,10 +140,11 @@ export default function Register() {
                                 <FormInput name={"username"} placeholder={"Type your username here"}></FormInput>
                                 <FormInput name={"password"} placeholder={"**********"} type={"password"}></FormInput>
                                 <FormInput name={"repeat password"} placeholder={"**********"} type={"password"}></FormInput>
+                                <div style={buttonStyle}>
+                                    {message && <Text style={{textTransform: "none", color: "red"} }>{message}</Text>}
+                                    <Button buttonType={ButtonType.primary} type="submit">Register</Button>
+                                </div>
                             </form>
-                            <div style={buttonStyle}>
-                                <Button buttonType={ButtonType.primary} type="submit">Register</Button>
-                            </div>
                             <div style={{display: "flex", flexDirection: "row"}}>
                                 <hr style={lineStyle}/>
                                 <Text style={lineTextStyle}> Do you have an account? </Text>

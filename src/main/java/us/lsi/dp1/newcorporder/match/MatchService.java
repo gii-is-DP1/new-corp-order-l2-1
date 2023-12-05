@@ -1,51 +1,42 @@
 package us.lsi.dp1.newcorporder.match;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import us.lsi.dp1.newcorporder.achievement.Achievement;
-import us.lsi.dp1.newcorporder.exceptions.ResourceNotFoundException;
-
-import javax.swing.text.html.Option;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import us.lsi.dp1.newcorporder.match.payload.response.MatchAssignmentResponse;
+import us.lsi.dp1.newcorporder.match.player.MatchPlayer;
+import us.lsi.dp1.newcorporder.player.Player;
 
 @Service
 public class MatchService {
 
-    List<Match> matchList = new ArrayList<>();
+    // TODO: synchronize
+    private final MatchRepository matchRepository;
 
-    @Transactional(readOnly = true)
-    public Iterable<Match> findAll() {
-        return matchList;
+    public MatchService(MatchRepository matchRepository) {
+        this.matchRepository = matchRepository;
     }
 
-    @Transactional(readOnly = true)
-    public Match findByInviteCode(String inviteCode) {
-        Optional<Match> match = matchList.stream().filter(m -> m.getInviteCode().equals(inviteCode)).findFirst();
-        if(match.isEmpty()) throw new ResourceNotFoundException("Match", "invite code", inviteCode);
-        return match.get();
+    public MatchAssignmentResponse quickPlay(Player player, MatchMode mode, int maxPlayers) {
+        Match match = matchRepository.findRandomPublicMatch(mode, maxPlayers)
+            .orElseGet(() -> matchRepository.createNewMatch(mode, MatchVisibility.PUBLIC, maxPlayers));
+
+        return this.joinMatch(player, match);
     }
 
-    @Transactional(readOnly = true)
-    public Match findRandomMatch() {
-        Optional<Match> match = matchList.stream()
-            .filter(m -> m.getMatchState().equals(MatchState.WAITING))
-            .filter(m -> m.getPlayers().size() < m.getMaxPlayers())
-            .findFirst();
-        if(match.isEmpty()) throw new NoSuchElementException("No matches left");
-        return match.get();
+    public MatchAssignmentResponse joinMatch(Player player, String matchCode) {
+        Match match = matchRepository.getByMatchCode(matchCode)
+            .orElseThrow(() -> new IllegalArgumentException("match with code %s does not exist".formatted(matchCode)));
+
+        return this.joinMatch(player, match);
     }
 
-    @Transactional(readOnly = true)
-    public Match findRandomMatch(MatchMode matchMode, int maxPlayers) {
-        Optional<Match> match = matchList.stream().filter(m -> m.getMatchState().equals(MatchState.WAITING))
-            .filter(m -> m.getPlayers().size() < m.getMaxPlayers())
-            .filter(m -> m.getMaxPlayers() == maxPlayers)
-            .filter(m -> m.getMatchMode().equals(matchMode))
-            .findFirst();
-        if(match.isEmpty()) throw new NoSuchElementException("No matches left");
-        return match.get();
+    public MatchAssignmentResponse createPrivateMatch(Player player, MatchMode mode, int maxPlayers) {
+        Match match = matchRepository.createNewMatch(mode, MatchVisibility.PRIVATE, maxPlayers);
+
+        return this.joinMatch(player, match);
+    }
+
+    private MatchAssignmentResponse joinMatch(Player player, Match match) {
+        match.addPlayer(MatchPlayer.create(player.getId()));
+        return new MatchAssignmentResponse(match.getCode());
     }
 }

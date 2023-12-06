@@ -17,7 +17,7 @@ public abstract class Turn {
         this.turnSystem = match.getTurnSystem();
     }
 
-    public TakeShareResponse onTakeShareRequest(TakeShareRequest request) {
+    public PlotResponse onPlotRequest(PlotRequest request) {
         throw new IllegalStateException("invalid move for the current action");
     }
 
@@ -50,7 +50,7 @@ public abstract class Turn {
         throw new IllegalStateException("invalid move for the current action");
     }
 
-    public CompanyAbilityResponse onCompanyAbilityRequest(CompanyAbilityRequest request) {
+    public UseCompanyAbilityResponse onUseCompanyAbilityRequest(UseCompanyAbilityRequest request) {
         throw new IllegalStateException("invalid move for the current action");
     }
 }

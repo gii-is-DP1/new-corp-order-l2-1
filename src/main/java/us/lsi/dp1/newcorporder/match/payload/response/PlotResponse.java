@@ -6,10 +6,12 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
 import us.lsi.dp1.newcorporder.match.conglomerate.Conglomerate;
 
-@Data
 @EqualsAndHashCode(callSuper = true)
+@Data
 @SuperBuilder
-public class CompanyAbilityResponse extends TurnStateResponse {
-    private Multiset<Conglomerate> hand;
-}
+public class PlotResponse extends TurnStateResponse {
 
+    private Conglomerate shareTaken;
+    private Multiset<Conglomerate> openDisplay;
+
+}

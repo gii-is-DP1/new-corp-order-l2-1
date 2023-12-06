@@ -4,9 +4,9 @@ import com.google.common.base.Preconditions;
 import us.lsi.dp1.newcorporder.match.Match;
 import us.lsi.dp1.newcorporder.match.conglomerate.Conglomerate;
 import us.lsi.dp1.newcorporder.match.payload.request.DiscardShareRequest;
-import us.lsi.dp1.newcorporder.match.payload.request.TakeShareRequest;
+import us.lsi.dp1.newcorporder.match.payload.request.PlotRequest;
 import us.lsi.dp1.newcorporder.match.payload.response.DiscardShareResponse;
-import us.lsi.dp1.newcorporder.match.payload.response.TakeShareResponse;
+import us.lsi.dp1.newcorporder.match.payload.response.PlotResponse;
 
 import static us.lsi.dp1.newcorporder.match.Match.MAX_SHARES_IN_HAND;
 import static us.lsi.dp1.newcorporder.match.Match.SHARES_IN_OPEN_DISPLAY;
@@ -22,12 +22,12 @@ public class PlotTurn extends Turn {
     }
 
     @Override
-    public TakeShareResponse onTakeShareRequest(TakeShareRequest takeShareRequest) {
+    public PlotResponse onPlotRequest(PlotRequest plotRequest) {
         Preconditions.checkState(currentState == State.SELECTING_FIRST_SHARE
-                || currentState == State.SELECTING_SECOND_SHARE,
+                                 || currentState == State.SELECTING_SECOND_SHARE,
             "illegal turn state");
 
-        Conglomerate share = this.takeShare(takeShareRequest);
+        Conglomerate share = this.takeShare(plotRequest);
         turnSystem.getCurrentPlayer().addShareToHand(share);
         currentState = this.getNextState();
 
@@ -35,22 +35,22 @@ public class PlotTurn extends Turn {
             this.endTurn();
         }
 
-        return TakeShareResponse.builder()
+        return PlotResponse.builder()
             .shareTaken(share)
             .nextState(currentState)
             .openDisplay(match.getGeneralSupply().getOpenDisplay())
             .build();
     }
 
-    private Conglomerate takeShare(TakeShareRequest takeShareRequest) {
-        return switch (takeShareRequest.getSource()) {
+    private Conglomerate takeShare(PlotRequest plotRequest) {
+        return switch (plotRequest.getSource()) {
             case DECK -> match.getGeneralSupply().takeConglomerateShareFromDeck();
             case OPEN_DISPLAY -> {
-                Preconditions.checkArgument(takeShareRequest.getConglomerate() != null,
+                Preconditions.checkArgument(plotRequest.getConglomerate() != null,
                     "conglomerate must be specified to take a share from the open display");
 
-                match.getGeneralSupply().takeConglomerateShareFromOpenDisplay(takeShareRequest.getConglomerate());
-                yield takeShareRequest.getConglomerate();
+                match.getGeneralSupply().takeConglomerateShareFromOpenDisplay(plotRequest.getConglomerate());
+                yield plotRequest.getConglomerate();
             }
         };
     }

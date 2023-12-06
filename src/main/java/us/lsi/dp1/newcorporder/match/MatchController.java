@@ -1,51 +1,45 @@
 package us.lsi.dp1.newcorporder.match;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import us.lsi.dp1.newcorporder.achievement.Achievement;
-import us.lsi.dp1.newcorporder.achievement.AchievementService;
-import us.lsi.dp1.newcorporder.auth.payload.response.MessageResponse;
-import us.lsi.dp1.newcorporder.util.RestPreconditions;
-
-import java.util.List;
+import us.lsi.dp1.newcorporder.auth.Authenticated;
+import us.lsi.dp1.newcorporder.match.payload.response.MatchAssignmentResponse;
+import us.lsi.dp1.newcorporder.player.Player;
 
 @RestController
 @RequestMapping("/api/v1/matches")
-@SecurityRequirement(name="bearerAuth")
+@SecurityRequirement(name = "bearerAuth")
 public class MatchController {
+
     private final MatchService matchService;
 
-    @Autowired
     public MatchController(MatchService matchService) {
         this.matchService = matchService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<Match>> findAll() {
-        List<Match> res = (List<Match>) matchService.findAll();
-        return new ResponseEntity<>(res, HttpStatus.OK);
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public MatchAssignmentResponse createPrivateMatch(@Authenticated Player player,
+                                                      @RequestParam("mode") MatchMode mode,
+                                                      @RequestParam("maxPlayers") int maxPlayers) {
+        return matchService.createPrivateMatch(player, mode, maxPlayers);
     }
 
-    @GetMapping(value = "{inviteCode}")
-    public ResponseEntity<Match> findByInviteCode(@PathVariable("inviteCode") String inviteCode) {
-        Match res = matchService.findByInviteCode(inviteCode);
-        return new ResponseEntity<>(res, HttpStatus.OK);
+    @PostMapping("/quick")
+    public MatchAssignmentResponse quickPlay(@Authenticated Player player,
+                                             @RequestParam("mode") MatchMode mode,
+                                             @RequestParam("maxPlayers") int maxPlayers) {
+        return matchService.quick(player, mode, maxPlayers);
     }
 
-    @GetMapping(value = "/random")
-    public ResponseEntity<Match> findRandomMatch() {
-        Match res = matchService.findRandomMatch();
-        return new ResponseEntity<>(res, HttpStatus.OK);
+    @PostMapping("/{match}/join")
+    public MatchAssignmentResponse joinMatch(@Authenticated Player player, @PathVariable Match match) {
+        return matchService.join(player, match);
     }
 
-    @GetMapping(value = "/random/{matchMode}/{maxPlayers}")
-    public ResponseEntity<Match> findRandomMatch(@PathVariable @Valid MatchMode matchMode, @PathVariable Integer maxPlayers) {
-        Match res = matchService.findRandomMatch(matchMode, maxPlayers);
-        return new ResponseEntity<>(res, HttpStatus.OK);
+    @PostMapping("/{match}/leave")
+    public void leaveMatch(@Authenticated Player player, @PathVariable Match match) {
+        matchService.leave(player, match);
     }
-
 }

@@ -24,25 +24,22 @@ public class MatchService {
         return this.join(player, match);
     }
 
-    public MatchAssignmentResponse join(Player player, String matchCode) {
-        Match match = matchRepository.getByMatchCode(matchCode)
-            .orElseThrow(() -> new IllegalArgumentException("match with code %s does not exist".formatted(matchCode)));
-
-        return this.join(player, match);
-    }
-
     public MatchAssignmentResponse createPrivateMatch(Player player, MatchMode mode, int maxPlayers) {
         Match match = matchRepository.createNewMatch(mode, MatchVisibility.PRIVATE, maxPlayers);
 
         return this.join(player, match);
     }
 
-    public Optional<Match> findByCode(String code) {
-        return matchRepository.getByMatchCode(code);
-    }
-
-    private MatchAssignmentResponse join(Player player, Match match) {
+    public MatchAssignmentResponse join(Player player, Match match) {
         match.addPlayer(MatchPlayer.create(player.getId()));
         return new MatchAssignmentResponse(match.getCode());
+    }
+
+    public void leave(Player player, Match match) {
+        match.removePlayer(match.getPlayer(player.getId()));
+    }
+
+    public Optional<Match> findByCode(String code) {
+        return matchRepository.getByMatchCode(code);
     }
 }

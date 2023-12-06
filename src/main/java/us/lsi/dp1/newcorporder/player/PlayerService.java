@@ -2,8 +2,10 @@ package us.lsi.dp1.newcorporder.player;
 import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataAccessException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import us.lsi.dp1.newcorporder.configuration.services.UserDetailsImpl;
 import us.lsi.dp1.newcorporder.exceptions.ResourceNotFoundException;
 
 @Service
@@ -44,5 +46,11 @@ public class PlayerService {
     public void deletePlayer(Integer id) {
         Player toDelete = findById(id);
         playerRepository.delete(toDelete);
+    }
+
+    @Transactional
+    public Player getAuthenticatedPlayer() {
+        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return this.findById(userDetails.getId());
     }
 }

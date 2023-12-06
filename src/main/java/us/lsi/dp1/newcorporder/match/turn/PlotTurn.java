@@ -1,8 +1,8 @@
 package us.lsi.dp1.newcorporder.match.turn;
 
 import com.google.common.base.Preconditions;
-import us.lsi.dp1.newcorporder.match.Conglomerate;
 import us.lsi.dp1.newcorporder.match.Match;
+import us.lsi.dp1.newcorporder.match.conglomerate.Conglomerate;
 import us.lsi.dp1.newcorporder.match.payload.request.DiscardShareRequest;
 import us.lsi.dp1.newcorporder.match.payload.request.TakeShareRequest;
 import us.lsi.dp1.newcorporder.match.payload.response.DiscardShareResponse;

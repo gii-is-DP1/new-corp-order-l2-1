@@ -11,6 +11,7 @@ import us.lsi.dp1.newcorporder.match.company.Company;
 import us.lsi.dp1.newcorporder.match.company.CompanyMatrix;
 import us.lsi.dp1.newcorporder.match.company.CompanyTile;
 import us.lsi.dp1.newcorporder.match.company.CompanyType;
+import us.lsi.dp1.newcorporder.match.conglomerate.Conglomerate;
 import us.lsi.dp1.newcorporder.match.player.Headquarter;
 import us.lsi.dp1.newcorporder.match.player.MatchPlayer;
 import us.lsi.dp1.newcorporder.match.turn.TurnSystem;

@@ -1,4 +1,4 @@
-package us.lsi.dp1.newcorporder.match;
+package us.lsi.dp1.newcorporder.match.consultant;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;

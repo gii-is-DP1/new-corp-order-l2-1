@@ -1,8 +1,8 @@
 package us.lsi.dp1.newcorporder.match.turn;
 
 import com.google.common.base.Preconditions;
-import us.lsi.dp1.newcorporder.match.ConsultantType;
 import us.lsi.dp1.newcorporder.match.Match;
+import us.lsi.dp1.newcorporder.match.consultant.ConsultantType;
 import us.lsi.dp1.newcorporder.match.payload.request.DiscardShareRequest;
 import us.lsi.dp1.newcorporder.match.payload.request.InfiltrateRequest;
 import us.lsi.dp1.newcorporder.match.payload.request.TakeConsultantRequest;

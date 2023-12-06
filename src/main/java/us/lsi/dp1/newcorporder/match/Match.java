@@ -7,6 +7,9 @@ import lombok.Builder;
 import lombok.Getter;
 import us.lsi.dp1.newcorporder.match.company.CompanyMatrix;
 import us.lsi.dp1.newcorporder.match.company.CompanyType;
+import us.lsi.dp1.newcorporder.match.conglomerate.Conglomerate;
+import us.lsi.dp1.newcorporder.match.consultant.ConsultantInitializer;
+import us.lsi.dp1.newcorporder.match.consultant.ConsultantType;
 import us.lsi.dp1.newcorporder.match.player.MatchPlayer;
 import us.lsi.dp1.newcorporder.match.turn.TurnSystem;
 

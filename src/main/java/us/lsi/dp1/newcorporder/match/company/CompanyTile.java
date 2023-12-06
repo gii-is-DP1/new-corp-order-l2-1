@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import us.lsi.dp1.newcorporder.match.Conglomerate;
+import us.lsi.dp1.newcorporder.match.conglomerate.Conglomerate;
 
 @Getter
 @EqualsAndHashCode(of = "company")

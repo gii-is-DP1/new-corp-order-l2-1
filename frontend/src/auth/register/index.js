@@ -1,9 +1,7 @@
 //import "../../static/css/auth/authButton.css";
 //import "../../static/css/auth/authPage.css";
 import tokenService from "../../services/token.service";
-import FormGenerator from "../../components/formGenerator/formGenerator";
-import { registerFormInputs } from "./form/registerFormInputs";
-import React, { useEffect, useRef, useState } from "react";
+import React, {useRef, useState} from "react";
 import Card from "../../components/Card";
 import LoginIcon from "@mui/icons-material/Login";
 import FormInput from "../../components/FormInput";
@@ -63,24 +61,15 @@ export default function Register() {
 
     const registerFormRef = useRef();
 
-    function handleButtonClick(event) {
-        const target = event.target;
-        let value = target.value;
-        if (value === "Back") value = null;
-        else setAuthority(value);
-        setType(value);
-    }
-
-    function handleSubmit({ values }) {
-
-        if(!registerFormRef.current.validate()) return;
+    function handleSubmit({values}) {
+        if (!registerFormRef.current) return;
 
         const request = values;
         request["authority"] = authority;
         let state = "";
 
         fetch("/api/v1/auth/signup", {
-            headers: { "Content-Type": "application/json" },
+            headers: {"Content-Type": "application/json"},
             method: "POST",
             body: JSON.stringify(request),
         })
@@ -93,7 +82,7 @@ export default function Register() {
                     };
 
                     fetch("/api/v1/auth/signin", {
-                        headers: { "Content-Type": "application/json" },
+                        headers: {"Content-Type": "application/json"},
                         method: "POST",
                         body: JSON.stringify(loginRequest),
                     })
@@ -114,52 +103,59 @@ export default function Register() {
                                 window.location.href = "/dashboard";
                             }
                         })
-                        .catch((message) => {
-                            alert(message);
+                        .catch((error) => {
+                            setMessage(error);
                         });
                 }
             })
             .catch((message) => {
-                alert(message);
+                setMessage(message);
             });
     }
-        return (
-            <div style={content}>
-                <div style={columnStyle}>
-                    <img src={"Images/New-corp-order-logo.png"} alt={"New Corp Order logo"}></img>
-                </div>
-                <div style={columnStyle}>
-                    <Card style={cardStyle}
-                          title={"sign up"}
-                          subtitle={"Feeling like playing?"}
-                          icon={<LoginIcon style={{fontSize: "45px"}}/>}
-                    >
-                        <div style={{margin: "15px"}}>
-                            <form style={{display: 'flex', flexDirection: 'column'}} onSubmit={handleSubmit}>
-                                <FormInput name={"email"} placeholder={"Type your email here"}></FormInput>
-                                <FormInput name={"username"} placeholder={"Type your username here"}></FormInput>
-                                <FormInput name={"password"} placeholder={"**********"} type={"password"}></FormInput>
-                                <FormInput name={"repeat password"} placeholder={"**********"} type={"password"}></FormInput>
-                                <div style={buttonStyle}>
-                                    {message && <Text style={{textTransform: "none", color: "red"} }>{message}</Text>}
-                                    <Button buttonType={ButtonType.primary} type="submit">Register</Button>
-                                </div>
-                            </form>
-                            <div style={{display: "flex", flexDirection: "row"}}>
-                                <hr style={lineStyle}/>
-                                <Text style={lineTextStyle}> Do you have an account? </Text>
-                                <hr style={lineStyle}/>
-                            </div>
-                            <div style={buttonStyle}>
-                                <a style={{textDecoration: "none"}} href={"/login"}>
-                                    <Button buttonType={ButtonType.secondaryLight}>
-                                        Log in instead
-                                    </Button>
-                                </a>
-                            </div>
-                        </div>
-                    </Card>
-                </div>
+
+    return (
+        <div style={content}>
+            <div style={columnStyle}>
+                <img src={"Images/New-corp-order-logo.png"} alt={"New Corp Order logo"}></img>
             </div>
-        );
+            <div style={columnStyle}>
+                <Card style={cardStyle}
+                      title={"sign up"}
+                      subtitle={"Feeling like playing?"}
+                      icon={<LoginIcon style={{fontSize: "45px"}}/>}
+                >
+                    <div style={{margin: "15px"}}>
+                        <form ref={registerFormRef.current}
+                              style={{display: 'flex', flexDirection: 'column'}}
+                              onSubmit={(e) => {
+                                  e.preventDefault();
+                                  handleSubmit(e)
+                              }}>
+                            <FormInput name={"email"} placeholder={"Type your email here"}></FormInput>
+                            <FormInput name={"username"} placeholder={"Type your username here"}></FormInput>
+                            <FormInput name={"password"} placeholder={"**********"} type={"password"}></FormInput>
+                            <FormInput name={"repeat password"} placeholder={"**********"}
+                                       type={"password"}></FormInput>
+                            <div style={buttonStyle}>
+                                {message && <Text style={{textTransform: "none", color: "red"}}>{message}</Text>}
+                                <Button buttonType={ButtonType.primary} type="submit">Register</Button>
+                            </div>
+                        </form>
+                        <div style={{display: "flex", flexDirection: "row"}}>
+                            <hr style={lineStyle}/>
+                            <Text style={lineTextStyle}> Do you have an account? </Text>
+                            <hr style={lineStyle}/>
+                        </div>
+                        <div style={buttonStyle}>
+                            <a style={{textDecoration: "none"}} href={"/login"}>
+                                <Button buttonType={ButtonType.secondaryLight}>
+                                    Log in instead
+                                </Button>
+                            </a>
+                        </div>
+                    </div>
+                </Card>
+            </div>
+        </div>
+    );
 }

@@ -57,7 +57,6 @@ export default function Login() {
     }
 
     async function handleSubmit({values}) {
-
         const reqBody = values;
         setMessage(null);
         await fetch("/api/v1/users/login", {
@@ -72,7 +71,6 @@ export default function Login() {
             .then(function (data) {
                 tokenService.setUser(data);
                 tokenService.updateLocalAccessToken(data.token);
-                // window.location.href = "/dashboard";
             })
             .catch((error) => {
                 setMessage(error);
@@ -91,11 +89,15 @@ export default function Login() {
                       icon={<LoginIcon style={{fontSize: "45px"}}/>}
                 >
                     <div style={{margin: "15px"}}>
-                        <form style={{display: 'flex', flexDirection: 'column'}} onSubmit={handleSubmit}>
+                        <form style={{display: 'flex', flexDirection: 'column'}}
+                              onSubmit={(e) => {
+                                  e.preventDefault();
+                                  handleSubmit(e)
+                              }}>
                             <FormInput name={"username"} placeholder={"Type your username here"}></FormInput>
                             <FormInput name={"password"} placeholder={"**********"} type={"password"}></FormInput>
                             <div style={buttonStyle}>
-                                {message && <Text style={{textTransform: "none", color: "red"} }>{message}</Text>}
+                                {message && <Text style={{textTransform: "none", color: "red"}}>{message}</Text>}
                                 <Button buttonType={ButtonType.primary} type="submit">Login</Button>
                             </div>
                         </form>

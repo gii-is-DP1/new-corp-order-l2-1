@@ -1,4 +1,4 @@
-package us.lsi.dp1.newcorporder.configuration.services;
+package us.lsi.dp1.newcorporder.auth;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
@@ -11,11 +11,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
-public class UserDetailsImpl implements UserDetails {
+public class ApplicationUserDetails implements UserDetails {
 
-    public static UserDetailsImpl build(User user) {
+    public static ApplicationUserDetails build(User user) {
         List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(user.getAuthority().getName()));
-        return new UserDetailsImpl(user, authorities);
+        return new ApplicationUserDetails(user, authorities);
     }
 
 	@JsonIgnore
@@ -23,7 +23,7 @@ public class UserDetailsImpl implements UserDetails {
 
     private final Collection<? extends GrantedAuthority> authorities;
 
-    public UserDetailsImpl(User user, Collection<? extends GrantedAuthority> authorities) {
+    public ApplicationUserDetails(User user, Collection<? extends GrantedAuthority> authorities) {
         this.user = user;
 		this.authorities = authorities;
 	}
@@ -80,7 +80,7 @@ public class UserDetailsImpl implements UserDetails {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		UserDetailsImpl other = (UserDetailsImpl) obj;
+        ApplicationUserDetails other = (ApplicationUserDetails) obj;
         return Objects.equals(this.user.getId(), other.getUser().getId());
 	}
 

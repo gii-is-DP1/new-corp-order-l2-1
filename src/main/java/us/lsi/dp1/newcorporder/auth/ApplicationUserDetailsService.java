@@ -1,4 +1,4 @@
-package us.lsi.dp1.newcorporder.configuration.services;
+package us.lsi.dp1.newcorporder.auth;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -9,11 +9,11 @@ import us.lsi.dp1.newcorporder.user.User;
 import us.lsi.dp1.newcorporder.user.UserRepository;
 
 @Service
-public class UserDetailsServiceImpl implements UserDetailsService {
+public class ApplicationUserDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
-    public UserDetailsServiceImpl(UserRepository userRepository) {
+    public ApplicationUserDetailsService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
@@ -23,6 +23,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		User user = userRepository.findByUsername(username)
 				.orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
 
-		return UserDetailsImpl.build(user);
+        return ApplicationUserDetails.build(user);
 	}
 }

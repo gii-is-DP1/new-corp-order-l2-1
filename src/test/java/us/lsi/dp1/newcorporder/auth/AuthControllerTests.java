@@ -17,10 +17,9 @@ import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.web.servlet.MockMvc;
+import us.lsi.dp1.newcorporder.auth.jwt.JwtUtils;
 import us.lsi.dp1.newcorporder.auth.payload.request.LoginRequest;
 import us.lsi.dp1.newcorporder.auth.payload.request.SignupRequest;
-import us.lsi.dp1.newcorporder.configuration.jwt.JwtUtils;
-import us.lsi.dp1.newcorporder.configuration.services.UserDetailsImpl;
 import us.lsi.dp1.newcorporder.user.User;
 import us.lsi.dp1.newcorporder.user.UserService;
 
@@ -65,7 +64,7 @@ class AuthControllerTests {
 
 	private LoginRequest loginRequest;
 	private SignupRequest signupRequest;
-	private UserDetailsImpl userDetails;
+    private ApplicationUserDetails userDetails;
 	private String token;
 
 	@BeforeEach
@@ -86,7 +85,7 @@ class AuthControllerTests {
             .password(loginRequest.getPassword())
             .build();
 
-        userDetails = new UserDetailsImpl(user, List.of(new SimpleGrantedAuthority("OWNER")));
+        userDetails = new ApplicationUserDetails(user, List.of(new SimpleGrantedAuthority("OWNER")));
 		token = "JWT TOKEN";
 	}
 

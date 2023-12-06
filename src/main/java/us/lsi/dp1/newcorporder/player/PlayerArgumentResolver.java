@@ -7,7 +7,7 @@ import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
-import us.lsi.dp1.newcorporder.configuration.Authenticated;
+import us.lsi.dp1.newcorporder.auth.Authenticated;
 
 import java.util.Optional;
 

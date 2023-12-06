@@ -5,7 +5,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import us.lsi.dp1.newcorporder.configuration.services.UserDetailsImpl;
+import us.lsi.dp1.newcorporder.auth.ApplicationUserDetails;
 import us.lsi.dp1.newcorporder.exceptions.ResourceNotFoundException;
 
 @Service
@@ -50,7 +50,7 @@ public class PlayerService {
 
     @Transactional
     public Player getAuthenticatedPlayer() {
-        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        ApplicationUserDetails userDetails = (ApplicationUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return this.findById(userDetails.getId());
     }
 }

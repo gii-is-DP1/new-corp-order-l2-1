@@ -10,12 +10,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import us.lsi.dp1.newcorporder.auth.jwt.JwtUtils;
 import us.lsi.dp1.newcorporder.auth.payload.request.LoginRequest;
 import us.lsi.dp1.newcorporder.auth.payload.request.SignupRequest;
 import us.lsi.dp1.newcorporder.auth.payload.response.JwtResponse;
 import us.lsi.dp1.newcorporder.auth.payload.response.MessageResponse;
-import us.lsi.dp1.newcorporder.configuration.jwt.JwtUtils;
-import us.lsi.dp1.newcorporder.configuration.services.UserDetailsImpl;
 import us.lsi.dp1.newcorporder.user.UserService;
 
 import java.util.List;
@@ -55,7 +54,7 @@ public class AuthController {
             SecurityContextHolder.getContext().setAuthentication(authentication);
             String jwt = jwtUtils.generateJwtToken(authentication);
 
-            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+            ApplicationUserDetails userDetails = (ApplicationUserDetails) authentication.getPrincipal();
             List<String> roles = userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());

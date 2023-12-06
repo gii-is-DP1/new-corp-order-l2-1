@@ -1,4 +1,4 @@
-package us.lsi.dp1.newcorporder.configuration.jwt;
+package us.lsi.dp1.newcorporder.auth.jwt;
 
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;

@@ -1,4 +1,4 @@
-package us.lsi.dp1.newcorporder.configuration;
+package us.lsi.dp1.newcorporder.auth;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

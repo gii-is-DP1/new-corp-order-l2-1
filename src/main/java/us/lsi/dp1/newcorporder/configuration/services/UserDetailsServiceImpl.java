@@ -1,20 +1,23 @@
 package us.lsi.dp1.newcorporder.configuration.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import us.lsi.dp1.newcorporder.user.User;
-import us.lsi.dp1.newcorporder.user.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import us.lsi.dp1.newcorporder.user.User;
+import us.lsi.dp1.newcorporder.user.UserRepository;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
-	@Autowired
-	UserRepository userRepository;
 
-	@Override
+    private final UserRepository userRepository;
+
+    public UserDetailsServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    @Override
 	@Transactional
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		User user = userRepository.findByUsername(username)
@@ -22,5 +25,4 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 		return UserDetailsImpl.build(user);
 	}
-
 }

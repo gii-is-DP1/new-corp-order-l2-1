@@ -1,43 +1,31 @@
 package us.lsi.dp1.newcorporder.configuration.services;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import us.lsi.dp1.newcorporder.user.User;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
-import us.lsi.dp1.newcorporder.user.User;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 public class UserDetailsImpl implements UserDetails {
 
-	private static final long serialVersionUID = 1L;
-
-	private Integer id;
-
-	private String username;
+    public static UserDetailsImpl build(User user) {
+        List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(user.getAuthority().getName()));
+        return new UserDetailsImpl(user, authorities);
+    }
 
 	@JsonIgnore
-	private String password;
+    @Getter private final User user;
 
-	private Collection<? extends GrantedAuthority> authorities;
+    private final Collection<? extends GrantedAuthority> authorities;
 
-	public UserDetailsImpl(Integer id, String username, String password,
-			Collection<? extends GrantedAuthority> authorities) {
-		this.id = id;
-		this.username = username;
-		this.password = password;
+    public UserDetailsImpl(User user, Collection<? extends GrantedAuthority> authorities) {
+        this.user = user;
 		this.authorities = authorities;
-	}
-
-	public static UserDetailsImpl build(User user) {
-		List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(user.getAuthority().getName()));
-
-		return new UserDetailsImpl(user.getId(), user.getUsername(),
-				user.getPassword(),
-				authorities);
 	}
 
 	@Override
@@ -45,19 +33,18 @@ public class UserDetailsImpl implements UserDetails {
 		return authorities;
 	}
 
+    public Integer getId() {
+        return this.user.getId();
+    }
 
-	public Integer getId() {
-		return id;
-	}
+    @Override
+    public String getUsername() {
+        return this.user.getUsername();
+    }
 
-	@Override
-	public String getPassword() {
-		return password;
-	}
-
-	@Override
-	public String getUsername() {
-		return username;
+    @Override
+    public String getPassword() {
+        return this.user.getPassword();
 	}
 
 	@Override
@@ -82,7 +69,7 @@ public class UserDetailsImpl implements UserDetails {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id);
+        return Objects.hash(this.user.getId());
 	}
 
 	@Override
@@ -94,7 +81,7 @@ public class UserDetailsImpl implements UserDetails {
 		if (getClass() != obj.getClass())
 			return false;
 		UserDetailsImpl other = (UserDetailsImpl) obj;
-		return Objects.equals(id, other.id);
+        return Objects.equals(this.user.getId(), other.getUser().getId());
 	}
 
 }

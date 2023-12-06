@@ -1,30 +1,22 @@
 package us.lsi.dp1.newcorporder.configuration.jwt;
 
+import io.jsonwebtoken.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
+import us.lsi.dp1.newcorporder.authority.Authority;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import us.lsi.dp1.newcorporder.authority.Authority;
-import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Component;
-
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.SignatureException;
-import io.jsonwebtoken.UnsupportedJwtException;
-
 @Component
 public class JwtUtils {
-
-    // TODO revisar
 
     private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
 
@@ -37,20 +29,28 @@ public class JwtUtils {
     public String generateJwtToken(Authentication authentication) {
         UserDetails userPrincipal = (UserDetails) authentication.getPrincipal();
         Map<String, Object> claims = new HashMap<>();
-        claims.put("authorities",
-            userPrincipal.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()));
+        claims.put("authorities", userPrincipal.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()));
 
-        return Jwts.builder().setClaims(claims).setSubject((userPrincipal.getUsername())).setIssuedAt(new Date())
+        return Jwts.builder()
+            .setClaims(claims)
+            .setSubject((userPrincipal.getUsername()))
+            .setIssuedAt(new Date())
             .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
-            .signWith(SignatureAlgorithm.HS512, jwtSecret).compact();
+            .signWith(SignatureAlgorithm.HS512, jwtSecret)
+            .compact();
     }
 
     public String generateTokenFromUsername(String username, Authority authority) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("authorities", authority.getName());
-        return Jwts.builder().setClaims(claims).setSubject(username).setIssuedAt(new Date())
+
+        return Jwts.builder()
+            .setClaims(claims)
+            .setSubject(username)
+            .setIssuedAt(new Date())
             .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
-            .signWith(SignatureAlgorithm.HS512, jwtSecret).compact();
+            .signWith(SignatureAlgorithm.HS512, jwtSecret)
+            .compact();
     }
 
     public String getUserNameFromJwtToken(String token) {

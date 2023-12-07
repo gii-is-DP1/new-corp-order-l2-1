@@ -34,12 +34,12 @@ public class MatchController {
     }
 
     @PostMapping("/{match}/join")
-    public MatchAssignmentResponse joinMatch(@Authenticated Player player, @PathVariable Match match) {
+    public MatchAssignmentResponse joinMatch(@Authenticated Player player, @FromPathVariable Match match) {
         return matchService.join(player, match);
     }
 
     @PostMapping("/{match}/leave")
-    public void leaveMatch(@Authenticated Player player, @PathVariable Match match) {
+    public void leaveMatch(@Authenticated Player player, @FromPathVariable Match match) {
         matchService.leave(player, match);
     }
 }

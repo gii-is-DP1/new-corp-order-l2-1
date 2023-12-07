@@ -11,6 +11,7 @@ import us.lsi.dp1.newcorporder.match.company.Company;
 import us.lsi.dp1.newcorporder.match.company.CompanyMatrix;
 import us.lsi.dp1.newcorporder.match.company.CompanyTile;
 import us.lsi.dp1.newcorporder.match.company.CompanyType;
+import us.lsi.dp1.newcorporder.match.conglomerate.Conglomerate;
 import us.lsi.dp1.newcorporder.match.player.Headquarter;
 import us.lsi.dp1.newcorporder.match.player.MatchPlayer;
 import us.lsi.dp1.newcorporder.match.turn.TurnSystem;
@@ -33,20 +34,20 @@ class MatchTest {
 
     @Test
     void givenMatchWith2Players_whenInitializingMatch_generalSupplyIsInitialized() {
-        Match match = new Match(4, MatchMode.NORMAL, null, generalSupply, companyMatrix, turnSystem);
+        Match match = new Match(4, MatchMode.NORMAL, MatchVisibility.PRIVATE, null, generalSupply, companyMatrix, turnSystem);
         match.addPlayer(new MatchPlayer(1, Headquarter.create()));
         match.addPlayer(new MatchPlayer(2, Headquarter.create()));
-        match.init();
+        match.start();
 
         verify(generalSupply, times(1)).init(MatchMode.NORMAL, 2);
     }
 
     @Test
     void givenMatchWith2Players_whenInitializingMatch_companyMatrixIsInitializedWithCoupleMatchSize() {
-        Match match = new Match(4, MatchMode.NORMAL, null, generalSupply, companyMatrix, turnSystem);
+        Match match = new Match(4, MatchMode.NORMAL, MatchVisibility.PRIVATE, null, generalSupply, companyMatrix, turnSystem);
         match.addPlayer(new MatchPlayer(1, Headquarter.create()));
         match.addPlayer(new MatchPlayer(2, Headquarter.create()));
-        match.init();
+        match.start();
 
         verify(companyMatrix, times(1)).init(MatchSize.COUPLE);
     }
@@ -54,25 +55,25 @@ class MatchTest {
     @ParameterizedTest
     @ValueSource(ints = {3, 4})
     void givenMatchWithMoreThan2Players_whenInitializingMatch_companyMatrixIsInitializedWithGroupMatchSize(int players) {
-        Match match = new Match(4, MatchMode.NORMAL, null, generalSupply, companyMatrix, turnSystem);
+        Match match = new Match(4, MatchMode.NORMAL, MatchVisibility.PRIVATE, null, generalSupply, companyMatrix, turnSystem);
         for (int i = 0; i < players; i++) {
             match.addPlayer(new MatchPlayer(i, Headquarter.create()));
         }
-        match.init();
+        match.start();
 
         verify(companyMatrix, times(1)).init(MatchSize.GROUP);
     }
 
     @Test
     void givenMatchWith2Players_whenInitializingMatch_playersAreInitialized() {
-        Match match = new Match(4, MatchMode.NORMAL, null, generalSupply, companyMatrix, turnSystem);
+        Match match = new Match(4, MatchMode.NORMAL, MatchVisibility.PRIVATE, null, generalSupply, companyMatrix, turnSystem);
         List<Conglomerate> conglomerates = getRandomConglomerates(Match.INITIAL_CONGLOMERATE_SHARES_PER_PLAYER);
         when(generalSupply.takeConglomerateSharesFromDeck(Match.INITIAL_CONGLOMERATE_SHARES_PER_PLAYER))
             .thenReturn(conglomerates);
 
         match.addPlayer(new MatchPlayer(1, Headquarter.create()));
         match.addPlayer(new MatchPlayer(2, Headquarter.create()));
-        match.init();
+        match.start();
 
         assertThat(match.getPlayers()).map(player -> player.getHeadquarter().getConsultants())
             .doesNotHaveDuplicates()
@@ -94,7 +95,7 @@ class MatchTest {
 
     @Test
     void whenRankingParticipation_calculationsAreDoneCorrectly() {
-        Match match = new Match(4, MatchMode.NORMAL, null, generalSupply, companyMatrix, turnSystem);
+        Match match = new Match(4, MatchMode.NORMAL, MatchVisibility.PRIVATE, null, generalSupply, companyMatrix, turnSystem);
 
         MatchPlayer matchPlayer1 = MatchPlayer.builder()
             .playerId(1)
@@ -151,7 +152,7 @@ class MatchTest {
                 CompanyTile.builder().company(Company.SLIMGROTZ_INC).currentConglomerate(Conglomerate.MEGA_MEDIA).agents(1).build())
             .build();
 
-        Match match = spy(new Match(4, MatchMode.NORMAL, null, generalSupply, companyMatrix, turnSystem));
+        Match match = spy(new Match(4, MatchMode.NORMAL, MatchVisibility.PRIVATE, null, generalSupply, companyMatrix, turnSystem));
 
         MatchPlayer player1 = MatchPlayer.builder()
             .playerId(1)

@@ -20,12 +20,12 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import us.lsi.dp1.newcorporder.util.RestPreconditions;
 import org.springframework.web.bind.annotation.*;
 import us.lsi.dp1.newcorporder.auth.payload.response.MessageResponse;
 import us.lsi.dp1.newcorporder.authority.Authority;
 import us.lsi.dp1.newcorporder.authority.AuthorityService;
 import us.lsi.dp1.newcorporder.exceptions.AccessDeniedException;
+import us.lsi.dp1.newcorporder.util.RestPreconditions;
 
 import java.util.List;
 
@@ -88,5 +88,4 @@ class UserRestController {
 		} else
 			throw new AccessDeniedException("You can't delete yourself!");
 	}
-
 }

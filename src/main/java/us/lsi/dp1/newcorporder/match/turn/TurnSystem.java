@@ -15,9 +15,9 @@ public class TurnSystem {
     }
 
     private Match match;
+    @Getter private Turn currentTurn;
     @Getter private MatchPlayer currentPlayer;
     @Getter @Nullable private MatchPlayer lastPlayerBeforeMatchEnds = null;
-    @Getter @Nullable private Turn currentTurn;
 
     private List<MatchPlayer> players;
 

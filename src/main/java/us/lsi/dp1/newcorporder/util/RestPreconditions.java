@@ -1,5 +1,6 @@
 package us.lsi.dp1.newcorporder.util;
 
+import us.lsi.dp1.newcorporder.exceptions.AccessDeniedException;
 import us.lsi.dp1.newcorporder.exceptions.ResourceNotFoundException;
 
 public final class RestPreconditions {
@@ -14,5 +15,10 @@ public final class RestPreconditions {
         }
 
         return resource;
+    }
+
+    public static void checkAccess(boolean expression) {
+        if (!expression)
+            throw new AccessDeniedException();
     }
 }

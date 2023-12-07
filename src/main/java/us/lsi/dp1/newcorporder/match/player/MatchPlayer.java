@@ -5,9 +5,10 @@ import com.google.common.collect.*;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import us.lsi.dp1.newcorporder.match.Conglomerate;
-import us.lsi.dp1.newcorporder.match.ConsultantType;
+import lombok.Setter;
 import us.lsi.dp1.newcorporder.match.company.CompanyType;
+import us.lsi.dp1.newcorporder.match.conglomerate.Conglomerate;
+import us.lsi.dp1.newcorporder.match.consultant.ConsultantType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,8 +17,13 @@ import java.util.Random;
 @EqualsAndHashCode(of = "playerId")
 public class MatchPlayer {
 
+    public static MatchPlayer create(Integer playerId) {
+        return new MatchPlayer(playerId, Headquarter.create());
+    }
+
     @Getter private final Integer playerId;
     @Getter private final Headquarter headquarter;
+    @Getter @Setter private boolean online = true;
 
     private final Multiset<Conglomerate> hand = HashMultiset.create();
     private final List<CompanyType> secretObjectives;

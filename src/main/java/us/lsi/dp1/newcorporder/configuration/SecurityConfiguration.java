@@ -1,21 +1,9 @@
 package us.lsi.dp1.newcorporder.configuration;
 
-import static org.springframework.security.config.Customizer.withDefaults;
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-import javax.sql.DataSource;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import us.lsi.dp1.newcorporder.configuration.jwt.AuthEntryPointJwt;
-import us.lsi.dp1.newcorporder.configuration.jwt.AuthTokenFilter;
-import us.lsi.dp1.newcorporder.configuration.services.UserDetailsServiceImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -27,13 +15,20 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import us.lsi.dp1.newcorporder.auth.ApplicationUserDetailsService;
+import us.lsi.dp1.newcorporder.auth.jwt.AuthEntryPointJwt;
+import us.lsi.dp1.newcorporder.auth.jwt.AuthTokenFilter;
+
+import javax.sql.DataSource;
+
+import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
 
 	@Autowired
-    UserDetailsServiceImpl userDetailsService;
+    ApplicationUserDetailsService userDetailsService;
 
 	@Autowired
 	private AuthEntryPointJwt unauthorizedHandler;

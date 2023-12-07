@@ -5,14 +5,9 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import us.lsi.dp1.newcorporder.user.User;
-import us.lsi.dp1.newcorporder.user.UserService;
-import us.lsi.dp1.newcorporder.util.RestPreconditions;
 import org.springframework.web.bind.annotation.*;
 import us.lsi.dp1.newcorporder.auth.payload.response.MessageResponse;
-import us.lsi.dp1.newcorporder.authority.Authority;
-import us.lsi.dp1.newcorporder.authority.AuthorityService;
-import us.lsi.dp1.newcorporder.exceptions.AccessDeniedException;
+import us.lsi.dp1.newcorporder.util.RestPreconditions;
 
 import java.util.List;
 
@@ -27,7 +22,6 @@ class PlayerRestController {
     @Autowired
     public PlayerRestController(PlayerService playerService) {
         this.playerService = playerService;
-
     }
 
     @GetMapping
@@ -38,14 +32,14 @@ class PlayerRestController {
 
     @GetMapping(value = "{id}")
     public ResponseEntity<Player> findById(@PathVariable("id") Integer id) {
-       Player res = playerService.findById(id);
+        Player res = playerService.findById(id);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Player> create(@RequestBody @Valid Player player) {
-       Player savedPlayer = playerService.save(player);
+        Player savedPlayer = playerService.save(player);
         return new ResponseEntity<>(savedPlayer, HttpStatus.CREATED);
     }
 
@@ -56,12 +50,11 @@ class PlayerRestController {
         return new ResponseEntity<>(this.playerService.updatePlayer(player, id), HttpStatus.OK);
     }
 
-
     @DeleteMapping(value = "{id}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<MessageResponse> delete(@PathVariable("id") int id) {
         RestPreconditions.checkNotNull(playerService.findById(id), "Player", "ID", id);
-       playerService.deletePlayer(id);
+        playerService.deletePlayer(id);
         return new ResponseEntity<>(new MessageResponse("Player deleted"), HttpStatus.OK);
     }
 }

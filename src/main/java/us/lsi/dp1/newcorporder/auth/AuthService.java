@@ -10,8 +10,6 @@ import us.lsi.dp1.newcorporder.authority.AuthorityService;
 import us.lsi.dp1.newcorporder.user.User;
 import us.lsi.dp1.newcorporder.user.UserService;
 
-import java.util.ArrayList;
-
 @Service
 public class AuthService {
 

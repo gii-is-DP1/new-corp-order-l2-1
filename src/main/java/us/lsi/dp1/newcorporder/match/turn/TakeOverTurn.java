@@ -1,19 +1,19 @@
 package us.lsi.dp1.newcorporder.match.turn;
 
 import com.google.common.base.Preconditions;
-import us.lsi.dp1.newcorporder.match.Conglomerate;
-import us.lsi.dp1.newcorporder.match.ConsultantType;
 import us.lsi.dp1.newcorporder.match.Match;
 import us.lsi.dp1.newcorporder.match.company.CompanyTile;
+import us.lsi.dp1.newcorporder.match.conglomerate.Conglomerate;
+import us.lsi.dp1.newcorporder.match.consultant.ConsultantType;
 import us.lsi.dp1.newcorporder.match.payload.CompanyTileReference;
-import us.lsi.dp1.newcorporder.match.payload.request.CompanyAbilityRequest;
 import us.lsi.dp1.newcorporder.match.payload.request.DiscardShareRequest;
 import us.lsi.dp1.newcorporder.match.payload.request.TakeOverRequest;
+import us.lsi.dp1.newcorporder.match.payload.request.UseCompanyAbilityRequest;
 import us.lsi.dp1.newcorporder.match.payload.request.UseConsultantRequest;
 import us.lsi.dp1.newcorporder.match.payload.request.ability.CompanyAbility;
-import us.lsi.dp1.newcorporder.match.payload.response.CompanyAbilityResponse;
 import us.lsi.dp1.newcorporder.match.payload.response.DiscardShareResponse;
 import us.lsi.dp1.newcorporder.match.payload.response.TakeOverResponse;
+import us.lsi.dp1.newcorporder.match.payload.response.UseCompanyAbilityResponse;
 import us.lsi.dp1.newcorporder.match.payload.response.UseConsultantResponse;
 
 import java.util.List;
@@ -121,7 +121,7 @@ public class TakeOverTurn extends Turn {
     }
 
     @Override
-    public CompanyAbilityResponse onCompanyAbilityRequest(CompanyAbilityRequest request) {
+    public UseCompanyAbilityResponse onUseCompanyAbilityRequest(UseCompanyAbilityRequest request) {
         checkState(State.CHOOSING_ABILITY_PROPERTIES);
 
         CompanyAbility ability = request.getCompanyAbility();
@@ -132,7 +132,7 @@ public class TakeOverTurn extends Turn {
         }
 
         this.endTurn();
-        return CompanyAbilityResponse.builder()
+        return UseCompanyAbilityResponse.builder()
             .hand(turnSystem.getCurrentPlayer().getHand())
             .nextState(currentState)
             .build();

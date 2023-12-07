@@ -1,20 +1,19 @@
-package us.lsi.dp1.newcorporder.configuration.jwt;
-
-import java.io.IOException;
+package us.lsi.dp1.newcorporder.auth.jwt;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import us.lsi.dp1.newcorporder.configuration.services.UserDetailsServiceImpl;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
+import us.lsi.dp1.newcorporder.auth.ApplicationUserDetailsService;
+
+import java.io.IOException;
 
 public class AuthTokenFilter extends OncePerRequestFilter {
 
@@ -22,7 +21,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     private JwtUtils jwtUtils;
 
     @Autowired
-    private UserDetailsServiceImpl userDetailsService;
+    private ApplicationUserDetailsService userDetailsService;
 
 //	private static final Logger logger = LoggerFactory.getLogger(AuthTokenFilter.class);
 

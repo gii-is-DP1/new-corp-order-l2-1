@@ -17,7 +17,7 @@ public class VerifyCurrentTurnAspect {
         this.playerService = playerService;
     }
 
-    @Before("@annotation(us.lsi.dp1.newcorporder.match.VerifyCurrentTurn) && args(match)")
+    @Before("@annotation(us.lsi.dp1.newcorporder.match.VerifyCurrentTurn) && args(.., match)")
     public void verifyCurrentTurn(Match match) {
         Player player = playerService.getAuthenticatedPlayer();
 

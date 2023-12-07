@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import us.lsi.dp1.newcorporder.auth.Authenticated;
+import us.lsi.dp1.newcorporder.bind.FromPathVariable;
 import us.lsi.dp1.newcorporder.match.payload.response.MatchAssignmentResponse;
 import us.lsi.dp1.newcorporder.player.Player;
 
@@ -30,7 +31,7 @@ public class MatchController {
     public MatchAssignmentResponse quickPlay(@Authenticated Player player,
                                              @RequestParam("mode") MatchMode mode,
                                              @RequestParam("maxPlayers") int maxPlayers) {
-        return matchService.quick(player, mode, maxPlayers);
+        return matchService.quickPlay(player, mode, maxPlayers);
     }
 
     @PostMapping("/{match}/join")
@@ -41,5 +42,10 @@ public class MatchController {
     @PostMapping("/{match}/leave")
     public void leaveMatch(@Authenticated Player player, @FromPathVariable Match match) {
         matchService.leave(player, match);
+    }
+
+    @PostMapping("/{match}/start")
+    public void forceStartMatch(@Authenticated Player player, @FromPathVariable Match match) {
+        matchService.forceStart(player, match);
     }
 }

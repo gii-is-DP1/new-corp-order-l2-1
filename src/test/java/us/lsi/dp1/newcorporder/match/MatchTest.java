@@ -37,7 +37,7 @@ class MatchTest {
         Match match = new Match(4, MatchMode.NORMAL, MatchVisibility.PRIVATE, null, generalSupply, companyMatrix, turnSystem);
         match.addPlayer(new MatchPlayer(1, Headquarter.create()));
         match.addPlayer(new MatchPlayer(2, Headquarter.create()));
-        match.init();
+        match.start();
 
         verify(generalSupply, times(1)).init(MatchMode.NORMAL, 2);
     }
@@ -47,7 +47,7 @@ class MatchTest {
         Match match = new Match(4, MatchMode.NORMAL, MatchVisibility.PRIVATE, null, generalSupply, companyMatrix, turnSystem);
         match.addPlayer(new MatchPlayer(1, Headquarter.create()));
         match.addPlayer(new MatchPlayer(2, Headquarter.create()));
-        match.init();
+        match.start();
 
         verify(companyMatrix, times(1)).init(MatchSize.COUPLE);
     }
@@ -59,7 +59,7 @@ class MatchTest {
         for (int i = 0; i < players; i++) {
             match.addPlayer(new MatchPlayer(i, Headquarter.create()));
         }
-        match.init();
+        match.start();
 
         verify(companyMatrix, times(1)).init(MatchSize.GROUP);
     }
@@ -73,7 +73,7 @@ class MatchTest {
 
         match.addPlayer(new MatchPlayer(1, Headquarter.create()));
         match.addPlayer(new MatchPlayer(2, Headquarter.create()));
-        match.init();
+        match.start();
 
         assertThat(match.getPlayers()).map(player -> player.getHeadquarter().getConsultants())
             .doesNotHaveDuplicates()

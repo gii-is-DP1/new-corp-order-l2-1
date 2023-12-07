@@ -5,6 +5,7 @@ import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 import us.lsi.dp1.newcorporder.match.company.CompanyMatrix;
 import us.lsi.dp1.newcorporder.match.company.CompanyType;
 import us.lsi.dp1.newcorporder.match.conglomerate.Conglomerate;
@@ -12,6 +13,7 @@ import us.lsi.dp1.newcorporder.match.consultant.ConsultantInitializer;
 import us.lsi.dp1.newcorporder.match.consultant.ConsultantType;
 import us.lsi.dp1.newcorporder.match.player.MatchPlayer;
 import us.lsi.dp1.newcorporder.match.turn.TurnSystem;
+import us.lsi.dp1.newcorporder.player.Player;
 
 import java.util.*;
 
@@ -30,16 +32,17 @@ public class Match {
     }
 
     @Getter private final String code;
-    @Getter private final int maxPlayers;
-    @Getter private final MatchMode matchMode;
     @Getter private final MatchVisibility visibility;
+    @Getter private final MatchMode matchMode;
+    @Getter private final int maxPlayers;
+    @Getter private MatchState matchState = MatchState.WAITING;
+
+    @Getter @Setter private MatchPlayer host;
+    private final Map<Integer, MatchPlayer> players = new HashMap<>();
 
     @Getter private final GeneralSupply generalSupply;
     @Getter private final CompanyMatrix companyMatrix;
     @Getter private final TurnSystem turnSystem;
-
-    @Getter private MatchState matchState = MatchState.WAITING;
-    private final Map<Integer, MatchPlayer> players = new HashMap<>();
 
     @Builder
     Match(int maxPlayers, MatchMode matchMode, MatchVisibility visibility, String code, GeneralSupply generalSupply,
@@ -53,10 +56,12 @@ public class Match {
         this.turnSystem = turnSystem;
     }
 
-    public void init() {
+    public void start() {
+        Preconditions.checkState(matchState == MatchState.WAITING, "match was already started");
+        Preconditions.checkState(players.size() > 1, "not enough players to start the match");
+
         generalSupply.init(matchMode, players.size());
         companyMatrix.init(players.size() > 2 ? MatchSize.GROUP : MatchSize.COUPLE);
-
         initPlayers();
 
         turnSystem.init(this, new ArrayList<>(players.values()));
@@ -83,8 +88,16 @@ public class Match {
         return this.players.get(id);
     }
 
+    public boolean isHost(Player player) {
+        return Objects.equals(player.getId(), this.host.getPlayerId());
+    }
+
     public void removePlayer(MatchPlayer player) {
         this.players.remove(player.getPlayerId());
+
+        if (player.equals(this.host)) {
+            this.host = this.players.get(0);
+        }
     }
 
     public Collection<MatchPlayer> getPlayers() {

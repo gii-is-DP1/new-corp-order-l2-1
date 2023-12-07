@@ -1,11 +1,12 @@
 package us.lsi.dp1.newcorporder.match;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import org.springframework.aot.hint.annotation.Reflective;
+
+import java.lang.annotation.*;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface VerifyCurrentTurn {
-}
+@Inherited
+@Documented
+@Reflective
+public @interface VerifyCurrentTurn {}

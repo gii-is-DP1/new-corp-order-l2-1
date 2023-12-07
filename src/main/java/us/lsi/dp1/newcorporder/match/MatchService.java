@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import us.lsi.dp1.newcorporder.match.payload.response.MatchAssignmentResponse;
 import us.lsi.dp1.newcorporder.match.player.MatchPlayer;
 import us.lsi.dp1.newcorporder.player.Player;
+import us.lsi.dp1.newcorporder.util.RestPreconditions;
 
 import java.util.Optional;
 
@@ -17,7 +18,7 @@ public class MatchService {
         this.matchRepository = matchRepository;
     }
 
-    public MatchAssignmentResponse quick(Player player, MatchMode mode, int maxPlayers) {
+    public MatchAssignmentResponse quickPlay(Player player, MatchMode mode, int maxPlayers) {
         Match match = matchRepository.findRandomPublicMatch(mode, maxPlayers)
             .orElseGet(() -> matchRepository.createNewMatch(mode, MatchVisibility.PUBLIC, maxPlayers));
 
@@ -37,6 +38,11 @@ public class MatchService {
 
     public void leave(Player player, Match match) {
         match.removePlayer(match.getPlayer(player.getId()));
+    }
+
+    public void forceStart(Player player, Match match) {
+        RestPreconditions.checkAccess(match.isHost(player));
+        match.start();
     }
 
     public Optional<Match> findByCode(String code) {

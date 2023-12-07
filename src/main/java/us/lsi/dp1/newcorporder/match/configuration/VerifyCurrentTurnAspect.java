@@ -1,8 +1,9 @@
-package us.lsi.dp1.newcorporder.match;
+package us.lsi.dp1.newcorporder.match.configuration;
 
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.stereotype.Component;
+import us.lsi.dp1.newcorporder.match.Match;
 import us.lsi.dp1.newcorporder.player.Player;
 import us.lsi.dp1.newcorporder.player.PlayerService;
 
@@ -16,8 +17,8 @@ public class VerifyCurrentTurnAspect {
         this.playerService = playerService;
     }
 
-    @Before("@annotation(VerifyCurrentTurn) && args(match)")
-    public void verify(Match match) {
+    @Before("@annotation(us.lsi.dp1.newcorporder.match.VerifyCurrentTurn) && args(match)")
+    public void verifyCurrentTurn(Match match) {
         Player player = playerService.getAuthenticatedPlayer();
 
         if (!match.getTurnSystem().getCurrentPlayer().getPlayerId().equals(player.getId())) {

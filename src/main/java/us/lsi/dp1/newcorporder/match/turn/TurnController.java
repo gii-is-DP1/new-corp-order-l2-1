@@ -16,7 +16,7 @@ public class TurnController {
     @PostMapping
     @VerifyCurrentTurn
     public void selectTurn(@PathVariable Match match, @RequestParam("action") Action action) {
-        match.getTurnSystem().selectAction(Action.PLOT);
+        match.getTurnSystem().selectAction(action);
     }
 
     @PostMapping("/plot")

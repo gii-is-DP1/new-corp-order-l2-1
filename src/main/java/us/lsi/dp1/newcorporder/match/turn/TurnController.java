@@ -3,6 +3,7 @@ package us.lsi.dp1.newcorporder.match.turn;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 import us.lsi.dp1.newcorporder.bind.FromPathVariable;
@@ -19,6 +20,7 @@ import us.lsi.dp1.newcorporder.match.payload.response.*;
     responseCode = "403",
     description = "The given action is illegal for the current state of the match"
 )
+@Tag(name = "Turn", description = "The Turn API")
 public class TurnController {
 
     @Operation(

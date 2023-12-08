@@ -18,6 +18,7 @@ package us.lsi.dp1.newcorporder.user;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -34,6 +35,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/users")
 @SecurityRequirement(name = "bearerAuth")
+@Tag(name = "User", description = "The User API")
 class UserRestController {
 
 	private final UserService userService;

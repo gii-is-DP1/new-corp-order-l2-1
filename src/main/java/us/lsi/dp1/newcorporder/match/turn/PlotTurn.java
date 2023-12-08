@@ -18,7 +18,7 @@ public class PlotTurn extends Turn {
     private State currentState = State.SELECTING_FIRST_SHARE;
 
     public PlotTurn(Match match) {
-        super(match);
+        super(Action.PLOT, match);
     }
 
     @Override

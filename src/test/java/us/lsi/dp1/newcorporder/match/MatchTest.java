@@ -24,6 +24,7 @@ import java.util.Random;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
+import static us.lsi.dp1.newcorporder.match.player.MatchPlayerTestUtils.playerWithId;
 
 @MockitoSettings
 class MatchTest {
@@ -35,8 +36,8 @@ class MatchTest {
     @Test
     void givenMatchWith2Players_whenInitializingMatch_generalSupplyIsInitialized() {
         Match match = new Match(4, MatchMode.NORMAL, MatchVisibility.PRIVATE, null, generalSupply, companyMatrix, turnSystem);
-        match.addPlayer(new MatchPlayer(1, Headquarter.create()));
-        match.addPlayer(new MatchPlayer(2, Headquarter.create()));
+        match.addPlayer(playerWithId(1));
+        match.addPlayer(playerWithId(2));
         match.start();
 
         verify(generalSupply, times(1)).init(MatchMode.NORMAL, 2);
@@ -45,8 +46,8 @@ class MatchTest {
     @Test
     void givenMatchWith2Players_whenInitializingMatch_companyMatrixIsInitializedWithCoupleMatchSize() {
         Match match = new Match(4, MatchMode.NORMAL, MatchVisibility.PRIVATE, null, generalSupply, companyMatrix, turnSystem);
-        match.addPlayer(new MatchPlayer(1, Headquarter.create()));
-        match.addPlayer(new MatchPlayer(2, Headquarter.create()));
+        match.addPlayer(playerWithId(1));
+        match.addPlayer(playerWithId(2));
         match.start();
 
         verify(companyMatrix, times(1)).init(MatchSize.COUPLE);
@@ -57,7 +58,7 @@ class MatchTest {
     void givenMatchWithMoreThan2Players_whenInitializingMatch_companyMatrixIsInitializedWithGroupMatchSize(int players) {
         Match match = new Match(4, MatchMode.NORMAL, MatchVisibility.PRIVATE, null, generalSupply, companyMatrix, turnSystem);
         for (int i = 0; i < players; i++) {
-            match.addPlayer(new MatchPlayer(i, Headquarter.create()));
+            match.addPlayer(playerWithId(i));
         }
         match.start();
 
@@ -71,8 +72,8 @@ class MatchTest {
         when(generalSupply.takeConglomerateSharesFromDeck(Match.INITIAL_CONGLOMERATE_SHARES_PER_PLAYER))
             .thenReturn(conglomerates);
 
-        match.addPlayer(new MatchPlayer(1, Headquarter.create()));
-        match.addPlayer(new MatchPlayer(2, Headquarter.create()));
+        match.addPlayer(playerWithId(1));
+        match.addPlayer(playerWithId(2));
         match.start();
 
         assertThat(match.getPlayers()).map(player -> player.getHeadquarter().getConsultants())
@@ -119,7 +120,7 @@ class MatchTest {
             .build();
         MatchPlayer matchPlayer3 = MatchPlayer.builder()
             .playerId(3)
-            .headquarter( Headquarter.builder()
+            .headquarter(Headquarter.builder()
                 .consultants(HashMultiset.create())
                 .conglomerateShares(createMegaMedia(6))
                 .usedConglomerateShares(createMegaMedia(0))

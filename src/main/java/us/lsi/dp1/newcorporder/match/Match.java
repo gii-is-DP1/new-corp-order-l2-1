@@ -33,9 +33,9 @@ public class Match {
 
     @Getter private final String code;
     @Getter private final MatchVisibility visibility;
-    @Getter private final MatchMode matchMode;
+    @Getter private final MatchMode mode;
     @Getter private final int maxPlayers;
-    @Getter private MatchState matchState = MatchState.WAITING;
+    @Getter private MatchState state = MatchState.WAITING;
 
     @Getter @Setter private MatchPlayer host;
     private final Map<Integer, MatchPlayer> players = new HashMap<>();
@@ -45,11 +45,11 @@ public class Match {
     @Getter private final TurnSystem turnSystem;
 
     @Builder
-    Match(int maxPlayers, MatchMode matchMode, MatchVisibility visibility, String code, GeneralSupply generalSupply,
+    Match(int maxPlayers, MatchMode mode, MatchVisibility visibility, String code, GeneralSupply generalSupply,
           CompanyMatrix companyMatrix, TurnSystem turnSystem) {
         this.code = code;
         this.maxPlayers = maxPlayers;
-        this.matchMode = matchMode;
+        this.mode = mode;
         this.visibility = visibility;
         this.generalSupply = generalSupply;
         this.companyMatrix = companyMatrix;
@@ -57,19 +57,19 @@ public class Match {
     }
 
     public void start() {
-        Preconditions.checkState(matchState == MatchState.WAITING, "match was already started");
+        Preconditions.checkState(state == MatchState.WAITING, "match was already started");
         Preconditions.checkState(players.size() > 1, "not enough players to start the match");
 
-        generalSupply.init(matchMode, players.size());
+        generalSupply.init(mode, players.size());
         companyMatrix.init(players.size() > 2 ? MatchSize.GROUP : MatchSize.COUPLE);
         initPlayers();
 
         turnSystem.init(this, new ArrayList<>(players.values()));
-        matchState = MatchState.PLAYING;
+        state = MatchState.PLAYING;
     }
 
     public void end() {
-        this.matchState = MatchState.FINISHED;
+        this.state = MatchState.FINISHED;
 
         Multiset<MatchPlayer> victoryPoints = this.calculateVictoryPoints();
         MatchPlayer winner = victoryPoints.entrySet().stream()

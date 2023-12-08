@@ -11,7 +11,6 @@ import us.lsi.dp1.newcorporder.match.MatchMode;
 import us.lsi.dp1.newcorporder.match.conglomerate.Conglomerate;
 import us.lsi.dp1.newcorporder.match.payload.request.DiscardShareRequest;
 import us.lsi.dp1.newcorporder.match.payload.response.DiscardShareResponse;
-import us.lsi.dp1.newcorporder.match.player.Headquarter;
 import us.lsi.dp1.newcorporder.match.player.MatchPlayer;
 
 import java.util.List;
@@ -19,6 +18,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.lenient;
+import static us.lsi.dp1.newcorporder.match.player.MatchPlayerTestUtils.playerWithId;
 
 @MockitoSettings
 class TurnTest {
@@ -26,7 +26,7 @@ class TurnTest {
     @Mock TurnSystem turnSystem;
     @Mock GeneralSupply generalSupply;
 
-    MatchPlayer currentPlayer = new MatchPlayer(1, Headquarter.create());
+    MatchPlayer currentPlayer = playerWithId(1);
     Match match;
     Turn turn;
 
@@ -34,11 +34,11 @@ class TurnTest {
     void setUp() {
         match = Match.builder()
             .maxPlayers(4)
-            .matchMode(MatchMode.NORMAL)
+            .mode(MatchMode.NORMAL)
             .generalSupply(generalSupply)
             .turnSystem(turnSystem)
             .build();
-        turn = new Turn(match) {};
+        turn = new Turn(null, match) {};
 
         lenient().when(turnSystem.getCurrentPlayer()).thenReturn(currentPlayer);
     }

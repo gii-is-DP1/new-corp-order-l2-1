@@ -1,7 +1,5 @@
 package us.lsi.dp1.newcorporder.match.company;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Lists;
@@ -30,10 +28,7 @@ public class CompanyMatrix {
         return new CompanyMatrixBuilder();
     }
 
-    @JsonIgnore
     @Getter private MatchSize matchSize;
-
-    @JsonInclude
     private CompanyTile[] tiles;
 
     private CompanyMatrix() {
@@ -135,5 +130,4 @@ public class CompanyMatrix {
             return new CompanyMatrix(matchSize, tiles);
         }
     }
-
 }

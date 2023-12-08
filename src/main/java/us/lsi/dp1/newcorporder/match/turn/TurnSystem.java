@@ -16,10 +16,10 @@ public class TurnSystem {
 
     private Match match;
     @Getter private Turn currentTurn;
+
+    @Getter private List<MatchPlayer> players;
     @Getter private MatchPlayer currentPlayer;
     @Getter @Nullable private MatchPlayer lastPlayerBeforeMatchEnds = null;
-
-    private List<MatchPlayer> players;
 
     private TurnSystem() {
     }

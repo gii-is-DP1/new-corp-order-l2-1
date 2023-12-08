@@ -3,6 +3,7 @@ package us.lsi.dp1.newcorporder.match;
 import org.springframework.stereotype.Service;
 import us.lsi.dp1.newcorporder.match.payload.response.MatchAssignmentResponse;
 import us.lsi.dp1.newcorporder.match.player.MatchPlayer;
+import us.lsi.dp1.newcorporder.match.view.MatchView;
 import us.lsi.dp1.newcorporder.player.Player;
 import us.lsi.dp1.newcorporder.util.RestPreconditions;
 
@@ -31,8 +32,13 @@ public class MatchService {
         return this.join(player, match);
     }
 
+    public MatchView getMatchView(Player player, Match match) {
+        MatchPlayer matchPlayer = match.getPlayer(player.getId());
+        return matchPlayer != null ? MatchView.of(match, matchPlayer) : MatchView.of(match);
+    }
+
     public MatchAssignmentResponse join(Player player, Match match) {
-        match.addPlayer(MatchPlayer.create(player.getId()));
+        match.addPlayer(MatchPlayer.create(player));
         return new MatchAssignmentResponse(match.getCode());
     }
 

@@ -20,7 +20,7 @@ public class InfiltrateTurn extends Turn {
     private UseConsultantRequest useConsultantRequest;
 
     public InfiltrateTurn(Match match) {
-        super(match);
+        super(Action.INFILTRATE, match);
     }
 
     @Override

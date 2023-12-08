@@ -27,7 +27,7 @@ public class TakeOverTurn extends Turn {
     private TakeOverRequest takeOverRequest;
 
     public TakeOverTurn(Match match) {
-        super(match);
+        super(Action.TAKE_OVER, match);
     }
 
     @Override

@@ -15,7 +15,6 @@ import us.lsi.dp1.newcorporder.match.payload.request.DiscardShareRequest;
 import us.lsi.dp1.newcorporder.match.payload.request.PlotRequest;
 import us.lsi.dp1.newcorporder.match.payload.response.DiscardShareResponse;
 import us.lsi.dp1.newcorporder.match.payload.response.PlotResponse;
-import us.lsi.dp1.newcorporder.match.player.Headquarter;
 import us.lsi.dp1.newcorporder.match.player.MatchPlayer;
 import us.lsi.dp1.newcorporder.match.turn.PlotTurn.State;
 
@@ -24,6 +23,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
+import static us.lsi.dp1.newcorporder.match.player.MatchPlayerTestUtils.playerWithId;
 
 @MockitoSettings
 class PlotTurnTest {
@@ -31,7 +31,7 @@ class PlotTurnTest {
     @Mock TurnSystem turnSystem;
     @Mock GeneralSupply generalSupply;
 
-    MatchPlayer currentPlayer = new MatchPlayer(1, Headquarter.create());
+    MatchPlayer currentPlayer = playerWithId(1);
     Match match;
     PlotTurn turn;
 
@@ -39,7 +39,7 @@ class PlotTurnTest {
     void setUp() {
         match = Match.builder()
             .maxPlayers(4)
-            .matchMode(MatchMode.NORMAL)
+            .mode(MatchMode.NORMAL)
             .generalSupply(generalSupply)
             .turnSystem(turnSystem)
             .build();

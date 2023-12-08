@@ -1,6 +1,7 @@
 package us.lsi.dp1.newcorporder.match.turn;
 
 import com.google.common.base.Preconditions;
+import lombok.Getter;
 import us.lsi.dp1.newcorporder.match.Match;
 import us.lsi.dp1.newcorporder.match.payload.request.*;
 import us.lsi.dp1.newcorporder.match.payload.response.*;
@@ -9,10 +10,12 @@ import static us.lsi.dp1.newcorporder.match.Match.MAX_SHARES_IN_HAND;
 
 public abstract class Turn {
 
+    @Getter protected final Action action;
     protected Match match;
     protected TurnSystem turnSystem;
 
-    public Turn(Match match) {
+    public Turn(Action action, Match match) {
+        this.action = action;
         this.match = match;
         this.turnSystem = match.getTurnSystem();
     }

@@ -3,6 +3,7 @@ package us.lsi.dp1.newcorporder.match;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import us.lsi.dp1.newcorporder.auth.Authenticated;
@@ -17,6 +18,7 @@ import us.lsi.dp1.newcorporder.player.Player;
     responseCode = "401",
     description = "Authentication information is missing or invalid"
 )
+@Tag(name = "Match", description = "The Match API")
 public class MatchController {
 
     private final MatchService matchService;

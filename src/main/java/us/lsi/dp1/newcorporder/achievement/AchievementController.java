@@ -3,6 +3,7 @@ package us.lsi.dp1.newcorporder.achievement;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/achievements")
 @SecurityRequirement(name="bearerAuth")
+@Tag(name = "Achievement", description = "The Achievement API")
 public class AchievementController {
     private final AchievementService achievementService;
 

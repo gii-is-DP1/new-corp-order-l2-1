@@ -23,7 +23,6 @@ export const CompanyType = {
     SOCIAL_MEDIA: "social-media"
 }
 
-
 export const consultant = {
     MEDIA_ADVISOR: "/images/consultants/media-advisor.png",
     DEALMAKER: "/images/consultants/dealmaker.png",

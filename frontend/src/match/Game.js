@@ -18,9 +18,17 @@ import Deck from "./Deck";
 import {HandViewer} from "./Viewers/HandViewer";
 import {HQViewer} from "./Viewers/HQViewer";
 import {GeneralSupplyViewer} from "./Viewers/GeneralSupplyViewer";
-import {pickCompany, pickManyConglomeratesOfTheSameColor, pickOneCard} from "./Pickers";
+import {
+    pickCompany,
+    pickManyConglomeratesOfTheSameColor,
+    pickOneCard,
+    pickOneOrZeroCards,
+    pickOrthogonallyAdjacentCompanyTiles
+} from "./Pickers";
 import {CompanyTile} from "./CompanyTile";
 import {ConglomerateMultiset, ConsultantMultiset} from "./ConglomerateMultiset";
+import {mockUpData} from "./MockupData";
+import {selectOrthogonallyAdjacentTiles} from "./Selector/ChangeSelectableItemsFunctions";
 
 export function getCompanyImageSrc(company) {
     return "/images/companies/" + company.type + "/" + company.name + ".png";
@@ -87,91 +95,6 @@ function getCurrentAction(state, canActivateCompanyAbility) {
     return frontendState.DONE;
 }
 
-const hqConglomerate = {
-    type: conglomerate.OMNICORP,
-    isRotated: true,
-};
-
-const playerConsultants = {
-    MEDIA_ADVISOR: 1,
-    DEALMAKER: 0,
-    CORPORATE_LAWYER: 2,
-    MILITARY_CONTRACTOR: 0,
-};
-
-const opponent = {
-    username: "Beluga",
-    conglomeratesInHand: 4,
-    hq: {
-        conglomerates: [
-            hqConglomerate,
-            hqConglomerate,
-        ],
-        consultants: playerConsultants
-    }
-}
-
-const handConglomerates = {
-    OMNICORP: 1,
-    MEGAMEDIA: 2,
-    TOTAL_ENTERTAINMENT: 3,
-    GENERIC_INC: 0
-};
-
-const mockUpData = {
-    companies: [
-        {company: Company.WORDOFMOUTH, agents: 1, type: conglomerate.OMNICORP},
-        {company: Company.SLIMGROTZ_INC, agents: 2, type: conglomerate.TOTAL_ENTERTAINMENT},
-        {company: Company.VISUAL_TERROR_INC, agents: 4, type: conglomerate.MEGAMEDIA},
-        {company: Company.PIX_CHIX, agents: 3, type: conglomerate.GENERIC_INC},
-        {company: Company.XCURBR, agents: 1, type: conglomerate.TOTAL_ENTERTAINMENT},
-        {company: Company.WALLPAPER, agents: 2, type: conglomerate.MEGAMEDIA},
-        {company: Company.FLICKERING_LIGHTS, agents: 4, type: conglomerate.TOTAL_ENTERTAINMENT},
-        {company: Company.LEADERBOARDER, agents: 2, type: conglomerate.GENERIC_INC},
-        {company: Company.READALOT, agents: 3, type: conglomerate.MEGAMEDIA},
-        {company: Company.PAGE_ONE_CORP, agents: 1, type: conglomerate.TOTAL_ENTERTAINMENT},
-        {company: Company.ANONYMOUS_CROWD, agents: 4, type: conglomerate.GENERIC_INC},
-        {company: Company.HOLOGRAFX, agents: 3, type: conglomerate.OMNICORP},
-        {company: Company.ALL_AROUND_YOU, agents: 2, type: conglomerate.MEGAMEDIA},
-        {company: Company.GENERIC_SUB_INC, agents: 2, type: conglomerate.GENERIC_INC},
-        {company: Company.SUBLIMINAL_SUBSIDIARY, agents: 4, type: conglomerate.TOTAL_ENTERTAINMENT},
-        {company: Company.GLOBAL_CORP, agents: 1, type: conglomerate.OMNICORP},
-    ],
-    player: {
-        hand: handConglomerates,
-        hq: {
-            secretObjectives: [
-                secretObjective.AMBIENT_ADVERTISING,
-                secretObjective.BROADCAST_NETWORK,
-            ],
-            conglomerates: [
-                hqConglomerate,
-                hqConglomerate,
-            ],
-            consultants: playerConsultants
-        }
-    },
-    generalSupply: {
-        conglomeratesLeftInDeck: 30,
-        openDisplay: [
-            conglomerate.GENERIC_INC,
-            conglomerate.MEGAMEDIA,
-            conglomerate.GENERIC_INC,
-            conglomerate.TOTAL_ENTERTAINMENT,
-        ],
-        consultants: {
-            MEDIA_ADVISOR: 2,
-            DEALMAKER: 3,
-            CORPORATE_LAWYER: 1,
-            MILITARY_CONTRACTOR: 6,
-        },
-    },
-    opponents: [
-        opponent,
-        opponent,
-        opponent
-    ],
-}
 
 let hand;
 
@@ -230,7 +153,7 @@ export function Game() {
         }
     })
     const [canActivateCompanyAbility, setCanActivateCompanyAbility] = useState(false);
-    hand = new ConglomerateMultiset(state.game.player.hand, conglomerate);
+    hand = new ConglomerateMultiset(state.game.player.hand);
 
     const hqConglomerates = getHqConglomerates(state);
     const hqConsultants = getConsultants(state.game.player.hq.consultants);
@@ -301,7 +224,6 @@ function viewOpponent(opponent) {
     </>
 }
 
-
 function chooseAction(setMoveState) {
     return <div>
         <h1>Pick an action</h1>
@@ -318,83 +240,81 @@ function getFrontendView(currentAction, state, setState) {
         state.action = action;
         setState({...state});
     }
-    const generalSupplyConsultants = new ConsultantMultiset(state.game.generalSupply,  consultant);
-    const yourConsultants = new ConsultantMultiset(state.game.player.hq.consultants, consultant);
-
+    const generalSupplyConsultants = new ConsultantMultiset(state.game.generalSupply);
+    const yourConsultants = new ConsultantMultiset(state.game.player.hq.consultants);
+    currentAction= frontendState.takeover.PICK_TWO_COMPANY_TILES;
     switch (currentAction) {
         case frontendState.plot.DRAW_FIRST_CONGLOMERATE: //TODO: remove card from general supply
-            return <> {pickOneCard(openDisplayAndDeck, (selected) => {
+            return pickOneCard(openDisplayAndDeck, selected => {
                 state.plot.firstConglomerate = openDisplayAndDeck[selected[0]];
                 setState({...state});
-            }, "e")
-            }</>
+            })
         case frontendState.plot.DRAW_SECOND_CONGLOMERATE:
             return pickOneCard(openDisplayAndDeck, (selected) => {
                 state.plot.secondConglomerate = openDisplayAndDeck[selected[0]];
                 setState({...state});
-            }, "d")
+            })
         case frontendState.infiltrate.PICK_CONGLOMERATES:
-            return <>
-                {pickManyConglomeratesOfTheSameColor(hand.componentArray, (selected) => {
-                    state.infiltrate.conglomerates = selected;
+            return pickManyConglomeratesOfTheSameColor(hand.componentArray, (selected) => {
+                    state.infiltrate.conglomerates = selected.map(index =>  hand.valueArray[index]);
                     setState({...state});
-                }, "c")}
-            </>
+                })
         case frontendState.infiltrate.PICK_COMPANY:
-            return <>
-                {pickCompany(getCompanyComponentArray(state.game.companies), (selected) => {
+            return pickCompany(getCompanyComponentArray(state.game.companies), (selected) => {
                     state.infiltrate.companyTile = state.game.companies[selected[0]];
                     setState({...state});
-                }, "z", 1)}
-            </>
+                }, 1)
         case frontendState.infiltrate.PICK_CONSULTANT:
-            return <>
-                {pickOneCard(yourConsultants.componentArray, (selected) => {
+            return pickOneCard(yourConsultants.componentArray, (selected) => {
                     const index = selected[0];
                     state.infiltrate.consultant = yourConsultants.valueArray[index];
                     setState({...state});
-                }, "b")}
-            </>
+                })
 
         case frontendState.infiltrate.MEDIA_ADVISOR_PICK_CONGLOMERATE:
             return pickOneCard(hand.componentArray, (selected) => {
                 state.infiltrate.mediaAdvisor.conglomerate = hand.valueArray[selected[0]];
                 setState({...state});
-            }, "a")
+            })
         case frontendState.infiltrate.CORPORATE_LAWYER_PICK_CONGLOMERATES:
-            return <>
-                {pickManyConglomeratesOfTheSameColor(hand.componentArray, (selected) => {
+            return pickManyConglomeratesOfTheSameColor(hand.componentArray, (selected) => {
                     state.infiltrate.corporateLawyer.conglomerates = hand.valueArray[selected[0]];
                     setState({...state});
-                }, "f")}
-            </>
+                })
         case frontendState.infiltrate.CORPORATE_LAWYER_PICK_COMPANY:
-            return <>
-                {pickCompany(getCompanyComponentArray(state.game.companies.filter(t => t !== state.infiltrate.companyTile)), (selected) => {
+            return pickCompany(getCompanyComponentArray(state.game.companies.filter(t => t !== state.infiltrate.companyTile)), (selected) => {
                     state.infiltrate.corporateLawyer.company = state.game.companies[selected[0]];
                     setState({...state});
-                }, "g", 1)}
-            </>
+                }, 1)
         case frontendState.infiltrate.TAKE_CONSULTANT:
-            return <>
-                {pickOneCard(generalSupplyConsultants.componentArray, (selected) => {
+            return pickOneCard(generalSupplyConsultants.componentArray, (selected) => {
                     const index = selected[0];
                     state.infiltrate.consultant = generalSupplyConsultants.valueArray[index];
                     setState({...state});
-                }, "q")}
-            </>
+                })
         case frontendState.takeover.PICK_CONSULTANT:
-            return <>
-                {pickOneCard(yourConsultants.componentArray, (selected) => {
+            return pickOneOrZeroCards(yourConsultants.componentArray, (selected) => {
+                    if(selected[0] == null)
+                        state.takeover.consultant = -1;
+                    else{
                     const index = selected[0];
-                    state.takeover.consultant = yourConsultants.valueArray[index];
+                    state.takeover.consultant = yourConsultants.valueArray[index];}
                     setState({...state});
-                }, "aa")}
-            </>
+                })
         case frontendState.takeover.PICK_CONGLOMERATES:
+            return pickManyConglomeratesOfTheSameColor(hand.componentArray, (selected) => {
+                    state.takeover.conglomerates = selected.map(index =>  hand.valueArray[index]);
+                    setState({...state});
+                })
         case frontendState.takeover.PICK_TWO_COMPANY_TILES:
+            return pickOrthogonallyAdjacentCompanyTiles(getCompanyComponentArray(state.game.companies), (selected) => {
+                state.takeover.companyTiles = selected.map(index =>  state.game.companies[index]);
+                setState({...state});
+            })
         case frontendState.takeover.ACTIVATE_ABILITY:
+
         case frontendState.takeover.DEALMAKER_DRAW_TWO_CARDS_FROM_DECK:
+
         case frontendState.BROADCAST_NETWORK_PICK_COMPANIES:
         case frontendState.GUERRILLA_MARKETING_PICK_CONGLOMERATES:
         case frontendState.PRINT_MEDIA_PICK_YOUR_CONGLOMERATE:
@@ -404,6 +324,7 @@ function getFrontendView(currentAction, state, setState) {
         case frontendState.ONLINE_MARKETING_PICK_COMPANIES:
         case frontendState.DISCARD:
         case frontendState.DONE:
+            return <></>
         case frontendState.CHOOSE_ACTION:
             return chooseAction(setMoveState);
     }

@@ -1,4 +1,4 @@
-import {conglomerate} from "./MatchEnums";
+import {conglomerate, consultant} from "./MatchEnums";
 import Conglomerate from "./Conglomerate";
 import React from "react";
 import {Consultant} from "./Consultant";
@@ -30,6 +30,10 @@ export class ItemsMultiset {
 }
 
 export class ConglomerateMultiset extends ItemsMultiset {
+    constructor(multiset) {
+        super(multiset, conglomerate);
+    }
+
     getConglomerateComponentOfType(value, quantity) {
         return [...Array(quantity)]
             .map(() => <Conglomerate conglomerate={value}/>);
@@ -37,6 +41,10 @@ export class ConglomerateMultiset extends ItemsMultiset {
 }
 
 export class ConsultantMultiset extends ItemsMultiset {
+    constructor(multiset) {
+        super(multiset, consultant);
+    }
+
     getConglomerateComponentOfType(value, quantity) {
         return [...Array(quantity)]
             .map(() => <Consultant consultant={value}/>);

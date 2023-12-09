@@ -2,7 +2,7 @@ package us.lsi.dp1.newcorporder.match.view;
 
 import com.google.common.collect.Multiset;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import us.lsi.dp1.newcorporder.match.company.CompanyType;
 import us.lsi.dp1.newcorporder.match.conglomerate.Conglomerate;
 import us.lsi.dp1.newcorporder.match.player.Headquarter;
@@ -10,13 +10,9 @@ import us.lsi.dp1.newcorporder.match.player.MatchPlayer;
 
 import java.util.List;
 
-@Getter
+@Data
 @Builder
 public class OwnPlayerView {
-
-    private final Multiset<Conglomerate> hand;
-    private final List<CompanyType> secretObjectives;
-    private final Headquarter headquarter;
 
     public static OwnPlayerView of(MatchPlayer player) {
         return OwnPlayerView.builder()
@@ -25,4 +21,8 @@ public class OwnPlayerView {
             .headquarter(player.getHeadquarter())
             .build();
     }
+
+    private final Multiset<Conglomerate> hand;
+    private final List<CompanyType> secretObjectives;
+    private final Headquarter headquarter;
 }

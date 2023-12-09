@@ -9,6 +9,7 @@ import us.lsi.dp1.newcorporder.match.GeneralSupply;
 import us.lsi.dp1.newcorporder.match.Match;
 import us.lsi.dp1.newcorporder.match.MatchMode;
 import us.lsi.dp1.newcorporder.match.conglomerate.Conglomerate;
+import us.lsi.dp1.newcorporder.match.consultant.ConsultantType;
 import us.lsi.dp1.newcorporder.match.payload.request.DiscardShareRequest;
 import us.lsi.dp1.newcorporder.match.payload.response.DiscardShareResponse;
 import us.lsi.dp1.newcorporder.match.player.MatchPlayer;
@@ -38,7 +39,18 @@ class TurnTest {
             .generalSupply(generalSupply)
             .turnSystem(turnSystem)
             .build();
-        turn = new Turn(null, match) {};
+
+        turn = new Turn(null, match) {
+            @Override
+            public TurnState getState() {
+                return null;
+            }
+
+            @Override
+            public ConsultantType getChosenConsultant() {
+                return null;
+            }
+        };
 
         lenient().when(turnSystem.getCurrentPlayer()).thenReturn(currentPlayer);
     }

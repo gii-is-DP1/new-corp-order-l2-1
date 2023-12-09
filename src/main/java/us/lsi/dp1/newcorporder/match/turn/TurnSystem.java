@@ -7,6 +7,7 @@ import us.lsi.dp1.newcorporder.match.Match;
 import us.lsi.dp1.newcorporder.match.player.MatchPlayer;
 
 import java.util.List;
+import java.util.Objects;
 
 public class TurnSystem {
 
@@ -43,7 +44,7 @@ public class TurnSystem {
     }
 
     public void passTurn() {
-        if (lastPlayerBeforeMatchEnds == currentPlayer) {
+        if (Objects.equals(lastPlayerBeforeMatchEnds, currentPlayer)) {
             this.match.end();
             return;
         }
@@ -59,9 +60,12 @@ public class TurnSystem {
         currentTurn = null;
     }
 
+    public boolean isFinalRound() {
+        return this.lastPlayerBeforeMatchEnds != null;
+    }
+
     public void activateFinalRound() {
-        Preconditions.checkState(this.lastPlayerBeforeMatchEnds == null,
-            "final round is already activated");
+        Preconditions.checkState(!this.isFinalRound(), "final round is already activated");
         this.lastPlayerBeforeMatchEnds = this.currentPlayer;
     }
 

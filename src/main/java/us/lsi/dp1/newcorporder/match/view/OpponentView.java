@@ -1,21 +1,13 @@
 package us.lsi.dp1.newcorporder.match.view;
 
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import us.lsi.dp1.newcorporder.match.player.Headquarter;
 import us.lsi.dp1.newcorporder.match.player.MatchPlayer;
 
-@Getter
+@Data
 @Builder
 public class OpponentView {
-
-    private final int playerId;
-    private final String username;
-    private final String picture;
-    private final boolean online;
-
-    private final int handSize;
-    private final Headquarter headquarter;
 
     public static OpponentView of(MatchPlayer player) {
         return OpponentView.builder()
@@ -26,4 +18,12 @@ public class OpponentView {
             .headquarter(player.getHeadquarter())
             .build();
     }
+
+    private final int playerId;
+    private final String username;
+    private final String picture;
+    private final boolean online;
+
+    private final int handSize;
+    private final Headquarter headquarter;
 }

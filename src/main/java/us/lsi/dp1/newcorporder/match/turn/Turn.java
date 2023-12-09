@@ -3,6 +3,7 @@ package us.lsi.dp1.newcorporder.match.turn;
 import com.google.common.base.Preconditions;
 import lombok.Getter;
 import us.lsi.dp1.newcorporder.match.Match;
+import us.lsi.dp1.newcorporder.match.consultant.ConsultantType;
 import us.lsi.dp1.newcorporder.match.payload.request.*;
 import us.lsi.dp1.newcorporder.match.payload.response.*;
 
@@ -19,6 +20,10 @@ public abstract class Turn {
         this.match = match;
         this.turnSystem = match.getTurnSystem();
     }
+
+    public abstract TurnState getState();
+
+    public abstract ConsultantType getChosenConsultant();
 
     public PlotResponse onPlotRequest(PlotRequest request) {
         throw new IllegalStateException("invalid move for the current action");

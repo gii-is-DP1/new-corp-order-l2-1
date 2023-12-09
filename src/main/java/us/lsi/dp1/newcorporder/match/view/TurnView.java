@@ -1,26 +1,50 @@
 package us.lsi.dp1.newcorporder.match.view;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
-import lombok.Getter;
-import us.lsi.dp1.newcorporder.match.Match;
-import us.lsi.dp1.newcorporder.match.player.MatchPlayer;
+import lombok.Data;
+import us.lsi.dp1.newcorporder.match.consultant.ConsultantType;
+import us.lsi.dp1.newcorporder.match.payload.CompanyTileReference;
+import us.lsi.dp1.newcorporder.match.turn.*;
 
-@Getter
+@Data
 @Builder
 public class TurnView {
 
-    private final Integer player;
-    private final boolean finalRound;
+    public static TurnView of(TurnSystem turnSystem) {
+        Turn turn = turnSystem.getCurrentTurn();
 
-    public static TurnView of(Match match) {
-        return TurnView.builder()
-            .player(getTurnPlayer(match))
-            .finalRound(match.getTurnSystem().getLastPlayerBeforeMatchEnds() != null)
+        TurnView view = TurnView.builder()
+            .finalRound(turnSystem.isFinalRound())
+            .player(turnSystem.getCurrentPlayer() != null ? turnSystem.getCurrentPlayer().getPlayerId() : null)
+            .action(turn.getAction())
+            .state(turn.getState())
+            .usingConsultant(turn.getChosenConsultant())
             .build();
+
+        if (turn instanceof TakeOverTurn takeOverTurn) {
+            view.setTakeOverProperties(takeOverTurn);
+        }
+
+        return view;
     }
 
-    private static Integer getTurnPlayer(Match match) {
-        MatchPlayer player = match.getTurnSystem().getCurrentPlayer();
-        return player != null ? player.getPlayerId() : null;
+    private final boolean finalRound;
+    private final Integer player;
+    private final Action action;
+    private final TurnState state;
+
+    private final ConsultantType usingConsultant;
+    private CompanyTileReference targetCompany;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public CompanyTileReference getTargetCompany() {
+        return targetCompany;
+    }
+
+    private void setTakeOverProperties(TakeOverTurn turn) {
+        if (turn.getTakeOverRequest() != null) {
+            this.targetCompany = turn.getTakeOverRequest().getTargetCompany();
+        }
     }
 }

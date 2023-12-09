@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import us.lsi.dp1.newcorporder.auth.Authenticated;
 import us.lsi.dp1.newcorporder.bind.FromPathVariable;
 import us.lsi.dp1.newcorporder.match.payload.response.MatchAssignmentResponse;
+import us.lsi.dp1.newcorporder.match.view.MatchView;
 import us.lsi.dp1.newcorporder.player.Player;
 
 @RestController
@@ -58,6 +59,20 @@ public class MatchController {
                                              @RequestParam("mode") MatchMode mode,
                                              @RequestParam("maxPlayers") int maxPlayers) {
         return matchService.quickPlay(player, mode, maxPlayers);
+    }
+
+    @Operation(
+        summary = "Get a match",
+        description = "Get a match",
+        tags = "get"
+    )
+    @ApiResponse(
+        responseCode = "200",
+        description = "The requested match view"
+    )
+    @GetMapping("/{match}")
+    public MatchView getMatch(@Authenticated Player player, @FromPathVariable Match match) {
+        return matchService.getMatchView(player, match);
     }
 
     @Operation(

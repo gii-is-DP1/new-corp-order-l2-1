@@ -2,42 +2,39 @@ package us.lsi.dp1.newcorporder.match.player;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.*;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import us.lsi.dp1.newcorporder.match.company.CompanyType;
 import us.lsi.dp1.newcorporder.match.conglomerate.Conglomerate;
 import us.lsi.dp1.newcorporder.match.consultant.ConsultantType;
+import us.lsi.dp1.newcorporder.player.Player;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+@AllArgsConstructor
+@Builder
 @EqualsAndHashCode(of = "playerId")
 public class MatchPlayer {
 
-    public static MatchPlayer create(Integer playerId) {
-        return new MatchPlayer(playerId, Headquarter.create());
+    public static MatchPlayer create(Player player) {
+        return MatchPlayer.builder()
+            .playerId(player.getId())
+            .username(player.getUser().getUsername())
+            .picture(player.getUser().getPicture())
+            .secretObjectives(new ArrayList<>(2))
+            .headquarter(Headquarter.create())
+            .build();
     }
 
     @Getter private final Integer playerId;
-    @Getter private final Headquarter headquarter;
-    @Getter @Setter private boolean online = true;
+    @Getter private final String username;
+    @Getter private final String picture;
+    @Getter @Setter private boolean online;
 
     private final Multiset<Conglomerate> hand = HashMultiset.create();
     private final List<CompanyType> secretObjectives;
-
-    public MatchPlayer(Integer playerId, Headquarter headquarter) {
-        this(playerId, headquarter, new ArrayList<>(2));
-    }
-
-    @Builder
-    private MatchPlayer(Integer playerId, Headquarter headquarter, List<CompanyType> secretObjectives) {
-        this.playerId = playerId;
-        this.headquarter = headquarter;
-        this.secretObjectives = secretObjectives;
-    }
+    @Getter private final Headquarter headquarter;
 
     public void init(ConsultantType initialConsultant, List<Conglomerate> initialHand) {
         this.hand.addAll(initialHand);

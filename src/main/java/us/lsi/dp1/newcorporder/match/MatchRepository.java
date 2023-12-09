@@ -14,10 +14,10 @@ public class MatchRepository {
 
     public Optional<Match> findRandomPublicMatch(MatchMode mode, int maxPlayers) {
         return this.matches.values().stream()
-            .filter(match -> match.getMatchState().equals(MatchState.WAITING))
+            .filter(match -> match.getState().equals(MatchState.WAITING))
             .filter(match -> match.getVisibility().equals(MatchVisibility.PUBLIC))
             .filter(match -> match.getPlayers().size() < match.getMaxPlayers())
-            .filter(match -> match.getMatchMode().equals(mode))
+            .filter(match -> match.getMode().equals(mode))
             .filter(match -> match.getMaxPlayers() == maxPlayers)
             .findFirst();
     }

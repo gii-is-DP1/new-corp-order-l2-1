@@ -1,5 +1,7 @@
 package us.lsi.dp1.newcorporder.match.player;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.ImmutableMultiset;
@@ -17,9 +19,16 @@ public class Headquarter {
         return new Headquarter();
     }
 
+    @JsonSerialize
     private final Multiset<Conglomerate> capturedAgents = HashMultiset.create();
+
+    @JsonSerialize
     private final Multiset<ConsultantType> consultants = HashMultiset.create();
+
+    @JsonSerialize
     private final Multiset<Conglomerate> conglomerateShares = HashMultiset.create();
+
+    @JsonSerialize
     private final Multiset<Conglomerate> usedConglomerateShares = HashMultiset.create();
 
     private Headquarter() {
@@ -32,9 +41,6 @@ public class Headquarter {
         this.conglomerateShares.addAll(conglomerateShares);
         this.usedConglomerateShares.addAll(usedConglomerateShares);
     }
-
-
-
 
     /**
      * Add an agent of the given conglomerate to captured agents
@@ -60,6 +66,7 @@ public class Headquarter {
      *
      * @return the quantity of captured agents
      */
+    @JsonIgnore
     public int getCapturedAgentsCount() {
         return capturedAgents.size();
     }
@@ -193,6 +200,7 @@ public class Headquarter {
         return this.capturedAgents.count(conglomerateType);
     }
 
+    @JsonIgnore
     public int getConsultantsVP() {
         Multiset<ConsultantType> consultants = HashMultiset.create(this.consultants);
         List<ConsultantType> bestMatchConsultants = rankBestConsultantToMatch(consultants);

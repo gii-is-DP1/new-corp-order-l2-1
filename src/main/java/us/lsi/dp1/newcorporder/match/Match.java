@@ -88,7 +88,6 @@ public class Match {
 
         Multiset<MatchPlayer> victoryPoints = this.calculateVictoryPoints();
         List<MatchPlayer> winners = getWinners();
-        //TODO generate and save stats
     }
 
     public MatchPlayer getPlayer(int id) {

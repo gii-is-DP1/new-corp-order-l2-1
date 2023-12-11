@@ -1,4 +1,4 @@
-package us.lsi.dp1.newcorporder.stats;
+package us.lsi.dp1.newcorporder.stats.playerMatchStats;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -6,6 +6,11 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import us.lsi.dp1.newcorporder.model.BaseEntity;
+import us.lsi.dp1.newcorporder.stats.MatchResult;
+import us.lsi.dp1.newcorporder.stats.companyPlayerMatchStats.CompanyPlayerMatchStats;
+import us.lsi.dp1.newcorporder.stats.conglomeratePlayerMatchStats.ConglomeratePlayerMatchStats;
+import us.lsi.dp1.newcorporder.stats.consultantPlayerMatchStats.ConsultantPlayerMatchStats;
+import us.lsi.dp1.newcorporder.stats.matchStats.MatchStats;
 
 import java.util.Set;
 

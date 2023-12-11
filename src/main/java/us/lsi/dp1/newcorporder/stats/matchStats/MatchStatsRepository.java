@@ -1,9 +1,9 @@
-package us.lsi.dp1.newcorporder.stats;
+package us.lsi.dp1.newcorporder.stats.matchStats;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import us.lsi.dp1.newcorporder.match.MatchMode;
-import us.lsi.dp1.newcorporder.player.Player;
+import us.lsi.dp1.newcorporder.stats.matchStats.MatchStats;
 
 import java.util.List;
 import java.util.Optional;

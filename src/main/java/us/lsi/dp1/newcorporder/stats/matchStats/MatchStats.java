@@ -1,4 +1,4 @@
-package us.lsi.dp1.newcorporder.stats;
+package us.lsi.dp1.newcorporder.stats.matchStats;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -7,9 +7,10 @@ import lombok.Getter;
 import lombok.Setter;
 import us.lsi.dp1.newcorporder.match.Match;
 import us.lsi.dp1.newcorporder.match.MatchMode;
-import us.lsi.dp1.newcorporder.match.MatchState;
 import us.lsi.dp1.newcorporder.match.player.MatchPlayer;
 import us.lsi.dp1.newcorporder.model.BaseEntity;
+import us.lsi.dp1.newcorporder.stats.playerMatchStats.PlayerMatchStats;
+import us.lsi.dp1.newcorporder.stats.playerMatchStats.PlayerMatchStatsService;
 
 import java.time.Instant;
 import java.util.HashSet;

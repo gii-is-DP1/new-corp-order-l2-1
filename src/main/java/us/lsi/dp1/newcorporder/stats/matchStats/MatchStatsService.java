@@ -1,4 +1,4 @@
-package us.lsi.dp1.newcorporder.stats;
+package us.lsi.dp1.newcorporder.stats.matchStats;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +8,9 @@ import org.springframework.transaction.annotation.Transactional;
 import us.lsi.dp1.newcorporder.exceptions.ResourceNotFoundException;
 import us.lsi.dp1.newcorporder.match.Match;
 import us.lsi.dp1.newcorporder.match.MatchMode;
+import us.lsi.dp1.newcorporder.stats.matchStats.MatchStats;
+import us.lsi.dp1.newcorporder.stats.matchStats.MatchStatsRepository;
+
 import java.util.List;
 import java.util.Optional;
 

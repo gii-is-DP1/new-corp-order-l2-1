@@ -23,6 +23,18 @@ import java.util.Set;
 @Entity
 public class MatchStats extends BaseEntity {
 
+    @Enumerated(EnumType.STRING)
+    @NotNull private MatchMode mode;
+
+    @NotNull private Instant startedAt;
+
+    @NotNull private Instant endedAt;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "matchStats")
+    private Set<PlayerMatchStats> playerMatchStats;
+
+
+
     public MatchStats() {}
     public MatchStats(MatchMode mode, Instant startedAt, Instant endedAt) {
         this.mode = mode;
@@ -36,24 +48,16 @@ public class MatchStats extends BaseEntity {
         MatchMode mode = match.getMatchMode();
         Instant startedAt = match.determineStartTime();
         Instant endedAt = Instant.now();
-        MatchStats res =  new MatchStats(mode, startedAt, endedAt);
-        for(MatchPlayer player : match.getPlayers()) {
-            res.addPlayerMatchStats(PlayerMatchStatsService.createPlayerMatchStats(match, player));
+        MatchStats matchStats = new MatchStats(mode, startedAt, endedAt);
+        for (MatchPlayer player : match.getPlayers()) {
+            PlayerMatchStats playerMatchStats = PlayerMatchStats.createPlayerMatchStats(match, player);
+            matchStats.addPlayerMatchStats(playerMatchStats);
         }
-        return res;
+        return matchStats;
     }
 
-    public void addPlayerMatchStats(PlayerMatchStats playerMatchStats) {
-        this.playerMatchStats.add(playerMatchStats);
+        public void addPlayerMatchStats (PlayerMatchStats playerMatchStats){
+            this.playerMatchStats.add(playerMatchStats);
+        }
+
     }
-
-    @Enumerated(EnumType.STRING)
-    @NotNull private MatchMode mode;
-
-    @NotNull private Instant startedAt;
-
-    @NotNull private Instant endedAt;
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "matchStats")
-    private Set<PlayerMatchStats> playerMatchStats;
-}

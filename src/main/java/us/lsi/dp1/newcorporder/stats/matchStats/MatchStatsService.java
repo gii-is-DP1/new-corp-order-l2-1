@@ -57,11 +57,25 @@ public class MatchStatsService {
         matchStatsRepository.delete(toDelete);
     }
 
-    @Transactional(readOnly = true)
-    public List<MatchStats> getMatchStatsByMode(MatchMode mode) {return matchStatsRepository.findByMode(mode);}
-    @Transactional(readOnly = true)
-    public Optional<MatchStats> getMatchStatsById(Integer id) {
-        return matchStatsRepository.findById(id);
+    @Transactional
+    public List<MatchStats> getFinishedMatchStats() {
+        return matchStatsRepository.findByEndedAtIsNotNull();}
+    @Transactional
+    public List<MatchStats> getFinishedMatchStatsByMode(MatchMode mode) {
+        return matchStatsRepository.findByModeAndEndedAtIsNotNull(mode);}
+
+    @Transactional
+    public List<MatchStats> getFinishedMatchesByModeOrderedByStartedAtDesc(MatchMode mode) {
+        return matchStatsRepository.findFinishedMatchesByModeOrderByStartedAtDesc(mode);}
+
+    @Transactional
+    public void generateAndSaveMatchStats(Match match) {
+        MatchStats matchStats = MatchStats.createMatchStats(match);
+        matchStatsRepository.save(matchStats);
     }
 
+    public MatchStats getMatchStatsByMatch(Match match) {
+        return matchStatsRepository.findByMatch(match);}
 }
+
+

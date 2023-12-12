@@ -56,23 +56,22 @@ export default function Login() {
         margin: "10px"
     }
 
-    async function handleSubmit({values}) {
-        const reqBody = values;
+    async function handleSubmit(body) {
         setMessage(null);
-        await fetch("/api/v1/users/login", {
+        await fetch("/api/v1/auth/login", {
             headers: {"Content-Type": "application/json"},
-            method: "GET",
-            body: JSON.stringify(reqBody),
+            method: "POST",
+            body: JSON.stringify(body),
         })
-            .then(function (response) {
+            .then(response => {
                 if (response.status === 200) return response.json();
                 else return Promise.reject("Invalid login attempt");
             })
-            .then(function (data) {
+            .then(data => {
                 tokenService.setUser(data);
                 tokenService.updateLocalAccessToken(data.token);
             })
-            .catch((error) => {
+            .catch(error => {
                 setMessage(error);
             });
     }
@@ -92,7 +91,10 @@ export default function Login() {
                         <form style={{display: 'flex', flexDirection: 'column'}}
                               onSubmit={(e) => {
                                   e.preventDefault();
-                                  handleSubmit(e)
+                                  handleSubmit({
+                                      username: e.target.username.value,
+                                      password: e.target.password.value
+                                  });
                               }}>
                             <FormInput name={"username"} placeholder={"Type your username here"}></FormInput>
                             <FormInput name={"password"} placeholder={"**********"} type={"password"}></FormInput>

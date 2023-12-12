@@ -35,7 +35,6 @@ public class AuthServiceTests {
 
     private SignupRequest createRequest(String auth, String username, String email) {
 		SignupRequest request = new SignupRequest();
-		request.setAuthority(auth);
 		request.setPassword("prueba");
 		request.setUsername(username);
         request.setEmail(email);

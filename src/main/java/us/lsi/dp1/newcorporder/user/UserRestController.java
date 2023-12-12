@@ -15,23 +15,27 @@
  */
 package us.lsi.dp1.newcorporder.user;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import us.lsi.dp1.newcorporder.util.RestPreconditions;
 import org.springframework.web.bind.annotation.*;
 import us.lsi.dp1.newcorporder.auth.payload.response.MessageResponse;
 import us.lsi.dp1.newcorporder.authority.Authority;
 import us.lsi.dp1.newcorporder.authority.AuthorityService;
 import us.lsi.dp1.newcorporder.exceptions.AccessDeniedException;
+import us.lsi.dp1.newcorporder.util.RestPreconditions;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/users")
 @SecurityRequirement(name = "bearerAuth")
+@Tag(name = "User", description = "The User API")
 class UserRestController {
 
 	private final UserService userService;
@@ -43,6 +47,15 @@ class UserRestController {
 		this.authService = authService;
 	}
 
+    @Operation(
+        summary = "List all users",
+        description = "List all users",
+        tags = "get"
+    )
+    @ApiResponse(
+        responseCode = "200",
+        description = "The users list"
+    )
 	@GetMapping
 	public ResponseEntity<List<User>> findAll(@RequestParam(required = false) String auth) {
 		List<User> res;
@@ -53,31 +66,56 @@ class UserRestController {
 		return new ResponseEntity<>(res, HttpStatus.OK);
 	}
 
-    @GetMapping("login")
-    public ResponseEntity<User> login(@RequestParam String username, @RequestParam String password){
-        try{
-            User requestUser = userService.findUser(username);
-            if(requestUser.getPassword().equals(password)){
-                return new ResponseEntity<>(requestUser, HttpStatus.OK);
-            }else{
-                throw new AccessDeniedException("the password is not correct");
-            }
-        }catch(Throwable err){
-            throw err;
-        }
-    }
-
+    @Operation(
+        summary = "List all authorities",
+        description = "List all authorities",
+        tags = "get"
+    )
+    @ApiResponse(
+        responseCode = "200",
+        description = "The authorities list"
+    )
 	@GetMapping("authorities")
 	public ResponseEntity<List<Authority>> findAllAuths() {
 		List<Authority> res = (List<Authority>) authService.findAll();
 		return new ResponseEntity<>(res, HttpStatus.OK);
 	}
 
+    @Operation(
+        summary = "Find an user by its id",
+        description = "Find an user by its id",
+        tags = "get"
+    )
+    @ApiResponse(
+        responseCode = "200",
+        description = "The found user"
+    )
+    @ApiResponse(
+        responseCode = "404",
+        description = "User not found"
+    )
 	@GetMapping(value = "{id}")
 	public ResponseEntity<User> findById(@PathVariable("id") Integer id) {
 		return new ResponseEntity<>(userService.findUser(id), HttpStatus.OK);
 	}
 
+    @Operation(
+        summary = "Create an user",
+        description = "Create an user",
+        tags = "post"
+    )
+    @ApiResponse(
+        responseCode = "201",
+        description = "The created user"
+    )
+    @ApiResponse(
+        responseCode = "400",
+        description = "Not valid user"
+    )
+    @ApiResponse(
+        responseCode = "401",
+        description = "Authorization information is missing or invalid"
+    )
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<User> create(@RequestBody @Valid User user) {
@@ -85,6 +123,23 @@ class UserRestController {
 		return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
 	}
 
+    @Operation(
+        summary = "Update an user by its id",
+        description = "Update an user by its id",
+        tags = "put"
+    )
+    @ApiResponse(
+        responseCode = "200",
+        description = "The updated user"
+    )
+    @ApiResponse(
+        responseCode = "400",
+        description = "Not valid user"
+    )
+    @ApiResponse(
+        responseCode = "404",
+        description = "User to update not found"
+    )
 	@PutMapping(value = "{userId}")
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<User> update(@PathVariable("userId") Integer id, @RequestBody @Valid User user) {
@@ -92,6 +147,23 @@ class UserRestController {
 		return new ResponseEntity<>(this.userService.updateUser(user, id), HttpStatus.OK);
 	}
 
+    @Operation(
+        summary = "Delete an user by its id",
+        description = "Delete an user by its id",
+        tags = "delete"
+    )
+    @ApiResponse(
+        responseCode = "200",
+        description = "User deleted"
+    )
+    @ApiResponse(
+        responseCode = "403",
+        description = "You cannot delete yourself"
+    )
+    @ApiResponse(
+        responseCode = "404",
+        description = "User to delete not found"
+    )
 	@DeleteMapping(value = "{userId}")
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<MessageResponse> delete(@PathVariable("userId") int id) {
@@ -100,7 +172,6 @@ class UserRestController {
 			userService.deleteUser(id);
 			return new ResponseEntity<>(new MessageResponse("User deleted!"), HttpStatus.OK);
 		} else
-			throw new AccessDeniedException("You can't delete yourself!");
+            throw new AccessDeniedException("You cannot delete yourself!");
 	}
-
 }

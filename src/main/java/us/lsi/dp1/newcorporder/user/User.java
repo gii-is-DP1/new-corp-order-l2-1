@@ -2,17 +2,17 @@ package us.lsi.dp1.newcorporder.user;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 import org.apache.commons.lang3.ArrayUtils;
 import us.lsi.dp1.newcorporder.authority.Authority;
-import us.lsi.dp1.newcorporder.friends.Friendship;
 import us.lsi.dp1.newcorporder.friends.FriendshipRequest;
 import us.lsi.dp1.newcorporder.misc.Notification;
 import us.lsi.dp1.newcorporder.model.BaseEntity;
-
-import lombok.Getter;
-import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.Set;
@@ -21,6 +21,9 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "users")
+@AllArgsConstructor
+@NoArgsConstructor
+@SuperBuilder
 public class User extends BaseEntity {
 
     @Size(max=32) @Column(unique = true) @NotNull

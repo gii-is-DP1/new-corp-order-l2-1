@@ -4,8 +4,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
-import us.lsi.dp1.newcorporder.match.Conglomerate;
 import us.lsi.dp1.newcorporder.match.MatchSize;
+import us.lsi.dp1.newcorporder.match.conglomerate.Conglomerate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

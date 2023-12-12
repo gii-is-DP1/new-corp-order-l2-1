@@ -4,12 +4,12 @@ import com.google.common.collect.Multiset;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
-import us.lsi.dp1.newcorporder.match.Conglomerate;
+import us.lsi.dp1.newcorporder.match.conglomerate.Conglomerate;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder
-public class CompanyAbilityResponse extends TurnStateResponse {
+public class UseCompanyAbilityResponse extends TurnStateResponse {
     private Multiset<Conglomerate> hand;
 }
 

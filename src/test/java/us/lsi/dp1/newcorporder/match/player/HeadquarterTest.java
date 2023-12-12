@@ -1,7 +1,8 @@
 package us.lsi.dp1.newcorporder.match.player;
 
 import org.junit.jupiter.api.Test;
-import us.lsi.dp1.newcorporder.match.ConsultantType;
+import us.lsi.dp1.newcorporder.match.consultant.ConsultantType;
+
 import static org.assertj.core.api.Assertions.assertThat;
 public class HeadquarterTest {
 

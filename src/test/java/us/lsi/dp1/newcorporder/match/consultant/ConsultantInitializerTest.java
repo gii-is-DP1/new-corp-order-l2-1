@@ -1,4 +1,4 @@
-package us.lsi.dp1.newcorporder.match;
+package us.lsi.dp1.newcorporder.match.consultant;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;

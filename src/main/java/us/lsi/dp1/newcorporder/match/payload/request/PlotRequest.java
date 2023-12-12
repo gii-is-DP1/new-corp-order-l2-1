@@ -4,11 +4,11 @@ import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
-import us.lsi.dp1.newcorporder.match.Conglomerate;
+import us.lsi.dp1.newcorporder.match.conglomerate.Conglomerate;
 
 @Data
 @Builder
-public class TakeShareRequest {
+public class PlotRequest {
 
     public enum Source {DECK, OPEN_DISPLAY}
 

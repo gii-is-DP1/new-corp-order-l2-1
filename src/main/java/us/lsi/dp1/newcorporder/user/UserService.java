@@ -60,7 +60,7 @@ public class UserService {
                 .orElseThrow(() -> new ResourceNotFoundException("User", "Username", auth.getName()));
     }
 
-    public Boolean existsUser(String username) {
+    public boolean existsUser(String username) {
         return userRepository.existsByUsername(username);
     }
 

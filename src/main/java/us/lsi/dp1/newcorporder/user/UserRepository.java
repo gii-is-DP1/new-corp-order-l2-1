@@ -11,7 +11,7 @@ public interface UserRepository extends CrudRepository<User, String> {
 
     Optional<User> findByUsername(String username);
 
-    Boolean existsByUsername(String username);
+    boolean existsByUsername(String username);
 
     @Query("SELECT u FROM User u WHERE u.authority.name = :auth")
     Iterable<User> findAllByAuthority(String auth);

@@ -1,8 +1,9 @@
 package us.lsi.dp1.newcorporder.match.turn;
 
 import com.google.common.base.Preconditions;
-import us.lsi.dp1.newcorporder.match.ConsultantType;
+import lombok.Getter;
 import us.lsi.dp1.newcorporder.match.Match;
+import us.lsi.dp1.newcorporder.match.consultant.ConsultantType;
 import us.lsi.dp1.newcorporder.match.payload.request.DiscardShareRequest;
 import us.lsi.dp1.newcorporder.match.payload.request.InfiltrateRequest;
 import us.lsi.dp1.newcorporder.match.payload.request.TakeConsultantRequest;
@@ -12,15 +13,21 @@ import us.lsi.dp1.newcorporder.match.payload.response.DiscardShareResponse;
 import us.lsi.dp1.newcorporder.match.payload.response.InfiltrateResponse;
 import us.lsi.dp1.newcorporder.match.payload.response.UseConsultantResponse;
 
+@Getter
 public class InfiltrateTurn extends Turn {
 
     private enum State implements TurnState {SELECTING_CONSULTANT, INFILTRATE, TAKING_CONSULTANT, NONE}
 
-    private State currentState = InfiltrateTurn.State.SELECTING_CONSULTANT;
+    private State state = InfiltrateTurn.State.SELECTING_CONSULTANT;
     private UseConsultantRequest useConsultantRequest;
 
     public InfiltrateTurn(Match match) {
-        super(match);
+        super(Action.INFILTRATE, match);
+    }
+
+    @Override
+    public ConsultantType getChosenConsultant() {
+        return this.useConsultantRequest.getConsultant();
     }
 
     @Override
@@ -34,10 +41,10 @@ public class InfiltrateTurn extends Turn {
             "invalid consultant for an infiltrate turn");
 
         this.useConsultantRequest = request;
-        this.currentState = State.INFILTRATE;
+        this.state = State.INFILTRATE;
         this.turnSystem.getCurrentPlayer().getHeadquarter().removeConsultant(request.getConsultant());
 
-        return new UseConsultantResponse(currentState);
+        return new UseConsultantResponse(state);
     }
 
     @Override
@@ -48,12 +55,12 @@ public class InfiltrateTurn extends Turn {
         infiltrate.run(match, useConsultantRequest);
 
         if (infiltrate.getTotalNumberOfShares() >= 3) {
-            currentState = State.TAKING_CONSULTANT;
+            state = State.TAKING_CONSULTANT;
         } else {
             this.endTurn();
         }
 
-        return new InfiltrateResponse(currentState);
+        return new InfiltrateResponse(state);
     }
 
     @Override
@@ -70,8 +77,8 @@ public class InfiltrateTurn extends Turn {
         throw new IllegalStateException("invalid move for the current action");
     }
 
-    void endTurn() {
-        this.currentState = State.NONE;
+    private void endTurn() {
+        this.state = State.NONE;
         turnSystem.passTurn();
     }
 
@@ -80,6 +87,6 @@ public class InfiltrateTurn extends Turn {
     }
 
     private void checkState(InfiltrateTurn.State state) {
-        Preconditions.checkState(currentState == state, "invalid action for the current state (%s)", state);
+        Preconditions.checkState(this.state == state, "invalid action for the current state (%s)", state);
     }
 }

@@ -5,12 +5,16 @@ class TokenService {
     }
 
     getLocalAccessToken() {
-        const jwt = JSON.parse(localStorage.getItem("jwt"));
-        return jwt ? jwt : null;
+        try {
+            const jwt = JSON.parse(localStorage.getItem("jwt"));
+            return jwt?.accessToken;
+        } catch (e) {
+            return null;
+        }
     }
 
     updateLocalAccessToken(token) {
-        window.localStorage.setItem("jwt", JSON.stringify(token));
+        window.localStorage.setItem("jwt", JSON.stringify({accessToken: token}));
     }
 
     getUser() {

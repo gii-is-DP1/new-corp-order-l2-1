@@ -19,7 +19,7 @@ import {HandViewer} from "./Viewers/HandViewer";
 import {HQViewer} from "./Viewers/HQViewer";
 import {GeneralSupplyViewer} from "./Viewers/GeneralSupplyViewer";
 import {
-    pickCompany,
+    pickCompany, pickConglomeratesToDiscard, pickConglomerateToDiscard,
     pickManyConglomeratesOfTheSameColor,
     pickOneCard,
     pickOneOrZeroCards,
@@ -164,10 +164,8 @@ export function Game() {
     const view = getFrontendView(currentAction, state, setState);
     return <div style={{display: "flex"}}>
         {view}
-        <p>Current action: {state.action}</p>
-
         <div>
-            <HandViewer items={hand}/>
+            <HandViewer items={hand.componentArray}/>
             <HQViewer hqItems={[...hqConglomerates, ...hqConsultants, ...secretObjectives]}/>
             <GeneralSupplyViewer items={[...openDisplay, <Deck/>, ...generalSupplyConsultants]}/>
             {state.game.opponents.map(viewOpponent)}
@@ -242,7 +240,6 @@ function getFrontendView(currentAction, state, setState) {
     }
     const generalSupplyConsultants = new ConsultantMultiset(state.game.generalSupply);
     const yourConsultants = new ConsultantMultiset(state.game.player.hq.consultants);
-    currentAction= frontendState.takeover.PICK_TWO_COMPANY_TILES;
     switch (currentAction) {
         case frontendState.plot.DRAW_FIRST_CONGLOMERATE: //TODO: remove card from general supply
             return pickOneCard(openDisplayAndDeck, selected => {
@@ -323,6 +320,9 @@ function getFrontendView(currentAction, state, setState) {
         case frontendState.SOCIAL_MEDIA_PICK_CONGLOMERATE:
         case frontendState.ONLINE_MARKETING_PICK_COMPANIES:
         case frontendState.DISCARD:
+            return pickConglomeratesToDiscard(hand.componentArray, (selected) => {
+                //TODO: backend connection
+            })
         case frontendState.DONE:
             return <></>
         case frontendState.CHOOSE_ACTION:

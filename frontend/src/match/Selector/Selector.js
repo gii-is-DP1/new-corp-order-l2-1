@@ -10,7 +10,10 @@ export default function Selector({
                                      changeSelectableItems,
                                      onConfirm,
                                      containerStyle,
-                                     itemStyle
+                                     itemStyle,
+                                     canSkip = false,
+                                     onSkip = () => {
+                                     }
                                  }) {
     let [selectedElements, setSelectedElements] = useState([]);
     const [selectableItems, setSelectableItems] = useState(selectableElements);
@@ -21,7 +24,7 @@ export default function Selector({
 
             {selection.map((item, i) =>
                 <Selectable
-                    key = {i}
+                    key={i}
                     style={itemStyle}
                     item={item}
                     isSelectable={selectableItems.includes(i)}
@@ -48,6 +51,15 @@ export default function Selector({
         >
             Confirm
         </Button>
+        {canSkip
+            ? <Button buttonContext={buttonContexts.light} buttonStyle={buttonStyles.primary}
+                      disabled={selectedElements.length > 0}
+                      onClick={() => onSkip([])}
+            >
+                Confirm
+            </Button>
+            : <></>
+        }
     </>
 }
 

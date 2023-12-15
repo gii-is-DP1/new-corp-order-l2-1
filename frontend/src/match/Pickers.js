@@ -3,7 +3,7 @@ import {selectAtLeastOne, selectAtLeastOneOrZero, selectAtLeastTwo} from "./Sele
 import {
     onlySelectOfSameColor,
     selectOrthogonallyAdjacentTiles,
-    selectQuantity
+    selectQuantity, selectUntilNRemain
 } from "./Selector/ChangeSelectableItemsFunctions";
 import React from "react";
 
@@ -60,6 +60,17 @@ export function pickOrthogonallyAdjacentCompanyTiles(from, onConfirm) {
                      selection={from}
                      canConfirm={selectAtLeastTwo}
                      changeSelectableItems={selectOrthogonallyAdjacentTiles}
+                     onConfirm={onConfirm}
+                     containerStyle={conglomerateContainerStyle}
+                     key={onConfirm}
+    />;
+}
+
+export function pickConglomeratesToDiscard(from, onConfirm){
+    return <Selector title={"Discard conglomerates in excess"}
+                     selection={from}
+                     canConfirm={selectAtLeastTwo}
+                     changeSelectableItems={selectUntilNRemain(6)}
                      onConfirm={onConfirm}
                      containerStyle={conglomerateContainerStyle}
                      key={onConfirm}

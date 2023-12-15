@@ -35,3 +35,10 @@ export function selectOrthogonallyAdjacentTiles(selection, selectedElements, sel
     else setSelectableItems(selectableElements);
 }
 
+export function selectUntilNRemain(n){
+    return (selection, selectedElements, selectableElements, setSelectableItems) => {
+        if (selectedElements.length === selection.length-n)
+            setSelectableItems(selectedElements);
+        else setSelectableItems(selectableElements);
+    }
+}

@@ -1,5 +1,6 @@
-import {Children, useState} from "react";
+import {useState} from "react";
 import Button, {buttonContexts, buttonStyles} from "../../components/Button";
+import {Selectable} from "./Selectable";
 
 export default function Selector({
                                      title,
@@ -17,7 +18,7 @@ export default function Selector({
                                  }) {
     let [selectedElements, setSelectedElements] = useState([]);
     const [selectableItems, setSelectableItems] = useState(selectableElements);
-    return <>
+    return <div style = {{display: "flex", flexDirection:"column"}}>
         <h1>{title} </h1>
         <h2>{subtitle}</h2>
         <div style={containerStyle}>
@@ -60,21 +61,6 @@ export default function Selector({
             </Button>
             : <></>
         }
-    </>
-}
-
-export function Selectable({item, isSelectable, isSelected, onClick, style}) {
-    const nonSelectableOpacity = 0.6;
-    return <div
-        onClick={onClick}
-        style={{
-            borderColor: "black",
-            borderStyle: "solid",
-            borderWidth: isSelected ? 5 : 0,
-            cursor: isSelectable ? "pointer" : "",
-            opacity: isSelectable ? 1 : nonSelectableOpacity,
-            ...style
-        }}>
-        {item}
     </div>
 }
+

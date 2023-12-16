@@ -29,6 +29,7 @@ import {CompanyTile} from "./CompanyTile";
 import {ConglomerateMultiset, ConsultantMultiset} from "./ConglomerateMultiset";
 import {mockUpData} from "./MockupData";
 import {selectOrthogonallyAdjacentTiles} from "./Selector/ChangeSelectableItemsFunctions";
+import Selector from "./Selector/Selector";
 
 export function getCompanyImageSrc(company) {
     return "/images/companies/" + company.type + "/" + company.name + ".png";
@@ -230,7 +231,12 @@ function chooseAction(setMoveState) {
         <Button onClick={() => setMoveState(TAKEOVER)}>TAKEOVER</Button>
     </div>
 }
-
+/*
+function actionPicker()
+{
+    return <Selector selection={}/>;
+}
+*/
 function getFrontendView(currentAction, state, setState) {
     const openDisplay = getOpenDisplay(state);
     const openDisplayAndDeck = [...openDisplay, <Deck/>];

@@ -1,4 +1,4 @@
-import {ViewerContainer} from "../Viewer";
+import {ViewerContainer} from "../../Viewer";
 import React from "react";
 
 export function HQViewer({hqItems}) {

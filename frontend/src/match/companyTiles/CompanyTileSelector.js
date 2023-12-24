@@ -1,5 +1,5 @@
 import {useState} from "react";
-import Button, {buttonContexts, buttonStyles} from "../components/Button";
+import Button, {buttonContexts, buttonStyles} from "../../components/Button";
 import {CompanyTile} from "./CompanyTile";
 
 export default function CompanyTileSelector({

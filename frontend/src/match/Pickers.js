@@ -1,10 +1,10 @@
-import Selector from "./Selector/Selector";
-import {selectAtLeastOne, selectAtLeastOneOrZero, selectAtLeastTwo} from "./Selector/CanConfirmFunctions";
+import Selector from "./game/selector/Selector";
+import {selectAtLeastOne, selectAtLeastOneOrZero, selectAtLeastTwo} from "./game/selector/CanConfirmFunctions";
 import {
     onlySelectOfSameColor,
     selectOrthogonallyAdjacentTiles,
     selectQuantity, selectUntilNRemain
-} from "./Selector/ChangeSelectableItemsFunctions";
+} from "./game/selector/ChangeSelectableItemsFunctions";
 import React from "react";
 
 const conglomerateContainerStyle = {

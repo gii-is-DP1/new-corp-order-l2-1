@@ -1,4 +1,6 @@
-import {getCompanyImageSrc} from "./Game";
+function getCompanyImageSrc(company) {
+    return "/images/companies/" + company.type + "/" + company.name + ".png";
+}
 
 export function CompanyTile({company, divStyle, onClick}) {
     const quantity = company.agents;

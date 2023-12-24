@@ -17,26 +17,6 @@ h2 {
     font-family: "DIN Next Slab W04 Regular", serif;
 }
 
-.cardContainer {
-    height: 200px;
-    display: flex;
-}
-
-.cardElement {
-    height: 200px;
-    display: block;
-}
-
-.cardElement img {
-    max-height: 100%;
-}
-
-.matchCode {
-    margin: auto;
-    font-size: 36px;
-    opacity: 0.7;
-    flex: 0.5;
-}
 
 .modal-content {
     background: none !important;

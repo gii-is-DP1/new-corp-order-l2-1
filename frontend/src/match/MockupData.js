@@ -85,3 +85,20 @@ export const mockUpData = {
         opponent
     ],
 }
+
+export const matchInfo = {
+    code: "A1B2C3",
+    isAdmin:true,
+    inLobby: false,
+    maxPlayers: 4,
+    players: [
+        {
+            username: "Gioacchino",
+            propic: "https://th.bing.com/th/id/OIG.brPoGXf3gGgrVkV9ixtc?w=173&h=173&c=6&r=0&o=5&dpr=1.3&pid=ImgGn"
+        },
+        {
+            username: "beluga",
+            propic: "https://th.bing.com/th/id/OIG.oi__xz_IswoFyfQ60TwA?w=173&h=173&c=6&r=0&o=5&dpr=1.3&pid=ImgGn"
+        }
+    ]
+};

@@ -124,20 +124,10 @@ class AuthControllerTests {
 	@Test
 	void shouldRegisterUser() throws Exception {
 		when(this.userService.existsUser(signupRequest.getUsername())).thenReturn(false);
-		doNothing().when(this.authService).createUser(signupRequest);
+        doNothing().when(this.authService).registerUser(signupRequest);
 
 		mockMvc.perform(post(BASE_URL + "/signup").with(csrf()).contentType(MediaType.APPLICATION_JSON)
-				.content(objectMapper.writeValueAsString(signupRequest))).andExpect(status().isOk())
+                .content(objectMapper.writeValueAsString(signupRequest))).andExpect(status().isCreated())
 				.andExpect(jsonPath("$.message").value("User registered successfully!"));
 	}
-
-	@Test
-	void shouldNotRegisterUserWithExistingUsername() throws Exception {
-		when(this.userService.existsUser(signupRequest.getUsername())).thenReturn(true);
-
-		mockMvc.perform(post(BASE_URL + "/signup").with(csrf()).contentType(MediaType.APPLICATION_JSON)
-				.content(objectMapper.writeValueAsString(signupRequest))).andExpect(status().isBadRequest())
-				.andExpect(jsonPath("$.message").value("Error: Username is already taken!"));
-	}
-
 }

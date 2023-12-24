@@ -25,60 +25,21 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import us.lsi.dp1.newcorporder.auth.payload.response.MessageResponse;
-import us.lsi.dp1.newcorporder.authority.Authority;
-import us.lsi.dp1.newcorporder.authority.AuthorityService;
 import us.lsi.dp1.newcorporder.exceptions.AccessDeniedException;
+import us.lsi.dp1.newcorporder.user.payload.EditProfileRequest;
 import us.lsi.dp1.newcorporder.util.RestPreconditions;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/users")
 @SecurityRequirement(name = "bearerAuth")
 @Tag(name = "User", description = "The User API")
-class UserRestController {
+class UserController {
 
 	private final UserService userService;
-	private final AuthorityService authService;
 
 	@Autowired
-	public UserRestController(UserService userService, AuthorityService authService) {
+    public UserController(UserService userService) {
 		this.userService = userService;
-		this.authService = authService;
-	}
-
-    @Operation(
-        summary = "List all users",
-        description = "List all users",
-        tags = "get"
-    )
-    @ApiResponse(
-        responseCode = "200",
-        description = "The users list"
-    )
-	@GetMapping
-	public ResponseEntity<List<User>> findAll(@RequestParam(required = false) String auth) {
-		List<User> res;
-		if (auth != null) {
-			res = (List<User>) userService.findAllByAuthority(auth);
-		} else
-			res = (List<User>) userService.findAll();
-		return new ResponseEntity<>(res, HttpStatus.OK);
-	}
-
-    @Operation(
-        summary = "List all authorities",
-        description = "List all authorities",
-        tags = "get"
-    )
-    @ApiResponse(
-        responseCode = "200",
-        description = "The authorities list"
-    )
-	@GetMapping("authorities")
-	public ResponseEntity<List<Authority>> findAllAuths() {
-		List<Authority> res = (List<Authority>) authService.findAll();
-		return new ResponseEntity<>(res, HttpStatus.OK);
 	}
 
     @Operation(
@@ -94,38 +55,14 @@ class UserRestController {
         responseCode = "404",
         description = "User not found"
     )
-	@GetMapping(value = "{id}")
+    @GetMapping(value = "/{id}")
 	public ResponseEntity<User> findById(@PathVariable("id") Integer id) {
 		return new ResponseEntity<>(userService.findUser(id), HttpStatus.OK);
 	}
 
     @Operation(
-        summary = "Create an user",
-        description = "Create an user",
-        tags = "post"
-    )
-    @ApiResponse(
-        responseCode = "201",
-        description = "The created user"
-    )
-    @ApiResponse(
-        responseCode = "400",
-        description = "Not valid user"
-    )
-    @ApiResponse(
-        responseCode = "401",
-        description = "Authorization information is missing or invalid"
-    )
-	@PostMapping
-	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<User> create(@RequestBody @Valid User user) {
-		User savedUser = userService.saveUser(user);
-		return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
-	}
-
-    @Operation(
-        summary = "Update an user by its id",
-        description = "Update an user by its id",
+        summary = "Update your own profile",
+        description = "Update your own profile",
         tags = "put"
     )
     @ApiResponse(
@@ -134,17 +71,31 @@ class UserRestController {
     )
     @ApiResponse(
         responseCode = "400",
-        description = "Not valid user"
+        description = "Invalid arguments"
+    )
+    @PutMapping(value = "/updateProfile")
+    @ResponseStatus(HttpStatus.OK)
+    public User update(@RequestBody @Valid EditProfileRequest request) {
+        return userService.editProfile(userService.findCurrentUser(), request);
+	}
+
+    @Operation(
+        summary = "Update another user's profile",
+        description = "Update another user's profile",
+        tags = "put"
     )
     @ApiResponse(
-        responseCode = "404",
-        description = "User to update not found"
+        responseCode = "200",
+        description = "The updated user"
     )
-	@PutMapping(value = "{userId}")
+    @ApiResponse(
+        responseCode = "400",
+        description = "Invalid arguments"
+    )
+    @PutMapping(value = "/{id}/updateProfile")
 	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<User> update(@PathVariable("userId") Integer id, @RequestBody @Valid User user) {
-		RestPreconditions.checkNotNull(userService.findUser(id), "User", "ID", id);
-		return new ResponseEntity<>(this.userService.updateUser(user, id), HttpStatus.OK);
+    public User update(@PathVariable Integer id, @RequestBody @Valid EditProfileRequest request) {
+        return userService.editProfile(userService.findUser(id), request);
 	}
 
     @Operation(

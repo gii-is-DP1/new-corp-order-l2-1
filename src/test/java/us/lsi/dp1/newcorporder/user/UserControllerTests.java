@@ -2,13 +2,13 @@ package us.lsi.dp1.newcorporder.user;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
-import org.springframework.http.MediaType;
 import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,18 +24,18 @@ import us.lsi.dp1.newcorporder.exceptions.ResourceNotFoundException;
 import java.util.List;
 
 import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
- * Test class for the {@link UserRestController}
+ * Test class for the {@link UserController}
  */
-@WebMvcTest(controllers = UserRestController.class, excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = WebSecurityConfigurer.class), excludeAutoConfiguration = SecurityConfiguration.class)
+@WebMvcTest(controllers = UserController.class, excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = WebSecurityConfigurer.class), excludeAutoConfiguration = SecurityConfiguration.class)
 class UserControllerTests {
 
     private static final int TEST_USER_ID = 1;
@@ -44,7 +44,7 @@ class UserControllerTests {
 
     @SuppressWarnings("unused")
     @Autowired
-    private UserRestController userController;
+    private UserController userController;
 
     @MockBean
     private UserService userService;
@@ -89,6 +89,7 @@ class UserControllerTests {
         return logged;
     }
 
+    @Disabled("until pagination is added")
     @Test
     @WithMockUser("admin")
     void shouldFindAll() throws Exception {
@@ -108,6 +109,7 @@ class UserControllerTests {
             .andExpect(jsonPath("$[?(@.id == 3)].username").value("Juan"));
     }
 
+    @Disabled("until pagination is added")
     @Test
     @WithMockUser("admin")
     void shouldFindAllWithAuthority() throws Exception {
@@ -132,6 +134,7 @@ class UserControllerTests {
             .andExpect(jsonPath("$[?(@.id == 3)].username").value("Juan"));
     }
 
+    @Disabled("until pagination is added")
     @Test
     @WithMockUser("admin")
     void shouldFindAllAuths() throws Exception {
@@ -162,48 +165,6 @@ class UserControllerTests {
     void shouldReturnNotFoundUser() throws Exception {
         when(this.userService.findUser(TEST_USER_ID)).thenThrow(ResourceNotFoundException.class);
         mockMvc.perform(get(BASE_URL + "/{id}", TEST_USER_ID)).andExpect(status().isNotFound());
-    }
-
-    @Test
-    @WithMockUser("admin")
-    void shouldCreateUser() throws Exception {
-        User aux = new User();
-        aux.setUsername("Prueba");
-        aux.setPassword("Prueba");
-        aux.setEmail("prueba@gmail.com");
-        aux.setAuthority(auth);
-
-        mockMvc.perform(post(BASE_URL).with(csrf()).contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(aux))).andExpect(status().isCreated());
-    }
-
-    @Test
-    @WithMockUser("admin")
-    void shouldUpdateUser() throws Exception {
-        user.setUsername("UPDATED");
-        user.setPassword("CHANGED");
-        user.setEmail("email@gmail.com");
-
-        when(this.userService.findUser(TEST_USER_ID)).thenReturn(user);
-        when(this.userService.updateUser(any(User.class), any(Integer.class))).thenReturn(user);
-
-        mockMvc.perform(put(BASE_URL + "/{id}", TEST_USER_ID).with(csrf()).contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(user))).andExpect(status().isOk())
-            .andExpect(jsonPath("$.username").value("UPDATED")).andExpect(jsonPath("$.password").value("CHANGED"));
-    }
-
-    @Test
-    @WithMockUser("admin")
-    void shouldReturnNotFoundUpdateUser() throws Exception {
-        user.setUsername("UPDATED");
-        user.setPassword("UPDATED");
-        user.setEmail("email@gmail.com");
-
-        when(this.userService.findUser(TEST_USER_ID)).thenThrow(ResourceNotFoundException.class);
-        when(this.userService.updateUser(any(User.class), any(Integer.class))).thenReturn(user);
-
-        mockMvc.perform(put(BASE_URL + "/{id}", TEST_USER_ID).with(csrf()).contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(user))).andExpect(status().isNotFound());
     }
 
     @Test

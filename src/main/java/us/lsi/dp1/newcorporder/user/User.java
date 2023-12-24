@@ -1,6 +1,7 @@
 package us.lsi.dp1.newcorporder.user;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -26,25 +27,25 @@ import java.util.Set;
 @SuperBuilder
 public class User extends BaseEntity {
 
-    @Size(max=32) @Column(unique = true) @NotNull
-    private String username;
+    @Size(max = 32)
+    @Column(unique = true)
+    @NotEmpty private String username;
 
-    @Size(max=32) @Column(unique = true) @NotNull
-    private String email;
+    @Size(max = 32)
+    @Column(unique = true)
+    @NotEmpty private String email;
+
+    @NotEmpty private String password;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "authority")
+    @NotNull private Authority authority;
 
     private String picture;
-
-    @NotNull
-    private String password;
 
     private LocalDate firstSeen;
 
     private LocalDate lastSeen;
-
-    @NotNull
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "authority")
-    Authority authority;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "sender")
     private Set<FriendshipRequest> sentFriendshipRequests;
@@ -62,5 +63,4 @@ public class User extends BaseEntity {
     public Boolean hasAnyAuthority(String... authorities) {
         return ArrayUtils.contains(authorities, this.authority.getName());
     }
-
 }

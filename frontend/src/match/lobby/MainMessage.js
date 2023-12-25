@@ -1,9 +1,13 @@
-import "./lobby.css";
+import css from "./lobby.module.css";
+import {useContext} from "react";
+import {Info} from "../Match";
 
-export function MainMessage(props) {
-    const text = props.matchInfo.players.length === props.matchInfo.maxPlayers
+export function MainMessage() {
+    const info = useContext(Info);
+    const isLobbyFull = info.players.length === info.maxPlayers;
+    const text = isLobbyFull
         ? "Starting..."
         : "Waiting for players...";
 
-    return <h2 className="mainMessage"> {text}</h2>;
+    return <h2 className={css.mainMessage}> {text}</h2>;
 }

@@ -57,7 +57,11 @@ export const mockUpData = {
                 secretObjective.AMBIENT_ADVERTISING,
                 secretObjective.BROADCAST_NETWORK,
             ],
-            conglomerates: [
+            rotatedConglomerates: [
+                hqConglomerate,
+                hqConglomerate,
+            ],
+            nonRotatedConglomerates: [
                 hqConglomerate,
                 hqConglomerate,
             ],

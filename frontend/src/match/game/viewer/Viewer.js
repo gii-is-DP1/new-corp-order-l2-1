@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import Button, {buttonContexts, buttonStyles} from "../components/Button";
+import Button, {buttonContexts, buttonStyles} from "../../../components/Button";
 
 export default function Viewer({title, items, containerStyle, itemsStyle, isVisible, setVisible}) {
     return <> {isVisible

@@ -1,4 +1,4 @@
-import {conglomerate} from "../MatchEnums";
+import {conglomerate} from "../../data/MatchEnums";
 import Conglomerate from "../Conglomerate";
 import React from "react";
 import {ItemMultiset} from "./ItemMultiset";

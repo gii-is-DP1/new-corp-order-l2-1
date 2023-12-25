@@ -1,11 +1,20 @@
 import {MatchCode} from "./MatchCode";
 import {MainMessage} from "./MainMessage";
 import {LobbyPlayers} from "./LobbyPlayers";
+import {Info} from "../Match";
 
-export function Lobby({matchInfo}) {
+export function Lobby() {
     return <>
-        <MainMessage matchInfo={matchInfo}/>
-        <LobbyPlayers matchInfo={matchInfo}/>
-        <MatchCode matchCode={matchInfo.code}/>
+        <MainMessage/>
+        <LobbyPlayers/>
+        <ContextCode/>
     </>
+}
+
+function ContextCode() {
+    return (
+        <Info.Consumer>
+            {info => <MatchCode code={info.code}/>}
+        </Info.Consumer>
+    );
 }

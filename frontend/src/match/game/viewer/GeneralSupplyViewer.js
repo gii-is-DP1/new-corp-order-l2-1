@@ -1,5 +1,5 @@
-import {ViewerContainer} from "../../Viewer";
-import Deck from "../../Deck";
+import {ViewerContainer} from "./Viewer";
+import Deck from "../../components/Deck";
 import React from "react";
 
 export function GeneralSupplyViewer({items}) {

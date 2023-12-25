@@ -1,6 +1,6 @@
 export class ItemMultiset {
     constructor(multiset, items) {
-        this.values = items;
+        this.items = items;
         this.keys = Object.keys(items);
         this.multiset = multiset;
         this.values = this.#getValuesArray();
@@ -8,11 +8,11 @@ export class ItemMultiset {
     }
 
     #getValuesArray() {
-        return this.keys.map((key) => this.#getConglomerateDataOfType(this.values[key], this.multiset[key] ?? 0)).flat(1);
+        return this.keys.map((key) => this.#getConglomerateDataOfType(this.items[key], this.multiset[key] ?? 0)).flat(1);
     }
 
     #getComponentArray() {
-        return this.keys.map((key) => this.getConglomerateComponentOfType(this.values[key], this.multiset[key] ?? 0)).flat(1);
+        return this.keys.map((key) => this.getConglomerateComponentOfType(this.items[key], this.multiset[key] ?? 0)).flat(1);
     }
 
     getConglomerateComponentOfType(value, quantity) {

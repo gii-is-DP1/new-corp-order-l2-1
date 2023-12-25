@@ -5,6 +5,7 @@ import {SecretObjectives} from "../components/collections/SecretObjectives";
 import {Conglomerates} from "../components/collections/Conglomerates";
 import {CompanyTiles} from "../components/collections/CompanyTiles";
 import {RotatableConglomerates} from "../components/collections/RotatableConglomerates";
+import {Opponents} from "../components/collections/Opponents";
 
 export class State {
     constructor(state, setGameState) {
@@ -18,6 +19,7 @@ export class State {
         this.playerConsultants = new ConsultantMultiset(state.game.player.hq.consultants);
         this.companyTiles = new CompanyTiles(state.game.companies);
         this.frontendState = getFrontendState(state);
+        this.opponents = new Opponents(state.game.opponents);
         this.update = () => {setGameState({...state})}
     }
 }

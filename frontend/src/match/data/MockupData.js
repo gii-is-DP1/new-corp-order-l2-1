@@ -1,9 +1,5 @@
 import {Company, conglomerate, secretObjective} from "./MatchEnums";
 
-const hqConglomerate = {
-    type: conglomerate.OMNICORP,
-    isRotated: true,
-};
 
 const playerConsultants = {
     MEDIA_ADVISOR: 1,
@@ -16,9 +12,13 @@ const opponent = {
     username: "Beluga",
     conglomeratesInHand: 4,
     hq: {
-        conglomerates: [
-            hqConglomerate,
-            hqConglomerate,
+        rotatedConglomerates: [
+            conglomerate.OMNICORP,
+            conglomerate.MEGAMEDIA,
+        ],
+        nonRotatedConglomerates: [
+            conglomerate.OMNICORP,
+            conglomerate.TOTAL_ENTERTAINMENT,
         ],
         consultants: playerConsultants
     }
@@ -58,12 +58,12 @@ export const mockUpData = {
                 secretObjective.BROADCAST_NETWORK,
             ],
             rotatedConglomerates: [
-                hqConglomerate,
-                hqConglomerate,
+                conglomerate.OMNICORP,
+                conglomerate.MEGAMEDIA,
             ],
             nonRotatedConglomerates: [
-                hqConglomerate,
-                hqConglomerate,
+                conglomerate.OMNICORP,
+                conglomerate.TOTAL_ENTERTAINMENT,
             ],
             consultants: playerConsultants
         }

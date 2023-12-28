@@ -90,6 +90,61 @@ export const mockUpData = {
     ],
 }
 
+export const startingState = {
+    game: mockUpData,
+    action: null,
+    plot: {
+        firstConglomerate: null,
+        secondConglomerate: null,
+    },
+    infiltrate: {
+        conglomerates: null,
+        companyTile: null,
+        consultant: null,
+        mediaAdvisor: {
+            conglomerate: null,
+        },
+        corporateLawyer: {
+            conglomerates: null,
+            company: null,
+        },
+        takenConsultant: null
+    },
+    takeover: {
+        consultant: null,
+        conglomerates: null,
+        companyTiles: null,
+        canActivateCompanyAbility: false,
+        ability: {
+            choice: null,
+            broadcastNetwork: {
+                companies: null,
+            },
+            guerrillaMarketing: {
+                conglomerates: null,
+            },
+            printMedia: {
+                yourConglomerate: null,
+                otherHq: null,
+                otherConglomerate: null,
+            },
+            ambientAdvertising: {
+                conglomerates: null,
+            },
+            socialMedia: {
+                hq: null,
+                conglomerate: null,
+            },
+            onlineMarketing: {
+                companies: null,
+            }
+        },
+        dealmaker: {
+            conglomerates: null,
+        }
+    }
+};
+
 export const matchInfo = {
     code: "A1B2C3",
     isAdmin:true,

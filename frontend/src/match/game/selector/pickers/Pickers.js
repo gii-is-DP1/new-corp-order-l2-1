@@ -7,7 +7,7 @@ import {
 } from "../ChangeSelectableItemsFunctions";
 import React from "react";
 
-const conglomerateContainerStyle = {
+export const conglomerateContainerStyle = {
     display: "flex",
 }
 
@@ -22,7 +22,7 @@ export function pickOneCard(from, onConfirm) {
     />;
 }
 
-export function pickOneOrZeroCards(from, onConfirm) {
+export function optionallyPickCard(from, onConfirm) {
     return <Selector title={"You may pick a card"}
                      selection={from}
                      canConfirm={selectAtLeastOneOrZero}

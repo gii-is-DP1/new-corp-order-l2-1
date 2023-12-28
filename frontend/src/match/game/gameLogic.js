@@ -1,37 +1,77 @@
-import {CompanyType, consultant, frontendState, INFILTRATE, PLOT, TAKEOVER} from "../data/MatchEnums";
-import {mockUpData} from "../data/MockupData";
-import {ConglomerateMultiset} from "../components/multisets/ConglomerateMultiset";
+import React from "react";
+import {PlotFirstConglomerateState} from "./views/plot/PlotFirstConglomeratePicker";
+import {
+    PlotSecondConglomerateState
+} from "./views/plot/PlotSecondConglomeratePicker";
 
-export function getFrontendState(state) {
-    const hand = new ConglomerateMultiset(state.game.player.hand);
+import {
+    InfiltrateConglomeratesState
+} from "./views/infiltrate/InfiltrateConglomerateState";
+import {InfiltrateConsultantState} from "./views/infiltrate/InfiltrateConsultantState";
+import {InfiltrateCompanyState} from "./views/infiltrate/InfiltrateCompanyState";
+import {MediaAdvisorConglomerateState} from "./views/infiltrate/MediaAdvisorConglomerateState";
+import {CorporateLawyerCompanyState} from "./views/infiltrate/CorporateLawyerCompanyState";
+import {CorporateLawyerConglomeratesState} from "./views/infiltrate/CorporateLawyerConglomeratesState";
+import {InfiltrateNewConsultantState} from "./views/infiltrate/InfiltrateNewConsultantState";
+import {TakeoverConsultantState} from "./views/takeover/TakeoverConsultantState";
+import {TakeoverConglomeratesState} from "./views/takeover/TakeoverConglomeratesState";
+import {TakeoverCompanyTilesState} from "./views/takeover/TakeoverCompanyTilesState";
+import {DealmakerDrawTwoCardsFromDeckState} from "./views/takeover/DealmakerDrawTwoCardsFromDeckState";
+import {DoneState} from "./views/DoneState";
+import {ChooseActionState} from "./views/ChooseActionState";
 
-    if (state.action === null)
-        return frontendState.CHOOSE_ACTION;
-    if (state.action === PLOT) {
-        if (state.plot.firstConglomerate === null)
-            return frontendState.plot.DRAW_FIRST_CONGLOMERATE;
-        if (state.plot.secondConglomerate === null)
-            return frontendState.plot.DRAW_SECOND_CONGLOMERATE;
-    } else if (state.action === INFILTRATE) {
-        if (state.infiltrate.conglomerates === null)
-            return frontendState.infiltrate.PICK_CONGLOMERATES;
-        if (state.infiltrate.companyTile === null)
-            return frontendState.infiltrate.PICK_COMPANY;
-        if (state.infiltrate.consultant === null)
-            return frontendState.infiltrate.PICK_CONSULTANT
-        if (state.infiltrate.consultant === consultant.MEDIA_ADVISOR)
-            return frontendState.infiltrate.MEDIA_ADVISOR_PICK_CONGLOMERATE;
-        if (state.infiltrate.consultant === consultant.CORPORATE_LAWYER) {
-            if (state.infiltrate.corporateLawyer.conglomerates === null)
-                return frontendState.infiltrate.CORPORATE_LAWYER_PICK_CONGLOMERATES;
-            if (state.infiltrate.corporateLawyer.company === null)
-                return frontendState.infiltrate.CORPORATE_LAWYER_PICK_COMPANY;
-        }
-        if (state.infiltrate.consultant >= 3 && state.infiltrate.takenConsultant === null)
-            return frontendState.infiltrate.TAKE_CONSULTANT;
+
+const frontendState = {
+    plot: {//TODO: some picker should be skippable (selectors have a "canSkip" property)
+        DRAW_FIRST_CONGLOMERATE: PlotFirstConglomerateState,
+        DRAW_SECOND_CONGLOMERATE: PlotSecondConglomerateState
+    },
+    infiltrate: {
+        PICK_CONGLOMERATES: InfiltrateConglomeratesState,
+        PICK_COMPANY: InfiltrateCompanyState,
+        PICK_CONSULTANT: InfiltrateConsultantState,
+        MEDIA_ADVISOR_PICK_CONGLOMERATE: MediaAdvisorConglomerateState,
+        CORPORATE_LAWYER_PICK_CONGLOMERATES: CorporateLawyerConglomeratesState,
+        CORPORATE_LAWYER_PICK_COMPANY: CorporateLawyerCompanyState,
+        TAKE_CONSULTANT: InfiltrateNewConsultantState,
+    },
+    takeover: {
+        PICK_CONSULTANT: TakeoverConsultantState,
+        PICK_CONGLOMERATES: TakeoverConglomeratesState,
+        PICK_TWO_COMPANY_TILES: TakeoverCompanyTilesState,
+        ACTIVATE_ABILITY: TakeoverCompanyTilesState,
+        DEALMAKER_DRAW_TWO_CARDS_FROM_DECK: DealmakerDrawTwoCardsFromDeckState,
+    },
+    /*TODO: implement company abilities states and Discard state
+    BROADCAST_NETWORK_PICK_COMPANIES:,
+    GUERRILLA_MARKETING_PICK_CONGLOMERATES:,
+    PRINT_MEDIA_PICK_YOUR_CONGLOMERATE: ,
+    PRINT_MEDIA_PICK_OTHER_CONGLOMERATE: ,
+    AMBIENT_ADVERTISING_PICK_CONGLOMERATES: ,
+    SOCIAL_MEDIA_PICK_CONGLOMERATE: ,
+    ONLINE_MARKETING_PICK_COMPANIES: ,
+    DISCARD:,
+     */
+    DONE: DoneState,
+    CHOOSE_ACTION: ChooseActionState,
+}
+
+export function getCurrentFrontendView(state) {
+    let currentState = frontendState.CHOOSE_ACTION;
+
+    while (true) {
+        const instance = new currentState(state, frontendState);
+        const nextState = instance.nextState;
+        if (nextState == null)
+            return instance.component;
+        currentState = nextState;
+    }
+}
+
+/* TODO: implement company abilities logic as FSM and THEN delete this horrendous comment
+
     } else if (state.action === TAKEOVER) {
-        if (state.takeover.consultant === null && state.takeover.consultant !== -1)
-            return frontendState.takeover.PICK_CONSULTANT;
+
         if (state.takeover.conglomerates === null)
             return frontendState.takeover.PICK_CONGLOMERATES;
         if (state.takeover.companyTiles === null)
@@ -59,58 +99,4 @@ export function getFrontendState(state) {
         return frontendState.DISCARD;
     return frontendState.DONE;
 }
-
-export const startingState = {
-    game: mockUpData,
-    action: null,
-    plot: {
-        firstConglomerate: null,
-        secondConglomerate: null,
-    },
-    infiltrate: {
-        conglomerates: null,
-        companyTile: null,
-        consultant: null,
-        mediaAdvisor: {
-            conglomerate: null,
-        },
-        corporateLawyer: {
-            conglomerates: null,
-            company: null,
-        },
-        takenConsultant: null
-    },
-    takeover: {
-        consultant: null,
-        conglomerates: null,
-        companyTiles: null,
-        canActivateCompanyAbility: false,
-        ability: {
-            choice: null,
-            broadcastNetwork: {
-                companies: null,
-            },
-            guerrillaMarketing: {
-                conglomerates: null,
-            },
-            printMedia: {
-                yourConglomerate: null,
-                otherHq: null,
-                otherConglomerate: null,
-            },
-            ambientAdvertising: {
-                conglomerates: null,
-            },
-            socialMedia: {
-                hq: null,
-                conglomerate: null,
-            },
-            onlineMarketing: {
-                companies: null,
-            }
-        },
-        dealmaker: {
-            conglomerates: null,
-        }
-    }
-};
+*/

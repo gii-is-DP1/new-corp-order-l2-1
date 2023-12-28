@@ -1,5 +1,5 @@
 import {ConsultantMultiset} from "../components/multisets/ConsultantMultiset";
-import {getFrontendState} from "../game/gameLogic";
+import {getCurrentFrontendView} from "../game/gameLogic";
 import {ConglomerateMultiset} from "../components/multisets/ConglomerateMultiset";
 import {SecretObjectives} from "../components/collections/SecretObjectives";
 import {Conglomerates} from "../components/collections/Conglomerates";
@@ -18,7 +18,7 @@ export class State {
         this.hand = new ConglomerateMultiset(state.game.player.hand);
         this.playerConsultants = new ConsultantMultiset(state.game.player.hq.consultants);
         this.companyTiles = new CompanyTiles(state.game.companies);
-        this.frontendState = getFrontendState(state);
+        this.frontendView = getCurrentFrontendView(state);
         this.opponents = new Opponents(state.game.opponents);
         this.update = () => {setGameState({...state})}
     }

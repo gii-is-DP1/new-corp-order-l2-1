@@ -8,6 +8,7 @@ import Match from "./match/Match"
 import {MainPage} from "./MainPage";
 import {AdminMatches} from "./admin/AdminMatches";
 import {AdminModeration} from "./admin/AdminModeration";
+import {AdminAchievements} from "./admin/AdminAchievements";
 
 function ErrorFallback({error, resetErrorBoundary}) {
     return (
@@ -41,6 +42,7 @@ function App() {
                     <Route path="/docs" element={<SwaggerDocs/>}/>
                     <Route path="/admin/matches" element={<AdminMatches/>}/>
                     <Route path="/admin/moderation" element={<AdminModeration/>}/>
+                    <Route path="/admin/achievements" element={<AdminAchievements/>}/>
                 </Routes>
             </ErrorBoundary>
         </>

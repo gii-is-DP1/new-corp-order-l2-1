@@ -5,9 +5,7 @@ import {ErrorBoundary} from "react-error-boundary";
 import tokenService from "./services/token.service";
 import SwaggerDocs from "./public/swagger";
 import Match from "./match/Match"
-import AppNavbar from "./AppNavbar";
-
-//import {Match} from "msw";
+import {MainPage} from "./MainPage";
 
 function ErrorFallback({error, resetErrorBoundary}) {
     return (
@@ -33,16 +31,16 @@ function App() {
     }
 
     return (
-        <div>
+        <>
             <ErrorBoundary FallbackComponent={ErrorFallback}>
                 <Routes>
+                    <Route path="/" element={<MainPage/>}/>
                     <Route path="/match/:id" element={<Match/>}/>
                     <Route path="/docs" element={<SwaggerDocs/>}/>
                 </Routes>
-
             </ErrorBoundary>
-        </div>
-    );// <AppNavbar/>
+        </>
+    );
 }
 
 export default App;

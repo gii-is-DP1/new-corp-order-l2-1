@@ -1,63 +1,50 @@
 import {black, dangerBackground, orange, successBackground, white} from "../util/Colors";
+import {Title} from "./Title";
+import {useState} from "react";
 
-export default function Button({children, onClick, buttonStyle = buttonStyles.primary, buttonContext = buttonContexts.light, disabled}) {
-    let backgroundColor = getBackgroundColor(buttonStyle, buttonContext);
-    let textColor = getTextColor(backgroundColor);
+export const ButtonType = {
+    primary: orange,
+    secondaryLight: black,
+    secondaryDark: white,
+    success: successBackground,
+    danger: dangerBackground
+}
 
-    const style = {
-        backgroundColor: backgroundColor,
-        color: textColor,
-        borderRadius: "0.4em",
+export default function Button({onClick, buttonType, style, children}) {
+    let textColor = getTextColor(buttonType);
+    let [hover, setHover] = useState(false);
+    let [click, setClick] = useState(false);
+
+    const defaultStyle = {
+        transition: "opacity 700ms, transform 100ms",
+        backgroundColor: buttonType,
+        opacity: hover ? 0.75 : 1,
+        transform: click ? "scale(0.95)" : "scale(1)",
+        borderRadius: "8px",
         borderWidth: "0px",
-        paddingTop: "0.5em",
-        paddingBottom: "0.5em",
-        paddingLeft: "1em",
-        paddingRight: "1em",
+        color: textColor,
+        minWidth: "150px",
+        minHeight: "45px",
+        padding: "10px",
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
     };
 
-    return <button
-        onClick={onClick}
-        style={style}
-        disabled={disabled}
-    >{children}</button>
+    return (
+        <button
+            onClick={onClick}
+            onMouseEnter={() => setHover(true)}
+            onMouseLeave={() => setHover(false)}
+            onMouseDown={() => setClick(true)}
+            onMouseUp={() => setClick(false)}
+            style={{...defaultStyle, ...style}}>
+            <Title>{children}</Title>
+        </button>
+    )
 }
 
-
-function getBackgroundColor(buttonStyle, context) {
-    switch (buttonStyle) {
-        case buttonStyles.success:
-            return successBackground;
-        case buttonStyles.danger:
-            return dangerBackground;
-        case buttonStyles.primary:
-            if (context === buttonContexts.orange)
-                return white;
-            else return orange;
-        case buttonStyles.secondary:
-            if (context === buttonContexts.dark)
-                return white;
-            else
-                return black;
-    }
-}
-
-function getTextColor(backgroundColor) {
-    if (backgroundColor === white)
-        return black;
-    else return white;
-}
-
-export const buttonStyles = {
-    primary: 0,
-    secondary: 1,
-    success: 2,
-    danger: 3
-}
-export const buttonContexts = {
-    light: 0,
-    dark: 1,
-    orange: 2,
-}
-
-export class buttonContext {
+function getTextColor(buttonType) {
+    return buttonType === white ? black : white;
 }

@@ -1,33 +1,42 @@
+import {white} from "../util/Colors";
+import {Title} from "./Title";
+import {Subtitle} from "./Subtitle";
+
 export default function Card({style, title, subtitle, icon, children}) {
 
     const cardStyle = {
-        minWidth: "200px",
-        minHeight: "200px",
+        backgroundColor: white,
+        minWidth: "350px",
+        minHeight: "150px",
         width: "fit-content",
         borderRadius: "25px",
         boxShadow: "0 0 25px #592c2c2c",
+        display: "flex",
+        flexDirection: "column"
     }
 
     const headerStyle = {
+        flex: "0 1 auto",
         display: "flex",
         flexDirection: "row",
         backgroundColor: "#2c2c2c",
-        margin: "0px",
         borderTopLeftRadius: "25px",
         borderTopRightRadius: "25px",
-        color: "white"
+        color: white
     }
 
-    const headerTextStyle = {
+    const headerContentStyle = {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        padding: "10px 0 10px",
+        textAlign: "center",
+        padding: "15px 25px 15px",
+        gap: "5px",
         flex: 1
     }
 
-    const iconStyle = {
+    const headerIconStyle = {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -36,20 +45,25 @@ export default function Card({style, title, subtitle, icon, children}) {
         padding: "0 25px"
     }
 
+    const contentStyle = {
+        flex: 1,
+        height: "100%"
+    }
+
     return (
         <div style={{...cardStyle, ...style}}>
             <header style={headerStyle}>
-                <div style={headerTextStyle}>
-                    <h1 style={{fontSize: "32px"}}>
-                        {title}
-                    </h1>
-                    <h2 style={{fontSize: "24px"}}>
-                        {subtitle}
-                    </h2>
+                <div style={headerContentStyle}>
+                    <Title>{title}</Title>
+                    <Subtitle>{subtitle}</Subtitle>
                 </div>
-                <img src={icon} alt={"icon"} style={iconStyle}/>
+                <div style={headerIconStyle}>
+                    {icon}
+                </div>
             </header>
-            {children}
+            <div style={contentStyle}>
+                {children}
+            </div>
         </div>
     )
 }

@@ -1,6 +1,6 @@
 import Modal from "react-bootstrap/Modal";
 import {black, white} from "../util/Colors";
-import Button, {buttonContexts, buttonStyles} from "./Button";
+import Button, {ButtonType} from "./Button";
 
 export default function BaseModal({title, state, body, onContinue = () => {}}) {
     const [show, setShow] = state;
@@ -28,8 +28,11 @@ export default function BaseModal({title, state, body, onContinue = () => {}}) {
                     {body}
                 </Modal.Body>
                 <Modal.Footer style={{backgroundColor:white,display:"flex",justifyContent:"space-between"}}>
-                    <Button buttonStyle={buttonStyles.primary} buttonContext={buttonContexts.light} onClick={() => {handleClose(); onContinue()}}>Ok</Button>
-                    <Button buttonStyle={buttonStyles.secondary} buttonContext={buttonContexts.light}  onClick={handleClose}>Cancel</Button>
+                    <Button buttonType={ButtonType.primary} onClick={() => {
+                        handleClose();
+                        onContinue()
+                    }}>Ok</Button>
+                    <Button buttonType={ButtonType.secondaryLight} onClick={handleClose}>Cancel</Button>
                 </Modal.Footer>
             </Modal>
         </>

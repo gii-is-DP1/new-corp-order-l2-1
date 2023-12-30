@@ -1,20 +1,13 @@
-/*
-@import url(https://db.onlinewebfonts.com/c/755ac4a5c4a3144f96657f6f555ab38e?family=Core+Magic+W00+Regular);
-@import url(https://db.onlinewebfonts.com/c/691548bdb28878b6980b20ad51fe6d8e?family=DIN+Next+Slab+W04+Regular);
-*/
-* {
+@font-face {
     color: #F8F8F8;
-    font-family: "Core Magic W00 Regular", serif;
+    font-family: 'Core Magic';
+    src: url(./fonts/core-magic.ttf) format('truetype');
 }
 
-h1 {
+@font-face {
     color: #F8F8F8;
-    font-family: "Core Magic W00 Regular", serif;
-}
-
-h2 {
-    color: #F8F8F8;
-    font-family: "DIN Next Slab W04 Regular", serif;
+    font-family: 'DIN Next Slab Pro';
+    src: url(./fonts/din-next-slab-pro.ttf) format('truetype');
 }
 
 

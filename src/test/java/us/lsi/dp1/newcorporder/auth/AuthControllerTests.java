@@ -17,10 +17,10 @@ import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.web.servlet.MockMvc;
+import us.lsi.dp1.newcorporder.auth.jwt.JwtUtils;
 import us.lsi.dp1.newcorporder.auth.payload.request.LoginRequest;
 import us.lsi.dp1.newcorporder.auth.payload.request.SignupRequest;
-import us.lsi.dp1.newcorporder.configuration.jwt.JwtUtils;
-import us.lsi.dp1.newcorporder.configuration.services.UserDetailsImpl;
+import us.lsi.dp1.newcorporder.user.User;
 import us.lsi.dp1.newcorporder.user.UserService;
 
 import java.util.List;
@@ -64,7 +64,7 @@ class AuthControllerTests {
 
 	private LoginRequest loginRequest;
 	private SignupRequest signupRequest;
-	private UserDetailsImpl userDetails;
+    private ApplicationUserDetails userDetails;
 	private String token;
 
 	@BeforeEach
@@ -79,9 +79,13 @@ class AuthControllerTests {
 		signupRequest.setAuthority("OWNER");
         signupRequest.setEmail("email@gmail.com");
 
-		userDetails = new UserDetailsImpl(1, loginRequest.getUsername(), loginRequest.getPassword(),
-				List.of(new SimpleGrantedAuthority("OWNER")));
+        User user = User.builder()
+            .id(1)
+            .username(loginRequest.getUsername())
+            .password(loginRequest.getPassword())
+            .build();
 
+        userDetails = new ApplicationUserDetails(user, List.of(new SimpleGrantedAuthority("OWNER")));
 		token = "JWT TOKEN";
 	}
 
@@ -93,10 +97,10 @@ class AuthControllerTests {
 		when(this.authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(auth);
 		Mockito.doReturn(userDetails).when(auth).getPrincipal();
 
-		mockMvc.perform(post(BASE_URL + "/signin").with(csrf()).contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post(BASE_URL + "/login").with(csrf()).contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(loginRequest))).andExpect(status().isOk())
 				.andExpect(jsonPath("$.username").value(loginRequest.getUsername()))
-				.andExpect(jsonPath("$.id").value(userDetails.getId())).andExpect(jsonPath("$.token").value(token));
+            .andExpect(jsonPath("$.id").value(userDetails.getUser().getId())).andExpect(jsonPath("$.token").value(token));
 	}
 
 	@Test

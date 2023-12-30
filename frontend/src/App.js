@@ -6,6 +6,7 @@ import tokenService from "./services/token.service";
 import SwaggerDocs from "./public/swagger";
 import Match from "./match/Match"
 import {MainPage} from "./MainPage";
+import {AdminMatches} from "./admin/AdminMatches";
 
 function ErrorFallback({error, resetErrorBoundary}) {
     return (
@@ -37,6 +38,7 @@ function App() {
                     <Route path="/" element={<MainPage/>}/>
                     <Route path="/match/:id" element={<Match/>}/>
                     <Route path="/docs" element={<SwaggerDocs/>}/>
+                    <Route path="/admin/matches" element={<AdminMatches/>}/>
                 </Routes>
             </ErrorBoundary>
         </>

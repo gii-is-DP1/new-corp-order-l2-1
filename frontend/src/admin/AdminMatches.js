@@ -1,51 +1,49 @@
 import AppNavbar from "../AppNavbar";
-import {black, orange, white} from "../util/Colors";
-import {Text} from "../components/Text";
+import {black, white} from "../util/Colors";
 import {Title} from "../components/Title";
 import List from "../components/List";
 import ListLine from "../components/ListLine";
+import Button, {ButtonType} from "../components/Button";
+import {Subtitle} from "../components/Subtitle";
 
 export function AdminMatches() {
 
     const content = {
-        flex: 1,
         display: "flex",
-        flexDirection: "row",
-        backgroundColor: black,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        justifyContent:"center",
-        alignItems:"center",
-
+        flexDirection: "column",
+        alignItems: "center"
     }
 
+    let matchItems = []
+    for (let i = 1; i < 20; i++) {
+        matchItems.push(
+            <ListLine sideContent={(
+                <Button style={{}} buttonType={ButtonType.secondaryLight}>
+                    Spectate
+                </Button>)}>
+                <Subtitle>· Match #{i} |</Subtitle>
+                <Subtitle>Match State |</Subtitle>
+                <Subtitle>Num players</Subtitle>
+            </ListLine>
+        )
+    }
 
-
-return (
-    <div style={{display: "flex", flexDirection: "column", height: "100%"}}>
-        <AppNavbar/>
-        <div style = {content}>
-            <div style = {{width:"60%", padding:"20px", justifyContent:"center", alignItems:"center"}}>
-                <Title style={{fontSize: "60px", color:white}}>
+    return (
+        <div style={{height: "100%", backgroundColor: black}}>
+            <AppNavbar/>
+            <section style={content}>
+                <Title style={{fontSize: "60px", color: white}}>
                     Matches
                 </Title>
-                <Text style={{color:white, textTransform:"none", fontSize:"25px"}}>
+                <Subtitle style={{fontSize: "15px", color: white}}>
                     Select a match to join (if currently playing) or view stats
-                </Text>
-                <List style={{height:"700px", backgroundColor: black}}>
-                    <ListLine></ListLine>
-                    <ListLine></ListLine>
-                    <ListLine></ListLine>
-                    <ListLine></ListLine>
-                    <ListLine></ListLine>
-                    <ListLine></ListLine>
-                    <ListLine></ListLine>
-                    <ListLine></ListLine>
-                    <ListLine></ListLine>
-                </List>
-            </div>
+                </Subtitle>
+                <div>
+                    <List style={{maxHeight: "650px", width: "800px", backgroundColor: black, overflow: "auto"}}>
+                        {matchItems}
+                    </List>
+                </div>
+            </section>
         </div>
-    </div>
-
-)
+    )
 }

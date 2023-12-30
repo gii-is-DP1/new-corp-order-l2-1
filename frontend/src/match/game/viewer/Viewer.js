@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import Button, {buttonContexts, buttonStyles} from "../../../components/Button";
+import Button, {buttonContexts, buttonStyles, ButtonType} from "../../../components/Button";
 
 function Viewer({title, items, containerStyle, itemsStyle, isVisible, setVisible}) {
     return <> {isVisible
@@ -21,7 +21,7 @@ function Viewer({title, items, containerStyle, itemsStyle, isVisible, setVisible
 export function ViewerContainer({title,buttonContent, items, containerStyle, itemsStyle}) {
     const [visible, setVisible] = useState(false)
     return <>
-        <Button buttonStyle={buttonStyles.primary} buttonContext={buttonContexts.light} onClick={() => setVisible(true)}>
+        <Button buttonType={ButtonType.primary} onClick={() => setVisible(true)}>
             {buttonContent}
         </Button>
         <Viewer title={title}

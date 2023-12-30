@@ -1,5 +1,5 @@
 import ProfilePicture from "../../components/ProfilePicture";
-import BaseButton, {buttonContexts, buttonStyles} from "../../components/Button";
+import BaseButton, {ButtonType} from "../../components/Button";
 import css from "./components.module.css"
 
 export function Player({data, isAdmin, onKick}) {
@@ -14,8 +14,7 @@ export function Player({data, isAdmin, onKick}) {
             {usernameParagraph}
             {isAdmin && data.username != null
                 ?
-                <BaseButton buttonStyle={buttonStyles.primary} buttonContext={buttonContexts.light}
-                            onClick={() => onKick()}>Kick</BaseButton>
+                <BaseButton buttonType={ButtonType.primary} onClick={() => onKick()}>Kick</BaseButton>
                 : <></>
             }
         </div>

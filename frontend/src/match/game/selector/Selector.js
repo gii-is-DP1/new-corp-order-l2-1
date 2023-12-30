@@ -1,5 +1,5 @@
 import {useState} from "react";
-import Button, {buttonContexts, buttonStyles} from "../../../components/Button";
+import Button, {ButtonType} from "../../../components/Button";
 import {Selectable} from "./Selectable";
 
 export default function Selector({
@@ -54,14 +54,14 @@ export default function Selector({
                     />
                 )}
             </div>
-            <Button buttonContext={buttonContexts.light} buttonStyle={buttonStyles.primary}
+            <Button buttonType={ButtonType.primary}
                     disabled={!canConfirm(selection, selectedElements)}
                     onClick={() => onConfirm(selectedElements)}
             >
                 Confirm
             </Button>
             {canSkip
-                ? <Button buttonContext={buttonContexts.light} buttonStyle={buttonStyles.primary}
+                ? <Button buttonType={ButtonType.primary}
                           disabled={selectedElements.length > 0}
                           onClick={() => onSkip([])}
                 >

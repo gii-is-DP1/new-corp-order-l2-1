@@ -1,7 +1,7 @@
 import {FrontendState} from "./FrontendState";
 import React, {useContext} from "react";
 import {StateContext} from "../Game";
-import Button from "../../../components/Button";
+import Button, {ButtonType} from "../../../components/Button";
 import {INFILTRATE, PLOT, TAKEOVER} from "../../data/MatchEnums";
 import {conglomerateContainerStyle, pickOneCard} from "../selector/pickers/Pickers";
 import {selectAtLeastOne} from "../selector/CanConfirmFunctions";
@@ -16,9 +16,9 @@ function ActionChooser() { //TODO: use picker to substitute this method
     }
 
     const selection = [ //TODO: make these like cards
-        <Button action = {PLOT}>PLOT</Button>,
-        <Button action = {INFILTRATE}>INFILTRATE</Button>,
-        <Button action = {TAKEOVER}>TAKEOVER</Button>,
+        <Button buttonType={ButtonType.primary} action = {PLOT}>PLOT</Button>,
+        <Button buttonType={ButtonType.primary} action = {INFILTRATE}>INFILTRATE</Button>,
+        <Button buttonType={ButtonType.primary} action = {TAKEOVER}>TAKEOVER</Button>,
     ]
 
     const onConfirm = (selectedItems) => {

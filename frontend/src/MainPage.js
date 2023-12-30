@@ -12,6 +12,7 @@ import List from "./components/List";
 import ListLine from "./components/ListLine";
 import QueueIcon from '@mui/icons-material/Queue';
 import {black, orange} from "./util/Colors";
+import {PressableText} from "./components/PressableText";
 
 export function MainPage() {
 
@@ -52,12 +53,6 @@ export function MainPage() {
         gap: "30px"
     }
 
-    const buttonTextStyle = {
-        backgroundColor: "transparent",
-        border: "none",
-        cursor: "pointer"
-    }
-
     let items = []
     for (let i = 0; i < 20; i++) {
         items.push(
@@ -72,21 +67,14 @@ export function MainPage() {
         );
     }
 
-    function PressableText({children}) {
-        const [colorText, setColorText] = useState(black)
+    function PlayCard({title, subtitle, icon, style, privateGame = false}) {
+        const [gamemode, setGamemode] = useState("")
+        const [players, setPlayers] = useState("")
 
-        function coloringText() {
-            const color = colorText === black ? orange : black;
-            setColorText(color);
+        function getColor(state, expected) {
+            return state === expected ? orange : black;
         }
 
-        return (
-            <button onClick={coloringText} style={buttonTextStyle}>
-                <Text style={{color: colorText}}>{children}</Text>
-            </button>)
-    }
-
-    function PlayCard({title, subtitle, icon, style, privateGame = false}) {
         return (
             <Card style={{...cardStyle, ...style}}
                   title={title}
@@ -97,16 +85,31 @@ export function MainPage() {
                     <section style={cardContentRowStyle}>
                         <Text>Game mode</Text>
                         <div style={{display: "flex", flexDirection: "row", gap: "15px"}}>
-                            <PressableText> Normal</PressableText>
-                            <PressableText> Quick</PressableText>
+                            <PressableText color={getColor(gamemode, "normal")}
+                                           onClick={() => setGamemode("normal")}>
+                                Normal
+                            </PressableText>
+                            <PressableText color={getColor(gamemode, "quick")}
+                                           onClick={() => setGamemode("quick")}>
+                                Quick
+                            </PressableText>
                         </div>
                     </section>
                     <section style={cardContentRowStyle}>
                         <Text>Number of players</Text>
                         <div style={{display: "flex", flexDirection: "row", gap: "15px"}}>
-                            <PressableText> 2<GroupIcon/></PressableText>
-                            <PressableText> 3<GroupIcon/></PressableText>
-                            <PressableText> 4<GroupIcon/></PressableText>
+                            <PressableText color={getColor(players, "2")}
+                                           onClick={() => setPlayers("2")}>
+                                2<GroupIcon/>
+                            </PressableText>
+                            <PressableText color={getColor(players, "3")}
+                                           onClick={() => setPlayers("3")}>
+                                3<GroupIcon/>
+                            </PressableText>
+                            <PressableText color={getColor(players, "4")}
+                                           onClick={() => setPlayers("4")}>
+                                4<GroupIcon/>
+                            </PressableText>
                         </div>
                     </section>
                     {privateGame &&

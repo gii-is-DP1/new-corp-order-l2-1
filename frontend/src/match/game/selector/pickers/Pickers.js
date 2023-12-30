@@ -44,29 +44,45 @@ export function pickManyConglomeratesOfTheSameColor(from, onConfirm) {
     />
 }
 
-export function pickCompany(from, onConfirm, n) {
-    return <Selector title={"Pick Company"}
-                     selection={from}
-                     canConfirm={selectAtLeastOne}
-                     changeSelectableItems={selectQuantity(n)}
+function CompanySelector({title, selection, canConfirm, changeSelectableItem, onConfirm}) {
+    return <Selector title={title}
+                     selection={selection}
+                     canConfirm={() => canConfirm}
+                     changeSelectableItems={() => changeSelectableItem}
                      onConfirm={onConfirm}
-                     containerStyle={conglomerateContainerStyle}
+                     itemStyle={{maxHeight: "25vh", maxWidth: "25%", flexShrink: 1}}
+                     containerStyle={{
+                         overflow: "auto",
+                         display: "flex",
+                         flexWrap: "wrap",
+                         flexShrink: 1,
+                         maxWidth: "80vh"
+                     }}
                      key={onConfirm}
+    />;
+}
+
+export function pickCompany(from, onConfirm, n) {
+    return <CompanySelector
+        title={"Pick Company"}
+        selection={from}
+        canConfirm={selectAtLeastOne}
+        changeSelectableItems={selectQuantity(n)}
+        onConfirm={onConfirm}
     />;
 }
 
 export function pickOrthogonallyAdjacentCompanyTiles(from, onConfirm) {
-    return <Selector title={"Pick orthogonally adjacent Companies"}
-                     selection={from}
-                     canConfirm={selectAtLeastTwo}
-                     changeSelectableItems={selectOrthogonallyAdjacentTiles}
-                     onConfirm={onConfirm}
-                     containerStyle={conglomerateContainerStyle}
-                     key={onConfirm}
+    return <CompanySelector
+        title={"Pick orthogonally adjacent Companies"}
+        selection={from}
+        canConfirm={selectAtLeastTwo}
+        changeSelectableItems={selectOrthogonallyAdjacentTiles}
+        onConfirm={onConfirm}
     />;
 }
 
-export function pickConglomeratesToDiscard(from, onConfirm){
+export function pickConglomeratesToDiscard(from, onConfirm) {
     return <Selector title={"Discard conglomerates in excess"}
                      selection={from}
                      canConfirm={selectAtLeastTwo}

@@ -13,17 +13,14 @@ export function Game() {
     const [gameState, setGameState] = useState(startingState);
     const initialContext = new State(gameState, setGameState);
     const FrontendView = () => initialContext.frontendView;
-
     //TODO: view company matrix
     return <div className={css.game}>
         <StateContext.Provider value={initialContext}>
             <FrontendView/>
-            <div>
-                <HandViewer/>
-                <HQViewer/>
-                <GeneralSupplyViewer/>
-                <OpponentsHqViewer/>
-            </div>
+            <HandViewer/>
+            <HQViewer/>
+            <GeneralSupplyViewer/>
+            <OpponentsHqViewer/>
         </StateContext.Provider>
     </div>;
 }

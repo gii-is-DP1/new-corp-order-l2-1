@@ -2,7 +2,7 @@ function getCompanyImageSrc(company) {
     return "/images/companies/" + company.type + "/" + company.name + ".png";
 }
 
-export function CompanyTile({company, divStyle, onClick}) {
+export function CompanyTile({company}) {
     const quantity = company.agents;
     const color = company.type.color;
     const alt = company.company + " of type " + company.type.name;
@@ -10,20 +10,14 @@ export function CompanyTile({company, divStyle, onClick}) {
     return (
         <div
             style={{
-                flexBasis: "22.5%",
-                flexShrink: 1,
-                width: "25%",
                 margin: "1%",
                 position: "relative",
-                top: 0,
-                left: 0,
-                ...divStyle
+                maxWidth: "100%",
+                flexShrink: 1
             }}
-            onClick={onClick}
         >
             <img style={{
                 maxWidth: "100%",
-                margin: "auto"
             }} src={getCompanyImageSrc(company.company)} alt={alt}/>
             <AgentsIndicator color={color} quantity={quantity}/>
         </div>

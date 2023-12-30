@@ -7,8 +7,17 @@ export function HandViewer({items}) {
     return <Hand items={context.hand.components}/>
 }
 
-function Hand({items}){
-    return <ViewerContainer title="Your Hand" containerStyle={{display: "flex", flexWrap: "wrap"}}
-                            buttonContent={<p>View Hand</p>}
-                            items={items}/>
+function Hand({items}) {
+    return (
+        <div style={{
+            bottom: 0, position: "absolute",
+            right: 0,
+            left: "50%",
+            transform: "translate(-50%, 0)",
+            maxWidth:"130px"
+        }}>
+            <ViewerContainer title="Your Hand" containerStyle={{}}
+                             buttonContent={<p>View Hand</p>}
+                             items={items}/>
+        </div>);
 }

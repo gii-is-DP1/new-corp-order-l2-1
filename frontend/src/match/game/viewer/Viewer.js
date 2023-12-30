@@ -1,9 +1,9 @@
 import React, {useState} from "react";
 import Button, {buttonContexts, buttonStyles} from "../../../components/Button";
 
-export default function Viewer({title, items, containerStyle, itemsStyle, isVisible, setVisible}) {
+function Viewer({title, items, containerStyle, itemsStyle, isVisible, setVisible}) {
     return <> {isVisible
-        ? <div style={{position:"absolute", backgroundColor:"black", width:"100%", height:"100%", left:0, top:0}}>
+        ? <div style={{position:"absolute", backgroundColor:"black", width:"100%", height:"100vh", left:0, top:0}}>
             <h1>{title}</h1>
             <div style={containerStyle}>
                 {items.map(item =>
@@ -32,8 +32,6 @@ export function ViewerContainer({title,buttonContent, items, containerStyle, ite
                 setVisible={setVisible}
         />
     </>
-
-
 }
 
 function Viewable({item, style}) {

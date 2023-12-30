@@ -59,6 +59,8 @@ const frontendState = {
 export function getCurrentFrontendView(state) {
     let currentState = frontendState.CHOOSE_ACTION;
 
+
+   // return new frontendState.infiltrate.CORPORATE_LAWYER_PICK_COMPANY(state, frontendState).component;
     while (true) {
         const instance = new currentState(state, frontendState);
         const nextState = instance.nextState;

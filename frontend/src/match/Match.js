@@ -11,8 +11,8 @@ export default function Match() {
         <div className={css.match}>
             <Info.Provider value = {matchInfo} >
                 <Main/>
-                <RightBar/>
+
             </Info.Provider>
-        </div>)
+        </div>)  /* <RightBar/>*/
 }
 

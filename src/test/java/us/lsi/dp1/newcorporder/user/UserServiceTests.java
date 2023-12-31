@@ -12,7 +12,6 @@ import us.lsi.dp1.newcorporder.exceptions.ResourceNotFoundException;
 import java.util.Collection;
 import java.util.List;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -26,14 +25,14 @@ class UserServiceTests {
 	private AuthorityService authService;
 
 	@Test
-    @WithMockUser(username = "user1", password = "0wn3r")
+    @WithMockUser(username = "JohnDoe")
 	void shouldFindCurrentUser() {
 		User user = this.userService.findCurrentUser();
-        assertEquals("user1", user.getUsername());
+        assertEquals("JohnDoe", user.getUsername());
 	}
 
 	@Test
-	@WithMockUser(username = "prueba")
+    @WithMockUser(username = "ghost")
 	void shouldNotFindCorrectCurrentUser() {
 		assertThrows(ResourceNotFoundException.class, () -> this.userService.findCurrentUser());
 	}
@@ -46,19 +45,19 @@ class UserServiceTests {
 	@Test
 	void shouldFindAllUsers() {
 		List<User> users = (List<User>) this.userService.findAll();
-        assertEquals(3, users.size());
+        assertEquals(6, users.size());
 	}
 
 	@Test
 	void shouldFindUsersByUsername() {
-        User user = this.userService.findUser("user1");
-        assertEquals("user1", user.getUsername());
+        User user = this.userService.findUser("JohnDoe");
+        assertEquals("JohnDoe", user.getUsername());
 	}
 
 	@Test
 	void shouldFindUsersByAuthority() {
-        List<User> owners = (List<User>) this.userService.findAllByAuthority("USER");
-        assertEquals(2, owners.size());
+        List<User> users = (List<User>) this.userService.findAllByAuthority("USER");
+        assertEquals(5, users.size());
 
 		List<User> admins = (List<User>) this.userService.findAllByAuthority("ADMIN");
 		assertEquals(1, admins.size());
@@ -73,7 +72,7 @@ class UserServiceTests {
 	@Test
 	void shouldFindSingleUser() {
         User user = this.userService.findUser(3);
-        assertEquals("user1", user.getUsername());
+        assertEquals("SamSmith", user.getUsername());
 	}
 
 	@Test
@@ -83,12 +82,12 @@ class UserServiceTests {
 
 	@Test
 	void shouldExistUser() {
-        assertEquals(true, this.userService.existsUser("user1"));
+        assertEquals(true, this.userService.existsUser("SamSmith"));
 	}
 
 	@Test
 	void shouldNotExistUser() {
-		assertEquals(false, this.userService.existsUser("owner10000"));
+        assertEquals(false, this.userService.existsUser("japarejo"));
 	}
 
 	@Test

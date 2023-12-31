@@ -29,7 +29,7 @@ import us.lsi.dp1.newcorporder.authority.AuthorityService;
 import us.lsi.dp1.newcorporder.exceptions.ResourceNotFoundException;
 import us.lsi.dp1.newcorporder.user.payload.EditProfileRequest;
 
-import java.time.LocalDate;
+import java.time.Instant;
 
 @Service
 public class UserService {
@@ -66,7 +66,7 @@ public class UserService {
 
     @Transactional
     public User saveUser(User user) throws DataAccessException {
-        user.setLastSeen(LocalDate.now());
+        user.setLastSeen(Instant.now());
         userRepository.save(user);
         return user;
     }

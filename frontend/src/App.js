@@ -4,6 +4,8 @@ import jwt_decode from "jwt-decode";
 import {ErrorBoundary} from "react-error-boundary";
 import tokenService from "./services/token.service";
 import SwaggerDocs from "./public/swagger";
+import Login from "./auth/login/index";
+import Register from "./auth/register/index"
 import Match from "./match/Match"
 import {MainPage} from "./MainPage";
 import {ProfilePage} from "./profile/ProfilePage";
@@ -39,6 +41,8 @@ function App() {
                     <Route path="/match/:id" element={<Match/>}/>
                     <Route path="/docs" element={<SwaggerDocs/>}/>
                     <Route path="/user/:id" element={<ProfilePage/>}/>
+                    <Route path="/login" element={<Login/>}/>
+                    <Route path="/register" element={<Register/>}/>
                 </Routes>
             </ErrorBoundary>
         </>

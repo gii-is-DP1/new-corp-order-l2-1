@@ -1,14 +1,17 @@
-import React from "react";
+//import "../../static/css/auth/authButton.css";
+//import "../../static/css/auth/authPage.css";
 import tokenService from "../../services/token.service";
+import React, {useRef, useState} from "react";
 import Card from "../../components/Card";
-import Button, {ButtonType} from "../../components/Button";
-import LoginIcon from '@mui/icons-material/Login';
+import LoginIcon from "@mui/icons-material/Login";
 import FormInput from "../../components/FormInput";
+import Button, {ButtonType} from "../../components/Button";
 import {Text} from "../../components/Text";
 
-export default function Login() {
-
-    const [message, setMessage] = React.useState();
+export default function Register() {
+    let [type, setType] = useState(null);
+    let [authority, setAuthority] = useState(null);
+    let [message, setMessage] = useState(null);
 
     const content = {
         height: "100%",
@@ -56,24 +59,53 @@ export default function Login() {
         margin: "10px"
     }
 
-    async function handleSubmit(body) {
-        setMessage(null);
-        await fetch("/api/v1/auth/login", {
+    function handleSubmit(body) {
+        console.log("nigga")
+
+        let state = "";
+
+        fetch("/api/v1/auth/signup", {
             headers: {"Content-Type": "application/json"},
             method: "POST",
             body: JSON.stringify(body),
         })
-            .then(response => {
-                if (response.status === 200) return response.json();
-                else return Promise.reject("Invalid login attempt");
+            .then(function (response) {
+                if (response.status === 200) {
+                    const loginRequest = {
+                        username: body.username,
+                        password: body.password,
+                        email: body.email,
+                    };
+
+                    fetch("/api/v1/auth/login", {
+                        headers: {"Content-Type": "application/json"},
+                        method: "POST",
+                        body: JSON.stringify(loginRequest),
+                    })
+                        .then(function (response) {
+                            if (response.status === 200) {
+                                state = "200";
+                                return response.json();
+                            } else {
+                                state = "";
+                                return response.json();
+                            }
+                        })
+                        .then(function (data) {
+                            if (state !== "200") alert(data.message);
+                            else {
+                                tokenService.setUser(data);
+                                tokenService.updateLocalAccessToken(data.token);
+                                window.location.href = "/";
+                            }
+                        })
+                        .catch((error) => {
+                            setMessage(error);
+                        });
+                }
             })
-            .then(data => {
-                tokenService.setUser(data);
-                tokenService.updateLocalAccessToken(data.token);
-                window.location.href = "/";
-            })
-            .catch(error => {
-                setMessage(error);
+            .catch((message) => {
+                setMessage(message);
             });
     }
 
@@ -84,8 +116,8 @@ export default function Login() {
             </div>
             <div style={columnStyle}>
                 <Card style={cardStyle}
-                      title={"Login"}
-                      subtitle={"Back again, huh?"}
+                      title={"sign up"}
+                      subtitle={"Feeling like playing?"}
                       icon={<LoginIcon style={{fontSize: "45px"}}/>}
                 >
                     <div style={{margin: "15px"}}>
@@ -94,25 +126,27 @@ export default function Login() {
                                   e.preventDefault();
                                   handleSubmit({
                                       username: e.target.username.value,
-                                      password: e.target.password.value
+                                      password: e.target.password.value,
+                                      email: e.target.email.value
                                   });
                               }}>
+                            <FormInput name={"email"} placeholder={"Type your email here"}></FormInput>
                             <FormInput name={"username"} placeholder={"Type your username here"}></FormInput>
                             <FormInput name={"password"} placeholder={"**********"} type={"password"}></FormInput>
                             <div style={buttonStyle}>
                                 {message && <Text style={{textTransform: "none", color: "red"}}>{message}</Text>}
-                                <Button buttonType={ButtonType.primary} type="submit">Login</Button>
+                                <Button buttonType={ButtonType.primary} type="submit">Register</Button>
                             </div>
                         </form>
                         <div style={{display: "flex", flexDirection: "row"}}>
                             <hr style={lineStyle}/>
-                            <Text style={lineTextStyle}> Don't have an account yet? </Text>
+                            <Text style={lineTextStyle}> Do you have an account? </Text>
                             <hr style={lineStyle}/>
                         </div>
                         <div style={buttonStyle}>
-                            <a style={{textDecoration: "none"}} href={"/register"}>
+                            <a style={{textDecoration: "none"}} href={"/login"}>
                                 <Button buttonType={ButtonType.secondaryLight}>
-                                    Sign up instead
+                                    Log in instead
                                 </Button>
                             </a>
                         </div>
@@ -121,5 +155,4 @@ export default function Login() {
             </div>
         </div>
     );
-
 }

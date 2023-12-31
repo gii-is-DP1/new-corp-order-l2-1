@@ -1,5 +1,6 @@
 package us.lsi.dp1.newcorporder.misc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
@@ -16,8 +17,13 @@ import java.time.Instant;
 @Entity
 @Getter
 @Setter
-@Table(name = "notification")
+@Table(name = "notifications")
 public class Notification extends BaseEntity {
+
+    @NotNull
+    @ManyToOne(optional = false)
+    @JsonIgnore
+    private User user;
 
     @NotNull
     @Column(name = "sent_at")

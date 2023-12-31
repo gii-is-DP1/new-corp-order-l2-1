@@ -2,25 +2,26 @@ INSERT INTO authorities(id, name)
 VALUES (1, 'ADMIN'),
        (2, 'USER');
 
+-- $2a$12$19.5GDidvCHN4go6jO9dde918jIYONlxe01RgKh5USM3Yd/lFzeI2: password
 INSERT INTO users(authority, first_seen, id, last_seen, email, username, password, picture)
-VALUES (1, '2020-01-01', 1, '2023-01-01', 'johndoe@example.com', 'JohnDoe', 'password', null),
-       (2, '2020-02-01', 2, '2023-02-01', 'jane@example.com', 'Jane', 'password', null),
-       (2, '2020-03-01', 3, '2023-03-01', 'samsmith@example.com', 'SamSmith', 'password', null),
-       (2, '2023-04-01', 4, '2023-12-31', 'octavio@example.com', 'Octavio', 'password', null),
-       (2, '2023-05-01', 5, '2023-12-31', 'alice@example.com', 'Alice', 'password', null),
-       (2, '2023-06-01', 6, '2023-12-31', 'bob@example.com', 'Bob', 'password', null);
+VALUES (1, '2020-01-01', 1, '2023-01-01', 'johndoe@example.com', 'JohnDoe',
+        '$2a$12$19.5GDidvCHN4go6jO9dde918jIYONlxe01RgKh5USM3Yd/lFzeI2', null),
+       (2, '2020-02-01', 2, '2023-02-01', 'jane@example.com', 'Jane',
+        '$2a$12$19.5GDidvCHN4go6jO9dde918jIYONlxe01RgKh5USM3Yd/lFzeI2', null),
+       (2, '2020-03-01', 3, '2023-03-01', 'samsmith@example.com', 'SamSmith',
+        '$2a$12$19.5GDidvCHN4go6jO9dde918jIYONlxe01RgKh5USM3Yd/lFzeI2', null),
+       (2, '2023-04-01', 4, '2023-12-31', 'octavio@example.com', 'Octavio',
+        '$2a$12$19.5GDidvCHN4go6jO9dde918jIYONlxe01RgKh5USM3Yd/lFzeI2', null),
+       (2, '2023-05-01', 5, '2023-12-31', 'alice@example.com', 'Alice',
+        '$2a$12$19.5GDidvCHN4go6jO9dde918jIYONlxe01RgKh5USM3Yd/lFzeI2', null),
+       (2, '2023-06-01', 6, '2023-12-31', 'bob@example.com', 'Bob',
+        '$2a$12$19.5GDidvCHN4go6jO9dde918jIYONlxe01RgKh5USM3Yd/lFzeI2', null);
 
-INSERT INTO notification(id, state, sent_at, title, image_url, message)
-VALUES (1, 1, '2023-01-01 00:00:00', 'Welcome!', null, 'Thanks for joining us!'),
-       (2, 0, '2023-01-02 00:00:00', 'Update!', null, 'New features available.'),
-       (3, 1, '2023-04-01 12:00:00', 'Important Update!', null, 'Check out the latest changes.'),
-       (4, 0, '2023-05-01 10:00:00', 'Event Reminder', null, 'Dont forget about our upcoming event!');
-
-INSERT INTO users_notifications(notifications_id, user_id)
-VALUES (1, 1),
-       (2, 1),
-       (3, 2),
-       (4, 3);
+INSERT INTO notifications(id, user_id, state, sent_at, title, image_url, message)
+VALUES (1, 1, 1, '2023-01-01 00:00:00', 'Welcome!', null, 'Thanks for joining us!'),
+       (2, 1, 0, '2023-01-02 00:00:00', 'Update!', null, 'New features available.'),
+       (3, 2, 1, '2023-04-01 12:00:00', 'Important Update!', null, 'Check out the latest changes.'),
+       (4, 3, 0, '2023-05-01 10:00:00', 'Event Reminder', null, 'Dont forget about our upcoming event!');
 
 INSERT INTO achievements(id, threshold, name, description, image_url, stat)
 VALUES (1, 10, 'Victor', 'Win 10 games', null, 'GAMES_WON'),
@@ -64,7 +65,7 @@ VALUES (2, 1, 1, '2023-01-01 00:00:01'),
        (3, 3, 1, '2023-04-01 00:00:01'),
        (4, 4, 2, '2023-05-01 00:00:02');
 
-INSERT INTO frienship_request(id, receiver_id, sender_id, sent_at)
+INSERT INTO friendship_requests(id, receiver_id, sender_id, sent_at)
 VALUES (1, 2, 1, '2023-01-01 00:00:01'),
        (2, 1, 2, '2023-01-02 00:00:02'),
        (3, 4, 1, '2023-04-01 00:00:01'),
@@ -75,4 +76,3 @@ VALUES (1, 1),
        (2, 2),
        (3, 3),
        (4, 4);
-       

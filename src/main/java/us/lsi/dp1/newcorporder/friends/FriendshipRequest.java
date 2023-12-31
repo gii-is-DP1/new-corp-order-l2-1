@@ -1,6 +1,9 @@
 package us.lsi.dp1.newcorporder.friends;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,7 +15,7 @@ import java.time.Instant;
 @Entity
 @Getter
 @Setter
-@Table(name = "frienship_request")
+@Table(name = "friendship_requests")
 public class FriendshipRequest extends BaseEntity {
     @NotNull
     @Column(name = "sent_at")

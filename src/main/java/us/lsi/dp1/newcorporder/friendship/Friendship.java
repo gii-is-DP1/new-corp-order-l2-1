@@ -1,4 +1,4 @@
-package us.lsi.dp1.newcorporder.friends;
+package us.lsi.dp1.newcorporder.friendship;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
@@ -6,8 +6,11 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 import us.lsi.dp1.newcorporder.model.BaseEntity;
 import us.lsi.dp1.newcorporder.user.User;
 
@@ -17,7 +20,11 @@ import java.time.Instant;
 @Setter
 @Entity
 @Table(name = "friendship")
+@SuperBuilder
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 public class Friendship extends BaseEntity {
+
     @NotNull
     @Column(name = "since")
     private Instant since;

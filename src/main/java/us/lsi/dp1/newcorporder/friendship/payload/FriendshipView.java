@@ -1,9 +1,9 @@
-package us.lsi.dp1.newcorporder.friends.payload;
+package us.lsi.dp1.newcorporder.friendship.payload;
 
 import lombok.Builder;
 import lombok.Data;
-import us.lsi.dp1.newcorporder.friends.Friendship;
-import us.lsi.dp1.newcorporder.friends.FriendshipRequest;
+import us.lsi.dp1.newcorporder.friendship.Friendship;
+import us.lsi.dp1.newcorporder.friendship.FriendshipRequest;
 import us.lsi.dp1.newcorporder.user.User;
 import us.lsi.dp1.newcorporder.user.payload.response.UserView;
 

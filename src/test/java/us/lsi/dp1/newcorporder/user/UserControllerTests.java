@@ -74,7 +74,7 @@ class UserControllerTests {
             .username("user")
             .password("password")
             .authority(auth)
-            .friends(Set.of())
+            .friendships(Set.of())
             .build();
 
         when(this.userService.findCurrentUser()).thenReturn(getUserFromDetails(

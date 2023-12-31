@@ -59,19 +59,17 @@ VALUES (1, 1, 2, 'MEDIA_ADVISOR'),
        (3, 3, 3, 'MEDIA_ADVISOR'),
        (4, 4, 1, 'CORPORATE_LAWYER');
 
-INSERT INTO friendship(friend_id, id, user_id, since)
-VALUES (2, 1, 1, '2023-01-01 00:00:01'),
-       (1, 3, 2, '2023-01-02 00:00:02'),
-       (1, 2, 3, '2023-01-01 00:00:01'),
-       (3, 4, 1, '2023-04-01 00:00:01'),
-       (2, 5, 4, '2023-04-01 00:00:01'),
-       (4, 6, 2, '2023-05-01 00:00:02');
+INSERT INTO friendship(id, friend_id, user_id, since)
+VALUES (1, 1, 2, '2023-01-02 00:00:02'),
+       (2, 2, 1, '2023-01-01 00:00:01'),
+       (3, 1, 3, '2023-01-01 00:00:01'),
+       (4, 3, 1, '2023-04-01 00:00:01'),
+       (5, 2, 4, '2023-04-01 00:00:01'),
+       (6, 4, 2, '2023-05-01 00:00:02');
 
-INSERT INTO friendship_requests(id, receiver_id, sender_id, sent_at)
-VALUES (1, 2, 1, '2023-01-01 00:00:01'),
-       (2, 1, 2, '2023-01-02 00:00:02'),
-       (3, 4, 1, '2023-04-01 00:00:01'),
-       (4, 3, 2, '2023-05-01 00:00:02');
+INSERT INTO friendship_requests(id, sender_id, receiver_id, sent_at)
+VALUES (1, 2, 3, '2023-01-01 00:00:01'),
+       (2, 1, 4, '2023-01-01 00:00:01');
 
 INSERT INTO players(id, users)
 VALUES (1, 1),

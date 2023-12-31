@@ -3,7 +3,7 @@ package us.lsi.dp1.newcorporder.user.payload.response;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Data;
-import us.lsi.dp1.newcorporder.friends.payload.FriendshipView;
+import us.lsi.dp1.newcorporder.friendship.payload.FriendshipView;
 import us.lsi.dp1.newcorporder.misc.Notification;
 import us.lsi.dp1.newcorporder.user.User;
 
@@ -34,7 +34,7 @@ public class UserView {
                 .authority(user.getAuthority().getName())
                 .firstSeen(user.getFirstSeen())
                 .lastSeen(user.getLastSeen())
-                .friends(user.getFriends().stream().map(FriendshipView::of).toList());
+                .friends(user.getFriendships().stream().map(FriendshipView::of).toList());
         }
 
         if (includeSensitiveData) {

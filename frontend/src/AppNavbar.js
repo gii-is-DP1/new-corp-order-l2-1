@@ -37,7 +37,7 @@ const AppNavbar = () => {
                     {link: '/boh', text: 'LEAVE ADMIN PANEL'},
                 ]);
             }
-            if (role === 'PLAYER') {
+            if (role === 'USER') {
                 navLinks = createNavLinks([
                     {link: '/stats', text: 'STATS'},
                     {link: '/friends', text: 'FRIENDS'},
@@ -46,18 +46,6 @@ const AppNavbar = () => {
             }
         });
 
-        userLogout = (
-            <>
-                <div style={{color: 'white'}} className="justify-content-end">
-                    {username}
-                </div>
-                <div className="d-flex">
-                    <Link style={{color: 'white'}} id="logout" to="/logout">
-                        Logout
-                    </Link>
-                </div>
-            </>
-        );
     }
 
     const navBarStyle = {

@@ -59,29 +59,25 @@ export default function Register() {
         margin: "10px"
     }
 
-    const registerFormRef = useRef();
+    function handleSubmit(body) {
+        console.log("nigga")
 
-    function handleSubmit({values}) {
-        if (!registerFormRef.current) return;
-
-        const request = values;
-        request["authority"] = authority;
         let state = "";
 
         fetch("/api/v1/auth/signup", {
             headers: {"Content-Type": "application/json"},
             method: "POST",
-            body: JSON.stringify(request),
+            body: JSON.stringify(body),
         })
             .then(function (response) {
                 if (response.status === 200) {
                     const loginRequest = {
-                        username: request.username,
-                        password: request.password,
-                        email: request.email,
+                        username: body.username,
+                        password: body.password,
+                        email: body.email,
                     };
 
-                    fetch("/api/v1/auth/signin", {
+                    fetch("/api/v1/auth/login", {
                         headers: {"Content-Type": "application/json"},
                         method: "POST",
                         body: JSON.stringify(loginRequest),
@@ -100,7 +96,7 @@ export default function Register() {
                             else {
                                 tokenService.setUser(data);
                                 tokenService.updateLocalAccessToken(data.token);
-                                window.location.href = "/dashboard";
+                                window.location.href = "/";
                             }
                         })
                         .catch((error) => {
@@ -125,17 +121,18 @@ export default function Register() {
                       icon={<LoginIcon style={{fontSize: "45px"}}/>}
                 >
                     <div style={{margin: "15px"}}>
-                        <form ref={registerFormRef.current}
-                              style={{display: 'flex', flexDirection: 'column'}}
+                        <form style={{display: 'flex', flexDirection: 'column'}}
                               onSubmit={(e) => {
                                   e.preventDefault();
-                                  handleSubmit(e)
+                                  handleSubmit({
+                                      username: e.target.username.value,
+                                      password: e.target.password.value,
+                                      email: e.target.email.value
+                                  });
                               }}>
                             <FormInput name={"email"} placeholder={"Type your email here"}></FormInput>
                             <FormInput name={"username"} placeholder={"Type your username here"}></FormInput>
                             <FormInput name={"password"} placeholder={"**********"} type={"password"}></FormInput>
-                            <FormInput name={"repeat password"} placeholder={"**********"}
-                                       type={"password"}></FormInput>
                             <div style={buttonStyle}>
                                 {message && <Text style={{textTransform: "none", color: "red"}}>{message}</Text>}
                                 <Button buttonType={ButtonType.primary} type="submit">Register</Button>

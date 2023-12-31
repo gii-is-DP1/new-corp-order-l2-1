@@ -70,6 +70,7 @@ export default function Login() {
             .then(data => {
                 tokenService.setUser(data);
                 tokenService.updateLocalAccessToken(data.token);
+                window.location.href = "/";
             })
             .catch(error => {
                 setMessage(error);

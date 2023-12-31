@@ -35,12 +35,12 @@ import us.lsi.dp1.newcorporder.util.RestPreconditions;
 @Tag(name = "User", description = "The User API")
 class UserController {
 
-	private final UserService userService;
+    private final UserService userService;
 
-	@Autowired
+    @Autowired
     public UserController(UserService userService) {
-		this.userService = userService;
-	}
+        this.userService = userService;
+    }
 
     @Operation(
         summary = "Find an user by its id",
@@ -56,13 +56,13 @@ class UserController {
         description = "User not found"
     )
     @GetMapping(value = "/{id}")
-	public ResponseEntity<User> findById(@PathVariable("id") Integer id) {
-		return new ResponseEntity<>(userService.findUser(id), HttpStatus.OK);
-	}
+    public ResponseEntity<User> findById(@PathVariable("id") Integer id) {
+        return new ResponseEntity<>(userService.findUser(id), HttpStatus.OK);
+    }
 
     @Operation(
-        summary = "Update your own profile",
-        description = "Update your own profile",
+        summary = "Update a user's profile",
+        description = "Update a user's profile",
         tags = "put"
     )
     @ApiResponse(
@@ -73,30 +73,14 @@ class UserController {
         responseCode = "400",
         description = "Invalid arguments"
     )
-    @PutMapping(value = "/updateProfile")
+    @PutMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public User update(@RequestBody @Valid EditProfileRequest request) {
-        return userService.editProfile(userService.findCurrentUser(), request);
-	}
-
-    @Operation(
-        summary = "Update another user's profile",
-        description = "Update another user's profile",
-        tags = "put"
-    )
-    @ApiResponse(
-        responseCode = "200",
-        description = "The updated user"
-    )
-    @ApiResponse(
-        responseCode = "400",
-        description = "Invalid arguments"
-    )
-    @PutMapping(value = "/{id}/updateProfile")
-	@ResponseStatus(HttpStatus.OK)
     public User update(@PathVariable Integer id, @RequestBody @Valid EditProfileRequest request) {
+        User loggedIn = userService.findCurrentUser();
+        RestPreconditions.checkAccess(id.equals(loggedIn.getId()) || loggedIn.hasAnyAuthority("admin"));
+
         return userService.editProfile(userService.findUser(id), request);
-	}
+    }
 
     @Operation(
         summary = "Delete an user by its id",
@@ -115,14 +99,14 @@ class UserController {
         responseCode = "404",
         description = "User to delete not found"
     )
-	@DeleteMapping(value = "{userId}")
-	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<MessageResponse> delete(@PathVariable("userId") int id) {
-		RestPreconditions.checkNotNull(userService.findUser(id), "User", "ID", id);
-		if (userService.findCurrentUser().getId() != id) {
-			userService.deleteUser(id);
-			return new ResponseEntity<>(new MessageResponse("User deleted!"), HttpStatus.OK);
-		} else
+    @DeleteMapping(value = "/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<MessageResponse> delete(@PathVariable("userId") int id) {
+        RestPreconditions.checkNotNull(userService.findUser(id), "User", "ID", id);
+        if (userService.findCurrentUser().getId() != id) {
+            userService.deleteUser(id);
+            return new ResponseEntity<>(new MessageResponse("User deleted!"), HttpStatus.OK);
+        } else
             throw new AccessDeniedException("You cannot delete yourself!");
-	}
+    }
 }

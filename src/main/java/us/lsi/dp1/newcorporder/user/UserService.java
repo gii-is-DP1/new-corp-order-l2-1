@@ -20,6 +20,7 @@ import jakarta.validation.Valid;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -73,13 +74,18 @@ public class UserService {
     @Transactional(readOnly = true)
     public User findCurrentUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth == null)
+
+        if (auth == null) {
             throw new ResourceNotFoundException("Nobody authenticated!");
-        else {
-            ApplicationUserDetails userDetails = (ApplicationUserDetails) auth.getPrincipal();
-            return userRepository.findById(userDetails.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("User", "Username", auth.getName()));
         }
+
+        if (auth.getPrincipal() instanceof ApplicationUserDetails userDetails) {
+            return userDetails.getUser();
+        }
+
+        UserDetails userDetails = (UserDetails) auth.getPrincipal();
+        return userRepository.findByUsername(userDetails.getUsername())
+            .orElseThrow(() -> new ResourceNotFoundException("User", "Username", auth.getName()));
     }
 
     @Transactional

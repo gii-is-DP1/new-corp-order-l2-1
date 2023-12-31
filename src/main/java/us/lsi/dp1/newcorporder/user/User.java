@@ -8,6 +8,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.apache.commons.lang3.ArrayUtils;
 import us.lsi.dp1.newcorporder.authority.Authority;
+import us.lsi.dp1.newcorporder.friends.Friendship;
 import us.lsi.dp1.newcorporder.friends.FriendshipRequest;
 import us.lsi.dp1.newcorporder.misc.Notification;
 import us.lsi.dp1.newcorporder.model.BaseEntity;
@@ -44,6 +45,9 @@ public class User extends BaseEntity {
     private Instant firstSeen;
 
     private Instant lastSeen;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    private Set<Friendship> friends;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "sender")
     private Set<FriendshipRequest> sentFriendshipRequests;

@@ -22,6 +22,7 @@ import us.lsi.dp1.newcorporder.exceptions.AccessDeniedException;
 import us.lsi.dp1.newcorporder.exceptions.ResourceNotFoundException;
 
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.doNothing;
@@ -39,6 +40,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class UserControllerTests {
 
     private static final int TEST_USER_ID = 1;
+    private static final String TEST_USER_NAME = "JohnDoe";
     private static final int TEST_AUTH_ID = 1;
     private static final String BASE_URL = "/api/v1/users";
 
@@ -67,11 +69,13 @@ class UserControllerTests {
         auth.setId(TEST_AUTH_ID);
         auth.setName("VET");
 
-        user = new User();
-        user.setId(1);
-        user.setUsername("user");
-        user.setPassword("password");
-        user.setAuthority(auth);
+        user = User.builder()
+            .id(1)
+            .username("user")
+            .password("password")
+            .authority(auth)
+            .friends(Set.of())
+            .build();
 
         when(this.userService.findCurrentUser()).thenReturn(getUserFromDetails(
             (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()));
@@ -153,18 +157,17 @@ class UserControllerTests {
     @Test
     @WithMockUser("admin")
     void shouldReturnUser() throws Exception {
-        when(this.userService.findUser(TEST_USER_ID)).thenReturn(user);
-        mockMvc.perform(get(BASE_URL + "/{id}", TEST_USER_ID)).andExpect(status().isOk())
-            .andExpect(jsonPath("$.id").value(TEST_USER_ID))
+        when(this.userService.findUser(TEST_USER_NAME)).thenReturn(user);
+        mockMvc.perform(get(BASE_URL + "/{id}", TEST_USER_NAME)).andExpect(status().isOk())
             .andExpect(jsonPath("$.username").value(user.getUsername()))
-            .andExpect(jsonPath("$.authority.name").value(user.getAuthority().getName()));
+            .andExpect(jsonPath("$.authority").value(user.getAuthority().getName()));
     }
 
     @Test
     @WithMockUser("admin")
     void shouldReturnNotFoundUser() throws Exception {
-        when(this.userService.findUser(TEST_USER_ID)).thenThrow(ResourceNotFoundException.class);
-        mockMvc.perform(get(BASE_URL + "/{id}", TEST_USER_ID)).andExpect(status().isNotFound());
+        when(this.userService.findUser(TEST_USER_NAME)).thenThrow(ResourceNotFoundException.class);
+        mockMvc.perform(get(BASE_URL + "/{id}", TEST_USER_NAME)).andExpect(status().isNotFound());
     }
 
     @Test
@@ -172,10 +175,10 @@ class UserControllerTests {
     void shouldDeleteOtherUser() throws Exception {
         logged.setId(2);
 
-        when(this.userService.findUser(TEST_USER_ID)).thenReturn(user);
-        doNothing().when(this.userService).deleteUser(TEST_USER_ID);
+        when(this.userService.findUser(TEST_USER_NAME)).thenReturn(user);
+        doNothing().when(this.userService).deleteUser(TEST_USER_NAME);
 
-        mockMvc.perform(delete(BASE_URL + "/{id}", TEST_USER_ID).with(csrf())).andExpect(status().isOk())
+        mockMvc.perform(delete(BASE_URL + "/{id}", TEST_USER_NAME).with(csrf())).andExpect(status().isOk())
             .andExpect(jsonPath("$.message").value("User deleted!"));
     }
 
@@ -184,10 +187,10 @@ class UserControllerTests {
     void shouldNotDeleteLoggedUser() throws Exception {
         logged.setId(TEST_USER_ID);
 
-        when(this.userService.findUser(TEST_USER_ID)).thenReturn(user);
-        doNothing().when(this.userService).deleteUser(TEST_USER_ID);
+        when(this.userService.findUser(TEST_USER_NAME)).thenReturn(user);
+        doNothing().when(this.userService).deleteUser(TEST_USER_NAME);
 
-        mockMvc.perform(delete(BASE_URL + "/{id}", TEST_USER_ID).with(csrf())).andExpect(status().isForbidden())
+        mockMvc.perform(delete(BASE_URL + "/{id}", TEST_USER_NAME).with(csrf())).andExpect(status().isForbidden())
             .andExpect(result -> assertTrue(result.getResolvedException() instanceof AccessDeniedException));
     }
 

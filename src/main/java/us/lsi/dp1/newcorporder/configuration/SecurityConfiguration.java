@@ -53,7 +53,9 @@ public class SecurityConfiguration {
 			.authorizeHttpRequests(authorizeRequests ->	authorizeRequests
 			.requestMatchers("/resources/**", "/webjars/**", "/static/**", "/swagger-resources/**").permitAll()
 			.requestMatchers( "/", "/oups","/api/v1/auth/**","/v3/api-docs/**","/swagger-ui.html","/swagger-ui/**").permitAll()
-			.requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/users/**")).hasAuthority(ADMIN)
+                .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/v1/users/{username}")).permitAll()
+                .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.PUT, "/api/v1/users/{username}")).permitAll()
+                .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.DELETE, "/api/v1/users/{username}")).hasAuthority(ADMIN)
             .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/v1/achievements/**")).hasAuthority(ADMIN)
             .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.PUT, "/api/v1/achievements/**")).hasAuthority(ADMIN)
             .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.DELETE, "/api/v1/achievements/**")).hasAuthority(ADMIN)

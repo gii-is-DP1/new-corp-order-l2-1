@@ -26,7 +26,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import us.lsi.dp1.newcorporder.auth.payload.response.MessageResponse;
 import us.lsi.dp1.newcorporder.exceptions.AccessDeniedException;
-import us.lsi.dp1.newcorporder.user.payload.EditProfileRequest;
+import us.lsi.dp1.newcorporder.user.payload.request.EditProfileRequest;
+import us.lsi.dp1.newcorporder.user.payload.response.UserView;
 import us.lsi.dp1.newcorporder.util.RestPreconditions;
 
 @RestController
@@ -43,8 +44,8 @@ class UserController {
     }
 
     @Operation(
-        summary = "Find an user by its id",
-        description = "Find an user by its id",
+        summary = "Find an user by its username",
+        description = "Find an user by its username",
         tags = "get"
     )
     @ApiResponse(
@@ -55,9 +56,12 @@ class UserController {
         responseCode = "404",
         description = "User not found"
     )
-    @GetMapping(value = "/{id}")
-    public ResponseEntity<User> findById(@PathVariable("id") Integer id) {
-        return new ResponseEntity<>(userService.findUser(id), HttpStatus.OK);
+    @GetMapping(value = "/{username}")
+    public UserView findById(@PathVariable String username) {
+        User user = userService.findUser(username);
+        RestPreconditions.checkNotNull(user, "User", "username", username);
+
+        return UserView.expanded(user, userService.findCurrentUser());
     }
 
     @Operation(
@@ -73,13 +77,15 @@ class UserController {
         responseCode = "400",
         description = "Invalid arguments"
     )
-    @PutMapping(value = "/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public User update(@PathVariable Integer id, @RequestBody @Valid EditProfileRequest request) {
+    @PutMapping(value = "/{username}")
+    public UserView update(@PathVariable String username, @RequestBody @Valid EditProfileRequest request) {
+        User user = userService.findUser(username);
         User loggedIn = userService.findCurrentUser();
-        RestPreconditions.checkAccess(id.equals(loggedIn.getId()) || loggedIn.hasAnyAuthority("admin"));
 
-        return userService.editProfile(userService.findUser(id), request);
+        RestPreconditions.checkAccess(loggedIn.equals(user) || loggedIn.hasAnyAuthority("admin"));
+        RestPreconditions.checkNotNull(user, "User", "username", username);
+
+        return UserView.expanded(userService.editProfile(user, request), loggedIn);
     }
 
     @Operation(
@@ -99,14 +105,16 @@ class UserController {
         responseCode = "404",
         description = "User to delete not found"
     )
-    @DeleteMapping(value = "/{userId}")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<MessageResponse> delete(@PathVariable("userId") int id) {
-        RestPreconditions.checkNotNull(userService.findUser(id), "User", "ID", id);
-        if (userService.findCurrentUser().getId() != id) {
-            userService.deleteUser(id);
+    @DeleteMapping(value = "/{username}")
+    public ResponseEntity<MessageResponse> delete(@PathVariable String username) {
+        User user = userService.findUser(username);
+        RestPreconditions.checkNotNull(user, "User", "username", username);
+
+        if (!user.equals(userService.findCurrentUser())) {
+            userService.deleteUser(user.getUsername());
             return new ResponseEntity<>(new MessageResponse("User deleted!"), HttpStatus.OK);
-        } else
+        } else {
             throw new AccessDeniedException("You cannot delete yourself!");
+        }
     }
 }

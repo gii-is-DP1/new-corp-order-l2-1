@@ -27,7 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import us.lsi.dp1.newcorporder.auth.ApplicationUserDetails;
 import us.lsi.dp1.newcorporder.authority.AuthorityService;
 import us.lsi.dp1.newcorporder.exceptions.ResourceNotFoundException;
-import us.lsi.dp1.newcorporder.user.payload.EditProfileRequest;
+import us.lsi.dp1.newcorporder.user.payload.request.EditProfileRequest;
 
 import java.time.Instant;
 
@@ -60,7 +60,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public User findUser(String username) {
-        return userRepository.findByUsername(username)
+        return userRepository.findByUsernameIgnoreCase(username)
             .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
     }
 
@@ -84,13 +84,13 @@ public class UserService {
         }
 
         UserDetails userDetails = (UserDetails) auth.getPrincipal();
-        return userRepository.findByUsername(userDetails.getUsername())
+        return userRepository.findByUsernameIgnoreCase(userDetails.getUsername())
             .orElseThrow(() -> new ResourceNotFoundException("User", "Username", auth.getName()));
     }
 
     @Transactional
-    public void deleteUser(Integer id) {
-        User toDelete = findUser(id);
+    public void deleteUser(String username) {
+        User toDelete = findUser(username);
         userRepository.delete(toDelete);
     }
 
@@ -112,7 +112,7 @@ public class UserService {
     }
 
     public boolean existsUser(String username) {
-        return userRepository.existsByUsername(username);
+        return userRepository.existsByUsernameIgnoreCase(username);
     }
 
     public void changeUsername(User user, String username) {

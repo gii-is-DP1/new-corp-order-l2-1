@@ -4,10 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.apache.commons.lang3.ArrayUtils;
 import us.lsi.dp1.newcorporder.authority.Authority;
@@ -22,9 +19,10 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "users")
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-@SuperBuilder
+@EqualsAndHashCode(callSuper = true, of = {})
 public class User extends BaseEntity {
 
     @Size(max = 32)

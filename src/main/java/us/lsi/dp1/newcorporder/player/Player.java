@@ -10,13 +10,13 @@ import lombok.experimental.SuperBuilder;
 import us.lsi.dp1.newcorporder.model.BaseEntity;
 import us.lsi.dp1.newcorporder.user.User;
 
-@Entity
-@Table(name = "players")
 @Getter
 @Setter
+@Entity
+@Table(name = "players")
 @SuperBuilder
 @NoArgsConstructor
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(callSuper = true, of = {})
 public class Player extends BaseEntity {
 
     @OneToOne(cascade = CascadeType.ALL)

@@ -10,12 +10,14 @@ import us.lsi.dp1.newcorporder.authority.AuthorityService;
 import us.lsi.dp1.newcorporder.user.User;
 import us.lsi.dp1.newcorporder.user.UserService;
 
+import java.time.Instant;
+
 @Service
 public class AuthService {
 
-	private final PasswordEncoder encoder;
-	private final AuthorityService authorityService;
-	private final UserService userService;
+    private final PasswordEncoder encoder;
+    private final AuthorityService authorityService;
+    private final UserService userService;
 
     public AuthService(PasswordEncoder encoder, AuthorityService authorityService, UserService userService) {
         this.encoder = encoder;
@@ -24,14 +26,17 @@ public class AuthService {
     }
 
     @Transactional
-	public void createUser(@Valid SignupRequest request) {
-        User user = new User();
-        user.setUsername(request.getUsername());
-        user.setPassword(encoder.encode(request.getPassword()));
-        user.setEmail(request.getEmail());
+    public void createUser(@Valid SignupRequest request) {
+        Authority authority = authorityService.findByName("USER");
 
-        Authority authority = authorityService.findByName(request.getAuthority());
-        user.setAuthority(authority);
+        User user = User.builder()
+            .username(request.getUsername())
+            .password(encoder.encode(request.getPassword()))
+            .email(request.getEmail())
+            .firstSeen(Instant.now())
+            .lastSeen(Instant.now())
+            .authority(authority)
+            .build();
 
         userService.saveUser(user);
     }

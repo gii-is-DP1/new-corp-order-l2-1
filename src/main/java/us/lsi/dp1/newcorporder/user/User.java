@@ -14,7 +14,7 @@ import us.lsi.dp1.newcorporder.friends.FriendshipRequest;
 import us.lsi.dp1.newcorporder.misc.Notification;
 import us.lsi.dp1.newcorporder.model.BaseEntity;
 
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.Set;
 
 @Getter
@@ -29,7 +29,7 @@ public class User extends BaseEntity {
     @Size(max=32) @Column(unique = true) @NotNull
     private String username;
 
-    @Size(max=32) @Column(unique = true) @NotNull
+    @Size(max=32) @NotNull
     private String email;
 
     private String picture;
@@ -37,9 +37,10 @@ public class User extends BaseEntity {
     @NotNull
     private String password;
 
-    private LocalDate firstSeen;
+    private Instant firstSeen;
 
-    private LocalDate lastSeen;
+    private Instant lastSeen;
+
 
     @NotNull
     @ManyToOne(optional = false)

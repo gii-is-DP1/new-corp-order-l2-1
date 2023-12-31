@@ -10,7 +10,7 @@ export const ButtonType = {
     danger: dangerBackground
 }
 
-export default function Button({onClick, buttonType, style, children}) {
+export default function Button({onClick, buttonType, style, children, type}) {
     let textColor = getTextColor(buttonType);
     let [hover, setHover] = useState(false);
     let [click, setClick] = useState(false);
@@ -35,6 +35,7 @@ export default function Button({onClick, buttonType, style, children}) {
     return (
         <button
             onClick={onClick}
+            type={type}
             onMouseEnter={() => setHover(true)}
             onMouseLeave={() => setHover(false)}
             onMouseDown={() => setClick(true)}

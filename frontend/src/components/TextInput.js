@@ -2,7 +2,7 @@ import {useState} from 'react';
 import * as Colors from "../util/Colors";
 import SendIcon from '@mui/icons-material/Send';
 
-export default function TextInput({name, placeholder, onClick, style}) {
+export default function TextInput({name, placeholder, onClick, style}) {{
 
     const [inputValue, setInputValue] = useState('');
 

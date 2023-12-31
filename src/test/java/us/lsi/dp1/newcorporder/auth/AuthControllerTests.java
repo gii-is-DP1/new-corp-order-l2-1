@@ -76,7 +76,6 @@ class AuthControllerTests {
 		signupRequest = new SignupRequest();
 		signupRequest.setUsername("username");
 		signupRequest.setPassword("password");
-		signupRequest.setAuthority("OWNER");
         signupRequest.setEmail("email@gmail.com");
 
         User user = User.builder()

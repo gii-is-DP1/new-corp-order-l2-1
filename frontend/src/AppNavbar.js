@@ -59,6 +59,22 @@ const AppNavbar = () => {
         color: white,
     };
 
+    function createNavLinks(navItem) {
+        const items = navItem.map(item => (
+            <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
+                {!item.isButton &&
+                    <Link to={item.link} style={{textDecoration: "none", color: white}}>
+                        <Text>{item.text}</Text>
+                    </Link>}
+
+                {item.isButton &&
+                    <Button onClick={() => navigate(`/${item.link}`)}
+                            buttonType={ButtonType.primary}>{item.text}</Button>}
+            </div>
+        ));
+        return <>{items}</>;
+    }
+
     return (
         <header style={navBarStyle}>
             <Link to="/">
@@ -75,15 +91,5 @@ const AppNavbar = () => {
         </header>
     );
 };
-
-function createNavLinks(navItem) {
-    const items = navItem.map(item => (
-        <Link to={item.link} style={{textDecoration: "none", color: white}}>
-            <Text>{item.text}</Text>
-        </Link>
-    ));
-
-    return <>{items}</>;
-}
 
 export default AppNavbar;

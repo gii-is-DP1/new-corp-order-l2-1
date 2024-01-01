@@ -96,7 +96,7 @@ public class MatchController {
     )
     @ApiResponse(
         responseCode = "200",
-        description = "The leaved match"
+        description = "The left match"
     )
     @PostMapping("/{match}/leave")
     public void leaveMatch(@Authenticated Player player, @FromPathVariable Match match) {

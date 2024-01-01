@@ -20,7 +20,7 @@ public class MatchService {
     }
 
     public MatchAssignmentResponse quickPlay(Player player, MatchMode mode, int maxPlayers) {
-        Match match = matchRepository.findRandomPublicMatch(mode, maxPlayers)
+        Match match = matchRepository.findRandomPublicMatch(player, mode, maxPlayers)
             .orElseGet(() -> matchRepository.createNewMatch(mode, MatchVisibility.PUBLIC, maxPlayers));
 
         return this.join(player, match);
@@ -38,7 +38,10 @@ public class MatchService {
     }
 
     public MatchAssignmentResponse join(Player player, Match match) {
-        match.addPlayer(MatchPlayer.create(player));
+        if (match.getPlayer(player.getId()) == null) {
+            match.addPlayer(MatchPlayer.create(player));
+        }
+
         return new MatchAssignmentResponse(match.getCode());
     }
 

@@ -2,6 +2,7 @@ package us.lsi.dp1.newcorporder.auth;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -14,8 +15,6 @@ import us.lsi.dp1.newcorporder.auth.jwt.JwtUtils;
 import us.lsi.dp1.newcorporder.auth.payload.request.LoginRequest;
 import us.lsi.dp1.newcorporder.auth.payload.request.SignupRequest;
 import us.lsi.dp1.newcorporder.auth.payload.response.JwtResponse;
-import us.lsi.dp1.newcorporder.auth.payload.response.MessageResponse;
-import us.lsi.dp1.newcorporder.user.UserService;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,26 +25,23 @@ import java.util.stream.Collectors;
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;
-    private final UserService userService;
     private final JwtUtils jwtUtils;
     private final AuthService authService;
 
-    public AuthController(AuthenticationManager authenticationManager, UserService userService, JwtUtils jwtUtils,
-                          AuthService authService) {
-        this.userService = userService;
+    public AuthController(AuthenticationManager authenticationManager, JwtUtils jwtUtils, AuthService authService) {
         this.jwtUtils = jwtUtils;
         this.authenticationManager = authenticationManager;
         this.authService = authService;
     }
 
-    @GetMapping("/validate")
-    public ResponseEntity<Boolean> validateToken(@RequestParam String token) {
-        Boolean isValid = jwtUtils.validateJwtToken(token);
-        return ResponseEntity.ok(isValid);
+    @PostMapping("/signup")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
+        authService.registerUser(signUpRequest);
     }
 
     @PostMapping("/login")
-    public ResponseEntity authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<Object> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         try {
             Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
@@ -65,13 +61,9 @@ public class AuthController {
         }
     }
 
-    @PostMapping("/signup")
-    public ResponseEntity<MessageResponse> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
-        if (userService.existsUser(signUpRequest.getUsername())) {
-            return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is already taken!"));
-        }
-
-        authService.createUser(signUpRequest);
-        return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+    @GetMapping("/validate")
+    @ResponseStatus(HttpStatus.OK)
+    public boolean validateToken(@RequestParam String token) {
+        return jwtUtils.validateJwtToken(token);
     }
 }

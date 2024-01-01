@@ -11,9 +11,9 @@ import java.util.Set;
 
 @Getter
 @Setter
-@EqualsAndHashCode(of = "id")
-@Table(name = "player_match_stats")
 @Entity
+@Table(name = "player_match_stats")
+@EqualsAndHashCode(callSuper = true, of = {})
 public class PlayerMatchStats extends BaseEntity {
 
     @ManyToOne(cascade = CascadeType.ALL)

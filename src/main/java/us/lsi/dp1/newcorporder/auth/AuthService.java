@@ -15,28 +15,25 @@ import java.time.Instant;
 @Service
 public class AuthService {
 
-    private final PasswordEncoder encoder;
-    private final AuthorityService authorityService;
     private final UserService userService;
+    private final AuthorityService authorityService;
 
-    public AuthService(PasswordEncoder encoder, AuthorityService authorityService, UserService userService) {
-        this.encoder = encoder;
-        this.authorityService = authorityService;
+    public AuthService(UserService userService, AuthorityService authorityService) {
         this.userService = userService;
+        this.authorityService = authorityService;
     }
 
     @Transactional
-    public void createUser(@Valid SignupRequest request) {
-        Authority authority = authorityService.findByName("USER");
-
+    public void registerUser(@Valid SignupRequest request) {
         User user = User.builder()
-            .username(request.getUsername())
-            .password(encoder.encode(request.getPassword()))
-            .email(request.getEmail())
             .firstSeen(Instant.now())
             .lastSeen(Instant.now())
-            .authority(authority)
+            .authority(authorityService.findByName("USER"))
             .build();
+
+        userService.changeUsername(user, request.getUsername());
+        userService.changePassword(user, request.getPassword());
+        userService.changeEmail(user, request.getEmail());
 
         userService.saveUser(user);
     }

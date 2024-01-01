@@ -13,9 +13,9 @@ import us.lsi.dp1.newcorporder.model.BaseEntity;
 
 @Getter
 @Setter
-@EqualsAndHashCode(of = "id")
-@Table(name = "conglomerate_player_match_stats")
 @Entity
+@Table(name = "conglomerate_player_match_stats")
+@EqualsAndHashCode(callSuper = true, of = {})
 public class ConglomeratePlayerMatchStats extends BaseEntity {
 
     @Enumerated(EnumType.STRING)

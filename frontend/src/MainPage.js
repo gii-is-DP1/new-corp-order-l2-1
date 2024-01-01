@@ -191,7 +191,7 @@ export function MainPage() {
         } catch (error) {
             setFormMessage(buildErrorComponent(error.message))
         }
-        setTimeout(() => setFormMessage(("")), 2000)
+        setTimeout(() => setFormMessage(("")), 5000)
     }
 
     return (
@@ -211,6 +211,7 @@ export function MainPage() {
                     >
                         <div style={{margin: "10px"}}>
                             <TextInput placeholder={"ENTER MATCH CODE..."} onClick={joinGameRequest}></TextInput>
+                            {formMessage}
                         </div>
                     </Card>
                 </div>

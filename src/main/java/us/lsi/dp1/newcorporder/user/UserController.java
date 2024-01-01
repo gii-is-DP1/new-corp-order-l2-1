@@ -26,9 +26,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import us.lsi.dp1.newcorporder.auth.payload.response.MessageResponse;
 import us.lsi.dp1.newcorporder.exceptions.AccessDeniedException;
+import us.lsi.dp1.newcorporder.friendship.FriendshipService;
 import us.lsi.dp1.newcorporder.user.payload.request.EditProfileRequest;
 import us.lsi.dp1.newcorporder.user.payload.response.UserView;
 import us.lsi.dp1.newcorporder.util.RestPreconditions;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -37,10 +40,12 @@ import us.lsi.dp1.newcorporder.util.RestPreconditions;
 class UserController {
 
     private final UserService userService;
+    private final FriendshipService friendshipService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, FriendshipService friendshipService) {
         this.userService = userService;
+        this.friendshipService = friendshipService;
     }
 
     @Operation(
@@ -56,7 +61,7 @@ class UserController {
         responseCode = "404",
         description = "User not found"
     )
-    @GetMapping(value = "/{username}")
+    @GetMapping("/{username}")
     public UserView findById(@PathVariable String username) {
         User user = userService.findUser(username);
         RestPreconditions.checkNotNull(user, "User", "username", username);
@@ -77,7 +82,7 @@ class UserController {
         responseCode = "400",
         description = "Invalid arguments"
     )
-    @PutMapping(value = "/{username}")
+    @PutMapping("/{username}")
     public UserView update(@PathVariable String username, @RequestBody @Valid EditProfileRequest request) {
         User user = userService.findUser(username);
         User loggedIn = userService.findCurrentUser();
@@ -105,7 +110,7 @@ class UserController {
         responseCode = "404",
         description = "User to delete not found"
     )
-    @DeleteMapping(value = "/{username}")
+    @DeleteMapping("/{username}")
     public ResponseEntity<MessageResponse> delete(@PathVariable String username) {
         User user = userService.findUser(username);
         RestPreconditions.checkNotNull(user, "User", "username", username);
@@ -116,5 +121,26 @@ class UserController {
         } else {
             throw new AccessDeniedException("You cannot delete yourself!");
         }
+    }
+
+    @Operation(
+        summary = "Get the friends of the given user",
+        description = "Get the friends of the given user",
+        tags = "get"
+    )
+    @ApiResponse(
+        responseCode = "200",
+        description = "The user's friends"
+    )
+    @ApiResponse(
+        responseCode = "404",
+        description = "User not found"
+    )
+    @GetMapping("/{username}/friends")
+    public List<UserView> getFriends(@PathVariable String username) {
+        User user = userService.findUser(username);
+        RestPreconditions.checkNotNull(user, "User", "user", username);
+
+        return friendshipService.getFriends(user);
     }
 }

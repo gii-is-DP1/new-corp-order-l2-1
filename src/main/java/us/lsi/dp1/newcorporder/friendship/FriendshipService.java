@@ -4,9 +4,12 @@ import com.google.common.base.Preconditions;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import us.lsi.dp1.newcorporder.friendship.payload.FriendshipView;
 import us.lsi.dp1.newcorporder.user.User;
+import us.lsi.dp1.newcorporder.user.payload.response.UserView;
 
 import java.time.Instant;
+import java.util.List;
 
 @Service
 public class FriendshipService {
@@ -20,6 +23,18 @@ public class FriendshipService {
     public FriendshipService(FriendshipRepository friendshipRepository, FriendshipRequestRepository friendshipRequestRepository) {
         this.friendshipRepository = friendshipRepository;
         this.friendshipRequestRepository = friendshipRequestRepository;
+    }
+
+    public List<FriendshipView> getFriendships(User user) {
+        return friendshipRepository.findByUser(user).stream()
+            .map(FriendshipView::of)
+            .toList();
+    }
+
+    public List<UserView> getFriends(User user) {
+        return friendshipRepository.findByUser(user).stream()
+            .map(friendship -> UserView.minimal(friendship.getFriend()))
+            .toList();
     }
 
     @Transactional

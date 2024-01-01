@@ -5,13 +5,42 @@ import {Title} from "../components/Title";
 import Button, {ButtonType} from "../components/Button";
 import {Text} from "../components/Text";
 import {PressableText} from "../components/PressableText";
-import {List} from "reactstrap";
-import React, {useState} from "react";
+import List from "../components/List";
+import React, {useEffect, useState} from "react";
 import ListLine from "../components/ListLine";
 import {Subtitle} from "../components/Subtitle";
+import fetchAuthenticated from "../util/fetchAuthenticated";
+import {useNavigate, useParams} from "react-router-dom";
+import tokenService from "../services/token.service";
+import TextInput from "../components/TextInput";
+import {buildErrorComponent, buildSuccessComponent} from "../util/formUtil";
 
 export function ProfilePage() {
-    const [selected, setSelected] = useState("lastMatches")
+    const [userData, setUserData] = useState(null)
+    const {username, select} = useParams()
+    const navigate = useNavigate()
+    const [formMessage, setFormMessage] = useState(<></>)
+
+    if (!select) {
+        navigate(`/user/${username}/lastMatches`)
+    }
+
+    const fetchUserData = async () => {
+        try {
+            setUserData(await fetchAuthenticated(`/api/v1/users/${username}`, "GET")
+                .then(async response => await response.json()));
+        } catch (error) {
+            navigate('')
+        }
+    };
+
+    useEffect(() => {
+        fetchUserData()
+    }, [select, username]);
+
+    if (!userData) {
+        return <></>
+    }
 
     const content = {
         flex: 1,
@@ -30,12 +59,28 @@ export function ProfilePage() {
     }
 
     const rowListStyle = {
+        backgroundColor: black,
         display: "flex",
         flexDirection: "column",
         maxHeight: "500px",
         width: "800px",
         overflow: "auto",
         gap: "5px"
+    }
+
+    function isMe() {
+        return userData ? userData.username.toUpperCase() === tokenService.getUser().username.toUpperCase() : ""
+    }
+
+    async function sendFriendRequest(value) {
+        try {
+            await fetchAuthenticated(`/api/v1/users/friendships/requests/${value}`, "POST")
+            await fetchUserData()
+            setFormMessage(buildSuccessComponent("Request sent successfully!"))
+        } catch (error) {
+            setFormMessage(buildErrorComponent(error.message))
+        }
+        setTimeout(() => setFormMessage(("")), 2000)
     }
 
     let matchItems = []
@@ -52,19 +97,53 @@ export function ProfilePage() {
         )
     }
 
-    let friendsItems = []
-    for (let i = 1; i < 20; i++) {
-        friendsItems.push(
+    let friendsItems = userData.friends?.map(request => {
+        const friend = request.user
+        return (
             <ListLine sideContent={(
-                <Button style={{}} buttonType={ButtonType.secondaryLight}>
-                    Visit profile
-                </Button>)}
+                <>
+                    <Button
+                        onClick={() => fetchAuthenticated(`/api/v1/users/friendships/${friend.username}`, "DELETE")
+                            .then(() => fetchUserData())}
+                        buttonType={ButtonType.danger}>
+                        Delete
+                    </Button>
+                    <Button onClick={() => navigate(`/user/${friend.username}`)} buttonType={ButtonType.secondaryLight}>
+                        Visit profile
+                    </Button>
+                </>)}
             >
-                <ProfilePicture style={{height: "30px", width: "30px"}}/>
-                <Text>AmigoAmigui {i}</Text>
+                <ProfilePicture url={friend.picture} style={{height: "30px", width: "30px"}}/>
+                <Text>{friend.username}</Text>
             </ListLine>
         )
-    }
+    })
+
+    let friendsRequest = userData.receivedFriendshipRequests?.map(request => {
+        const friend = request.user
+        return (
+            <ListLine sideContent={(
+                <>
+                    <Button
+                        onClick={() => fetchAuthenticated(`/api/v1/users/friendships/requests/${friend.username}`, "DELETE")
+                            .then(() => fetchUserData())}
+                        buttonType={ButtonType.danger}>
+                        Deny
+                    </Button>
+                    <Button
+                        onClick={() => fetchAuthenticated(`/api/v1/users/friendships/requests/${friend.username}/accept`, "POST")
+                            .then(() => fetchUserData())}
+                        buttonType={ButtonType.success}>
+                        Accept
+                    </Button>
+                </>)}
+            >
+                <ProfilePicture url={friend.picture} style={{height: "30px", width: "30px"}}/>
+                <Text>{friend.username}</Text>
+
+            </ListLine>
+        )
+    })
 
     let statsItems = []
     for (let i = 1; i < 20; i++) {
@@ -78,7 +157,7 @@ export function ProfilePage() {
             </ListLine>
         )
     }
-
+    console.log(tokenService.getUser())
     return (
         <div style={{display: "flex", flexDirection: "column", height: "100%", backgroundColor: black}}>
 
@@ -86,9 +165,11 @@ export function ProfilePage() {
 
             <div style={content}>
                 <section style={columnStyle}>
-                    <ProfilePicture style={{height: "150px", width: "150px"}}/>
-                    <Title style={{color: white, fontSize: "35px"}}>Username</Title>
-                    <Button buttonType={ButtonType.primary}> Edit </Button>
+                    <ProfilePicture url={userData.picture} style={{height: "150px", width: "150px"}}/>
+                    <Title style={{color: white, fontSize: "35px"}}>{userData.username}</Title>
+                    {isMe() &&
+                        <Button onClick={() => navigate(`/user/${userData.username}/edit`)}
+                                buttonType={ButtonType.primary}> Edit </Button>}
                     <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
                         <Text style={{color: grayDarker}}>000 victories</Text>
                         <Text style={{color: grayDarker}}>000 matches played</Text>
@@ -98,31 +179,51 @@ export function ProfilePage() {
                 <section style={columnStyle}>
                     <div style={{display: "flex", gap: "25px"}}>
                         <PressableText style={{color: white}}
-                                       underlined={selected === "lastMatches"}
-                                       onClick={() => setSelected("lastMatches")}>
+                                       underlined={select === "lastMatches"}
+                                       onClick={() => navigate(`/user/${userData.username}/lastMatches`)}>
                             Last matches
                         </PressableText>
                         <PressableText style={{color: white}}
-                                       underlined={selected === "friends"}
-                                       onClick={() => setSelected("friends")}>
+                                       underlined={select === "friends"}
+                                       onClick={() => navigate(`/user/${userData.username}/friends`)}>
                             Friends
                         </PressableText>
                         <PressableText style={{color: white}}
-                                       underlined={selected === "stats"}
-                                       onClick={() => setSelected("stats")}>
+                                       underlined={select === "stats"}
+                                       onClick={() => navigate(`/user/${userData.username}/stats`)}>
                             Stats
                         </PressableText>
                     </div>
                     <div>
-                        {selected === "lastMatches" &&
+                        {select === "lastMatches" &&
                             <List style={rowListStyle}>
                                 {matchItems}
                             </List>}
-                        {selected === "friends" &&
-                            <List style={rowListStyle}>
-                                {friendsItems}
-                            </List>}
-                        {selected === "stats" &&
+
+                        {select === "friends" &&
+                            <div style={{width: "100%", display: "flex", flexDirection: "column"}}>
+                                {friendsRequest?.length !== 0 && isMe() &&
+                                    <List style={{...rowListStyle, paddingBottom: "50px"}}>
+                                        <Text style={{color: white}}> 🔔 You have friendship requests from:</Text>
+                                        {friendsRequest}
+                                    </List>
+                                }
+                                {isMe() &&
+                                    <>
+                                        <TextInput
+                                            onClick={sendFriendRequest}
+                                            style={{margin: "5px", flex: "1"}}
+                                            placeholder={"Search an user to send a request"}>
+                                        </TextInput>
+                                        {formMessage}
+                                    </>
+                                }
+                                <List style={rowListStyle}>
+                                    {friendsItems}
+                                </List>
+                            </div>}
+
+                        {select === "stats" &&
                             <List style={rowListStyle}>
                                 {statsItems}
                             </List>}

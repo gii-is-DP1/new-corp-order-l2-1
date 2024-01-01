@@ -40,7 +40,7 @@ function App() {
                     <Route path="/" element={<MainPage/>}/>
                     <Route path="/match/:id" element={<Match/>}/>
                     <Route path="/docs" element={<SwaggerDocs/>}/>
-                    <Route path="/user/:id" element={<ProfilePage/>}/>
+                    <Route path="/user/:username/:select?" element={<ProfilePage/>}/>
                     <Route path="/login" element={<Login/>}/>
                     <Route path="/register" element={<Register/>}/>
                 </Routes>

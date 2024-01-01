@@ -16,10 +16,14 @@ import {PressableText} from "./components/PressableText";
 import fetchAuthenticated from "./util/fetchAuthenticated";
 import tokenService from "./services/token.service";
 import ProfilePicture from "./components/ProfilePicture";
+import {useNavigate} from "react-router-dom";
+import {buildErrorComponent} from "./util/formUtil";
 
 export function MainPage() {
     const [userFriends, setUserFriends] = useState(null)
-    console.log(tokenService.getUser().username)
+    const [formMessage, setFormMessage] = useState(<></>)
+    const navigate = useNavigate()
+
     const fetchUserFriends = async () => {
         try {
             setUserFriends(await fetchAuthenticated(`/api/v1/users/${tokenService.getUser().username}/friends`, "GET")
@@ -74,19 +78,6 @@ export function MainPage() {
         gap: "30px"
     }
 
-    let friendsItems = userFriends?.map(friend => {
-        return (
-            <ListLine sideContent={(
-                <button style={{backgroundColor: "transparent", border: "none", padding: "3px"}}>
-                    <QueueIcon style={{color: black}}/>
-                </button>)}
-            >
-                <ProfilePicture url={friend.picture} style={{height: "30px", width: "30px"}}/>
-                <Text>{friend.username}</Text>
-            </ListLine>
-        )
-    })
-
     function PlayCard({title, subtitle, icon, style, privateGame = false}) {
         const [gamemode, setGamemode] = useState("")
         const [players, setPlayers] = useState("")
@@ -94,6 +85,30 @@ export function MainPage() {
         function getColor(state, expected) {
             return state === expected ? orange : black;
         }
+
+        async function createMatch(privateGame) {
+            try {
+                const append = privateGame ? "" : "/quick"
+                await fetchAuthenticated(`/api/v1/matches${append}?mode=${gamemode.toUpperCase()}&maxPlayers=${players}`, "POST")
+                    .then(response => response.json())
+                    .then((response) => navigate(`/match/${response.matchCode}`))
+            } catch (error) {
+                console.log(error.message)
+            }
+        }
+
+        let friendsItems = userFriends?.map(friend => {
+            return (
+                <ListLine sideContent={(
+                    <button style={{backgroundColor: "transparent", border: "none", padding: "3px"}}>
+                        <QueueIcon style={{color: black}}/>
+                    </button>)}
+                >
+                    <ProfilePicture url={friend.picture} style={{height: "30px", width: "30px"}}/>
+                    <Text>{friend.username}</Text>
+                </ListLine>
+            )
+        })
 
         return (
             <Card style={{...cardStyle, ...style}}
@@ -160,12 +175,23 @@ export function MainPage() {
                         </section>
                     }
                     <section style={{...cardContentRowStyle, justifyContent: "center"}}>
-                        <Button buttonType={ButtonType.secondaryLight}>
+                        <Button onClick={() => privateGame ? createMatch(privateGame) : createMatch()}
+                                buttonType={ButtonType.secondaryLight}>
                             Play
                         </Button>
                     </section>
                 </div>
             </Card>)
+    }
+
+    async function joinGameRequest(value) {
+        try {
+            await fetchAuthenticated(`/api/v1/matches/${value}/join`, "POST")
+                .then(() => navigate(`match/${value}`))
+        } catch (error) {
+            setFormMessage(buildErrorComponent(error.message))
+        }
+        setTimeout(() => setFormMessage(("")), 2000)
     }
 
     return (
@@ -184,8 +210,7 @@ export function MainPage() {
                           icon={<InsertLinkIcon style={{fontSize: "45px"}}/>}
                     >
                         <div style={{margin: "10px"}}>
-                            <TextInput placeholder={"ENTER MATCH CODE..."} onClick={() => {
-                            }}></TextInput>
+                            <TextInput placeholder={"ENTER MATCH CODE..."} onClick={joinGameRequest}></TextInput>
                         </div>
                     </Card>
                 </div>

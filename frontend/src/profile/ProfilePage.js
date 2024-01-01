@@ -12,14 +12,12 @@ import {Subtitle} from "../components/Subtitle";
 import fetchAuthenticated from "../util/fetchAuthenticated";
 import {useNavigate, useParams} from "react-router-dom";
 import tokenService from "../services/token.service";
-import TextInput from "../components/TextInput";
-import {buildErrorComponent, buildSuccessComponent} from "../util/formUtil";
+import {FriendsTab} from "./FriendsTab";
 
 export function ProfilePage() {
     const [userData, setUserData] = useState(null)
     const {username, select} = useParams()
     const navigate = useNavigate()
-    const [formMessage, setFormMessage] = useState(<></>)
 
     if (!select) {
         navigate(`/user/${username}/lastMatches`)
@@ -40,6 +38,10 @@ export function ProfilePage() {
 
     if (!userData) {
         return <></>
+    }
+
+    function isMe() {
+        return userData ? userData.username.toUpperCase() === tokenService.getUser().username.toUpperCase() : ""
     }
 
     const content = {
@@ -68,21 +70,6 @@ export function ProfilePage() {
         gap: "5px"
     }
 
-    function isMe() {
-        return userData ? userData.username.toUpperCase() === tokenService.getUser().username.toUpperCase() : ""
-    }
-
-    async function sendFriendRequest(value) {
-        try {
-            await fetchAuthenticated(`/api/v1/users/friendships/requests/${value}`, "POST")
-            await fetchUserData()
-            setFormMessage(buildSuccessComponent("Request sent successfully!"))
-        } catch (error) {
-            setFormMessage(buildErrorComponent(error.message))
-        }
-        setTimeout(() => setFormMessage(("")), 2000)
-    }
-
     let matchItems = []
     for (let i = 1; i < 20; i++) {
         matchItems.push(
@@ -97,54 +84,6 @@ export function ProfilePage() {
         )
     }
 
-    let friendsItems = userData.friends?.map(request => {
-        const friend = request.user
-        return (
-            <ListLine sideContent={(
-                <>
-                    <Button
-                        onClick={() => fetchAuthenticated(`/api/v1/users/friendships/${friend.username}`, "DELETE")
-                            .then(() => fetchUserData())}
-                        buttonType={ButtonType.danger}>
-                        Delete
-                    </Button>
-                    <Button onClick={() => navigate(`/user/${friend.username}`)} buttonType={ButtonType.secondaryLight}>
-                        Visit profile
-                    </Button>
-                </>)}
-            >
-                <ProfilePicture url={friend.picture} style={{height: "30px", width: "30px"}}/>
-                <Text>{friend.username}</Text>
-            </ListLine>
-        )
-    })
-
-    let friendsRequest = userData.receivedFriendshipRequests?.map(request => {
-        const friend = request.user
-        return (
-            <ListLine sideContent={(
-                <>
-                    <Button
-                        onClick={() => fetchAuthenticated(`/api/v1/users/friendships/requests/${friend.username}`, "DELETE")
-                            .then(() => fetchUserData())}
-                        buttonType={ButtonType.danger}>
-                        Deny
-                    </Button>
-                    <Button
-                        onClick={() => fetchAuthenticated(`/api/v1/users/friendships/requests/${friend.username}/accept`, "POST")
-                            .then(() => fetchUserData())}
-                        buttonType={ButtonType.success}>
-                        Accept
-                    </Button>
-                </>)}
-            >
-                <ProfilePicture url={friend.picture} style={{height: "30px", width: "30px"}}/>
-                <Text>{friend.username}</Text>
-
-            </ListLine>
-        )
-    })
-
     let statsItems = []
     for (let i = 1; i < 20; i++) {
         statsItems.push(
@@ -157,7 +96,7 @@ export function ProfilePage() {
             </ListLine>
         )
     }
-    console.log(tokenService.getUser())
+
     return (
         <div style={{display: "flex", flexDirection: "column", height: "100%", backgroundColor: black}}>
 
@@ -201,27 +140,12 @@ export function ProfilePage() {
                             </List>}
 
                         {select === "friends" &&
-                            <div style={{width: "100%", display: "flex", flexDirection: "column"}}>
-                                {friendsRequest?.length !== 0 && isMe() &&
-                                    <List style={{...rowListStyle, paddingBottom: "50px"}}>
-                                        <Text style={{color: white}}> 🔔 You have friendship requests from:</Text>
-                                        {friendsRequest}
-                                    </List>
-                                }
-                                {isMe() &&
-                                    <>
-                                        <TextInput
-                                            onClick={sendFriendRequest}
-                                            style={{margin: "5px", flex: "1"}}
-                                            placeholder={"Search an user to send a request"}>
-                                        </TextInput>
-                                        {formMessage}
-                                    </>
-                                }
-                                <List style={rowListStyle}>
-                                    {friendsItems}
-                                </List>
-                            </div>}
+                            <FriendsTab userData={userData}
+                                        navigate={navigate}
+                                        fetchUserData={fetchUserData}
+                                        isMe={isMe}
+                                        rowListStyle={rowListStyle}
+                            />}
 
                         {select === "stats" &&
                             <List style={rowListStyle}>

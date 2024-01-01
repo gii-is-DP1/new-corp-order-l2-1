@@ -6,15 +6,36 @@ import Button, {ButtonType} from "./components/Button";
 import InsertLinkIcon from "@mui/icons-material/InsertLink";
 import TextInput from "./components/TextInput";
 import LockIcon from "@mui/icons-material/Lock";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Text} from "./components/Text";
 import List from "./components/List";
 import ListLine from "./components/ListLine";
 import QueueIcon from '@mui/icons-material/Queue';
 import {black, orange} from "./util/Colors";
 import {PressableText} from "./components/PressableText";
+import fetchAuthenticated from "./util/fetchAuthenticated";
+import tokenService from "./services/token.service";
+import ProfilePicture from "./components/ProfilePicture";
 
 export function MainPage() {
+    const [userFriends, setUserFriends] = useState(null)
+    console.log(tokenService.getUser().username)
+    const fetchUserFriends = async () => {
+        try {
+            setUserFriends(await fetchAuthenticated(`/api/v1/users/${tokenService.getUser().username}/friends`, "GET")
+                .then(async response => await response.json()));
+        } catch (error) {
+            console.log(error.message)
+        }
+    };
+
+    useEffect(() => {
+        fetchUserFriends()
+    }, [])
+
+    if (!userFriends) {
+        return <></>
+    }
 
     const content = {
         flex: 1,
@@ -53,19 +74,18 @@ export function MainPage() {
         gap: "30px"
     }
 
-    let items = []
-    for (let i = 0; i < 20; i++) {
-        items.push(
-            <ListLine iconSrc={"/Images/Consultants/Dealmaker.png"}
-                      sideContent={(
-                          <button style={{backgroundColor: "transparent", border: "none", padding: "3px"}}>
-                              <QueueIcon style={{color: black}}/>
-                          </button>)}
+    let friendsItems = userFriends?.map(friend => {
+        return (
+            <ListLine sideContent={(
+                <button style={{backgroundColor: "transparent", border: "none", padding: "3px"}}>
+                    <QueueIcon style={{color: black}}/>
+                </button>)}
             >
-                <Text>AmigoAmigui{i}</Text>
+                <ProfilePicture url={friend.picture} style={{height: "30px", width: "30px"}}/>
+                <Text>{friend.username}</Text>
             </ListLine>
-        );
-    }
+        )
+    })
 
     function PlayCard({title, subtitle, icon, style, privateGame = false}) {
         const [gamemode, setGamemode] = useState("")
@@ -115,7 +135,27 @@ export function MainPage() {
                     {privateGame &&
                         <section style={cardContentRowStyle}>
                             <List style={{height: "256px"}}>
-                                {items}
+                                {friendsItems}
+                                {friendsItems.length === 0 &&
+                                    <div style={{
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        alignItems: "center",
+                                        justifyContent: "center"
+                                    }}>
+                                        <Text>
+                                            There is no one to invite here...
+                                        </Text>
+                                        <img src={"https://media.giphy.com/media/ISOckXUybVfQ4/giphy.gif"}
+                                             alt={"SpongeBob super sad"}
+                                             style={{
+                                                 height: "220px",
+                                                 width: "300px",
+                                                 borderRadius: "5px",
+                                                 opacity: "0.9"
+                                             }}/>
+                                    </div>
+                                }
                             </List>
                         </section>
                     }

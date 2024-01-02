@@ -17,11 +17,13 @@ VALUES (1, '2020-01-01', 1, '2023-01-01', 'johndoe@example.com', 'JohnDoe',
        (2, '2023-06-01', 6, '2023-12-31', 'bob@example.com', 'Bob',
         '$2a$12$19.5GDidvCHN4go6jO9dde918jIYONlxe01RgKh5USM3Yd/lFzeI2', null);
 
-INSERT INTO notifications(id, user_id, state, sent_at, title, image_url, message)
-VALUES (1, 1, 1, '2023-01-01 00:00:00', 'Welcome!', null, 'Thanks for joining us!'),
-       (2, 1, 0, '2023-01-02 00:00:00', 'Update!', null, 'New features available.'),
-       (3, 2, 1, '2023-04-01 12:00:00', 'Important Update!', null, 'Check out the latest changes.'),
-       (4, 3, 0, '2023-05-01 10:00:00', 'Event Reminder', null, 'Dont forget about our upcoming event!');
+INSERT INTO notifications(id, user_id, state, sent_at)
+VALUES (1, 1, 1, '2023-01-01 00:00:00'),
+       (2, 4, 0, '2023-05-01 10:00:00');
+
+INSERT INTO invite_notifications(id, sender_id, match_code)
+VALUES (1, 2, 'ASDFGH'),
+       (2, 1, 'OCTAVIO');
 
 INSERT INTO achievements(id, threshold, name, description, image_url, stat)
 VALUES (1, 10, 'Victor', 'Win 10 games', null, 'GAMES_WON'),

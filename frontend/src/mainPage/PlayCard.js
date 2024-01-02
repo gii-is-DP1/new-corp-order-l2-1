@@ -27,6 +27,7 @@ export function PlayCard({
     let [userFriends, setUserFriends] = useState(null)
     const [gamemode, setGamemode] = useState("")
     const [players, setPlayers] = useState("")
+    const [invitationRequest, setInvitationRequest] = useState([])
 
     const fetchUserFriends = async () => {
         try {
@@ -47,10 +48,12 @@ export function PlayCard({
 
     let friendsItems = userFriends?.map(friend => {
         return (
-            <ListLine sideContent={(
-                <button style={{backgroundColor: "transparent", border: "none", padding: "3px"}}>
+            <ListLine sideContent={!invitationRequest.includes(friend.username) && (
+                <button onClick={() => setInvitationRequest([...invitationRequest, friend.username])}
+                        style={{backgroundColor: "transparent", border: "none", padding: "3px"}}>
                     <QueueIcon style={{color: black}}/>
-                </button>)}
+                </button>
+            )}
             >
                 <ProfilePicture url={friend.picture} style={{height: "30px", width: "30px"}}/>
                 <Text>{friend.username}</Text>
@@ -61,9 +64,13 @@ export function PlayCard({
     async function createMatch(privateGame) {
         try {
             const append = privateGame ? "" : "/quick"
-            await fetchAuthenticated(`/api/v1/matches${append}?mode=${gamemode.toUpperCase()}&maxPlayers=${players}`, "POST")
+            const response = await fetchAuthenticated(`/api/v1/matches${append}?mode=${gamemode.toUpperCase()}&maxPlayers=${players}`, "POST")
                 .then(response => response.json())
-                .then((response) => navigate(`/match/${response.matchCode}`))
+
+            let friends = invitationRequest.map(friend => `target=${friend}`).join("&")
+            friends = invitationRequest ? `?${friends}` : ""
+            await fetchAuthenticated(`/api/v1/matches/${response.matchCode}/invite${friends}`, "POST")
+            navigate(`/match/${response.matchCode}`)
         } catch (error) {
             console.log(error.message)
         }

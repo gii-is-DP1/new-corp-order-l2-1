@@ -9,6 +9,7 @@ import fetchAuthenticated from "../util/fetchAuthenticated";
 import {useNavigate} from "react-router-dom";
 import {buildErrorComponent} from "../util/formUtil";
 import {PlayCard} from "./PlayCard"
+import {Notifications} from "./Notifications";
 
 export function MainPage() {
     const [formMessage, setFormMessage] = useState(<></>)
@@ -64,7 +65,7 @@ export function MainPage() {
     return (
         <div style={{display: "flex", flexDirection: "column", height: "100%"}}>
             <AppNavbar/>
-
+            <Notifications/>
             <div style={content}>
                 <div style={columnStyle}>
                     <PlayCard title={"Play now"}

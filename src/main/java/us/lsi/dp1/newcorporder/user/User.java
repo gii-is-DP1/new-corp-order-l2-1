@@ -10,8 +10,8 @@ import org.apache.commons.lang3.ArrayUtils;
 import us.lsi.dp1.newcorporder.authority.Authority;
 import us.lsi.dp1.newcorporder.friendship.Friendship;
 import us.lsi.dp1.newcorporder.friendship.FriendshipRequest;
-import us.lsi.dp1.newcorporder.misc.Notification;
 import us.lsi.dp1.newcorporder.model.BaseEntity;
+import us.lsi.dp1.newcorporder.notification.Notification;
 
 import java.time.Instant;
 import java.util.Set;
@@ -55,7 +55,7 @@ public class User extends BaseEntity {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "receiver")
     private Set<FriendshipRequest> receivedFriendshipRequests;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private Set<Notification> notifications;
 
     public Boolean hasAuthority(String auth) {

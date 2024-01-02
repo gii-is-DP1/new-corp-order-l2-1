@@ -33,7 +33,7 @@ export default function TextInput({name, placeholder, onClick, type, style}) {
     }
 
     const handleEvent = async (e) => {
-        if ((e.key === 'Enter' || e.type === 'click') && onClick) {
+        if (inputValue !== "" && (e.key === 'Enter' || e.type === 'click') && onClick) {
             e.preventDefault();
             try {
                 await onClick(inputValue);

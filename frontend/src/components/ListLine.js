@@ -1,6 +1,6 @@
 import * as Colors from "../util/Colors";
 
-export default function ListLine({children, sideContent}) {
+export default function ListLine({children, sideContent, style}) {
 
     const containerStyle = {
         backgroundColor: Colors.white,
@@ -20,7 +20,7 @@ export default function ListLine({children, sideContent}) {
     }
 
     return (
-        <div style={containerStyle}>
+        <div style={{...containerStyle, ...style}}>
             <div style={{...columnStyle, flex: 1}}>
                 {children}
             </div>

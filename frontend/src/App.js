@@ -11,7 +11,10 @@ import {MainPage} from "./MainPage";
 import {AdminMatches} from "./admin/AdminMatches";
 import {AdminModeration} from "./admin/AdminModeration";
 import {AdminAchievements} from "./admin/AdminAchievements";
+import {MainPage} from "./mainPage/MainPage";
 import {ProfilePage} from "./profile/ProfilePage";
+import Login from "./auth/login";
+import Register from "./auth/register";
 
 function ErrorFallback({error, resetErrorBoundary}) {
     return (
@@ -25,21 +28,24 @@ function ErrorFallback({error, resetErrorBoundary}) {
 
 function App() {
     const jwt = tokenService.getLocalAccessToken();
-
-    let roles = []
-
-    if (jwt) {
-        roles = getRolesFromJWT(jwt);
-    }
-
-    function getRolesFromJWT(jwt) {
-        return jwt_decode(jwt).authorities;
-    }
+    const roles = jwt ? tokenService.getRoles() : [];
 
     return (
         <>
             <ErrorBoundary FallbackComponent={ErrorFallback}>
                 <Routes>
+                    <Route path="/docs" element={<SwaggerDocs/>}/>
+
+                    {jwt && <>
+                        <Route path="/" element={<MainPage/>}/>
+                        <Route path="/match/:id" element={<Match/>}/>
+                        <Route path="/user/:username/:select?" element={<ProfilePage/>}/>
+                    </>}
+
+                    {!jwt && <>
+                        {["/", "/login"].map(path => <Route path={path} element={<Login/>}/>)}
+                        <Route path="/register" element={<Register/>}/>
+                    </>}
                     <Route path="/" element={<MainPage/>}/>
                     <Route path="/match/:id" element={<Match/>}/>
                     <Route path="/docs" element={<SwaggerDocs/>}/>

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Data;
 import us.lsi.dp1.newcorporder.friendship.payload.FriendshipView;
-import us.lsi.dp1.newcorporder.misc.Notification;
+import us.lsi.dp1.newcorporder.notification.Notification;
 import us.lsi.dp1.newcorporder.user.User;
 
 import java.time.Instant;

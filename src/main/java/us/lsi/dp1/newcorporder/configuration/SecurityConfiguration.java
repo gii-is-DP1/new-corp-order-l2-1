@@ -49,7 +49,7 @@ public class SecurityConfiguration {
 
             .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                 .requestMatchers("/resources/**", "/webjars/**", "/static/**", "/swagger-resources/**").permitAll()
-                .requestMatchers("/", "/oups", "/api/v1/auth/**", "/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**", "/h2-console/**").permitAll()
+                .requestMatchers("/", "/api/v1/auth/**", "/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**", "/h2-console/**").permitAll()
 
                 .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/v1/users/{username}")).authenticated()
                 .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/v1/users/{username}")).authenticated()

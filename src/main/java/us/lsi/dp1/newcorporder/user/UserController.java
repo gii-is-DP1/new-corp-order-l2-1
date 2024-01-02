@@ -124,6 +124,27 @@ class UserController {
     }
 
     @Operation(
+        summary = "Find an user picture by its username",
+        description = "Find an user picture by its username",
+        tags = "get"
+    )
+    @ApiResponse(
+        responseCode = "200",
+        description = "The found user picture"
+    )
+    @ApiResponse(
+        responseCode = "404",
+        description = "User not found"
+    )
+    @GetMapping("/{username}/picture")
+    public UserView findPicture(@PathVariable String username) {
+        User user = userService.findUser(username);
+        RestPreconditions.checkNotNull(user, "User", "username", username);
+
+        return UserView.minimal(user);
+    }
+
+    @Operation(
         summary = "Get the friends of the given user",
         description = "Get the friends of the given user",
         tags = "get"

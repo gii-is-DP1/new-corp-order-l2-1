@@ -1,5 +1,6 @@
 import {Text} from "./Text";
 import React from "react";
+import {Pressable} from "./Pressable";
 
 export function PressableText({children, onClick, style, underlined, color}) {
     const textStyle = {
@@ -7,15 +8,9 @@ export function PressableText({children, onClick, style, underlined, color}) {
         color: color ? color : "inherit"
     }
 
-    const buttonStyle = {
-        backgroundColor: "transparent",
-        border: "none",
-        cursor: "pointer"
-    }
-
     return (
-        <button onClick={onClick} style={buttonStyle}>
+        <Pressable onClick={onClick}>
             <Text style={{...textStyle, ...style}}>{children}</Text>
-        </button>
+        </Pressable>
     )
 }

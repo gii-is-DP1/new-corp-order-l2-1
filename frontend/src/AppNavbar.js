@@ -49,8 +49,7 @@ const AppNavbar = () => {
                     {link: '/matches', text: 'Matches'},
                     {link: '/moderation', text: 'Moderation'},
                     {link: '/achievements', text: 'Achievements'},
-                    {link: '/stats', text: 'Stats'},
-                    {link: '/boh', text: 'Leave Admin Panel'},
+                    {link: `/user/${username}`, isProfilePicture: true},
                 ]);
             }
             if (role === 'USER') {

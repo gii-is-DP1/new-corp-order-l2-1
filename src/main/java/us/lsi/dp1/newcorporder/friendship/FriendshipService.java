@@ -37,6 +37,14 @@ public class FriendshipService {
             .toList();
     }
 
+    public boolean areFriends(User user1, User user2) {
+        return friendshipRepository.existsByUserAndFriend(user1, user2);
+    }
+
+    public Friendship getFriendship(User user1, User user2) {
+        return friendshipRepository.findByUserAndFriend(user1, user2);
+    }
+
     @Transactional
     public void requestFriendship(User sender, User receiver) {
         Preconditions.checkState(!sender.equals(receiver),

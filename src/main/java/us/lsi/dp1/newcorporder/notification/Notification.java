@@ -3,6 +3,7 @@ package us.lsi.dp1.newcorporder.notification;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -32,6 +33,7 @@ public abstract class Notification extends BaseEntity {
 
     @NotNull
     @Column(name = "state")
-    private NotificacionState state;
+    @Builder.Default
+    private NotificacionState state = NotificacionState.NOT_SEEN;
 
 }

@@ -1,3 +1,5 @@
+import jwt_decode from "jwt-decode";
+
 class TokenService {
     getLocalRefreshToken() {
         const user = JSON.parse(localStorage.getItem("user"));
@@ -15,6 +17,10 @@ class TokenService {
 
     updateLocalAccessToken(token) {
         window.localStorage.setItem("jwt", JSON.stringify({accessToken: token}));
+    }
+
+    getRoles() {
+        return jwt_decode(this.getLocalAccessToken()).authorities;
     }
 
     getUser() {

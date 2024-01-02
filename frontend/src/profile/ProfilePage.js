@@ -44,6 +44,11 @@ export function ProfilePage() {
         return userData ? userData.username.toUpperCase() === tokenService.getUser().username.toUpperCase() : ""
     }
 
+    function logout() {
+        tokenService.removeUser();
+        window.location.href = "/";
+    }
+
     const content = {
         flex: 1,
         display: "flex",
@@ -106,9 +111,16 @@ export function ProfilePage() {
                 <section style={columnStyle}>
                     <ProfilePicture url={userData.picture} style={{height: "150px", width: "150px"}}/>
                     <Title style={{color: white, fontSize: "35px"}}>{userData.username}</Title>
-                    {isMe() &&
+                    {isMe() && <div style={{display: "flex", flexDirection: "row", gap: "5px"}}>
                         <Button onClick={() => navigate(`/user/${userData.username}/edit`)}
-                                buttonType={ButtonType.primary}> Edit </Button>}
+                                buttonType={ButtonType.primary}>
+                            Edit
+                        </Button>
+                        <Button onClick={() => logout()}
+                                buttonType={ButtonType.danger}>
+                            Logout
+                        </Button>
+                    </div>}
                     <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
                         <Text style={{color: grayDarker}}>000 victories</Text>
                         <Text style={{color: grayDarker}}>000 matches played</Text>

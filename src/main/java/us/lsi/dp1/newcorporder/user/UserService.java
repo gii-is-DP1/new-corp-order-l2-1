@@ -28,8 +28,11 @@ import us.lsi.dp1.newcorporder.auth.ApplicationUserDetails;
 import us.lsi.dp1.newcorporder.authority.AuthorityService;
 import us.lsi.dp1.newcorporder.exceptions.ResourceNotFoundException;
 import us.lsi.dp1.newcorporder.user.payload.request.EditProfileRequest;
+import us.lsi.dp1.newcorporder.user.payload.response.UserView;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class UserService {
@@ -127,6 +130,19 @@ public class UserService {
 
     public void changeAuthority(User user, String authority) {
         user.setAuthority(authorityService.findByName(authority));
+    }
+
+    public List<UserView> getAllUsers(String username) {
+        Iterable<User> users = findAll();
+        List<UserView> userViews = new ArrayList<>();
+        for (User user : users) {
+            if (username == null) {
+                userViews.add(UserView.expanded(user, findCurrentUser()));
+            } else if (user.getUsername().toLowerCase().contains(username.toLowerCase())) {
+                userViews.add(UserView.expanded(user, findCurrentUser()));
+            }
+        }
+        return userViews;
     }
 
     public void changePassword(User user, String password) {

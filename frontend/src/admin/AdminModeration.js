@@ -6,8 +6,15 @@ import ListLine from "../components/ListLine";
 import Button, {ButtonType} from "../components/Button";
 import {Subtitle} from "../components/Subtitle";
 import TextInput from "../components/TextInput";
+import fetchAuthenticated from "../util/fetchAuthenticated";
+import {useEffect, useState} from "react";
+import ProfilePicture from "../components/ProfilePicture";
+import {useNavigate} from "react-router-dom";
 
 export function AdminModeration() {
+    const [usersData, setUsersData] = useState(null)
+    const [filter, setFilter] = useState("")
+    const navigate = useNavigate()
 
     const content = {
         display: "flex",
@@ -19,26 +26,37 @@ export function AdminModeration() {
         padding: "10px",
     }
 
-    let matchItems = []
-    for (let i = 1; i < 20; i++) {
-        matchItems.push(
-            <ListLine sideContent={(
-                <div style = {{display:"flex", flexDirection:"row", gap: "5px"}}>
-                    <Button style={buttonStyle} buttonType={ButtonType.danger}>
-                        Ban
-                    </Button>
-                    <Button style={buttonStyle} buttonType={ButtonType.secondaryLight}>
-                        Profile
-                    </Button>
-                </div>
-            )}>
-                <img src="https://w7.pngwing.com/pngs/682/203/png-transparent-account-user-person-profile-avatar-basic-interface-icon.png"
-                     alt="logo"
-                     style={{width: "40px", height: "40px", borderRadius: "50%"}}/>
-                <Subtitle>· Jugador #{i} |</Subtitle>
-            </ListLine>
-        )
-    }
+    useEffect(() => {
+        fetchUsersData()
+    }, [filter]);
+
+    const fetchUsersData = async () => {
+        try {
+            setUsersData(await fetchAuthenticated(`/api/v1/users?username=${filter}`, "GET")
+                .then(async response => await response.json()));
+        } catch (error) {
+            navigate('')
+        }
+    };
+
+    let usersItem = usersData?.map(user => {
+       return  <ListLine sideContent={(
+            <div style = {{display:"flex", flexDirection:"row", gap: "5px"}}>
+                <Button onClick={() => fetchAuthenticated(`/api/v1/users/${user.username}`, "DELETE")
+                                    .then(() => fetchUsersData())}
+                        style={buttonStyle}
+                        buttonType={ButtonType.danger} >
+                    Ban
+                </Button>
+                <Button style={buttonStyle} buttonType={ButtonType.secondaryLight} onClick={() => navigate(`/user/${user.username}`) }>
+                    Profile
+                </Button>
+            </div>
+        )}>
+           <ProfilePicture url={user.picture} style={{width: "40px", height: "40px"}}/>
+            <Subtitle>{user.username}</Subtitle>
+        </ListLine>
+    })
 
     return (
         <div style={{height: "100%", backgroundColor: black}}>
@@ -51,11 +69,16 @@ export function AdminModeration() {
                     <Subtitle style={{fontSize: "20px", color: white}}>
                         Select player to view actions
                     </Subtitle>
-                    <TextInput style={{width: "600px", fontSize:"20px",  textTransform: "uppercase", padding: "15px"}} placeholder="Filter..."/>
+                    <div style={{display:'flex', flexDirection:"row", gap:'20px'}}>
+                        <TextInput onClick={setFilter}
+                                   style={{width: "600px", fontSize:"20px",  textTransform: "uppercase"}}
+                                   placeholder="Filter..."/>
+                        {filter != "" && <Button onClick={() => setFilter("")} buttonType={ButtonType.danger} style={{fontSize: "20px", textTransform: "uppercase"}}>Delete filter</Button>}
+                    </div>
                 </div>
                 <div style={{marginTop:"22px"}}>
                     <List style={{maxHeight: "650px", width: "800px", backgroundColor: black, overflow: "auto"}}>
-                        {matchItems}
+                        {usersItem}
                     </List>
                 </div>
             </section>

@@ -121,6 +121,7 @@ export const startingState = {
                 companies: null,
             },
             guerrillaMarketing: {
+                opponent: null,
                 conglomerates: null,
             },
             printMedia: {

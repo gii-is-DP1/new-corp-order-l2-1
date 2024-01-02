@@ -1,5 +1,10 @@
 import Selector from "../Selector";
-import {selectAtLeastOne, selectAtLeastOneOrZero, selectAtLeastTwo} from "../CanConfirmFunctions";
+import {
+    selectAtLeastOne,
+    selectAtLeastOneOrTwo,
+    selectAtLeastOneOrZero,
+    selectAtLeastTwo
+} from "../CanConfirmFunctions";
 import {
     onlySelectOfSameColor,
     selectOrthogonallyAdjacentTiles,
@@ -16,6 +21,17 @@ export function pickOneCard(from, onConfirm) {
                      selection={from}
                      canConfirm={selectAtLeastOne}
                      changeSelectableItems={selectQuantity(1)}
+                     onConfirm={onConfirm}
+                     containerStyle={conglomerateContainerStyle}
+                     key={onConfirm}
+    />;
+}
+
+export function pickOneorTwoCards(from, onConfirm) {
+    return <Selector title={"Pick one or two card"}
+                     selection={from}
+                     canConfirm={selectAtLeastOneOrTwo}
+                     changeSelectableItems={selectQuantity(2)}
                      onConfirm={onConfirm}
                      containerStyle={conglomerateContainerStyle}
                      key={onConfirm}
@@ -68,6 +84,16 @@ export function pickCompany(from, onConfirm, n) {
         selection={from}
         canConfirm={selectAtLeastOne}
         changeSelectableItems={selectQuantity(n)}
+        onConfirm={onConfirm}
+    />;
+}
+
+export function pickOneOrTwoCompanies(from, onConfirm) {
+    return <CompanySelector
+        title={"Pick one or two Companies"}
+        selection={from}
+        canConfirm={selectAtLeastOneOrTwo}
+        changeSelectableItems={onlySelectOfSameColor}
         onConfirm={onConfirm}
     />;
 }

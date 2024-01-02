@@ -9,3 +9,7 @@ export function selectAtLeastOneOrZero(selection, selectedElements){
 export function selectAtLeastTwo(selection, selectedElements){
     return selectedElements.length >= 2;
 }
+
+export function selectAtLeastOneOrTwo(selection, selectedElements){
+    return selectedElements.length >= 1 && selectedElements.length <= 2;
+}

@@ -7,7 +7,7 @@ import SwaggerDocs from "./public/swagger";
 import Login from "./auth/login/index";
 import Register from "./auth/register/index"
 import Match from "./match/Match"
-import {MainPage} from "./MainPage";
+import {MainPage} from "./mainPage/MainPage";
 import {ProfilePage} from "./profile/ProfilePage";
 
 function ErrorFallback({error, resetErrorBoundary}) {

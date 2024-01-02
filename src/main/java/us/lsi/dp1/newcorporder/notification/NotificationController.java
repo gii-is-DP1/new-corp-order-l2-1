@@ -2,10 +2,9 @@ package us.lsi.dp1.newcorporder.notification;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import us.lsi.dp1.newcorporder.user.UserService;
+import us.lsi.dp1.newcorporder.util.RestPreconditions;
 
 import java.util.List;
 
@@ -14,11 +13,11 @@ import java.util.List;
 public class NotificationController {
 
     private final UserService userService;
-    private final NotificationRepository notificationRepository;
+    private final NotificationService notificationService;
 
-    public NotificationController(UserService userService, NotificationRepository notificationRepository) {
+    public NotificationController(UserService userService, NotificationService notificationService) {
         this.userService = userService;
-        this.notificationRepository = notificationRepository;
+        this.notificationService = notificationService;
     }
 
     @Operation(
@@ -31,6 +30,22 @@ public class NotificationController {
     )
     @GetMapping
     public List<Notification> getNotifications() {
-        return notificationRepository.findByUserOrderBySentAtAsc(userService.findCurrentUser());
+        return notificationService.getNonDismissedNotifications(userService.findCurrentUser());
+    }
+
+    @Operation(
+        summary = "Dismiss the given notification",
+        tags = "delete"
+    )
+    @ApiResponse(
+        responseCode = "200",
+        description = "The notification was dismissed successfully"
+    )
+    @DeleteMapping("/{id}")
+    public void getNotifications(@PathVariable Integer id) {
+        Notification notification = notificationService.getNotification(id);
+        RestPreconditions.checkAccess(notification.getUser().equals(userService.findCurrentUser()));
+
+        notificationService.dismiss(notification);
     }
 }

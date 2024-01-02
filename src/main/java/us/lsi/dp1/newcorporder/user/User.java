@@ -1,16 +1,15 @@
 package us.lsi.dp1.newcorporder.user;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.apache.commons.lang3.ArrayUtils;
 import us.lsi.dp1.newcorporder.authority.Authority;
-import us.lsi.dp1.newcorporder.friends.FriendshipRequest;
+import us.lsi.dp1.newcorporder.friendship.Friendship;
+import us.lsi.dp1.newcorporder.friendship.FriendshipRequest;
 import us.lsi.dp1.newcorporder.misc.Notification;
 import us.lsi.dp1.newcorporder.model.BaseEntity;
 
@@ -21,31 +20,34 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "users")
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-@SuperBuilder
+@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 public class User extends BaseEntity {
 
-    @Size(max=32) @Column(unique = true) @NotNull
-    private String username;
+    @Size(max = 32)
+    @Column(unique = true)
+    @NotEmpty private String username;
 
-    @Size(max=32) @NotNull
-    private String email;
+    @Size(max = 32)
+    @Column(unique = true)
+    @NotEmpty private String email;
+
+    @NotEmpty private String password;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "authority")
+    @NotNull private Authority authority;
 
     private String picture;
-
-    @NotNull
-    private String password;
 
     private Instant firstSeen;
 
     private Instant lastSeen;
 
-
-    @NotNull
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "authority")
-    Authority authority;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    private Set<Friendship> friendships;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "sender")
     private Set<FriendshipRequest> sentFriendshipRequests;
@@ -63,5 +65,4 @@ public class User extends BaseEntity {
     public Boolean hasAnyAuthority(String... authorities) {
         return ArrayUtils.contains(authorities, this.authority.getName());
     }
-
 }

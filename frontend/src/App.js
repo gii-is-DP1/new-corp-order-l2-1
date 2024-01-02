@@ -11,6 +11,7 @@ import {MainPage} from "./MainPage";
 import {AdminMatches} from "./admin/AdminMatches";
 import {AdminModeration} from "./admin/AdminModeration";
 import {AdminAchievements} from "./admin/AdminAchievements";
+import {ProfilePage} from "./profile/ProfilePage";
 
 function ErrorFallback({error, resetErrorBoundary}) {
     return (
@@ -45,6 +46,7 @@ function App() {
                     <Route path="/admin/matches" element={<AdminMatches/>}/>
                     <Route path="/admin/moderation" element={<AdminModeration/>}/>
                     <Route path="/admin/achievements" element={<AdminAchievements/>}/>
+                    <Route path="/user/:username/:select?" element={<ProfilePage/>}/>
                     <Route path="/login" element={<Login/>}/>
                     <Route path="/register" element={<Register/>}/>
                 </Routes>

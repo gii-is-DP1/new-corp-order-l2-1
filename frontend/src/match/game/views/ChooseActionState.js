@@ -7,6 +7,7 @@ import {conglomerateContainerStyle, pickOneCard} from "../selector/pickers/Picke
 import {selectAtLeastOne} from "../selector/CanConfirmFunctions";
 import {selectQuantity} from "../selector/ChangeSelectableItemsFunctions";
 import Selector from "../selector/Selector";
+import css from "../game.module.css";
 
 function ActionChooser() { //TODO: use picker to substitute this method
     const context = useContext(StateContext);
@@ -16,9 +17,9 @@ function ActionChooser() { //TODO: use picker to substitute this method
     }
 
     const selection = [ //TODO: make these like cards
-        <Button buttonType={ButtonType.primary} action = {PLOT}>PLOT</Button>,
-        <Button buttonType={ButtonType.primary} action = {INFILTRATE}>INFILTRATE</Button>,
-        <Button buttonType={ButtonType.primary} action = {TAKEOVER}>TAKEOVER</Button>,
+        <img className={css.actionCard} src={"/images/plot.png"} alt={PLOT} action={PLOT}/>,
+        <img className={css.actionCard} src={"/images/infiltrate.png"} alt={INFILTRATE} action={INFILTRATE}/>,
+        <img className={css.actionCard} src={"/images/takeover.png"} alt={TAKEOVER} action={TAKEOVER}/>,
     ]
 
     const onConfirm = (selectedItems) => {
@@ -29,12 +30,29 @@ function ActionChooser() { //TODO: use picker to substitute this method
     }
 
     return <Selector title={"What will you do?"}
+                     help={
+                         <>
+                             <h3>Plot</h3>
+                             <p>Take Conglomerate cards into your hand </p>
+                             <h3>Infiltrate</h3>
+                             <p>Place Conglomerate cards from your hand into your HQ to place Agents on Company
+                                 tiles</p>
+                             <h3>Takeover</h3>
+                             <p>Rotate Conglomerate cards in your HQ to move Agents</p>
+                         </>
+                     }
                      selection={selection}
                      canConfirm={selectAtLeastOne}
                      changeSelectableItems={selectQuantity(1)}
                      onConfirm={onConfirm}
-                     containerStyle={{display: "flex", justifyContent: "space-around"}}
-                     key={onConfirm}/>
+                     containerStyle={
+                         {
+                             display: "flex", justifyContent:
+                                 "space-around"
+                         }
+                     }
+                     key={onConfirm}
+    />
 }
 
 

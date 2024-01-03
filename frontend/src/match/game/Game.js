@@ -2,10 +2,11 @@ import React, {useState} from "react";
 import {startingState} from "../data/MockupData";
 import css from "./game.module.css";
 import {State} from "../data/State";
-import {HandViewer} from "./viewer/HandViewer";
-import {HQViewer} from "./viewer/HQViewer";
-import {GeneralSupplyViewer} from "./viewer/GeneralSupplyViewer";
-import {OpponentsHqViewer} from "./viewer/OpponentsHqViewer";
+import {HandViewer} from "./viewers/HandViewer";
+import {HQViewer} from "./viewers/HQViewer";
+import {GeneralSupplyViewer} from "./viewers/GeneralSupplyViewer";
+import {OpponentsHqViewer} from "./viewers/OpponentsHqViewer";
+import {CompanyMatrixViewer} from "./viewers/CompanyMatrixViewer";
 
 export const StateContext = React.createContext({})
 
@@ -17,10 +18,17 @@ export function Game() {
     return <div className={css.game}>
         <StateContext.Provider value={initialContext}>
             <FrontendView/>
+            <Viewers/>
+        </StateContext.Provider>
+    </div>;
+}
+
+function Viewers(){
+    return <>
+           <CompanyMatrixViewer/>
             <HandViewer/>
             <HQViewer/>
             <GeneralSupplyViewer/>
             <OpponentsHqViewer/>
-        </StateContext.Provider>
-    </div>;
+    </>
 }

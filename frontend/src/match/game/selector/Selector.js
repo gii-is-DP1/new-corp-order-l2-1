@@ -4,7 +4,7 @@ import {Selectable} from "./Selectable";
 
 export default function Selector({
                                      title,
-                                     subtitle,
+                                     help,
                                      selection,
                                      selectableElements = [...Array(selection.length).keys()],
                                      canConfirm,
@@ -29,7 +29,7 @@ export default function Selector({
             margin: "auto"
         }}>
             <h1 style={{textAlign: "center"}}>{title} </h1>
-            <h2>{subtitle}</h2>
+
             <div style={containerStyle}>
                 {selection.map((item, i) =>
                     <Selectable
@@ -53,7 +53,9 @@ export default function Selector({
                         }}
                     />
                 )}
+
             </div>
+
             <Button buttonType={ButtonType.primary}
                     disabled={!canConfirm(selection, selectedElements)}
                     onClick={() => onConfirm(selectedElements)}
@@ -69,6 +71,7 @@ export default function Selector({
                 </Button>
                 : <></>
             }
+            {help}
         </div>
     </>
 }

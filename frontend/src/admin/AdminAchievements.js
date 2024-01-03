@@ -1,13 +1,21 @@
 import AppNavbar from "../AppNavbar";
-import {black, white} from "../util/Colors";
+import {black, white, grayDarker} from "../util/Colors";
 import {Title} from "../components/Title";
 import List from "../components/List";
 import ListLine from "../components/ListLine";
 import Button, {ButtonType} from "../components/Button";
 import {Subtitle} from "../components/Subtitle";
 import TextInput from "../components/TextInput";
+import fetchAuthenticated from "../util/fetchAuthenticated";
+import ProfilePicture from "../components/ProfilePicture";
+import {useEffect, useState} from "react";
+import {useNavigate} from "react-router-dom";
+import AchievementPicture from "../components/AchievementPicture";
 
 export function AdminAchievements() {
+    const [achievementsData, setAchievementsData] = useState(null)
+    const [filter, setFilter] = useState("")
+    const navigate = useNavigate()
 
     const content = {
         display: "flex",
@@ -19,30 +27,39 @@ export function AdminAchievements() {
         width: "500px",
         fontSize:"20px",
         textTransform: "uppercase",
-        padding: "15px"
     }
 
+    const fetchAchievementsData = async () => {
+        try {
+            setAchievementsData(await fetchAuthenticated(`/api/v1/achievements?name=${filter}`, "GET")
+                .then(async response => await response.json()));
+        } catch (error) {
+            navigate('')
+        }
+    };
 
-    let matchItems = []
-    for (let i = 1; i < 20; i++) {
-        matchItems.push(
-            <ListLine sideContent={(
-                <div style = {{display:"flex", flexDirection:"row", gap: "5px"}}>
-                    <Button buttonType={ButtonType.secondaryLight}>
-                        edit
-                    </Button>
-                    <Button  buttonType={ButtonType.danger}>
-                        delete
-                    </Button>
-                </div>
-            )}>
-                <img src="https://c0.klipartz.com/pngpicture/938/540/gratis-png-emoticon-smiley-signo-de-interrogacion-smiley.png"
-                     alt="logo"
-                     style={{width: "40px", height: "40px", borderRadius: "50%"}}/>
-                <Subtitle> Achievement #{i} </Subtitle>
-            </ListLine>
-        )
-    }
+    useEffect(() => {
+        fetchAchievementsData()
+    }, [filter]);
+
+    let achievementItems = achievementsData?.map(achievement => {
+        return  <ListLine sideContent={(
+            <div style = {{display:"flex", flexDirection:"row", gap: "5px"}}>
+                <Button buttonType={ButtonType.secondaryLight}>
+                    edit
+                </Button>
+                <Button onClick={() => fetchAuthenticated(`/api/v1/achievements/${achievement.id}`, "DELETE")
+                    .then(() => fetchAchievementsData())}
+                    buttonType={ButtonType.danger}>
+                    delete
+                </Button>
+            </div>
+        )}>
+            <AchievementPicture url={achievement.imageUrl} style={{width: "40px", height: "40px"}} earned={true}/>
+            <Subtitle> {achievement.name} </Subtitle>
+            <Subtitle style={{fontSize: '12px', color:grayDarker}}> {achievement.description} </Subtitle>
+        </ListLine>
+    })
 
     return (
         <div style={{height: "100%", backgroundColor: black}}>
@@ -56,7 +73,10 @@ export function AdminAchievements() {
                         Create, modify or delete achievements
                     </Subtitle>
                     <div style={{display:"flex", flexDirection:"row", gap:"20px"}}>
-                        <TextInput style={textInputStyle} placeholder="Filter..."/>
+                        <TextInput onClick={setFilter}
+                                   style={{width: "600px", fontSize:"20px",  textTransform: "uppercase"}}
+                                   placeholder="Filter..."/>
+                        {filter != "" && <Button onClick={() => setFilter("")} buttonType={ButtonType.danger} style={{fontSize: "20px", textTransform: "uppercase"}}>Delete filter</Button>}
                         <Button style={{width:"200px"}} buttonType={ButtonType.success}>
                             Create
                         </Button>
@@ -64,7 +84,7 @@ export function AdminAchievements() {
                 </div>
                 <div style={{marginTop:"22px"}}>
                     <List style={{maxHeight: "650px", width: "800px", backgroundColor: black, overflow: "auto"}}>
-                        {matchItems}
+                        {achievementItems}
                     </List>
                 </div>
             </section>

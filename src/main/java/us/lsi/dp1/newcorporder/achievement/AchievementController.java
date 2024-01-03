@@ -36,8 +36,8 @@ public class AchievementController {
         description = "The achievements list"
     )
     @GetMapping
-    public ResponseEntity<List<Achievement>> findAll() {
-        List<Achievement> res = (List<Achievement>) achievementService.findAll();
+    public ResponseEntity<List<Achievement>> findAll(@RequestParam(required = false) String name) {
+        List<Achievement> res = achievementService.getAllFilteredAchievements(name);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 

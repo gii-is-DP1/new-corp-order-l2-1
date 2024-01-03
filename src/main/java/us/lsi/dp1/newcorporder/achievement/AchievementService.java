@@ -7,6 +7,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import us.lsi.dp1.newcorporder.exceptions.ResourceNotFoundException;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class AchievementService {
 
@@ -46,4 +49,17 @@ public class AchievementService {
         Achievement toDelete = findById(id);
         achievementRepository.delete(toDelete);
     }
+
+    @Transactional
+    public List<Achievement> getAllFilteredAchievements(String name) {
+        List<Achievement> achievements = this.achievementRepository.findAll();
+        if (name == null || name.isEmpty()) {
+            return achievements;
+        }
+
+        return achievements.stream()
+            .filter(achievement -> achievement.getName().toLowerCase().contains(name.toLowerCase()))
+            .collect(Collectors.toList());
+    }
+
 }

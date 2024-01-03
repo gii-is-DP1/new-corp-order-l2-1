@@ -7,7 +7,6 @@ import Button, {ButtonType} from "../components/Button";
 import {Subtitle} from "../components/Subtitle";
 import TextInput from "../components/TextInput";
 import fetchAuthenticated from "../util/fetchAuthenticated";
-import ProfilePicture from "../components/ProfilePicture";
 import {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import AchievementPicture from "../components/AchievementPicture";
@@ -77,7 +76,7 @@ export function AdminAchievements() {
                                    style={{width: "600px", fontSize:"20px",  textTransform: "uppercase"}}
                                    placeholder="Filter..."/>
                         {filter != "" && <Button onClick={() => setFilter("")} buttonType={ButtonType.danger} style={{fontSize: "20px", textTransform: "uppercase"}}>Delete filter</Button>}
-                        <Button style={{width:"200px"}} buttonType={ButtonType.success}>
+                        <Button style={{width:"200px"}} buttonType={ButtonType.success} onClick={() => navigate(`/admin/achievements/create`)}>
                             Create
                         </Button>
                     </div>

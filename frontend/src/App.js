@@ -12,6 +12,7 @@ import {MainPage} from "./mainPage/MainPage";
 import {ProfilePage} from "./profile/ProfilePage";
 import Login from "./auth/login";
 import Register from "./auth/register";
+import {CreateAchievements} from "./admin/CreateAchievement";
 
 function ErrorFallback({error, resetErrorBoundary}) {
     return (
@@ -49,6 +50,7 @@ function App() {
                     <Route path="/admin/matches" element={<AdminMatches/>}/>
                     <Route path="/admin/moderation" element={<AdminModeration/>}/>
                     <Route path="/admin/achievements" element={<AdminAchievements/>}/>
+                    <Route path="/admin/achievements/create" element={<CreateAchievements/>}/>
                     <Route path="/user/:username/:select?" element={<ProfilePage/>}/>
                     <Route path="/login" element={<Login/>}/>
                     <Route path="/register" element={<Register/>}/>

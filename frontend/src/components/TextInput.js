@@ -2,7 +2,7 @@ import {useRef, useState} from 'react';
 import * as Colors from "../util/Colors";
 import SendIcon from '@mui/icons-material/Send';
 
-export default function TextInput({name, placeholder, onClick, type, style}) {
+export default function TextInput({name, placeholder, onClick, type, style, minValue, maxValue}) {
     const [inputValue, setInputValue] = useState('');
     const inputRef = useRef(null);
 
@@ -55,6 +55,8 @@ export default function TextInput({name, placeholder, onClick, type, style}) {
                        onChange={e => setInputValue(e.target.value)}
                        ref={inputRef}
                        onKeyDown={handleEvent}
+                       min={minValue}
+                       max={maxValue}
                 />
                 {onClick &&
                     <button onClick={handleEvent} style={buttonStyle}>

@@ -23,6 +23,11 @@ import {BroadcastNetworkCompaniesState} from "./views/takeover/BroadcastNetworkC
 import {ActivateAbilityState} from "./views/takeover/ActivateAbilityState";
 import {GuerrillaMarketingConglomeratesState} from "./views/takeover/GuerrillaMarketingConglomeratesState";
 import {GuerrillaMarketingOpponentState} from "./views/takeover/GuerrillaMarketingOpponentState";
+import {PrintMediaFirstConglomerateState} from "./views/takeover/PrintMediaFirstConglomerateState";
+import {PrintMediaOtherHqState} from "./views/takeover/PrintMediaOtherHqState";
+import {PrintMediaSecondConglomerateState} from "./views/takeover/PrintMediaSecondConglomerateState";
+import {AmbientAdvertisingOpponentState} from "./views/takeover/AmbientAdvertisingOpponentState";
+import {AmbientAdvertisingConglomeratesState} from "./views/takeover/AmbientAdvertisingConglomeratesState";
 
 const frontendState = {
     plot: {//TODO: some picker should be skippable (selectors have a "canSkip" property)
@@ -46,10 +51,12 @@ const frontendState = {
         DEALMAKER_DRAW_TWO_CARDS_FROM_DECK: DealmakerDrawTwoCardsFromDeckState,
         BROADCAST_NETWORK_PICK_COMPANIES: BroadcastNetworkCompaniesState,
         GUERRILLA_MARKETING_PICK_OPPONENT: GuerrillaMarketingOpponentState,
-        GUERRILLA_MARKETING_PICK_CONGLOMERATES: GuerrillaMarketingConglomeratesState},
-        /*PRINT_MEDIA_PICK_YOUR_CONGLOMERATE: PrintMediaFirstConglomerateState,
+        GUERRILLA_MARKETING_PICK_CONGLOMERATES: GuerrillaMarketingConglomeratesState,
+        PRINT_MEDIA_PICK_YOUR_CONGLOMERATE: PrintMediaFirstConglomerateState,
+        PRINT_MEDIA_PICK_OTHER_HQ: PrintMediaOtherHqState,
         PRINT_MEDIA_PICK_OTHER_CONGLOMERATE: PrintMediaSecondConglomerateState,
-        AMBIENT_ADVERTISING_PICK_CONGLOMERATES: AmbientAdvertisingConglomeratesState,
+        AMBIENT_ADVERTISING_PICK_OPPONENT: AmbientAdvertisingOpponentState,
+        AMBIENT_ADVERTISING_PICK_CONGLOMERATES: AmbientAdvertisingConglomeratesState},/*
         SOCIAL_MEDIA_PICK_CONGLOMERATE: SocialMediaConglomerateState,
         ONLINE_MARKETING_PICK_COMPANIES: OnlineMarketingCompaniesState,
     },

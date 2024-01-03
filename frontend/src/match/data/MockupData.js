@@ -126,10 +126,13 @@ export const startingState = {
             },
             printMedia: {
                 yourConglomerate: null,
+                yourIsRotated: null,
                 otherHq: null,
                 otherConglomerate: null,
+                otherIsRotated: null,
             },
             ambientAdvertising: {
+                opponent: null,
                 conglomerates: null,
             },
             socialMedia: {

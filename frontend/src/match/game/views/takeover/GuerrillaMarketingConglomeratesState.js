@@ -1,30 +1,25 @@
 import {FrontendState} from "../FrontendState";
 import {useContext} from "react";
 import {StateContext} from "../../Game";
-import {OpponentConglomerateViewer} from "../../viewer/OpponentConglomerateViewer";
-import {pickOneCard, pickOneorTwoCard, pickOneorTwoCards} from "../../selector/pickers/Pickers";
+import {pickOneorTwoCards} from "../../selector/pickers/Pickers";
 import {Conglomerates} from "../../../components/collections/Conglomerates";
 
 
 function GuerrillaMarketingConglomeratesPicker() {
     const context = useContext(StateContext);
     const state = context.state;
-    //console.log(state.takeover.ability.guerrillaMarketing.opponent.props.opponent.hq.nonRotatedConglomerates);
-    const conglomerates = new Conglomerates(state.takeover.ability.guerrillaMarketing.opponent.props.opponent.hq.nonRotatedConglomerates)
+    const conglomerates = new Conglomerates(state.takeover.ability.guerrillaMarketing.opponent.hq.nonRotatedConglomerates)
     return pickOneorTwoCards(conglomerates.components, (selected) => {
-
+        const selectedConglomerates = selected.map(index => state.takeover.ability.guerrillaMarketing.opponent.hq.nonRotatedConglomerates[index]);
+        state.takeover.ability.guerrillaMarketing.opponent.hq.rotatedConglomerates = state.takeover.ability.guerrillaMarketing.opponent.hq.rotatedConglomerates.concat(selectedConglomerates);
+        for (let i = 0; i < selectedConglomerates.length; i++) {
+            const index = state.takeover.ability.guerrillaMarketing.opponent.hq.nonRotatedConglomerates.indexOf(selectedConglomerates[i]);
+            state.takeover.ability.guerrillaMarketing.opponent.hq.nonRotatedConglomerates.splice(index, 1);
+        }
+        state.takeover.ability.guerrillaMarketing.conglomerates = selected.map(index => state.takeover.ability.guerrillaMarketing.opponent.hq.nonRotatedConglomerates[index]);
+        context.update();
     });
 }
-    /*const context = useContext(StateContext);
-    const state = context.state;
-    const opponents = [];
-    for (let i = 0; i < state.game.opponents.length; i++) {
-        opponents[i] = <OpponentConglomerateViewer opponent={state.game.opponents[i]} key={i}/>;
-    }
-    return pickOneCard(opponents, (selected) => {
-        console.log(opponents);
-    })
-*/
 
 export class GuerrillaMarketingConglomeratesState extends FrontendState {
     component = <GuerrillaMarketingConglomeratesPicker/>

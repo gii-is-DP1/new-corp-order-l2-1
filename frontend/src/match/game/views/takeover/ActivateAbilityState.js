@@ -42,7 +42,8 @@ export class ActivateAbilityState extends FrontendState {
             switch (gameState.takeover.ability.choice) {
                 case CompanyType.BROADCAST_NETWORK: return frontendState.takeover.BROADCAST_NETWORK_PICK_COMPANIES;
                 case CompanyType.GUERRILLA_MARKETING: return frontendState.takeover.GUERRILLA_MARKETING_PICK_OPPONENT;
-                // case CompanyType.AMBIENT_ADVERTISING: return frontendState.takeover.AMBIENT_ADVERTISING_PICK_CONGLOMERATES;
+                case CompanyType.PRINT_MEDIA: return frontendState.takeover.PRINT_MEDIA_PICK_YOUR_CONGLOMERATE;
+                case CompanyType.AMBIENT_ADVERTISING: return frontendState.takeover.AMBIENT_ADVERTISING_PICK_OPPONENT;
             }
         }
     }

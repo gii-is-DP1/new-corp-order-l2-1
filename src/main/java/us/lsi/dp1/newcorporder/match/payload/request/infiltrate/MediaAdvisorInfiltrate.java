@@ -38,5 +38,8 @@ public class MediaAdvisorInfiltrate implements Infiltrate {
         match.getTurnSystem().getCurrentPlayer().discardSharesFromHand(extraConglomerate, 1);
         match.getTurnSystem().getCurrentPlayer().getHeadquarter().addConglomerates(conglomerateType, numberOfShares + 1);
         tile.addAgents(numberOfShares + 1);
+
+        match.getTurnSystem().getCurrentPlayer().addShareUses(conglomerateType, numberOfShares);
+        match.getTurnSystem().getCurrentPlayer().addShareUses(extraConglomerate, 1);
     }
 }

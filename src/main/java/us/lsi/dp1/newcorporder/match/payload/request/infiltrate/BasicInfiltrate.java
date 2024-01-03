@@ -32,5 +32,7 @@ public class BasicInfiltrate implements Infiltrate {
         match.getTurnSystem().getCurrentPlayer().discardSharesFromHand(conglomerateType, numberOfShares);
         match.getTurnSystem().getCurrentPlayer().getHeadquarter().addConglomerates(conglomerateType, numberOfShares);
         tile.addAgents(numberOfShares);
+
+        match.getTurnSystem().getCurrentPlayer().addShareUses(conglomerateType, numberOfShares);
     }
 }

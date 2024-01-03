@@ -102,6 +102,7 @@ public class PlotTurn extends Turn {
             }
         }
 
+        turnSystem.getCurrentPlayer().addTimePlotted();
         state = this.getNextState();
         turnSystem.passTurn();
     }

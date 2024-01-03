@@ -1,7 +1,7 @@
 import {FrontendState} from "../FrontendState";
 import {useContext} from "react";
 import {StateContext} from "../../Game";
-import {OpponentConglomerateViewer} from "../../viewer/OpponentConglomerateViewer";
+import {OpponentConglomerateViewer} from "../../viewers/OpponentConglomerateViewer";
 import {pickOneCard, pickOneorTwoCard, pickOneorTwoCards} from "../../selector/pickers/Pickers";
 import {Conglomerates} from "../../../components/collections/Conglomerates";
 

@@ -1,3 +1,7 @@
 .game{
     display: flex;
 }
+
+.actionCard{
+    height: 300px;
+}

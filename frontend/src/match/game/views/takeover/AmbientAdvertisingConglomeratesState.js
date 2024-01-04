@@ -8,18 +8,17 @@ import {Conglomerates} from "../../../components/collections/Conglomerates";
 function AmbientAdvertisingConglomeratesPicker() {
     const context = useContext(StateContext);
     const state = context.state;
-    const conglomerates = new Conglomerates(state.takeover.ability.guerrillaMarketing.opponent.hq.rotatedConglomerates)
-    return <p></p>/*
+    const conglomerates = new Conglomerates(state.takeover.ability.ambientAdvertising.opponent.hq.rotatedConglomerates);
     return pickOneorTwoCards(conglomerates.components, (selected) => {
-        const selectedConglomerates = selected.map(index => state.takeover.ability.guerrillaMarketing.opponent.hq.nonRotatedConglomerates[index]);
-        state.takeover.ability.guerrillaMarketing.opponent.hq.rotatedConglomerates = state.takeover.ability.guerrillaMarketing.opponent.hq.rotatedConglomerates.concat(selectedConglomerates);
+        const selectedConglomerates = selected.map(index => state.takeover.ability.ambientAdvertising.opponent.hq.rotatedConglomerates[index]);
+        state.takeover.ability.ambientAdvertising.opponent.hq.nonRotatedConglomerates = state.takeover.ability.ambientAdvertising.opponent.hq.nonRotatedConglomerates.concat(selectedConglomerates);
         for (let i = 0; i < selectedConglomerates.length; i++) {
-            const index = state.takeover.ability.guerrillaMarketing.opponent.hq.nonRotatedConglomerates.indexOf(selectedConglomerates[i]);
-            state.takeover.ability.guerrillaMarketing.opponent.hq.nonRotatedConglomerates.splice(index, 1);
+            const index = state.takeover.ability.ambientAdvertising.opponent.hq.rotatedConglomerates.indexOf(selectedConglomerates[i]);
+            state.takeover.ability.ambientAdvertising.opponent.hq.rotatedConglomerates.splice(index, 1);
         }
-        state.takeover.ability.guerrillaMarketing.conglomerates = selected.map(index => state.takeover.ability.guerrillaMarketing.opponent.hq.nonRotatedConglomerates[index]);
+        state.takeover.ability.ambientAdvertising.conglomerates = selectedConglomerates;
         context.update();
-    });*/
+    });
 }
 
 export class AmbientAdvertisingConglomeratesState extends FrontendState {

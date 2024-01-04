@@ -16,7 +16,7 @@ function GuerrillaMarketingConglomeratesPicker() {
             const index = state.takeover.ability.guerrillaMarketing.opponent.hq.nonRotatedConglomerates.indexOf(selectedConglomerates[i]);
             state.takeover.ability.guerrillaMarketing.opponent.hq.nonRotatedConglomerates.splice(index, 1);
         }
-        state.takeover.ability.guerrillaMarketing.conglomerates = selected.map(index => state.takeover.ability.guerrillaMarketing.opponent.hq.nonRotatedConglomerates[index]);
+        state.takeover.ability.guerrillaMarketing.conglomerates = selectedConglomerates;
         context.update();
     });
 }

@@ -44,6 +44,8 @@ export class ActivateAbilityState extends FrontendState {
                 case CompanyType.GUERRILLA_MARKETING: return frontendState.takeover.GUERRILLA_MARKETING_PICK_OPPONENT;
                 case CompanyType.PRINT_MEDIA: return frontendState.takeover.PRINT_MEDIA_PICK_YOUR_CONGLOMERATE;
                 case CompanyType.AMBIENT_ADVERTISING: return frontendState.takeover.AMBIENT_ADVERTISING_PICK_OPPONENT;
+                case CompanyType.SOCIAL_MEDIA: return frontendState.takeover.SOCIAL_MEDIA_PICK_HQ;
+                case CompanyType.ONLINE_MARKETING: return frontendState.takeover.ONLINE_MARKETING_PICK_COMPANIES;
             }
         }
     }

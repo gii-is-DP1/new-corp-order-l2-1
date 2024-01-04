@@ -28,9 +28,20 @@ export function pickOneCard(from, onConfirm) {
 }
 
 export function pickOneorTwoCards(from, onConfirm) {
-    return <Selector title={"Pick one or two card"}
+    return <Selector title={"Pick one or two cards"}
                      selection={from}
                      canConfirm={selectAtLeastOneOrTwo}
+                     changeSelectableItems={selectQuantity(2)}
+                     onConfirm={onConfirm}
+                     containerStyle={conglomerateContainerStyle}
+                     key={onConfirm}
+    />;
+}
+
+export function pickTwoCards(from, onConfirm) {
+    return <Selector title={"Pick two cards"}
+                     selection={from}
+                     canConfirm={selectAtLeastTwo}
                      changeSelectableItems={selectQuantity(2)}
                      onConfirm={onConfirm}
                      containerStyle={conglomerateContainerStyle}
@@ -94,6 +105,16 @@ export function pickOneOrTwoCompanies(from, onConfirm) {
         selection={from}
         canConfirm={selectAtLeastOneOrTwo}
         changeSelectableItems={onlySelectOfSameColor}
+        onConfirm={onConfirm}
+    />;
+}
+
+export function pickTwoCompanies(from, onConfirm) {
+    return <CompanySelector
+        title={"Pick one or two Companies"}
+        selection={from}
+        canConfirm={selectAtLeastTwo}
+        changeSelectableItems={selectQuantity(2)}
         onConfirm={onConfirm}
     />;
 }

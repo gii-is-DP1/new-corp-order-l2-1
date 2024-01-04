@@ -16,6 +16,7 @@ export function HQViewer() {
 function Hq({hqItems}) {
     return (<div style={{
         bottom: 0, position: "absolute",
+        top: "80%",
         right: 0,
         left: "40%",
         transform: "translate(-50%, 0)",

@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import {black, white, gray} from "../util/Colors";
 import * as Colors from "../util/Colors";
 
-function DropdownPicker({ options, style, onChange }) {
-    const [selectedValue, setSelectedValue] = useState('');
+function DropdownPicker({ options, style, onChange, defaultValue }) {
 
     const defaultStyle = {
         color: black,
@@ -19,7 +18,7 @@ function DropdownPicker({ options, style, onChange }) {
 
     return (
         <div>
-            <select style={{...defaultStyle, ...style}}
+            <select style={{...defaultStyle, ...style}} value={defaultValue}
                 onChange={e => onChange(e.target.value)}
             >
                 <option value="">Select an option</option>

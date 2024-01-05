@@ -8,6 +8,7 @@ import DropDownPicker from "../components/DropDownPicker";
 import tokenService from "../services/token.service";
 import {Text} from "../components/Text";
 import fetchAuthenticatedWithBody from "../util/fetchAuthenticatedWithBody";
+import {Title} from "../components/Title";
 
 export function CreateAchievements() {
     const navigate = useNavigate()
@@ -82,6 +83,9 @@ export function CreateAchievements() {
         <div style={{height: "100%", backgroundColor: black}}>
             <AppNavbar/>
             <section style={content}>
+                <Title style={{fontSize: "40px", color: white, marginBottom:'20px'}}>
+                    Create New Achievement
+                </Title>
                 <form style={{display: 'flex', flexDirection: 'column', width: "600px", gap: "8px"}}
                       onSubmit={(e) => {
                           e.preventDefault();

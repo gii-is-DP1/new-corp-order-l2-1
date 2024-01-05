@@ -44,7 +44,7 @@ export function AdminAchievements() {
     let achievementItems = achievementsData?.map(achievement => {
         return  <ListLine sideContent={(
             <div style = {{display:"flex", flexDirection:"row", gap: "5px"}}>
-                <Button buttonType={ButtonType.secondaryLight} onClick={() => navigate(`/admin/achievements/edit/${achievement.id}`)}>
+                <Button buttonType={ButtonType.secondaryLight} onClick={() => navigate(`/admin/achievements/${achievement.id}`)}>
                     edit
                 </Button>
                 <Button onClick={() => fetchAuthenticated(`/api/v1/achievements/${achievement.id}`, "DELETE")

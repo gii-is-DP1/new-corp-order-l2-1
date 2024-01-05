@@ -18,7 +18,7 @@ function DropdownPicker({ options, style, onChange, defaultValue }) {
 
     return (
         <div>
-            <select style={{...defaultStyle, ...style}} value={defaultValue}
+            <select style={{...defaultStyle, ...style}} defaultValue={defaultValue}
                 onChange={e => onChange(e.target.value)}
             >
                 <option value="">Select an option</option>

@@ -82,7 +82,19 @@ export function EditAchievements() {
     }
 
     useEffect(() => {
-        fetchAchievementData()
+        if(achievementId === undefined) {
+            setAchievementData({
+                "id": null,
+                "name": "",
+                "description": "",
+                "imageUrl": "",
+                "stat": "",
+                "threshold": null
+            });
+            setIsLoaded(true);
+        }else{
+            fetchAchievementData()
+        }
     }, [achievementId]);
 
     async function handleSubmit(body) {
@@ -91,18 +103,39 @@ export function EditAchievements() {
             setMessage('Por favor, selecciona un valor para el estadístico.');
             return;
         }
-        await fetchAuthenticatedWithBody(`/api/v1/achievements/${achievementId}`, "PUT", body)
-            .then(response => {
-                if (response.status === 200) return response.json();
-                else return Promise.reject("Invalid create achievement attempt");
-            })
-            .then(() => {
-                window.location.href = "/admin/achievements";
-            })
-            .catch(error => {
-                setMessage(error);
-            });
+        if (body.name.trim() === '') {
+            setMessage('Por favor, introduce un nombre para el logro.');
+            return;
+        }
+        if(achievementId === undefined){
+            await fetchAuthenticatedWithBody("/api/v1/achievements", "POST", body)
+                .then(response => {
+                    if (response.status === 201) return response.json();
+                    else return Promise.reject("Invalid create achievement attempt");
+                })
+                .then(() => {
+                    window.location.href = "/admin/achievements";
+                })
+                .catch(error => {
+                    setMessage(error);
+                });
+        }else{
+            await fetchAuthenticatedWithBody(`/api/v1/achievements/${achievementId}`, "PUT", body)
+                .then(response => {
+                    if (response.status === 200) return response.json();
+                    else return Promise.reject("Invalid edit achievement attempt");
+                })
+                .then(() => {
+                    window.location.href = "/admin/achievements";
+                })
+                .catch(error => {
+                    setMessage(error);
+                });
+        }
     }
+
+
+
 
     return (
         <div style={{height: "100%", backgroundColor: black}}>

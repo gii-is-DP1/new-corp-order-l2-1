@@ -12,7 +12,6 @@ import {MainPage} from "./mainPage/MainPage";
 import {ProfilePage} from "./profile/ProfilePage";
 import Login from "./auth/login";
 import Register from "./auth/register";
-import {CreateAchievements} from "./admin/CreateAchievement";
 import {EditAchievements} from "./admin/EditAchievement";
 
 function ErrorFallback({error, resetErrorBoundary}) {
@@ -42,8 +41,8 @@ function App() {
                         <Route path="/admin/matches" element={<AdminMatches/>}/>
                         <Route path="/admin/moderation" element={<AdminModeration/>}/>
                         <Route path="/admin/achievements" element={<AdminAchievements/>}/>
-                        <Route path="/admin/achievements/create" element={<CreateAchievements/>}/>
-                        <Route path="/admin/achievements/edit/:achievementId" element={<EditAchievements/>}/>
+                        <Route path="/admin/achievements/create" element={<EditAchievements/>}/>
+                        <Route path="/admin/achievements/:achievementId" element={<EditAchievements/>}/>
                     </>}
 
                     {!jwt && <>

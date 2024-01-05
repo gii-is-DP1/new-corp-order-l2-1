@@ -17,6 +17,7 @@ export function EditAchievements() {
     const [isLoaded, setIsLoaded] = useState(false);
     const [selectedValue, setSelectedValue] = useState("");
     const [message, setMessage] = useState();
+    const [title, setTitle] = useState('');
     const {achievementId} = useParams();
 
     const content = {
@@ -92,8 +93,10 @@ export function EditAchievements() {
                 "threshold": null
             });
             setIsLoaded(true);
+            setTitle('Create achievement')
         }else{
             fetchAchievementData()
+            setTitle('Edit achievement: ')
         }
     }, [achievementId]);
 
@@ -143,7 +146,7 @@ export function EditAchievements() {
             <section style={content}>
                 <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
                     <Title style={titleStyle}>
-                        {`Edit achievement: `}
+                        {title}
                     </Title>
                     <Title style={{fontSize: "40px", color: orange, marginBottom: '20px'}}>
                         {achievementData?.name}

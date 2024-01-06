@@ -51,6 +51,7 @@ public class SecurityConfiguration {
                 .requestMatchers("/resources/**", "/webjars/**", "/static/**", "/swagger-resources/**").permitAll()
                 .requestMatchers("/", "/api/v1/auth/**", "/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll()
 
+                .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/v1/users")).authenticated()
                 .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/v1/users/{username}")).authenticated()
                 .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/v1/users/{username}/picture")).authenticated()
                 .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/v1/users/{username}/friends")).authenticated()
@@ -62,6 +63,7 @@ public class SecurityConfiguration {
                 .requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/notifications/**")).authenticated()
                 .requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/matches/**")).authenticated()
 
+                .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/v1/achievements/**")).hasAuthority(ADMIN)
                 .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/v1/achievements/**")).hasAuthority(ADMIN)
                 .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.PUT, "/api/v1/achievements/**")).hasAuthority(ADMIN)
                 .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.DELETE, "/api/v1/achievements/**")).hasAuthority(ADMIN)

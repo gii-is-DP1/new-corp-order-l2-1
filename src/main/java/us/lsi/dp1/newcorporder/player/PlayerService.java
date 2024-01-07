@@ -17,16 +17,19 @@ public class PlayerService {
         this.playerRepository = playerRepository;
     }
 
-    @Transactional(readOnly = true)
     public Iterable<Player> findAll() {
         return this.playerRepository.findAll();
     }
 
-    @Transactional(readOnly = true)
     public Player findById(Integer id) {
         return this.playerRepository
             .findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Player", "id", id));
+    }
+
+    public Player findByUsername(String username) {
+        return this.playerRepository.findByUserUsernameIgnoreCase(username)
+            .orElseThrow(() -> new ResourceNotFoundException("Player", "username", username));
     }
 
     @Transactional

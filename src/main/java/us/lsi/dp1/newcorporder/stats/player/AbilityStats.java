@@ -1,4 +1,4 @@
-package us.lsi.dp1.newcorporder.stats;
+package us.lsi.dp1.newcorporder.stats.player;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import us.lsi.dp1.newcorporder.match.consultant.ConsultantType;
+import us.lsi.dp1.newcorporder.match.company.CompanyType;
 import us.lsi.dp1.newcorporder.match.player.MatchPlayer;
 import us.lsi.dp1.newcorporder.model.BaseEntity;
 
@@ -19,20 +19,20 @@ import java.util.List;
 @SuperBuilder
 @NoArgsConstructor
 @Entity
-@Table(name = "consultant_stats")
+@Table(name = "ability_stats")
 @EqualsAndHashCode(callSuper = true, of = {})
-public class ConsultantStats extends BaseEntity {
+public class AbilityStats extends BaseEntity {
 
-    public static List<ConsultantStats> create(MatchPlayer player) {
-        return Arrays.stream(ConsultantType.values())
-            .map(type -> ConsultantStats.create(player, type))
+    public static List<AbilityStats> create(MatchPlayer player) {
+        return Arrays.stream(CompanyType.values())
+            .map(type -> AbilityStats.create(player, type))
             .toList();
     }
 
-    public static ConsultantStats create(MatchPlayer player, ConsultantType type) {
-        return ConsultantStats.builder()
+    public static AbilityStats create(MatchPlayer player, CompanyType type) {
+        return AbilityStats.builder()
             .type(type)
-            .timesUsed(player.getConsultantUses().count(type))
+            .timesUsed(player.getAbilityUses().count(type))
             .build();
     }
 
@@ -40,7 +40,7 @@ public class ConsultantStats extends BaseEntity {
     private PlayerMatchStats playerMatchStats;
 
     @Enumerated(EnumType.STRING)
-    @NotNull private ConsultantType type;
+    @NotNull private CompanyType type;
 
     @NotNull private Integer timesUsed;
 }

@@ -37,18 +37,20 @@ VALUES (1, 10, 'Victor', 'Win 10 games', null, 'GAMES_WON'),
        (3, 15, 'Champion', 'Achieve 15 victories', null, 'GAMES_WON'),
        (4, 30, 'Dedicated Player', 'Play for 30 hours', null, 'TIME_PLAYED');
 
-INSERT INTO match_stats(id, end_time, start_time, mode, max_players)
-VALUES (1, '2023-01-01 01:00:00', '2023-01-01 00:00:00', 'NORMAL', 4),
-       (2, '2023-01-02 01:00:00', '2023-01-02 00:00:00', 'QUICK', 3),
-       (3, '2023-04-01 02:00:00', '2023-04-01 00:00:00', 'NORMAL', 4),
-       (4, '2023-05-01 03:00:00', '2023-05-01 00:00:00', 'QUICK', 2);
+INSERT INTO match_stats(id, code, end_time, start_time, mode, max_players)
+VALUES (1, 'BIKEHS', '2023-01-01 01:00:00', '2023-01-01 00:00:00', 'NORMAL', 4),
+       (2, 'JAKDFO', '2023-01-02 01:00:00', '2023-01-02 00:00:00', 'QUICK', 3),
+       (3, 'DJCVMA', '2023-04-01 02:00:00', '2023-04-01 00:00:00', 'NORMAL', 4),
+       (4, 'OCTAVIO', '2023-05-01 03:00:00', '2023-05-01 00:00:00', 'QUICK', 2);
 
 INSERT INTO player_match_stats(id, match_stats_id, player_id, times_infiltrated, times_plotted, times_taken_over,
                                total_victory_points, result)
 VALUES (1, 1, 4, 3, 2, 1, 15, 'WON'),
        (2, 2, 4, 1, 1, 0, 5, 'LOST'),
-       (3, 3, 1, 2, 3, 1, 20, 'WON'),
-       (4, 4, 2, 0, 2, 1, 10, 'LOST');
+       (3, 2, 1, 5, 3, 4, 1, 'TIED'),
+       (4, 2, 2, 1, 1, 2, 4, 'TIED'),
+       (5, 3, 1, 2, 3, 1, 20, 'WON'),
+       (6, 4, 2, 0, 2, 1, 10, 'LOST');
 
 INSERT INTO ability_stats(times_used, id, player_match_stats_id, type)
 VALUES (5, 1, 1, 'BROADCAST_NETWORK'),
@@ -64,9 +66,11 @@ VALUES (10, 1, 1, 500, 'OMNICORP'),
 
 INSERT INTO consultant_stats(id, player_match_stats_id, times_used, type)
 VALUES (1, 1, 2, 'MEDIA_ADVISOR'),
-       (2, 2, 1, 'CORPORATE_LAWYER'),
-       (3, 3, 3, 'MEDIA_ADVISOR'),
-       (4, 4, 1, 'CORPORATE_LAWYER');
+       (2, 2, 3, 'CORPORATE_LAWYER'),
+       (3, 2, 2, 'DEAL_MAKER'),
+       (4, 2, 1, 'MEDIA_ADVISOR'),
+       (5, 3, 3, 'MEDIA_ADVISOR'),
+       (6, 4, 1, 'CORPORATE_LAWYER');
 
 INSERT INTO friendship(id, friend_id, user_id, since)
 VALUES (1, 1, 2, '2023-01-02 00:00:02'),

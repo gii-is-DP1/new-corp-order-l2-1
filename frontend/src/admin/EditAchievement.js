@@ -18,6 +18,7 @@ export function EditAchievements() {
     const [selectedValue, setSelectedValue] = useState("");
     const [message, setMessage] = useState();
     const [title, setTitle] = useState('');
+    const [buttonText, setButtonText] = useState('');
     const {achievementId} = useParams();
 
     const content = {
@@ -94,9 +95,11 @@ export function EditAchievements() {
             });
             setIsLoaded(true);
             setTitle('Create achievement')
+            setButtonText('Create achievement')
         }else{
             fetchAchievementData()
             setTitle('Edit achievement: ')
+            setButtonText('Edit achievement')
         }
     }, [achievementId]);
 
@@ -164,12 +167,12 @@ export function EditAchievements() {
                                       threshold: e.target.threshold.value
                                   });
                               }}>
-                            <FormInput labelStyle={labelStyle} name={"name"} defaultValue={achievementData?.name}
+                            <FormInput labelStyle={labelStyle} name={"name"} defaultValue={achievementData.name}
                                        placeholder={"Type the achievement's name"}></FormInput>
                             <FormInput labelStyle={labelStyle} name={"description"}
-                                       defaultValue={achievementData?.description}
+                                       defaultValue={achievementData.description}
                                        placeholder={"Type the achievement's description"}></FormInput>
-                            <FormInput labelStyle={labelStyle} name={"image_url"} defaultValue={achievementData?.imageUrl}
+                            <FormInput labelStyle={labelStyle} name={"image_url"} defaultValue={achievementData.imageUrl}
                                        placeholder={"Put the url of the image the achievement will have"}></FormInput>
                             <label style={textStyle} htmlFor={'stat'}>
                                 stat
@@ -177,11 +180,11 @@ export function EditAchievements() {
                             <DropDownPicker style={{width: "600px"}} options={statsOptions} onChange={handleDropDownChange}
                                             defaultValue={achievementData.stat}/>
                             <FormInput labelStyle={labelStyle} name={"threshold"} type={'number'} minValue={0}
-                                       maxValue={9999} defaultValue={achievementData?.threshold}
+                                       maxValue={9999} defaultValue={achievementData.threshold}
                                        placeholder={"Put the threshold of the stat necessary to gain the achievement"}></FormInput>
                             <div style={buttonStyle}>
                                 {message && <Text style={{textTransform: "none", color: "red"}}>{message}</Text>}
-                                <Button buttonType={ButtonType.primary} type="submit">Edit Achievement</Button>
+                                <Button buttonType={ButtonType.primary} type="submit">{buttonText}</Button>
                             </div>
                         </form>
                     ):

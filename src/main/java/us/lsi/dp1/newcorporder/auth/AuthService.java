@@ -10,28 +10,30 @@ import us.lsi.dp1.newcorporder.authority.AuthorityService;
 import us.lsi.dp1.newcorporder.user.User;
 import us.lsi.dp1.newcorporder.user.UserService;
 
+import java.time.Instant;
+
 @Service
 public class AuthService {
 
-	private final PasswordEncoder encoder;
-	private final AuthorityService authorityService;
-	private final UserService userService;
+    private final UserService userService;
+    private final AuthorityService authorityService;
 
-    public AuthService(PasswordEncoder encoder, AuthorityService authorityService, UserService userService) {
-        this.encoder = encoder;
-        this.authorityService = authorityService;
+    public AuthService(UserService userService, AuthorityService authorityService) {
         this.userService = userService;
+        this.authorityService = authorityService;
     }
 
     @Transactional
-	public void createUser(@Valid SignupRequest request) {
-        User user = new User();
-        user.setUsername(request.getUsername());
-        user.setPassword(encoder.encode(request.getPassword()));
-        user.setEmail(request.getEmail());
+    public void registerUser(@Valid SignupRequest request) {
+        User user = User.builder()
+            .firstSeen(Instant.now())
+            .lastSeen(Instant.now())
+            .authority(authorityService.findByName("USER"))
+            .build();
 
-        Authority authority = authorityService.findByName(request.getAuthority());
-        user.setAuthority(authority);
+        userService.changeUsername(user, request.getUsername());
+        userService.changePassword(user, request.getPassword());
+        userService.changeEmail(user, request.getEmail());
 
         userService.saveUser(user);
     }

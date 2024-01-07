@@ -11,6 +11,11 @@ import us.lsi.dp1.newcorporder.bind.FromPathVariable;
 import us.lsi.dp1.newcorporder.match.payload.response.MatchAssignmentResponse;
 import us.lsi.dp1.newcorporder.match.view.MatchView;
 import us.lsi.dp1.newcorporder.player.Player;
+import us.lsi.dp1.newcorporder.user.User;
+import us.lsi.dp1.newcorporder.user.UserService;
+import us.lsi.dp1.newcorporder.util.RestPreconditions;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/matches")
@@ -22,9 +27,11 @@ import us.lsi.dp1.newcorporder.player.Player;
 @Tag(name = "Match", description = "The Match API")
 public class MatchController {
 
+    private final UserService userService;
     private final MatchService matchService;
 
-    public MatchController(MatchService matchService) {
+    public MatchController(UserService userService, MatchService matchService) {
+        this.userService = userService;
         this.matchService = matchService;
     }
 
@@ -43,6 +50,27 @@ public class MatchController {
                                                       @RequestParam("mode") MatchMode mode,
                                                       @RequestParam("maxPlayers") int maxPlayers) {
         return matchService.createPrivateMatch(player, mode, maxPlayers);
+    }
+
+    @Operation(
+        summary = "Invite a friend to the given match",
+        tags = "post"
+    )
+    @ApiResponse(
+        responseCode = "201",
+        description = "Invitation sent"
+    )
+    @PostMapping("/{match}/invite")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void inviteFriend(@Authenticated Player player,
+                             @RequestParam("target") List<String> friends,
+                             @FromPathVariable Match match) {
+        friends.forEach(friendUsername -> {
+            User friend = userService.findUser(friendUsername);
+            RestPreconditions.checkNotNull(friend, "User", "username", friendUsername);
+
+            matchService.inviteFriend(player.getUser(), friend, match);
+        });
     }
 
     @Operation(
@@ -96,7 +124,7 @@ public class MatchController {
     )
     @ApiResponse(
         responseCode = "200",
-        description = "The leaved match"
+        description = "The left match"
     )
     @PostMapping("/{match}/leave")
     public void leaveMatch(@Authenticated Player player, @FromPathVariable Match match) {

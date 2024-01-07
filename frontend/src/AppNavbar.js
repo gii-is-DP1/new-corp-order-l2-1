@@ -1,19 +1,36 @@
 import React, {useEffect, useState} from 'react';
-import {Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import tokenService from './services/token.service';
 import jwt_decode from 'jwt-decode';
 import {black, white} from "./util/Colors";
 import {Text} from "./components/Text";
+import Button, {ButtonType} from "./components/Button";
+import ProfilePicture from "./components/ProfilePicture";
+import {Pressable} from "./components/Pressable";
+import fetchAuthenticated from "./util/fetchAuthenticated";
 
 const AppNavbar = () => {
     const [roles, setRoles] = useState([]);
     const [username, setUsername] = useState('');
     const jwt = tokenService.getLocalAccessToken();
+    const navigate = useNavigate()
+    const [userPicture, setUserPicture] = useState(null)
+
+    const fetchUserPicture = async () => {
+        try {
+            setUserPicture(await fetchAuthenticated(`/api/v1/users/${tokenService.getUser().username}/picture`, "GET")
+                .then(response => response.json())
+                .then(response => response.picture));
+        } catch (error) {
+            console.log(error.message)
+        }
+    }
 
     useEffect(() => {
         if (jwt) {
             setRoles(jwt_decode(jwt).authorities);
             setUsername(jwt_decode(jwt).sub);
+            fetchUserPicture()
         }
     }, [jwt]);
 
@@ -22,42 +39,28 @@ const AppNavbar = () => {
 
     if (!jwt) {
         navLinks = createNavLinks([
-            {link: '/home', text: 'HOME'},
-            {link: '/register', text: 'REGISTER'},
-            {link: '/login', text: 'LOGIN'},
+            {link: '/register', text: 'Register'},
+            {link: '/login', text: 'Login'},
         ]);
     } else {
         roles.forEach((role) => {
             if (role === 'ADMIN') {
                 navLinks = createNavLinks([
-                    {link: '/matches', text: 'MATCHES'},
-                    {link: '/moderation', text: 'MODERATION'},
-                    {link: '/achievements', text: 'ACHIEVEMENTS'},
-                    {link: '/stats', text: 'STATS'},
-                    {link: '/boh', text: 'LEAVE ADMIN PANEL'},
+                    {link: '/matches', text: 'Matches'},
+                    {link: '/moderation', text: 'Moderation'},
+                    {link: '/achievements', text: 'Achievements'},
+                    {link: `/user/${username}`, isProfilePicture: true},
                 ]);
             }
-            if (role === 'PLAYER') {
+            if (role === 'USER') {
                 navLinks = createNavLinks([
-                    {link: '/stats', text: 'STATS'},
-                    {link: '/friends', text: 'FRIENDS'},
-                    {link: '/boh', text: 'PLAY NOW'},
+                    {link: `/user/${username}/friends`, text: 'Friends'},
+                    {link: `/user/${username}/achievements`, text: 'Achievements'},
+                    {link: `/user/${username}`, isProfilePicture: true},
+                    {link: '', text: 'Play now', isButton: true},
                 ]);
             }
         });
-
-        userLogout = (
-            <>
-                <div style={{color: 'white'}} className="justify-content-end">
-                    {username}
-                </div>
-                <div className="d-flex">
-                    <Link style={{color: 'white'}} id="logout" to="/logout">
-                        Logout
-                    </Link>
-                </div>
-            </>
-        );
     }
 
     const navBarStyle = {
@@ -69,6 +72,29 @@ const AppNavbar = () => {
         background: black,
         color: white,
     };
+
+    function createNavLinks(navItem) {
+        const items = navItem.map(item => (
+            <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
+                {!item.isButton &&
+                    <Link to={item.link} style={{textDecoration: "none", color: white}}>
+                        <Text>{item.text}</Text>
+                    </Link>}
+
+                {item.isButton &&
+                    <Button onClick={() => navigate(`/${item.link}`)}
+                            buttonType={ButtonType.primary}>{item.text}</Button>}
+
+                {item.isProfilePicture &&
+                    <Pressable onClick={() => navigate(`${item.link}`)}>
+                        <ProfilePicture url={userPicture}
+                                        style={{width: "45px", height: "45px"}}
+                                        alt={"user picture"}/>
+                    </Pressable>}
+            </div>
+        ));
+        return <>{items}</>;
+    }
 
     return (
         <header style={navBarStyle}>
@@ -86,15 +112,5 @@ const AppNavbar = () => {
         </header>
     );
 };
-
-function createNavLinks(navItem) {
-    const items = navItem.map(item => (
-        <Link to={item.link} style={{textDecoration: "none", color: white}}>
-            <Text>{item.text}</Text>
-        </Link>
-    ));
-
-    return <>{items}</>;
-}
 
 export default AppNavbar;

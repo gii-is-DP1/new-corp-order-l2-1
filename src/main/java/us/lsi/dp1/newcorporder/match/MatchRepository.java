@@ -1,6 +1,7 @@
 package us.lsi.dp1.newcorporder.match;
 
 import org.springframework.stereotype.Repository;
+import us.lsi.dp1.newcorporder.player.Player;
 import us.lsi.dp1.newcorporder.util.RandomUtils;
 
 import java.util.Map;
@@ -12,10 +13,11 @@ public class MatchRepository {
 
     private final Map<String, Match> matches = new ConcurrentHashMap<>();
 
-    public Optional<Match> findRandomPublicMatch(MatchMode mode, int maxPlayers) {
+    public Optional<Match> findRandomPublicMatch(Player player, MatchMode mode, int maxPlayers) {
         return this.matches.values().stream()
             .filter(match -> match.getState().equals(MatchState.WAITING))
             .filter(match -> match.getVisibility().equals(MatchVisibility.PUBLIC))
+            .filter(match -> match.getPlayer(player.getId()) == null)
             .filter(match -> match.getPlayers().size() < match.getMaxPlayers())
             .filter(match -> match.getMode().equals(mode))
             .filter(match -> match.getMaxPlayers() == maxPlayers)

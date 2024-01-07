@@ -13,10 +13,10 @@ import us.lsi.dp1.newcorporder.model.NamedEntity;
 
 @Getter
 @Setter
-@EqualsAndHashCode(of = "id")
-@SuperBuilder
-@Table(name = "achievements")
 @Entity
+@Table(name = "achievements")
+@SuperBuilder
+@EqualsAndHashCode(callSuper = true, of = {})
 public class Achievement extends NamedEntity {
 
     @Size(max=256)

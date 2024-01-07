@@ -13,9 +13,9 @@ import java.util.Set;
 
 @Getter
 @Setter
-@EqualsAndHashCode(of = "id")
-@Table(name = "match_stats")
 @Entity
+@Table(name = "match_stats")
+@EqualsAndHashCode(callSuper = true, of = {})
 public class MatchStats extends BaseEntity {
 
     @Enumerated(EnumType.STRING)

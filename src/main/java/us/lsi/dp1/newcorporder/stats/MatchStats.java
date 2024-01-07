@@ -10,6 +10,7 @@ import lombok.experimental.SuperBuilder;
 import us.lsi.dp1.newcorporder.match.Match;
 import us.lsi.dp1.newcorporder.match.MatchMode;
 import us.lsi.dp1.newcorporder.model.BaseEntity;
+import us.lsi.dp1.newcorporder.stats.player.PlayerMatchStats;
 
 import java.time.Instant;
 import java.util.List;
@@ -25,6 +26,7 @@ public class MatchStats extends BaseEntity {
 
     public static MatchStats create(Match match, List<PlayerMatchStats> playerStats) {
         return MatchStats.builder()
+            .code(match.getCode())
             .mode(match.getMode())
             .maxPlayers(match.getMaxPlayers())
             .startTime(match.getStartTime())
@@ -32,6 +34,9 @@ public class MatchStats extends BaseEntity {
             .playerMatchStats(playerStats)
             .build();
     }
+
+    @Column(unique = true, nullable = false)
+    @NotNull private String code;
 
     @Enumerated(EnumType.STRING)
     @NotNull private MatchMode mode;
@@ -44,4 +49,5 @@ public class MatchStats extends BaseEntity {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "matchStats")
     private List<PlayerMatchStats> playerMatchStats;
+
 }

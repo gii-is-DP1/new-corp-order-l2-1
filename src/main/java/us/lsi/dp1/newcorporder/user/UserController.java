@@ -156,7 +156,7 @@ class UserController {
         User user = userService.findUser(username);
         RestPreconditions.checkNotNull(user, "User", "username", username);
 
-        return UserView.minimal(user);
+        return UserView.reduced(user);
     }
 
     @Operation(

@@ -16,36 +16,32 @@ import java.util.Set;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserView {
 
-    public static UserView minimal(User user) {
-        return UserView.of(user, true, false);
+    public static UserView reduced(User user) {
+        return UserView.of(user).build();
     }
 
     public static UserView expanded(User user, User viewer) {
-        return UserView.of(user, false, user.equals(viewer) || viewer.hasAnyAuthority("ADMIN"));
-    }
+        UserViewBuilder builder = UserView.of(user)
+            .authority(user.getAuthority().getName())
+            .firstSeen(user.getFirstSeen())
+            .lastSeen(user.getLastSeen())
+            .friends(user.getFriendships().stream().map(FriendshipView::of).toList());
 
-    public static UserView of(User user, boolean minimal, boolean includeSensitiveData) {
-        UserViewBuilder viewBuilder = UserView.builder()
-            .username(user.getUsername())
-            .picture(user.getPicture());
-
-        if (!minimal) {
-            viewBuilder
-                .authority(user.getAuthority().getName())
-                .firstSeen(user.getFirstSeen())
-                .lastSeen(user.getLastSeen())
-                .friends(user.getFriendships().stream().map(FriendshipView::of).toList());
-        }
-
-        if (includeSensitiveData) {
-            viewBuilder
+        if (user.equals(viewer) || viewer.hasAnyAuthority("ADMIN")) {
+            builder
                 .email(user.getEmail())
                 .sentFriendshipRequests(user.getSentFriendshipRequests().stream().map(request -> FriendshipView.of(request, user)).toList())
                 .receivedFriendshipRequests(user.getReceivedFriendshipRequests().stream().map(request -> FriendshipView.of(request, user)).toList())
                 .notifications(user.getNotifications());
         }
 
-        return viewBuilder.build();
+        return builder.build();
+    }
+
+    private static UserViewBuilder of(User user) {
+        return UserView.builder()
+            .username(user.getUsername())
+            .picture(user.getPicture());
     }
 
     private String username;
@@ -62,7 +58,7 @@ public class UserView {
 
     private Set<Notification> notifications;
 
-    @JsonInclude(JsonInclude.Include.ALWAYS)
+    @JsonInclude
     public String getPicture() {
         return picture;
     }

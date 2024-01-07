@@ -16,7 +16,7 @@ public class FriendshipView {
     public static FriendshipView of(Friendship friendship) {
         return FriendshipView.builder()
             .since(friendship.getSince())
-            .user(UserView.minimal(friendship.getFriend()))
+            .user(UserView.reduced(friendship.getFriend()))
             .build();
     }
 
@@ -25,7 +25,7 @@ public class FriendshipView {
 
         return FriendshipView.builder()
             .since(friendshipRequest.getSentAt())
-            .user(UserView.minimal(user.equals(receiver) ? friendshipRequest.getSender() : receiver))
+            .user(UserView.reduced(user.equals(receiver) ? friendshipRequest.getSender() : receiver))
             .build();
     }
 

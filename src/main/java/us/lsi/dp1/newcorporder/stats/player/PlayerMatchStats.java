@@ -1,5 +1,8 @@
-package us.lsi.dp1.newcorporder.stats;
+package us.lsi.dp1.newcorporder.stats.player;
 
+import com.google.common.collect.HashMultiset;
+import com.google.common.collect.Multiset;
+import com.google.common.collect.Multisets;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
@@ -8,10 +11,15 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import us.lsi.dp1.newcorporder.match.Match;
+import us.lsi.dp1.newcorporder.match.company.CompanyType;
+import us.lsi.dp1.newcorporder.match.conglomerate.Conglomerate;
+import us.lsi.dp1.newcorporder.match.consultant.ConsultantType;
 import us.lsi.dp1.newcorporder.match.player.MatchPlayer;
 import us.lsi.dp1.newcorporder.match.view.MatchSummary;
 import us.lsi.dp1.newcorporder.model.BaseEntity;
 import us.lsi.dp1.newcorporder.player.Player;
+import us.lsi.dp1.newcorporder.stats.MatchResult;
+import us.lsi.dp1.newcorporder.stats.MatchStats;
 
 import java.util.List;
 
@@ -59,13 +67,32 @@ public class PlayerMatchStats extends BaseEntity {
 
     @NotNull private Integer timesTakenOver;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "playerMatchStats")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "playerMatchStats")
     private List<AbilityStats> abilityStats;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "playerMatchStats")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "playerMatchStats")
     private List<ConglomerateStats> conglomerateStats;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "playerMatchStats")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "playerMatchStats")
     private List<ConsultantStats> consultantStats;
 
+    public Multiset<CompanyType> getAbilityUses() {
+        return this.abilityStats.stream()
+            .collect(Multisets.toMultiset(AbilityStats::getType, AbilityStats::getTimesUsed, HashMultiset::create));
+    }
+
+    public Multiset<Conglomerate> getShareUses() {
+        return this.conglomerateStats.stream()
+            .collect(Multisets.toMultiset(ConglomerateStats::getConglomerate, ConglomerateStats::getSharesUsed, HashMultiset::create));
+    }
+
+    public Multiset<Conglomerate> getAgentUses() {
+        return this.conglomerateStats.stream()
+            .collect(Multisets.toMultiset(ConglomerateStats::getConglomerate, ConglomerateStats::getAgentsUsed, HashMultiset::create));
+    }
+
+    public Multiset<ConsultantType> getConsultantUses() {
+        return this.consultantStats.stream()
+            .collect(Multisets.toMultiset(ConsultantStats::getType, ConsultantStats::getTimesUsed, HashMultiset::create));
+    }
 }

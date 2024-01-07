@@ -60,8 +60,11 @@ public class SecurityConfiguration {
                 .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.DELETE, "/api/v1/users/{username}")).hasAuthority(ADMIN)
                 .requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/users/friendships/**")).authenticated()
 
-                .requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/notifications/**")).authenticated()
+                .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/v1/players/{username}/stats")).authenticated()
+                .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/v1/players/{username}/lastMatches")).authenticated()
+
                 .requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/matches/**")).authenticated()
+                .requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/notifications/**")).authenticated()
 
                 .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/v1/achievements/**")).hasAuthority(ADMIN)
                 .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/v1/achievements/**")).hasAuthority(ADMIN)

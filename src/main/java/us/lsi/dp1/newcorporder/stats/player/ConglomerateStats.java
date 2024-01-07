@@ -1,4 +1,4 @@
-package us.lsi.dp1.newcorporder.stats;
+package us.lsi.dp1.newcorporder.stats.player;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;

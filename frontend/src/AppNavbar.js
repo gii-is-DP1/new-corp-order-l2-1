@@ -46,6 +46,7 @@ const AppNavbar = () => {
         roles.forEach((role) => {
             if (role === 'ADMIN') {
                 navLinks = createNavLinks([
+                    {link: '/admin/metrics', text: 'Metrics'},
                     {link: '/admin/matches', text: 'Matches'},
                     {link: '/admin/moderation', text: 'Moderation'},
                     {link: '/admin/achievements', text: 'Achievements'},

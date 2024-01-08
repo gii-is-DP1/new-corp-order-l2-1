@@ -13,6 +13,7 @@ import Login from "./auth/login";
 import Register from "./auth/register";
 import {EditAchievements} from "./admin/EditAchievement";
 import {MatchStats} from "./stats/MatchStats";
+import {AdminMetrics} from "./admin/AdminMetrics";
 
 function ErrorFallback({error, resetErrorBoundary}) {
     return (
@@ -41,6 +42,7 @@ function App() {
 
                         <Route path="/user/:username/:select?" element={<ProfilePage/>}/>
 
+                        <Route path="/admin/metrics" element={<AdminMetrics/>}/>
                         <Route path="/admin/matches" element={<AdminMatches/>}/>
                         <Route path="/admin/moderation" element={<AdminModeration/>}/>
                         <Route path="/admin/achievements" element={<AdminAchievements/>}/>

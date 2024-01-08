@@ -6,6 +6,7 @@ import {useContext, useState} from "react";
 import BaseModal from "../../components/BaseModal";
 import fetchAuthenticated from "../../util/fetchAuthenticated";
 import Button, {ButtonType} from "../../components/Button";
+import { useNavigate } from "react-router-dom";
 
 
 export function Lobby() {
@@ -29,33 +30,33 @@ function ContextCode() {
 
 function KickedModal(){
     const [show, setShow] = useState(false);
-
-
-
+    const navigate = useNavigate();
+    if(info.hasBeenKicked)
+    setShow(true);
     return (
         <Info.Consumer>
             {
                 info =>
-                {//
-                    if(info.hasBeenKicked)
-                        setShow(true);
-                   return <BaseModal
-                        title={<h2>¡Bad news!</h2>}
-                        body={<p>Sadly, you have been kicked from this match by its host</p>}
-                        state={[show, setShow]}
-                        onContinue={() => {
-                            info.hasBeenKicked = false;
-                        }}
-                    />
+                {
+return <BaseModal
+    title={"¡Bad news!"}
+    body={"Sadly, you have been kicked from this match by its host"}
+    state={[show, setShow]}
+    onContinue={() => {
+        navigate("/");
+    }}
+    canCancel={false}
+    continueText={"I accept it"}
+/>
                 }
             }
-        </Info.Consumer>
-    )
+        </Info.Consumer>)
 }
 
 function StartModal(){
     const [startShow, setStartShow] = useState(false);
-
+    
+    
 
     return (
         <Info.Consumer>
@@ -74,9 +75,10 @@ function StartModal(){
                                 console.log(error.message)
                             }
                         }
-                        }
-                    />
-                        <Button buttonType={ButtonType.primary} onClick={() => setStartShow(true)} disabled={!(info.players.length > 1)}>START</Button></>
+                        }/>
+
+                        <Button buttonType={ButtonType.primary} onClick={() => setStartShow(true)} disabled={!(info.players.length > 1)}>START</Button>
+                        </>
 
                 }
             }

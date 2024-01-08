@@ -2,26 +2,30 @@ import Modal from "react-bootstrap/Modal";
 import {black, white} from "../util/Colors";
 import Button, {ButtonType} from "./Button";
 
-export default function BaseModal({title, state, body, onContinue = () => {}}) {
+export default function BaseModal({title, state, body, onContinue = () => {}, canCancel = true}) {
     const [show, setShow] = state;
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
-    const background = {
-        backgroundColor:black,
-    }
+    const closeModal = () => setShow(false);
+    const CancelButton = () => canCancel
+        ? <Button buttonType={ButtonType.secondaryLight} onClick={closeModal}>Cancel</Button>
+        : <></>;
+
+    const XButton = () => canCancel
+        ? <img style={{float:"right", cursor:"pointer"}} alt="X" onClick={closeModal} src = "/svg/cancel-icon.svg" />
+        : <></>
+
 
     return (
         <>
             <Modal
                 show={show}
-                onHide={handleClose}
+                onHide={closeModal}
                 backdrop="static"
                 keyboard={false}
             >
                 <Modal.Header style={{backgroundColor:black, display: "block"}}>
                     <Modal.Title>
                         <span>{title}</span>
-                        <img style={{float:"right", cursor:"pointer"} } alt="X" onClick={handleClose} src = "/svg/cancel-icon.svg" />
+                        <XButton/>
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body style={{backgroundColor:white, color: black}}>
@@ -29,10 +33,12 @@ export default function BaseModal({title, state, body, onContinue = () => {}}) {
                 </Modal.Body>
                 <Modal.Footer style={{backgroundColor:white,display:"flex",justifyContent:"space-between"}}>
                     <Button buttonType={ButtonType.primary} onClick={() => {
-                        handleClose();
+                        closeModal();
                         onContinue()
-                    }}>Ok</Button>
-                    <Button buttonType={ButtonType.secondaryLight} onClick={handleClose}>Cancel</Button>
+                    }}>
+                       Ok
+                    </Button>
+                    <CancelButton/>
                 </Modal.Footer>
             </Modal>
         </>

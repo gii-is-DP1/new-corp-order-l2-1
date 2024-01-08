@@ -10,7 +10,11 @@
 }
 
 *{
-     color: #F8F8F8;
+    color: #F8F8F8;
+    font-family: 'DIN Next Slab Pro', serif;
+}
+h1, h2, h3{
+    font-family: 'Core Magic', serif;
 }
 
 .modal-content {

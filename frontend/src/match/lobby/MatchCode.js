@@ -13,8 +13,8 @@ export function MatchCode({code}) {
 
     return (
     <i className={css.matchCode}>
-        <span> {text} </span>
-        <span onClick={toggleVisibility}>
+        <span title={"Copy"} style={{cursor: "pointer"}} onClick={() => navigator.clipboard.writeText(code)}> {text} </span>
+        <span style={{cursor: "pointer"}} onClick={toggleVisibility}>
             {showHideIcon}
         </span>
     </i>)

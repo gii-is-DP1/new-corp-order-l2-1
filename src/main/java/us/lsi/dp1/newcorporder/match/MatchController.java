@@ -4,11 +4,14 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import us.lsi.dp1.newcorporder.auth.Authenticated;
 import us.lsi.dp1.newcorporder.bind.FromPathVariable;
 import us.lsi.dp1.newcorporder.match.payload.response.MatchAssignmentResponse;
+import us.lsi.dp1.newcorporder.match.payload.response.MatchResponse;
 import us.lsi.dp1.newcorporder.match.view.MatchView;
 import us.lsi.dp1.newcorporder.player.Player;
 import us.lsi.dp1.newcorporder.user.User;
@@ -33,6 +36,19 @@ public class MatchController {
     public MatchController(UserService userService, MatchService matchService) {
         this.userService = userService;
         this.matchService = matchService;
+    }
+
+    @Operation(
+        summary = "Get last matches",
+        tags = "get"
+    )
+    @ApiResponse(
+        responseCode = "200",
+        description = "The last matches"
+    )
+    @GetMapping
+    public List<MatchResponse> getMatches(@PageableDefault Pageable pageable) {
+        return matchService.getMatches(pageable);
     }
 
     @Operation(

@@ -48,6 +48,7 @@ public class Match {
     @Getter private final CompanyMatrix companyMatrix;
     @Getter private final TurnSystem turnSystem;
 
+    @Getter private final Instant creationTime = Instant.now();
     @Getter private Instant startTime;
     @Getter private Instant endTime;
 
@@ -99,7 +100,7 @@ public class Match {
     }
 
     public boolean isHost(Player player) {
-        return Objects.equals(player.getId(), this.host.getPlayerId());
+        return this.host == null || Objects.equals(player.getId(), this.host.getPlayerId());
     }
 
     public void removePlayer(MatchPlayer player) {
@@ -110,8 +111,8 @@ public class Match {
         }
     }
 
-    public Collection<MatchPlayer> getPlayers() {
-        return players.values();
+    public List<MatchPlayer> getPlayers() {
+        return Optional.ofNullable(this.turnSystem.getPlayers()).orElseGet(() -> new ArrayList<>(this.players.values()));
     }
 
     private void initPlayers() {

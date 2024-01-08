@@ -13,6 +13,7 @@ import java.util.List;
 
 @Data
 @Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class MatchView {
 
     public static MatchView of(Match match) {
@@ -20,23 +21,28 @@ public class MatchView {
     }
 
     public static MatchView of(Match match, MatchPlayer player) {
-        return MatchView.builder()
+        MatchView.MatchViewBuilder builder = MatchView.builder()
             .mode(match.getMode())
             .maxPlayers(match.getMaxPlayers())
             .host(match.getHost() != null ? match.getHost().getPlayerId() : null)
             .state(match.getState())
-            .player(player != null ? OwnPlayerView.of(player) : null)
-            .opponents(buildOpponents(match, player))
-            .companyMatrix(match.getCompanyMatrix().getTiles())
-            .generalSupply(GeneralSupplyView.of(match.getGeneralSupply()))
-            .turn(TurnView.of(match.getTurnSystem()))
-            .build();
+            .opponents(buildOpponents(match, player));
+
+        if (match.getState() == MatchState.PLAYING) {
+            builder
+                .player(player != null ? OwnPlayerView.of(player) : null)
+                .companyMatrix(match.getCompanyMatrix().getTiles())
+                .generalSupply(GeneralSupplyView.of(match.getGeneralSupply()))
+                .turn(TurnView.of(match.getTurnSystem()));
+        }
+
+        return builder.build();
     }
 
     private static List<OpponentView> buildOpponents(Match match, MatchPlayer player) {
-        return match.getTurnSystem().getPlayers().stream()
+        return match.getPlayers().stream()
             .filter(opponent -> !opponent.equals(player))
-            .map(OpponentView::of)
+            .map(opponent -> OpponentView.of(opponent, match.getState()))
             .toList();
     }
 
@@ -51,13 +57,8 @@ public class MatchView {
     private final GeneralSupplyView generalSupply;
     private final TurnView turn;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonInclude
     public Integer getHost() {
         return host;
-    }
-
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    public OwnPlayerView getPlayer() {
-        return player;
     }
 }

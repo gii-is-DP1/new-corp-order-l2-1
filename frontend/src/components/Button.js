@@ -10,7 +10,7 @@ export const ButtonType = {
     danger: dangerBackground
 }
 
-export default function Button({onClick, buttonType, style, children, type}) {
+export default function Button({onClick, buttonType, style, children, type, disabled}) {
     let textColor = getTextColor(buttonType);
     let [hover, setHover] = useState(false);
     let [click, setClick] = useState(false);
@@ -18,7 +18,7 @@ export default function Button({onClick, buttonType, style, children, type}) {
     const defaultStyle = {
         transition: "opacity 700ms, transform 100ms",
         backgroundColor: buttonType,
-        opacity: hover ? 0.75 : 1,
+        opacity: hover ? 0.75 : disabled ? 0.30 : 1,
         transform: click ? "scale(0.95)" : "scale(1)",
         borderRadius: "8px",
         borderWidth: "0px",
@@ -36,6 +36,7 @@ export default function Button({onClick, buttonType, style, children, type}) {
         <button
             onClick={onClick}
             type={type}
+            disabled={disabled}
             onMouseEnter={() => setHover(true)}
             onMouseLeave={() => setHover(false)}
             onMouseDown={() => setClick(true)}

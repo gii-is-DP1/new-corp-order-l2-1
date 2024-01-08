@@ -17,9 +17,9 @@ public class TurnView {
         TurnView view = TurnView.builder()
             .finalRound(turnSystem.isFinalRound())
             .player(turnSystem.getCurrentPlayer() != null ? turnSystem.getCurrentPlayer().getPlayerId() : null)
-            .action(turn.getAction())
-            .state(turn.getState())
-            .usingConsultant(turn.getChosenConsultant())
+            .action(turn == null ? null : turn.getAction())
+            .state(turn == null ? null : turn.getState())
+            .usingConsultant(turn == null ? null : turn.getChosenConsultant())
             .build();
 
         if (turn instanceof TakeOverTurn takeOverTurn) {

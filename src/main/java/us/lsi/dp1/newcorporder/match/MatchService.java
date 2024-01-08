@@ -36,6 +36,7 @@ public class MatchService {
 
     public MatchAssignmentResponse quickPlay(Player player, MatchMode mode, int maxPlayers) {
         Optional<Match> match = matchRepository.findRandomPublicMatch(player, mode, maxPlayers);
+        System.out.println(match.isPresent() ? match.get().getCode() : "");
         if (match.isEmpty()) return createNewMatch(player, mode, maxPlayers, MatchVisibility.PUBLIC);
         else
             return this.join(player, match.get());

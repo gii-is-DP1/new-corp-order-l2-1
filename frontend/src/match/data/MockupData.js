@@ -153,6 +153,8 @@ export const matchInfo = {
     code: "A1B2C3",
     isAdmin:true,
     inLobby: false,
+    hasBeenKicked:false,
+    isSpectating:true,
     maxPlayers: 4,
     players: [
         {

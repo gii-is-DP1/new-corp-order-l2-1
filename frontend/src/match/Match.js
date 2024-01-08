@@ -10,6 +10,8 @@ import tokenService from "../services/token.service";
 export const Info = React.createContext(matchInfo)
 
 export default function Match() {
+
+
     const [matchData, setMatchData] = useState(null);
     const {id} = useParams();
 
@@ -63,6 +65,10 @@ function setContext(id, matchData){
     matchInfo.inLobby = matchData.state === "WAITING";
     matchInfo.maxPlayers = matchData.maxPlayers;
     matchInfo.isAdmin = matchData.host === tokenService.getUser().id;
+    if(!matchData.isSpectating && matchData.spectating)
+        matchInfo.hasBeenKicked = true;
+    matchInfo.wasSpectating = matchInfo.isSpectating;
+    matchInfo.isSpectating = matchData.spectating;
     if(!matchData.spectating)
         matchInfo.players = [{propic: null, username: tokenService.getUser().username}];
     else matchInfo.players = [];

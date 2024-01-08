@@ -50,7 +50,8 @@ VALUES (1, 1, 4, 3, 2, 1, 15, 'WON'),
        (3, 2, 1, 5, 3, 4, 1, 'TIED'),
        (4, 2, 2, 1, 1, 2, 4, 'TIED'),
        (5, 3, 1, 2, 3, 1, 20, 'WON'),
-       (6, 4, 2, 0, 2, 1, 10, 'LOST');
+       (6, 4, 3, 3, 1, 2, 15, 'WON'),
+       (7, 4, 2, 0, 2, 1, 10, 'LOST');
 
 INSERT INTO ability_stats(times_used, id, player_match_stats_id, type)
 VALUES (5, 1, 1, 'BROADCAST_NETWORK'),

@@ -25,14 +25,14 @@ export function PlayCard({
                          }) {
 
     let [userFriends, setUserFriends] = useState(null)
-    const [gamemode, setGamemode] = useState("")
+    const [gameMode, setGameMode] = useState("")
     const [players, setPlayers] = useState("")
     const [invitationRequest, setInvitationRequest] = useState([])
 
     const fetchUserFriends = async () => {
         try {
             setUserFriends(await fetchAuthenticated(`/api/v1/users/${tokenService.getUser().username}/friends`, "GET")
-                .then(async response => await response.json()));
+                .then(response => response.json()));
         } catch (error) {
             console.log(error.message)
         }
@@ -64,17 +64,19 @@ export function PlayCard({
     async function createMatch(privateGame) {
         try {
             const append = privateGame ? "" : "/quick"
-            const response = await fetchAuthenticated(`/api/v1/matches${append}?mode=${gamemode.toUpperCase()}&maxPlayers=${players}`, "POST")
+            const response = await fetchAuthenticated(`/api/v1/matches${append}?mode=${gameMode.toUpperCase()}&maxPlayers=${players}`, "POST")
                 .then(response => response.json())
 
-            let friends = invitationRequest.map(friend => `target=${friend}`).join("&")
-            friends = invitationRequest ? `?${friends}` : ""
-            await fetchAuthenticated(`/api/v1/matches/${response.matchCode}/invite${friends}`, "POST")
+            if (privateGame) {
+                let friends = invitationRequest.map(friend => `target=${friend}`).join("&")
+                friends = invitationRequest ? `?${friends}` : ""
+                await fetchAuthenticated(`/api/v1/matches/${response.matchCode}/invite${friends}`, "POST")
+            }
+
             navigate(`/match/${response.matchCode}`)
         } catch (error) {
             console.log(error.message)
         }
-
     }
 
     function getColor(state, expected) {
@@ -91,12 +93,12 @@ export function PlayCard({
                 <section style={cardContentRowStyle}>
                     <Text>Game mode</Text>
                     <div style={{display: "flex", flexDirection: "row", gap: "15px"}}>
-                        <PressableText color={getColor(gamemode, "normal")}
-                                       onClick={() => setGamemode("normal")}>
+                        <PressableText color={getColor(gameMode, "normal")}
+                                       onClick={() => setGameMode("normal")}>
                             Normal
                         </PressableText>
-                        <PressableText color={getColor(gamemode, "quick")}
-                                       onClick={() => setGamemode("quick")}>
+                        <PressableText color={getColor(gameMode, "quick")}
+                                       onClick={() => setGameMode("quick")}>
                             Quick
                         </PressableText>
                     </div>

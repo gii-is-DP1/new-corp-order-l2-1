@@ -1,6 +1,5 @@
 package us.lsi.dp1.newcorporder.configuration;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -16,11 +15,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import us.lsi.dp1.newcorporder.auth.ApplicationUserDetailsService;
 import us.lsi.dp1.newcorporder.auth.jwt.AuthEntryPointJwt;
 import us.lsi.dp1.newcorporder.auth.jwt.AuthTokenFilter;
-
-import javax.sql.DataSource;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -28,16 +24,12 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @EnableWebSecurity
 public class SecurityConfiguration {
 
-    @Autowired
-    ApplicationUserDetailsService userDetailsService;
-
-    @Autowired
-    private AuthEntryPointJwt unauthorizedHandler;
-
-    @Autowired
-    DataSource dataSource;
-
     private static final String ADMIN = "ADMIN";
+    private final AuthEntryPointJwt unauthorizedHandler;
+
+    public SecurityConfiguration(AuthEntryPointJwt unauthorizedHandler) {
+        this.unauthorizedHandler = unauthorizedHandler;
+    }
 
     @Bean
     protected SecurityFilterChain configure(HttpSecurity http) throws Exception {
@@ -60,8 +52,12 @@ public class SecurityConfiguration {
                 .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.DELETE, "/api/v1/users/{username}")).hasAuthority(ADMIN)
                 .requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/users/friendships/**")).authenticated()
 
-                .requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/notifications/**")).authenticated()
+                .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/v1/players/{username}/stats")).authenticated()
+                .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/v1/players/{username}/lastMatches")).authenticated()
+
                 .requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/matches/**")).authenticated()
+                .requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/metrics")).authenticated()
+                .requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/notifications/**")).authenticated()
 
                 .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/v1/achievements/**")).hasAuthority(ADMIN)
                 .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/v1/achievements/**")).hasAuthority(ADMIN)
@@ -70,7 +66,6 @@ public class SecurityConfiguration {
                 .requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
 
                 .anyRequest().denyAll())
-
             .addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
@@ -90,6 +85,4 @@ public class SecurityConfiguration {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
-
 }

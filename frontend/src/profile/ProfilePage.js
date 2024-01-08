@@ -13,11 +13,13 @@ import fetchAuthenticated from "../util/fetchAuthenticated";
 import {useNavigate, useParams} from "react-router-dom";
 import tokenService from "../services/token.service";
 import {FriendsTab} from "./FriendsTab";
+import {LastMatchesTab} from "./LastMatchesTab";
 
 export function ProfilePage() {
     const [userData, setUserData] = useState(null)
     const {username, select} = useParams()
     const navigate = useNavigate()
+    const [userStats, setUserStats] = useState(null)
 
     if (!select) {
         navigate(`/user/${username}/lastMatches`)
@@ -32,11 +34,21 @@ export function ProfilePage() {
         }
     };
 
+    const fetchUserStats = async () => {
+        try {
+            setUserStats(await fetchAuthenticated(`/api/v1/players/${username}/stats`, "GET")
+                .then(async response => await response.json()));
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     useEffect(() => {
         fetchUserData()
+        fetchUserStats()
     }, [select, username]);
 
-    if (!userData) {
+    if (!userData || !userStats) {
         return <></>
     }
 
@@ -75,29 +87,12 @@ export function ProfilePage() {
         gap: "5px"
     }
 
-    let matchItems = []
+    let achievementsItems = []
     for (let i = 1; i < 20; i++) {
-        matchItems.push(
-            <ListLine sideContent={(
-                <Button style={{}} buttonType={ButtonType.secondaryLight}>
-                    Spectate
-                </Button>)}>
-                <Subtitle>· Match #{i} |</Subtitle>
-                <Subtitle>Match State |</Subtitle>
-                <Subtitle>Num players</Subtitle>
-            </ListLine>
-        )
-    }
-
-    let statsItems = []
-    for (let i = 1; i < 20; i++) {
-        statsItems.push(
-            <ListLine sideContent={(
-                <Button style={{}} buttonType={ButtonType.secondaryLight}>
-                    View Match
-                </Button>)}>
-                <Subtitle>· Stat #{i} |</Subtitle>
-                <Subtitle> From match #{i + 3 * i * i}</Subtitle>
+        achievementsItems.push(
+            <ListLine sideContent={<Button buttonType={ButtonType.primary}>Logrado? si: no </Button>}>
+                <Subtitle>· Achievement #{i} |</Subtitle>
+                <Subtitle> Blablabla</Subtitle>
             </ListLine>
         )
     }
@@ -122,9 +117,10 @@ export function ProfilePage() {
                         </Button>
                     </div>}
                     <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
-                        <Text style={{color: grayDarker}}>000 victories</Text>
-                        <Text style={{color: grayDarker}}>000 matches played</Text>
-                        <Text style={{color: grayDarker}}>more relevant stats...</Text>
+                        <Text style={{color: grayDarker}}>{userStats.totalMatches} matches played</Text>
+                        <Text style={{color: grayDarker}}>{userStats.wins} victories</Text>
+                        <Text style={{color: grayDarker}}>{userStats.ties} ties</Text>
+                        <Text style={{color: grayDarker}}>{userStats.loses} loses</Text>
                     </div>
                 </section>
                 <section style={columnStyle}>
@@ -140,16 +136,17 @@ export function ProfilePage() {
                             Friends
                         </PressableText>
                         <PressableText style={{color: white}}
-                                       underlined={select === "stats"}
-                                       onClick={() => navigate(`/user/${userData.username}/stats`)}>
-                            Stats
+                                       underlined={select === "achievements"}
+                                       onClick={() => navigate(`/user/${userData.username}/achievements`)}>
+                            Achievements
                         </PressableText>
                     </div>
                     <div>
                         {select === "lastMatches" &&
-                            <List style={rowListStyle}>
-                                {matchItems}
-                            </List>}
+                            <LastMatchesTab username={username}
+                                            navigate={navigate}
+                                            rowListStyle={rowListStyle}
+                            />}
 
                         {select === "friends" &&
                             <FriendsTab userData={userData}
@@ -159,9 +156,9 @@ export function ProfilePage() {
                                         rowListStyle={rowListStyle}
                             />}
 
-                        {select === "stats" &&
+                        {select === "achievements" &&
                             <List style={rowListStyle}>
-                                {statsItems}
+                                {achievementsItems}
                             </List>}
                     </div>
                 </section>

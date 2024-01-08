@@ -55,7 +55,7 @@ const AppNavbar = () => {
             if (role === 'USER') {
                 navLinks = createNavLinks([
                     {link: `/user/${username}/friends`, text: 'Friends'},
-                    {link: `/user/${username}/stats`, text: 'Stats'},
+                    {link: `/user/${username}/achievements`, text: 'Achievements'},
                     {link: `/user/${username}`, isProfilePicture: true},
                     {link: '', text: 'Play now', isButton: true},
                 ]);

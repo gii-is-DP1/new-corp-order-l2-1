@@ -6,16 +6,20 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import us.lsi.dp1.newcorporder.auth.Authenticated;
 import us.lsi.dp1.newcorporder.bind.FromPathVariable;
 import us.lsi.dp1.newcorporder.match.payload.response.MatchAssignmentResponse;
 import us.lsi.dp1.newcorporder.match.view.MatchView;
 import us.lsi.dp1.newcorporder.player.Player;
+import us.lsi.dp1.newcorporder.player.PlayerService;
 import us.lsi.dp1.newcorporder.user.User;
 import us.lsi.dp1.newcorporder.user.UserService;
 import us.lsi.dp1.newcorporder.util.RestPreconditions;
 
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/matches")
@@ -29,10 +33,12 @@ public class MatchController {
 
     private final UserService userService;
     private final MatchService matchService;
+    private final PlayerService playerService;
 
-    public MatchController(UserService userService, MatchService matchService) {
+    public MatchController(PlayerService playerService, UserService userService, MatchService matchService) {
         this.userService = userService;
         this.matchService = matchService;
+        this.playerService = playerService;
     }
 
     @Operation(
@@ -98,9 +104,23 @@ public class MatchController {
         responseCode = "200",
         description = "The requested match view"
     )
-    @GetMapping("/{match}")
+    @GetMapping("/{match}/{sdjosof}")
     public MatchView getMatch(@Authenticated Player player, @FromPathVariable Match match) {
         return matchService.getMatchView(player, match);
+    }
+
+    @Operation(
+        summary = "Get a match",
+        description = "Get a match",
+        tags = "get"
+    )
+    @ApiResponse(
+        responseCode = "200",
+        description = "The requested match "
+    )
+    @GetMapping("/{matchCode}")
+    public MatchView getMatchWithCode(@Authenticated Player player, @PathVariable String matchCode) {
+        return matchService.getMatchView(player,matchService.getMatch(matchCode).get());
     }
 
     @Operation(
@@ -129,6 +149,17 @@ public class MatchController {
     @PostMapping("/{match}/leave")
     public void leaveMatch(@Authenticated Player player, @FromPathVariable Match match) {
         matchService.leave(player, match);
+    }
+
+    @PostMapping("/{match}/kick/{username}")
+    public void kickPlayer(@Authenticated Player player, @PathVariable String username, @FromPathVariable Match match) {
+        Player p = playerService.findByUserId(userService.findUser(username).getId());
+        List<Player> matchPlayers = new LinkedList<>();
+        match.getPlayers().forEach(mp -> matchPlayers.add(playerService.findByUserId(mp.getPlayerId())));
+        if(matchPlayers.contains(player) && match.isHost(player))
+            matchService.leave(p, match);
+        else
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
     }
 
     @Operation(

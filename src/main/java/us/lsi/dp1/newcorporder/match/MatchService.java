@@ -30,17 +30,27 @@ public class MatchService {
         this.matchRepository = matchRepository;
     }
 
-    public MatchAssignmentResponse quickPlay(Player player, MatchMode mode, int maxPlayers) {
-        Match match = matchRepository.findRandomPublicMatch(player, mode, maxPlayers)
-            .orElseGet(() -> matchRepository.createNewMatch(mode, MatchVisibility.PUBLIC, maxPlayers));
+    public Optional<Match> getMatch(String code) {
+        return matchRepository.getByMatchCode(code);
+    }
 
-        return this.join(player, match);
+    public MatchAssignmentResponse quickPlay(Player player, MatchMode mode, int maxPlayers) {
+        Optional<Match> match = matchRepository.findRandomPublicMatch(player, mode, maxPlayers);
+        if (match.isEmpty()) return createNewMatch(player, mode, maxPlayers, MatchVisibility.PUBLIC);
+        else
+            return this.join(player, match.get());
     }
 
     public MatchAssignmentResponse createPrivateMatch(Player player, MatchMode mode, int maxPlayers) {
-        Match match = matchRepository.createNewMatch(mode, MatchVisibility.PRIVATE, maxPlayers);
+        return createNewMatch(player, mode, maxPlayers, MatchVisibility.PRIVATE);
+    }
 
-        return this.join(player, match);
+    public MatchAssignmentResponse createNewMatch(Player host, MatchMode mode, int maxPlayers, MatchVisibility matchVisibility) {
+        Match match = matchRepository.createNewMatch(mode, matchVisibility, maxPlayers);
+        MatchAssignmentResponse mr = join(host, match);
+        match.setHost(match.getPlayer(host.getId()));
+        return mr;
+
     }
 
     public void inviteFriend(User user, User friend, Match match) {

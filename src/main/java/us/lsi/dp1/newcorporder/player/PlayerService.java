@@ -29,6 +29,14 @@ public class PlayerService {
             .orElseThrow(() -> new ResourceNotFoundException("Player", "id", id));
     }
 
+    @Transactional(readOnly = true)
+    public Player findByUserId(Integer id) {
+        return this.playerRepository
+            .findByUserId(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Player", "id", id));
+    }
+
+
     @Transactional
     public Player save(@Valid Player player) throws DataAccessException {
         return playerRepository.save(player);

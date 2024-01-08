@@ -27,19 +27,21 @@ public class MatchView {
             .state(match.getState())
             .player(player != null ? OwnPlayerView.of(player) : null)
             .opponents(buildOpponents(match, player))
+            .isSpectating(!match.getPlayers().contains(player))/*
             .companyMatrix(match.getCompanyMatrix().getTiles())
             .generalSupply(GeneralSupplyView.of(match.getGeneralSupply()))
-            .turn(TurnView.of(match.getTurnSystem()))
+            .turn(TurnView.of(match.getTurnSystem()))*/
             .build();
     }
 
     private static List<OpponentView> buildOpponents(Match match, MatchPlayer player) {
-        return match.getTurnSystem().getPlayers().stream()
+        return match.getPlayers().stream()
             .filter(opponent -> !opponent.equals(player))
             .map(OpponentView::of)
             .toList();
     }
 
+    private final boolean isSpectating;
     private final MatchMode mode;
     private final int maxPlayers;
     private final Integer host;

@@ -2,8 +2,8 @@ import PersonIcon from '@mui/icons-material/Person';
 
 export default function ProfilePicture({url, isTransparent, style}) {
     const defaultStyle = {
-        width: "100%",
-        height: "100%",
+        width: "64px",
+        height: "64px",
         borderRadius: "50%",
         overflow: "hidden"
     }

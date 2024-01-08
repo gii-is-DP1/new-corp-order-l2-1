@@ -6,7 +6,7 @@ import {useContext, useState} from "react";
 import BaseModal from "../../components/BaseModal";
 import fetchAuthenticated from "../../util/fetchAuthenticated";
 import Button, {ButtonType} from "../../components/Button";
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 
 
 export function Lobby() {
@@ -15,8 +15,10 @@ export function Lobby() {
         <MainMessage/>
         <LobbyPlayers/>
         <ContextCode/>
-        <StartModal/>
 
+        <Info.Consumer>
+            {info => info.isAdmin? <StartModal/> : <></>}
+        </Info.Consumer>
     </>
 }
 
@@ -28,46 +30,44 @@ function ContextCode() {
     );
 }
 
-function KickedModal(){
+function KickedModal() {
     const [show, setShow] = useState(false);
     const navigate = useNavigate();
-    if(info.hasBeenKicked)
-    setShow(true);
+
     return (
         <Info.Consumer>
             {
-                info =>
-                {
-return <BaseModal
-    title={"¡Bad news!"}
-    body={"Sadly, you have been kicked from this match by its host"}
-    state={[show, setShow]}
-    onContinue={() => {
-        navigate("/");
-    }}
-    canCancel={false}
-    continueText={"I accept it"}
-/>
+                info => {
+                    if (info.hasBeenKicked)
+                        setShow(true);
+                    return <BaseModal
+                        title={"¡Bad news!"}
+                        body={"Sadly, you have been kicked from this match by its host"}
+                        state={[show, setShow]}
+                        onContinue={() => {
+                            navigate("/");
+                        }}
+                        canCancel={false}
+                        continueText={"I accept it"}
+                    />
                 }
             }
         </Info.Consumer>)
 }
 
-function StartModal(){
+function StartModal() {
     const [startShow, setStartShow] = useState(false);
-    
-    
+
 
     return (
         <Info.Consumer>
             {
-                info =>
-                {
+                info => {
                     return <><BaseModal
-                        title={<h2>START GAME</h2>}
-                        body={<p>Do you want to start the game</p>}
+                        title={"Start Game"}
+                        body={"¿Do you want to start the game?"}
                         state={[startShow, setStartShow]}
-                        onContinue={async() => {
+                        onContinue={async () => {
                             try {
                                 await fetchAuthenticated(`/api/v1/matches/${info.code}/start`, "POST")
                                     .then(async response => await response.json());
@@ -77,8 +77,9 @@ function StartModal(){
                         }
                         }/>
 
-                        <Button buttonType={ButtonType.primary} onClick={() => setStartShow(true)} disabled={!(info.players.length > 1)}>START</Button>
-                        </>
+                        <Button buttonType={ButtonType.primary} onClick={() => setStartShow(true)}
+                                disabled={!(info.players.length > 1)}>START</Button>
+                    </>
 
                 }
             }

@@ -165,5 +165,8 @@ class UserController {
         return friendshipService.getFriends(user);
     }
 
-    //@PutMapping("/{username}/propic")
+    @PutMapping("/{username}/{propic}")
+    public void updatePropic(@PathVariable String username, @PathVariable Integer propic){
+        userService.changePropic(userService.findUser(username), propic);
+    }
 }

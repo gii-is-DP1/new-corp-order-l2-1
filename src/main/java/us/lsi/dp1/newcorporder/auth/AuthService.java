@@ -11,6 +11,7 @@ import us.lsi.dp1.newcorporder.user.User;
 import us.lsi.dp1.newcorporder.user.UserService;
 
 import java.time.Instant;
+import java.util.Random;
 
 @Service
 public class AuthService {
@@ -34,7 +35,8 @@ public class AuthService {
         userService.changeUsername(user, request.getUsername());
         userService.changePassword(user, request.getPassword());
         userService.changeEmail(user, request.getEmail());
-
+        Random random = new Random();
+        userService.changePropic(user, random.nextInt(22)+1);
         userService.saveUser(user);
     }
 }

@@ -6,6 +6,7 @@ import {RightBar} from "./RightBar";
 import {useParams} from "react-router-dom";
 import fetchAuthenticated from "../util/fetchAuthenticated";
 import tokenService from "../services/token.service";
+import {propics} from "./data/MatchEnums";
 
 export const Info = React.createContext({...defaultMatchInfo})
 let matchInfo = {...defaultMatchInfo};
@@ -14,6 +15,17 @@ export default function Match() {
     const [matchData, setMatchData] = useState(null);
     const {id} = useParams();
     matchInfo =  {...defaultMatchInfo};
+
+    const [propic, setPropic] = useState(null);
+    const fetchPropic = async () => {
+        try {
+            setPropic(await fetchAuthenticated(`/api/v1/users/${tokenService.getUser().username}/picture`, "GET")
+                .then(async response => await response.json()));
+        } catch (error) {
+            console.log(error.message)
+        }
+    };
+
     const fetchMatchData = async () => {
         try {
             setMatchData(await fetchAuthenticated(`/api/v1/matches/${id}`, "GET")
@@ -25,16 +37,18 @@ export default function Match() {
 
     useEffect(() => {
         fetchMatchData()
+        fetchPropic()
         setInterval(() => fetchMatchData(), 5000)
     }, []);
 
-    const isLoading = matchData == null;
+    const isLoading = matchData == null || propic == null;
     if(isLoading) {
         return <LoadingScreen/>;
     }
     else
     {
-        setContext(id, matchData);
+        console.log(matchData);
+        setContext(id, matchData, propic);
         return <LoadedPage key={id}/>
     }
 }
@@ -56,11 +70,10 @@ function LoadedPage(){
         </div>);
 }
 
-function setContext(id, matchData) {
+function setContext(id, matchData, propic) {
     if (matchInfo.code !== id)
     {
         matchInfo = {...defaultMatchInfo};
-        console.log("Entered new match");
     }
 
     matchInfo.code = id;
@@ -71,8 +84,9 @@ function setContext(id, matchData) {
         matchInfo.hasBeenKicked = true;
     matchInfo.wasSpectating = matchInfo.isSpectating;
     matchInfo.isSpectating = matchData.spectating;
+    console.log( propic)
     if(!matchData.spectating)
-        matchInfo.players = [{propic: null, username: tokenService.getUser().username}];
+        matchInfo.players = [{propic: propics[propic.picture], username: tokenService.getUser().username}];
     else matchInfo.players = [];
-    matchInfo.players = matchInfo.players.concat(matchData.opponents.map(opponent => {return {propic:null,username:opponent.username}}));
+    matchInfo.players = matchInfo.players.concat(matchData.opponents.map(opponent => {return {propic: propics[opponent.picture],username:opponent.username}}));
 }

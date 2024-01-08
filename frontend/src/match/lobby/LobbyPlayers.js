@@ -22,7 +22,6 @@ export function LobbyPlayers() {
                                            }
                                        }}
     />;
-
     return <div className={css.playersContainer}>
         {playerInfoModal}
         {[...Array(info.maxPlayers)].map((x, i) => {

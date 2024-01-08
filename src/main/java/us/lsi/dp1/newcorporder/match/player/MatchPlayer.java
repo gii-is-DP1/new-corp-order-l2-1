@@ -29,7 +29,7 @@ public class MatchPlayer {
 
     @Getter private final Integer playerId;
     @Getter private final String username;
-    @Getter private final String picture;
+    @Getter private final Integer picture;
     @Getter @Setter private boolean online;
 
     private final Multiset<Conglomerate> hand = HashMultiset.create();

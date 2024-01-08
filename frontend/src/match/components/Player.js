@@ -10,7 +10,7 @@ export function Player({data, isAdmin, onKick}) {
 
     return (
         <div className={css.player}>
-            <ProfilePicture url={data.propic} isTransparent={data.username == null}/>
+            <ProfilePicture url={data.propic}  style={{width: "64px", height: "64px"}} isTransparent={data.username == null}/>
             {usernameParagraph}
             {isAdmin && data.username != null
                 ?

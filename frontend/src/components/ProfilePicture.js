@@ -1,15 +1,16 @@
 import PersonIcon from '@mui/icons-material/Person';
+import {black, grayDarker} from "../util/Colors";
 
 export default function ProfilePicture({url, isTransparent, style}) {
     const defaultStyle = {
-        width: "64px",
-        height: "64px",
+        width: "100%",
+        height: "100%",
         borderRadius: "50%",
         overflow: "hidden"
     }
 
     const backgroundStyle = {
-        backgroundColor: "#F8F8F8",
+        backgroundColor: grayDarker,
         width: "100%",
         height: "100%",
         display: "flex",
@@ -24,7 +25,7 @@ export default function ProfilePicture({url, isTransparent, style}) {
                 ? <div style={backgroundStyle}>
                     <PersonIcon style={{width: "70%", height: "70%"}}/>
                 </div>
-                : <img width="64px" height="64px" alt="profile image" src={url}/>
+                : <img width="100%" height="100%" alt="profile image" src={url}/>
         }
     </div>
 }

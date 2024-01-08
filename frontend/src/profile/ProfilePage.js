@@ -13,6 +13,7 @@ import fetchAuthenticated from "../util/fetchAuthenticated";
 import {useNavigate, useParams} from "react-router-dom";
 import tokenService from "../services/token.service";
 import {FriendsTab} from "./FriendsTab";
+import {propics} from "../match/data/MatchEnums";
 
 export function ProfilePage() {
     const [userData, setUserData] = useState(null)
@@ -106,7 +107,7 @@ export function ProfilePage() {
 
             <div style={content}>
                 <section style={columnStyle}>
-                    <ProfilePicture url={userData.picture} style={{height: "150px", width: "150px"}}/>
+                    <ProfilePicture url={propics[userData.picture]} style={{height: "150px", width: "150px"}}/>
                     <Title style={{color: white, fontSize: "35px"}}>{userData.username}</Title>
                     {isMe() && <div style={{display: "flex", flexDirection: "row", gap: "5px"}}>
                         <Button onClick={() => navigate(`/user/${userData.username}/edit`)}

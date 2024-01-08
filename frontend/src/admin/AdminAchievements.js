@@ -1,5 +1,5 @@
 import AppNavbar from "../AppNavbar";
-import {black, white, grayDarker} from "../util/Colors";
+import {black, grayDarker, white} from "../util/Colors";
 import {Title} from "../components/Title";
 import List from "../components/List";
 import ListLine from "../components/ListLine";
@@ -24,7 +24,7 @@ export function AdminAchievements() {
 
     const textInputStyle = {
         width: "500px",
-        fontSize:"20px",
+        fontSize: "20px",
         textTransform: "uppercase",
     }
 
@@ -42,21 +42,22 @@ export function AdminAchievements() {
     }, [filter]);
 
     let achievementItems = achievementsData?.map(achievement => {
-        return  <ListLine sideContent={(
-            <div style = {{display:"flex", flexDirection:"row", gap: "5px"}}>
-                <Button buttonType={ButtonType.secondaryLight} onClick={() => navigate(`/admin/achievements/${achievement.id}`)}>
+        return <ListLine sideContent={(
+            <div style={{display: "flex", flexDirection: "row", gap: "5px"}}>
+                <Button buttonType={ButtonType.secondaryLight}
+                        onClick={() => navigate(`/admin/achievements/${achievement.id}`)}>
                     edit
                 </Button>
                 <Button onClick={() => fetchAuthenticated(`/api/v1/achievements/${achievement.id}`, "DELETE")
                     .then(() => fetchAchievementsData())}
-                    buttonType={ButtonType.danger}>
+                        buttonType={ButtonType.danger}>
                     delete
                 </Button>
             </div>
         )}>
             <AchievementPicture url={achievement.imageUrl} style={{width: "40px", height: "40px"}} earned={true}/>
             <Subtitle> {achievement.name} </Subtitle>
-            <Subtitle style={{fontSize: '12px', color:grayDarker}}> {achievement.description} </Subtitle>
+            <Subtitle style={{fontSize: '12px', color: grayDarker}}> {achievement.description} </Subtitle>
         </ListLine>
     })
 
@@ -64,24 +65,27 @@ export function AdminAchievements() {
         <div style={{height: "100%", backgroundColor: black}}>
             <AppNavbar/>
             <section style={content}>
-                <div style={{gap:"15px", display:"flex", flexDirection:"column", alignItems: "center"}}>
+                <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
                     <Title style={{fontSize: "60px", color: white}}>
                         achievements
                     </Title>
-                    <Subtitle style={{fontSize: "20px", color: white}}>
-                        Create, modify or delete achievements
+                    <Subtitle style={{fontSize: "15px", color: white}}>
+                        Create, edit or delete achievements
                     </Subtitle>
-                    <div style={{display:"flex", flexDirection:"row", gap:"20px"}}>
+                    <div style={{marginTop: "15px", display: "flex", flexDirection: "row", gap: "10px"}}>
                         <TextInput onClick={setFilter}
-                                   style={{width: "600px", fontSize:"20px",  textTransform: "uppercase"}}
+                                   style={{width: "600px", fontSize: "20px", textTransform: "uppercase"}}
                                    placeholder="Filter..."/>
-                        {filter != "" && <Button onClick={() => setFilter("")} buttonType={ButtonType.danger} style={{fontSize: "20px", textTransform: "uppercase"}}>Delete filter</Button>}
-                        <Button style={{width:"200px"}} buttonType={ButtonType.success} onClick={() => navigate(`/admin/achievements/create`)}>
+                        {filter != "" && <Button onClick={() => setFilter("")} buttonType={ButtonType.danger}
+                                                 style={{fontSize: "20px", textTransform: "uppercase"}}>Delete
+                            filter</Button>}
+                        <Button style={{width: "200px"}} buttonType={ButtonType.success}
+                                onClick={() => navigate(`/admin/achievements/create`)}>
                             Create
                         </Button>
                     </div>
                 </div>
-                <div style={{marginTop:"22px"}}>
+                <div style={{marginTop: "15px"}}>
                     <List style={{maxHeight: "650px", width: "800px", backgroundColor: black, overflow: "auto"}}>
                         {achievementItems}
                     </List>

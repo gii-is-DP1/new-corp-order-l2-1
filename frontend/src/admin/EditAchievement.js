@@ -1,11 +1,10 @@
 import AppNavbar from "../AppNavbar";
-import {black, white, grayDarker, orange} from "../util/Colors";
+import {black, orange, white} from "../util/Colors";
 import Button, {ButtonType} from "../components/Button";
 import React, {useEffect, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import FormInput from "../components/FormInput";
 import DropDownPicker from "../components/DropDownPicker";
-import tokenService from "../services/token.service";
 import {Text} from "../components/Text";
 import fetchAuthenticatedWithBody from "../util/fetchAuthenticatedWithBody";
 import {Title} from "../components/Title";
@@ -139,9 +138,6 @@ export function EditAchievements() {
                 });
         }
     }
-
-
-
 
     return (
         <div style={{height: "100%", backgroundColor: black}}>

@@ -19,16 +19,19 @@ export default function AchievementPicture({url, style, earned}) {
     }
 
     const imgStyle = {
-         filter: earned?'none':'grayscale(100%)'
+        filter: earned ? 'none' : 'grayscale(100%)'
     }
 
     return <div style={{...defaultStyle, ...style}}>
         {
             url == null
                 ? <div style={backgroundStyle}>
-                    <EmojiEventsIcon style={{width: "70%", height: "70%", color:earned?yellow: grayDarker}}/>
+                    <EmojiEventsIcon style={{width: "70%", height: "70%", color: earned ? yellow : grayDarker}}/>
                 </div>
-                : <img style={imgStyle} width="64px" height="64px" alt="profile image" src={url}/>
+
+                : <div style={backgroundStyle}>
+                    <img style={imgStyle} width="64px" height="64px" alt="profile image" src={url}/>
+                </div>
         }
     </div>
 }

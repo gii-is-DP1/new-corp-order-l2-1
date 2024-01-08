@@ -26,8 +26,6 @@ export function AchievementsTab({achievementsCompleatedData, allAchievementsData
         }))
     }, []);
 
-
-
     let compleatedAchievementsItems = achievementsCompleatedData?.map(achievement => {
         return <AchievementExpandedView achievement={achievement} setSelectedAchievement={setSelectedAchievement} selectedAchievement={selectedAchievement} earned={true}/>
     });

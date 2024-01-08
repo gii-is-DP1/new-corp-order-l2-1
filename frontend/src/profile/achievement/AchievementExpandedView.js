@@ -7,7 +7,7 @@ import Button, {ButtonType} from "../../components/Button";
 import React from "react";
 import * as Colors from "../../util/Colors";
 
-export function AchievementExpandedView({achievement, selectedAchievement, setSelectedAchievement, earned, }){
+export function AchievementExpandedView({achievement, selectedAchievement, setSelectedAchievement, earned}){
 
     const listLineExpandedStyle = {
         backgroundColor: Colors.white,
@@ -20,13 +20,19 @@ export function AchievementExpandedView({achievement, selectedAchievement, setSe
 
     return <>{selectedAchievement === achievement.id ? (
         <ListLine style={listLineExpandedStyle} sideContent={
-            <div style={{display: "flex", flexDirection: "column", gap: "5px", paddingRight: '30px'}}>
-                <Subtitle style={{color: orange, fontSize: '18px'}}> You need to have: </Subtitle>
-                <div style={{display: "flex", flexDirection: "row", gap: "10px"}}>
-                    <Subtitle style={{fontSize: '25px', color: black}}> {achievement.threshold} </Subtitle>
-                    <Subtitle style={{fontSize: '25px', color: grayDarker}}> {achievement.stat} </Subtitle>
+            <>
+            {earned?(
+                <Title style={{color:orange, fontSize:'30px', paddingRight:'20px'}}> Complete </Title>
+                ):(
+                <div style={{display: "flex", flexDirection: "column", gap: "5px", paddingRight: '30px'}}>
+                    <Subtitle style={{color: orange, fontSize: '18px'}}> You need to have: </Subtitle>
+                    <div style={{display: "flex", flexDirection: "row", gap: "10px"}}>
+                        <Subtitle style={{fontSize: '25px', color: black}}> {achievement.threshold} </Subtitle>
+                        <Subtitle style={{fontSize: '25px', color: grayDarker}}> {achievement.stat} </Subtitle>
+                    </div>
                 </div>
-            </div>
+                )}
+            </>
         }>
             <AchievementPicture url={achievement.imageUrl} style={{width: "80px", height: "80px"}} earned={earned}/>
             <div style={{display: "flex", flexDirection: "column", gap: "10px"}}>

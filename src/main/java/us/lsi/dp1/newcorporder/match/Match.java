@@ -1,5 +1,6 @@
 package us.lsi.dp1.newcorporder.match;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
@@ -13,9 +14,12 @@ import us.lsi.dp1.newcorporder.match.consultant.ConsultantInitializer;
 import us.lsi.dp1.newcorporder.match.consultant.ConsultantType;
 import us.lsi.dp1.newcorporder.match.player.MatchPlayer;
 import us.lsi.dp1.newcorporder.match.turn.TurnSystem;
+import us.lsi.dp1.newcorporder.match.view.MatchSummary;
 import us.lsi.dp1.newcorporder.player.Player;
 
+import java.time.Instant;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Match {
 
@@ -44,6 +48,9 @@ public class Match {
     @Getter private final CompanyMatrix companyMatrix;
     @Getter private final TurnSystem turnSystem;
 
+    @Getter private Instant startTime;
+    @Getter private Instant endTime;
+
     @Builder
     Match(int maxPlayers, MatchMode mode, MatchVisibility visibility, String code, GeneralSupply generalSupply,
           CompanyMatrix companyMatrix, TurnSystem turnSystem) {
@@ -66,17 +73,20 @@ public class Match {
 
         turnSystem.init(this, new ArrayList<>(players.values()));
         state = MatchState.PLAYING;
+        startTime = Instant.now();
     }
 
-    public void end() {
+    public MatchSummary end() {
         this.state = MatchState.FINISHED;
+        this.endTime = Instant.now();
 
         Multiset<MatchPlayer> victoryPoints = this.calculateVictoryPoints();
-        MatchPlayer winner = victoryPoints.entrySet().stream()
-            .max(Comparator.comparingInt(Multiset.Entry::getCount))
-            .map(Multiset.Entry::getElement)
-            .orElseThrow();
-        //TODO generate and save stats
+        Set<MatchPlayer> winners = this.getWinners(victoryPoints);
+
+        return MatchSummary.builder()
+            .victoryPoints(victoryPoints)
+            .winners(winners)
+            .build();
     }
 
     public void addPlayer(MatchPlayer player) {
@@ -148,11 +158,24 @@ public class Match {
         return points;
     }
 
-    public List<MatchPlayer> rankPlayerParticipation(Conglomerate conglomerateType) {
+    @VisibleForTesting
+    List<MatchPlayer> rankPlayerParticipation(Conglomerate conglomerateType) {
         return this.players.values().stream()
             .sorted(Comparator.<MatchPlayer>comparingInt(player -> player.getParticipationPoints(conglomerateType))
                 .thenComparingInt(x -> x.getHeadquarter().getAgentsCaptured(conglomerateType))
                 .reversed())
             .toList();
+    }
+
+    public Set<MatchPlayer> getWinners(Multiset<MatchPlayer> victoryPoints) {
+        int maximumVictoryPoints = victoryPoints.entrySet().stream()
+            .mapToInt(Multiset.Entry::getCount)
+            .max()
+            .orElseThrow();
+
+        return victoryPoints.entrySet().stream()
+            .filter(entry -> entry.getCount() == maximumVictoryPoints)
+            .map(Multiset.Entry::getElement)
+            .collect(Collectors.toSet());
     }
 }

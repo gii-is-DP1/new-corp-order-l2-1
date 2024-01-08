@@ -43,6 +43,7 @@ public class InfiltrateTurn extends Turn {
         this.useConsultantRequest = request;
         this.state = State.INFILTRATE;
         this.turnSystem.getCurrentPlayer().getHeadquarter().removeConsultant(request.getConsultant());
+        this.turnSystem.getCurrentPlayer().addConsultantUse(request.getConsultant());
 
         return new UseConsultantResponse(state);
     }
@@ -52,7 +53,7 @@ public class InfiltrateTurn extends Turn {
         checkState(State.INFILTRATE);
 
         Infiltrate infiltrate = request.getInfiltrate();
-        infiltrate.run(match, useConsultantRequest);
+        infiltrate.run(match, useConsultantRequest); // TODO bring common logic here from infiltrate implementations
 
         if (infiltrate.getTotalNumberOfShares() >= 3) {
             state = State.TAKING_CONSULTANT;
@@ -78,6 +79,7 @@ public class InfiltrateTurn extends Turn {
     }
 
     private void endTurn() {
+        this.turnSystem.getCurrentPlayer().addTimeInfiltrated();
         this.state = State.NONE;
         turnSystem.passTurn();
     }

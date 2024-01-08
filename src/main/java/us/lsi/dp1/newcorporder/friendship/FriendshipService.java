@@ -33,7 +33,7 @@ public class FriendshipService {
 
     public List<UserView> getFriends(User user) {
         return friendshipRepository.findByUser(user).stream()
-            .map(friendship -> UserView.minimal(friendship.getFriend()))
+            .map(friendship -> UserView.reduced(friendship.getFriend()))
             .toList();
     }
 

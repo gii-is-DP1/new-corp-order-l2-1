@@ -27,6 +27,6 @@ public class InviteNotification extends Notification {
     private String matchCode;
 
     public UserView getSender() {
-        return UserView.minimal(sender);
+        return UserView.reduced(sender);
     }
 }

@@ -22,10 +22,5 @@ public class MatchStatsController {
     public MatchStatsView getStats(@PathVariable String match) {
         return matchStatsService.getStats(match);
     }
-
-    @GetMapping("/user/{userid}/stats")
-    public List<MatchStatsView> getStatsByPlayer(@PathVariable Integer userid) {
-        return matchStatsService.getAllStatsByPlayer(userid);
-    }
-
+    
 }

@@ -42,13 +42,6 @@ public class MatchStatsService {
             .toList();
     }
 
-    public List<MatchStatsView> getAllStatsByPlayer(Integer playerId) {
-        return matchStatsRepository.findAll().stream()
-            .filter(matchStats -> matchStats.getPlayerMatchStats().stream()
-                .anyMatch(playerMatchStats -> playerMatchStats.getPlayer().getId().equals(playerId)))
-            .map(MatchStatsView::create)
-            .toList();
-    }
 
 
 }

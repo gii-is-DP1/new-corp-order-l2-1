@@ -8,8 +8,8 @@ export function Main() {
     return <div className={css.main}>
         <Info.Consumer>
             {info => info.inLobby
-                ? <Lobby/>
-                : <Game/>
+                ? <Lobby key={info.code}/>
+                : <Game  key={info.code}/>
             }
         </Info.Consumer>
     </div>

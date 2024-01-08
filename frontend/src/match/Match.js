@@ -1,4 +1,4 @@
-import {matchInfo} from "./data/MockupData";
+import {defaultMatchInfo} from "./data/MockupData";
 import React, {useEffect, useState} from "react"
 import css from "./match.module.css";
 import {Main} from "./Main";
@@ -7,14 +7,13 @@ import {useParams} from "react-router-dom";
 import fetchAuthenticated from "../util/fetchAuthenticated";
 import tokenService from "../services/token.service";
 
-export const Info = React.createContext(matchInfo)
+export const Info = React.createContext({...defaultMatchInfo})
+let matchInfo = {...defaultMatchInfo};
 
 export default function Match() {
-
-
     const [matchData, setMatchData] = useState(null);
     const {id} = useParams();
-
+    matchInfo =  {...defaultMatchInfo};
     const fetchMatchData = async () => {
         try {
             setMatchData(await fetchAuthenticated(`/api/v1/matches/${id}`, "GET")
@@ -30,16 +29,14 @@ export default function Match() {
     }, []);
 
     const isLoading = matchData == null;
-    console.log(isLoading);
     if(isLoading) {
         return <LoadingScreen/>;
     }
     else
     {
         setContext(id, matchData);
-        return <LoadedPage/>
+        return <LoadedPage key={id}/>
     }
-
 }
 
 function LoadingScreen(){
@@ -55,12 +52,17 @@ function LoadedPage(){
         <div className={css.match}>
             <Info.Provider value = {matchInfo} >
                 <Main/>
-
             </Info.Provider>
-        </div>)  /* <RightBar/>*/
+        </div>);
 }
 
-function setContext(id, matchData){
+function setContext(id, matchData) {
+    if (matchInfo.code !== id)
+    {
+        matchInfo = {...defaultMatchInfo};
+        console.log("Entered new match");
+    }
+
     matchInfo.code = id;
     matchInfo.inLobby = matchData.state === "WAITING";
     matchInfo.maxPlayers = matchData.maxPlayers;

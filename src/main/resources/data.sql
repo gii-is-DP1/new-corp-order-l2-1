@@ -42,7 +42,7 @@ VALUES (1, 1, 'Victory', 'Win 1 games', null, 'GAMES_WON'),
        (8, 40, 'Conqueror', 'Take over 40 times', null, 'TIMES_TAKEN_OVER'),
        (9, 50, 'The right time for a comeback', 'Use consultant stats 50 times', null, 'CONSULTANT_STATS_USED'),
        (10, 60, 'Skillful', 'Use abilities 60 times', null, 'ABILITIES_USED'),
-       (11, 20, 'Legend', 'Legends only survive seen from afar', 'https://upload.wikimedia.org/wikipedia/commons/2/29/Trifuerza.svg', 'FINAL_SCORE'),
+       (11, 30, 'Legend', 'Legends only survive seen from afar', 'https://upload.wikimedia.org/wikipedia/commons/2/29/Trifuerza.svg', 'FINAL_SCORE'),
        (12, 100, 'Victor', 'Win 100 games', 'https://i.kym-cdn.com/photos/images/original/000/839/199/8a9.jpg', 'GAMES_WON'),
        (13, 1000, 'Time to go outside', 'Play too much', null, 'TIMES_PLAYED'),
        (14, 50, 'Plot a lot', 'Is funny because plot and lot ends with lot', null, 'TIMES_PLOTTED');

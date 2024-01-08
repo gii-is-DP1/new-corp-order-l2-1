@@ -14,11 +14,12 @@ import {useNavigate, useParams} from "react-router-dom";
 import tokenService from "../services/token.service";
 import {FriendsTab} from "./FriendsTab";
 import AchievementPicture from "../components/AchievementPicture";
-import {AchievementsTab} from "./AchievementsTab";
+import {AchievementsTab} from "./achievement/AchievementsTab";
 
 export function ProfilePage() {
     const [userData, setUserData] = useState(null)
     const [achievementsData, setAchievementsData] = useState(null)
+    const [completedAchievementsData, setCompletedAchievementsData] = useState(null)
     const {username, select} = useParams()
     const navigate = useNavigate()
 
@@ -44,9 +45,20 @@ export function ProfilePage() {
         }
     };
 
+    const fetchCompletedAchievementsData = async () => {
+        try {
+            setCompletedAchievementsData(await fetchAuthenticated(`/api/v1/achievements/completed/${username}`, "GET")
+                .then(async response => await response.json()));
+        } catch (error) {
+            navigate('')
+        }
+    };
+
     useEffect(() => {
         fetchUserData()
         fetchAchievementsData()
+        fetchCompletedAchievementsData()
+
     }, [select, username]);
 
     if (!userData) {
@@ -102,19 +114,6 @@ export function ProfilePage() {
         )
     }
 
-    let achievementsItems = achievementsData?.map(achievement => {
-        return  <ListLine sideContent={
-            <div style = {{display:"flex", flexDirection:"row", gap: "5px"}}>
-                <Button buttonType={ButtonType.primary} onClick={() => navigate(`/achievements/${achievement.id}`)}>
-                    View Achievement
-                </Button>
-            </div>
-        }>
-            <AchievementPicture url={achievement.imageUrl} style={{width: "40px", height: "40px"}} earned={false}/>
-            <Subtitle> {achievement.name} </Subtitle>
-            <Subtitle style={{fontSize: '12px', color:grayDarker}}> {achievement.description} </Subtitle>
-        </ListLine>
-    });
 
 
     return (
@@ -175,11 +174,11 @@ export function ProfilePage() {
                             />}
 
                         {select === "achievements" &&
-                            <AchievementsTab achievementsData={achievementsData}
-                                                navigate={navigate}
-                                                fetchAchievementsData={fetchAchievementsData}
-                                                isMe={isMe}
-                                                rowListStyle={rowListStyle}
+                            <AchievementsTab achievementsCompleatedData={completedAchievementsData}
+                                             allAchievementsData={achievementsData}
+                                             isMe={isMe()}
+                                             rowListStyle={rowListStyle}
+                                             username={username}
                             />}
                     </div>
                 </section>

@@ -78,16 +78,16 @@ public class AchievementController {
         responseCode = "404",
         description = "Player not found"
     )
-    @GetMapping(value = "/completed/{playerId}")
-    public ResponseEntity<List<Achievement>> getAllAchievementsOfPlayer(@PathVariable("playerId") Integer playerId) {
-        Player player = playerService.findById(playerId);
+    @GetMapping(value = "/completed/{username}")
+    public ResponseEntity<List<Achievement>> getAllAchievementsOfPlayer(@PathVariable("username") String username) {
+        Player player = playerService.findByUsername(username);
         List<Achievement> res = achievementService.getAllAchievementsByPlayer(player);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/completed/{playerId}/{achievementId}")
-    public ResponseEntity<Boolean> isAchievementComplete(@PathVariable("playerId") Integer playerId,@PathVariable("achievementId") Integer achievementId){
-        Player player = playerService.findById(playerId);
+    @GetMapping(value = "/completed/{username}/{achievementId}")
+    public ResponseEntity<Boolean> isAchievementComplete(@PathVariable("username") String username, @PathVariable("achievementId") Integer achievementId){
+        Player player = playerService.findByUsername(username);
         Achievement achievement = achievementService.findById(achievementId);
         Boolean res = achievementService.isAchievementCompleted(achievement, player);
         return new ResponseEntity<>(res, HttpStatus.OK);

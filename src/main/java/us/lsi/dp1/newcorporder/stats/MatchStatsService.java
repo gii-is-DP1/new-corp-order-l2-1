@@ -34,4 +34,21 @@ public class MatchStatsService {
             .map(MatchStatsView::create)
             .orElseThrow(() -> new ResourceNotFoundException("match", "code", matchCode));
     }
+
+    public List<MatchStatsView> getAllStats() {
+        return matchStatsRepository.findAll().stream()
+            .map(MatchStatsView::create)
+            .toList();
+    }
+
+    public List<MatchStatsView> getAllStatsByPlayer(Integer playerId) {
+        return matchStatsRepository.findAll().stream()
+            .filter(matchStats -> matchStats.getPlayerMatchStats().stream()
+                .anyMatch(playerMatchStats -> playerMatchStats.getPlayer().getId().equals(playerId)))
+            .map(MatchStatsView::create)
+            .toList();
+    }
+
+
+
 }

@@ -4,6 +4,8 @@ import {LobbyPlayers} from "./LobbyPlayers";
 import {Info} from "../Match";
 import {useContext, useState} from "react";
 import BaseModal from "../../components/BaseModal";
+import fetchAuthenticated from "../../util/fetchAuthenticated";
+import Button, {ButtonType} from "../../components/Button";
 
 
 export function Lobby() {
@@ -12,6 +14,7 @@ export function Lobby() {
         <MainMessage/>
         <LobbyPlayers/>
         <ContextCode/>
+        <StartModal/>
 
     </>
 }
@@ -51,7 +54,7 @@ function KickedModal(){
 }
 
 function StartModal(){
-    const [show, setShow] = useState(false);
+    const [startShow, setStartShow] = useState(false);
 
 
     return (
@@ -59,16 +62,22 @@ function StartModal(){
             {
                 info =>
                 {
-                    if(info.players.length > 1)
-                        setShow(true);
-                    return <BaseModal
+                    return <><BaseModal
                         title={<h2>START GAME</h2>}
                         body={<p>Do you want to start the game</p>}
-                        state={[show, setShow]}
-                        onContinue={() => {
-
-                        }}
+                        state={[startShow, setStartShow]}
+                        onContinue={async() => {
+                            try {
+                                await fetchAuthenticated(`/api/v1/matches/${info.code}/start`, "POST")
+                                    .then(async response => await response.json());
+                            } catch (error) {
+                                console.log(error.message)
+                            }
+                        }
+                        }
                     />
+                        <Button buttonType={ButtonType.primary} onClick={() => setStartShow(true)} disabled={!(info.players.length > 1)}>START</Button></>
+
                 }
             }
         </Info.Consumer>

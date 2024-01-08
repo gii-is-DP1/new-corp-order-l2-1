@@ -30,7 +30,6 @@ export default function Match() {
     }, []);
 
     const isLoading = matchData == null;
-    console.log(isLoading);
     if(isLoading) {
         return <LoadingScreen/>;
     }

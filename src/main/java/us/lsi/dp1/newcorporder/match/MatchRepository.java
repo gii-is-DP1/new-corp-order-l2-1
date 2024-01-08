@@ -17,11 +17,6 @@ public class MatchRepository {
     private final Map<String, Match> matches = new ConcurrentHashMap<>();
 
     public Optional<Match> findRandomPublicMatch(Player player, MatchMode mode, int maxPlayers) {
-        System.out.println("XOXOXOXOXOXOXOXOXOXOXOXOXOX");
-        for (Match match: matches.values() ) {
-            System.out.println(match.getCode());
-        }
-        System.out.println("WOWOWOWOWOWOWOWOWOWOWOW");
         return this.matches.values().stream()
             .filter(match -> match.getState().equals(MatchState.WAITING))
             .filter(match -> match.getVisibility().equals(MatchVisibility.PUBLIC))

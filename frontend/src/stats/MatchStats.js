@@ -42,7 +42,7 @@ export function MatchStats() {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        gap: "15px"
+        gap: "10px"
     }
 
     const bodyStyle = {
@@ -150,6 +150,10 @@ export function MatchStats() {
                     </Title>
                     <Subtitle style={{fontSize: "18px", color: white}}>
                         Played by {matchStats.maxPlayers} players in {matchStats.mode} mode
+                    </Subtitle>
+                    <Subtitle style={{fontSize: "18px", color: white}}>
+                        The game
+                        lasted {Date.parse(matchStats.endTime) / 60000 - Date.parse(matchStats.startTime) / 60000} minutes
                     </Subtitle>
                 </section>
                 <section style={bodyStyle}>

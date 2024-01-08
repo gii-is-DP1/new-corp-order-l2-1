@@ -27,4 +27,5 @@ public class MatchStatsController {
     public List<MatchStatsView> getStatsByPlayer(@PathVariable Integer userid) {
         return matchStatsService.getAllStatsByPlayer(userid);
     }
+
 }

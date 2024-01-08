@@ -7,6 +7,8 @@ import org.springframework.stereotype.Repository;
 import us.lsi.dp1.newcorporder.player.Player;
 import us.lsi.dp1.newcorporder.stats.MatchResult;
 
+import java.util.List;
+
 @Repository
 public interface PlayerMatchStatsRepository extends CrudRepository<PlayerMatchStats, Integer> {
 
@@ -16,4 +18,8 @@ public interface PlayerMatchStatsRepository extends CrudRepository<PlayerMatchSt
 
     int countByPlayerAndResult(Player player, MatchResult result);
 
+    @Override
+    List<PlayerMatchStats> findAll();
+
+    List<PlayerMatchStats> findByPlayerId(int playerId);
 }

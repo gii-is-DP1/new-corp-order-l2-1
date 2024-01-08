@@ -8,6 +8,8 @@ import us.lsi.dp1.newcorporder.stats.MatchResult;
 import us.lsi.dp1.newcorporder.stats.payload.response.PlayerMatchStatsView;
 import us.lsi.dp1.newcorporder.stats.payload.response.PlayerStatsResponse;
 
+import java.util.List;
+
 @Service
 public class PlayerMatchStatsService {
 
@@ -42,4 +44,48 @@ public class PlayerMatchStatsService {
     public int countMatchesByResult(Player player, MatchResult result) {
         return playerMatchStatsRepository.countByPlayerAndResult(player, result);
     }
+
+    public int getTimesPlottedByPlayerId(int playerId) {
+        return playerMatchStatsRepository.findByPlayerId(playerId).stream()
+            .mapToInt(PlayerMatchStats::getTimesPlotted)
+            .sum();
+    }
+
+    public int getTimesInfiltratedByPlayerId(int playerId) {
+        return playerMatchStatsRepository.findByPlayerId(playerId).stream()
+            .mapToInt(PlayerMatchStats::getTimesInfiltrated)
+            .sum();
+    }
+
+    public int getTimesTakenOverByPlayerId(int playerId) {
+        return playerMatchStatsRepository.findByPlayerId(playerId).stream()
+            .mapToInt(PlayerMatchStats::getTimesTakenOver)
+            .sum();
+    }
+
+    public int getConsultantUsedByPlayerId(int playerId) {
+        int consultantUsedCount = 0;
+        List<PlayerMatchStats> playerMatchStatsList = playerMatchStatsRepository.findByPlayerId(playerId);
+        for (PlayerMatchStats playerMatchStats : playerMatchStatsList) {
+            consultantUsedCount += playerMatchStats.getConsultantUses().size();
+        }
+        return consultantUsedCount;
+    }
+
+    public int getAbilityUsedByPlayerId(int playerId) {
+        int abilityUsedCount = 0;
+        List<PlayerMatchStats> playerMatchStatsList = playerMatchStatsRepository.findByPlayerId(playerId);
+        for (PlayerMatchStats playerMatchStats : playerMatchStatsList) {
+            abilityUsedCount += playerMatchStats.getAbilityUses().size();
+        }
+        return abilityUsedCount;
+    }
+
+    public int getMaxFinalScoreByPlayerId(int playerId) {
+        return playerMatchStatsRepository.findByPlayerId(playerId).stream()
+            .mapToInt(PlayerMatchStats::getTotalVictoryPoints)
+            .max()
+            .orElse(0);
+    }
+
 }

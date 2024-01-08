@@ -1,6 +1,7 @@
 package us.lsi.dp1.newcorporder.stats;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import us.lsi.dp1.newcorporder.exceptions.ResourceNotFoundException;
 import us.lsi.dp1.newcorporder.match.Match;
 import us.lsi.dp1.newcorporder.match.view.MatchSummary;
@@ -48,7 +49,6 @@ public class MatchStatsService {
             .map(MatchStatsView::create)
             .toList();
     }
-
 
 
 }

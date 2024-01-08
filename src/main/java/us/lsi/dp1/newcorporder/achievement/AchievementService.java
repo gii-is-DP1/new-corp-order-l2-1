@@ -6,19 +6,28 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import us.lsi.dp1.newcorporder.exceptions.ResourceNotFoundException;
+import us.lsi.dp1.newcorporder.player.Player;
+import us.lsi.dp1.newcorporder.stats.MatchStatsService;
+import us.lsi.dp1.newcorporder.stats.payload.response.MatchStatsView;
+import us.lsi.dp1.newcorporder.stats.player.PlayerMatchStatsService;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class AchievementService {
 
+    private final PlayerMatchStatsService playerMatchStatsService;
+    private final MatchStatsService matchStatsService;
     private final AchievementRepository achievementRepository;
 
-    public AchievementService(AchievementRepository achievementRepository) {
+    public AchievementService(AchievementRepository achievementRepository, PlayerMatchStatsService playerMatchStatsService, MatchStatsService matchStatsService) {
         this.achievementRepository = achievementRepository;
+        this.playerMatchStatsService = playerMatchStatsService;
+        this.matchStatsService = matchStatsService;
     }
 
     @Transactional(readOnly = true)
@@ -35,7 +44,7 @@ public class AchievementService {
 
     @Transactional
     public Achievement save(@Valid Achievement achievement) throws DataAccessException {
-        if(!isValidImageUrl(achievement.getImageUrl())) achievement.setImageUrl(null);
+        if (!isValidImageUrl(achievement.getImageUrl())) achievement.setImageUrl(null);
         return achievementRepository.save(achievement);
     }
 
@@ -59,10 +68,37 @@ public class AchievementService {
         if (name == null || name.isEmpty()) {
             return achievements;
         }
-
         return achievements.stream()
             .filter(achievement -> achievement.getName().toLowerCase().contains(name.toLowerCase()))
             .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public List<Achievement> getAllAchievementsByPlayer(Player player) {
+        List<Achievement> allAchievements = this.achievementRepository.findAll();
+        List<Achievement> achievementsCompleted = new ArrayList<>();
+        for (Achievement achievement : allAchievements) {
+            if(isAchievementCompleted(achievement, player))
+                achievementsCompleted.add(achievement);
+        }
+        return achievementsCompleted;
+    }
+
+    @Transactional
+    public boolean isAchievementCompleted(Achievement achievement, Player player) {;
+        int threshold = achievement.getThreshold();
+        return threshold <= switch (achievement.getStat()) {
+            case GAMES_LOST -> playerMatchStatsService.getStats(player).getLoses();
+            case GAMES_TIED -> playerMatchStatsService.getStats(player).getTies();
+            case GAMES_WON -> playerMatchStatsService.getStats(player).getWins();
+            case TIMES_PLAYED -> playerMatchStatsService.getStats(player).getTotalMatches();
+            case TIMES_PLOTTED-> playerMatchStatsService.getTimesPlottedByPlayerId(player.getId());
+            case TIMES_INFILTRATED-> playerMatchStatsService.getTimesInfiltratedByPlayerId(player.getId());
+            case TIMES_TAKEN_OVER-> playerMatchStatsService.getTimesTakenOverByPlayerId(player.getId());
+            case CONSULTANT_STATS_USED-> playerMatchStatsService.getConsultantUsedByPlayerId(player.getId());
+            case ABILITIES_USED->playerMatchStatsService.getAbilityUsedByPlayerId(player.getId());
+            case FINAL_SCORE -> playerMatchStatsService.getMaxFinalScoreByPlayerId(player.getId());
+        };
     }
 
     private boolean isValidImageUrl(String imageUrl) {

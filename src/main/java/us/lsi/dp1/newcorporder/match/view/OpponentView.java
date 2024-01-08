@@ -2,6 +2,7 @@ package us.lsi.dp1.newcorporder.match.view;
 
 import lombok.Builder;
 import lombok.Data;
+import us.lsi.dp1.newcorporder.match.MatchState;
 import us.lsi.dp1.newcorporder.match.player.Headquarter;
 import us.lsi.dp1.newcorporder.match.player.MatchPlayer;
 
@@ -9,14 +10,18 @@ import us.lsi.dp1.newcorporder.match.player.MatchPlayer;
 @Builder
 public class OpponentView {
 
-    public static OpponentView of(MatchPlayer player) {
-        return OpponentView.builder()
+    public static OpponentView of(MatchPlayer player, MatchState state) {
+        OpponentViewBuilder builder = OpponentView.builder()
             .playerId(player.getPlayerId())
             .username(player.getUsername())
-            .picture(player.getPicture())
-            .handSize(player.getHand().size())
-            .headquarter(player.getHeadquarter())
-            .build();
+            .picture(player.getPicture());
+
+        if (state != MatchState.WAITING) {
+            builder
+                .handSize(player.getHand().size())
+                .headquarter(player.getHeadquarter());
+        }
+        return builder.build();
     }
 
     private final int playerId;

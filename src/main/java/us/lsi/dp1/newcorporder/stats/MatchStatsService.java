@@ -1,5 +1,6 @@
 package us.lsi.dp1.newcorporder.stats;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import us.lsi.dp1.newcorporder.exceptions.ResourceNotFoundException;
 import us.lsi.dp1.newcorporder.match.Match;
@@ -25,6 +26,10 @@ public class MatchStatsService {
         this.playerService = playerService;
         this.playerMatchStatsRepository = playerMatchStatsRepository;
         this.matchStatsRepository = matchStatsRepository;
+    }
+
+    public List<MatchStats> findLast(Pageable pageable) {
+        return matchStatsRepository.findAllSortedByStartTimeDesc(pageable);
     }
 
     public MatchStats createMatchStats(Match match, MatchSummary matchSummary) {

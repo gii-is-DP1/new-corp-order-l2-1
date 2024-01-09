@@ -14,17 +14,9 @@ export function HQViewer() {
 }
 
 function Hq({hqItems}) {
-    return (<div style={{
-        bottom: 0, position: "absolute",
-        top: "80%",
-        right: 0,
-        left: "40%",
-        transform: "translate(-50%, 0)",
-        maxWidth: "130px"
-    }}>
-
-        <ViewerContainer title="Your HQ" containerStyle={{}}
-                         buttonContent={<p>View Hq</p>}
+    return (
+        <ViewerContainer title="Your HQ" containerStyle={{display: "flex", flexWrap: "wrap"}}
+                         buttonContent={<p>Hq</p>}
                          items={hqItems}/>
-    </div>);
+    );
 }

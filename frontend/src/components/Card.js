@@ -1,4 +1,4 @@
-import {white} from "../util/Colors";
+import {black, white} from "../util/Colors";
 import {Title} from "./Title";
 import {Subtitle} from "./Subtitle";
 
@@ -47,7 +47,8 @@ export default function Card({style, title, subtitle, icon, children}) {
 
     const contentStyle = {
         flex: 1,
-        height: "100%"
+        height: "100%",
+        color: black
     }
 
     return (

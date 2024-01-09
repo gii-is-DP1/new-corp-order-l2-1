@@ -1,24 +1,41 @@
 import React, {useState} from "react";
 import Button, {buttonContexts, buttonStyles, ButtonType} from "../../../components/Button";
 
-function Viewer({title, items, containerStyle, itemsStyle, isVisible, setVisible}) {
+export function Viewer({title, items, containerStyle, itemsStyle, isVisible, setVisible, canQuit = true}) {
     return <> {isVisible
-        ? <div style={{position:"absolute", backgroundColor:"black", width:"100%", height:"100vh", left:0, top:0}}>
-            <h1>{title}</h1>
+        ? <div style={{
+            zIndex: 100,
+            position: "fixed",
+            backgroundColor: "black",
+            left: 0,
+            top: 0,
+            bottom: 0,
+            right: 0,
+            width: "100vw",
+            height: "100vh"
+        }}>
+            <div style={{display: "flex", justifyContent: "space-between"}}>
+                <h1>{title}</h1>
+                {canQuit
+                    ? <img src="/svg/cancel-icon.svg" alt="cancel" onClick={() => setVisible(false)}/>
+                    : <></>
+                }
+            </div>
+
             <div style={containerStyle}>
                 {items.map(item =>
                     <Viewable item={item} style={itemsStyle}/>
                 )}
             </div>
 
-            <img src="/svg/cancel-icon.svg" alt="cancel" onClick={() => setVisible(false)}/>
+
         </div>
         : <></>
     }
     </>
 }
 
-export function ViewerContainer({title,buttonContent, items, containerStyle, itemsStyle}) {
+export function ViewerContainer({title, buttonContent, items, containerStyle, itemsStyle}) {
     const [visible, setVisible] = useState(false)
     return <>
         <Button buttonType={ButtonType.primary} onClick={() => setVisible(true)}>
@@ -34,7 +51,7 @@ export function ViewerContainer({title,buttonContent, items, containerStyle, ite
     </>
 }
 
-function Viewable({item, style}) {
+export function Viewable({item, style}) {
     return <div style={style}>
         {item}
     </div>

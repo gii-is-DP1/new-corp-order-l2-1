@@ -31,6 +31,7 @@ import us.lsi.dp1.newcorporder.user.payload.request.EditProfileRequest;
 import us.lsi.dp1.newcorporder.user.payload.response.UserView;
 import us.lsi.dp1.newcorporder.util.RestPreconditions;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -46,6 +47,20 @@ class UserController {
     public UserController(UserService userService, FriendshipService friendshipService) {
         this.userService = userService;
         this.friendshipService = friendshipService;
+    }
+
+    @Operation(
+        summary = "Get all users",
+        description = "Get all users",
+        tags = "get"
+    )
+    @ApiResponse(
+        responseCode = "200",
+        description = "All users"
+    )
+    @GetMapping()
+    public List<UserView> findAll(@RequestParam(required = false) String username) {
+         return userService.getAllUsers(username);
     }
 
     @Operation(

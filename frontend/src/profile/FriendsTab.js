@@ -12,6 +12,7 @@ import TextInput from "../components/TextInput";
 export function FriendsTab({userData, navigate, fetchUserData, isMe, rowListStyle}) {
     const [formMessage, setFormMessage] = useState(<></>)
 
+
     async function sendFriendRequest(value) {
         try {
             await fetchAuthenticated(`/api/v1/users/friendships/requests/${value}`, "POST")

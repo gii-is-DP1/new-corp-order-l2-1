@@ -60,8 +60,6 @@ export default function Register() {
     }
 
     function handleSubmit(body) {
-        console.log("nigga")
-
         let state = "";
 
         fetch("/api/v1/auth/signup", {

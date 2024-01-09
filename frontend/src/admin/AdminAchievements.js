@@ -1,5 +1,5 @@
 import AppNavbar from "../AppNavbar";
-import {black, white, grayDarker} from "../util/Colors";
+import {black, grayDarker, white} from "../util/Colors";
 import {Title} from "../components/Title";
 import List from "../components/List";
 import ListLine from "../components/ListLine";
@@ -19,7 +19,8 @@ export function AdminAchievements() {
     const content = {
         display: "flex",
         flexDirection: "column",
-        alignItems: "center"
+        alignItems: "center",
+        overflow: "auto"
     }
 
     const textInputStyle = {
@@ -82,7 +83,7 @@ export function AdminAchievements() {
                     </div>
                 </div>
                 <div style={{marginTop:"22px"}}>
-                    <List style={{maxHeight: "650px", width: "800px", backgroundColor: black, overflow: "auto"}}>
+                    <List style={{maxHeight: "525px", width: "800px", backgroundColor: black, overflow: "auto"}}>
                         {achievementItems}
                     </List>
                 </div>

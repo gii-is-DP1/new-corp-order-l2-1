@@ -77,7 +77,7 @@ export function AdminModeration() {
                     </div>
                 </div>
                 <div style={{marginTop:"22px"}}>
-                    <List style={{maxHeight: "650px", width: "800px", backgroundColor: black, overflow: "auto"}}>
+                    <List style={{maxHeight: "525px", width: "800px", backgroundColor: black, overflow: "auto"}}>
                         {usersItem}
                     </List>
                 </div>

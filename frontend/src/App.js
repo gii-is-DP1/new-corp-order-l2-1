@@ -13,6 +13,7 @@ import {ProfilePage} from "./profile/ProfilePage";
 import Login from "./auth/login";
 import Register from "./auth/register";
 import {EditAchievements} from "./admin/EditAchievement";
+import {MatchStats} from "./stats/MatchStats";
 
 function ErrorFallback({error, resetErrorBoundary}) {
     return (
@@ -37,6 +38,7 @@ function App() {
                     {jwt && <>
                         <Route path="/" element={<MainPage/>}/>
                         <Route path="/match/:id" element={<Match/>}/>
+                        <Route path="/match/:matchCode/stats" element={<MatchStats/>}/>
                         <Route path="/user/:username/:select?" element={<ProfilePage/>}/>
                         <Route path="/admin/matches" element={<AdminMatches/>}/>
                         <Route path="/admin/moderation" element={<AdminModeration/>}/>

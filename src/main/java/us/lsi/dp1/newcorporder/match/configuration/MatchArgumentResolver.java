@@ -37,7 +37,7 @@ public class MatchArgumentResolver implements HandlerMethodArgumentResolver {
         String code = getPathVariable(webRequest, parameter.getParameterName());
 
         return matchService.findByCode(code)
-            .orElseThrow(() -> new IllegalArgumentException("match with code %s does not exist".formatted(code)));
+            .orElseThrow(() -> new IllegalArgumentException("match with code %s already ended or does not exist".formatted(code)));
     }
 
     @SuppressWarnings("unchecked")

@@ -40,21 +40,20 @@ export function AdminModeration() {
     };
 
     let usersItem = usersData?.map(user => {
-        return <ListLine sideContent={(
-            <div style={{display: "flex", flexDirection: "row", gap: "5px"}}>
+       return  <ListLine sideContent={(
+            <div style = {{display:"flex", flexDirection:"row", gap: "5px"}}>
                 <Button onClick={() => fetchAuthenticated(`/api/v1/users/${user.username}`, "DELETE")
-                    .then(() => fetchUsersData())}
+                                    .then(() => fetchUsersData())}
                         style={buttonStyle}
-                        buttonType={ButtonType.danger}>
+                        buttonType={ButtonType.danger} >
                     Ban
                 </Button>
-                <Button style={buttonStyle} buttonType={ButtonType.secondaryLight}
-                        onClick={() => navigate(`/user/${user.username}`)}>
+                <Button style={buttonStyle} buttonType={ButtonType.secondaryLight} onClick={() => navigate(`/user/${user.username}`) }>
                     Profile
                 </Button>
             </div>
         )}>
-            <ProfilePicture url={user.picture} style={{width: "40px", height: "40px"}}/>
+           <ProfilePicture url={user.picture} style={{width: "40px", height: "40px"}}/>
             <Subtitle>{user.username}</Subtitle>
         </ListLine>
     })
@@ -63,23 +62,21 @@ export function AdminModeration() {
         <div style={{height: "100%", backgroundColor: black}}>
             <AppNavbar/>
             <section style={content}>
-                <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
+                <div style={{gap:"15px", display:"flex", flexDirection:"column", alignItems: "center"}}>
                     <Title style={{fontSize: "60px", color: white}}>
                         Moderation
                     </Title>
-                    <Subtitle style={{fontSize: "15px", color: white}}>
-                        Select player to ban or visit profile
+                    <Subtitle style={{fontSize: "20px", color: white}}>
+                        Select player to view actions
                     </Subtitle>
-                    <div style={{marginTop: "15px", display: 'flex', flexDirection: "row", gap: '10px'}}>
+                    <div style={{display:'flex', flexDirection:"row", gap:'20px'}}>
                         <TextInput onClick={setFilter}
                                    style={{width: "600px", fontSize: "20px", textTransform: "uppercase"}}
                                    placeholder="Filter..."/>
-                        {filter != "" && <Button onClick={() => setFilter("")} buttonType={ButtonType.danger}
-                                                 style={{fontSize: "20px", textTransform: "uppercase"}}>Delete
-                            filter</Button>}
+                        {filter != "" && <Button onClick={() => setFilter("")} buttonType={ButtonType.danger} style={{fontSize: "20px", textTransform: "uppercase"}}>Delete filter</Button>}
                     </div>
                 </div>
-                <div style={{marginTop: "15px"}}>
+                <div style={{marginTop:"22px"}}>
                     <List style={{maxHeight: "650px", width: "800px", backgroundColor: black, overflow: "auto"}}>
                         {usersItem}
                     </List>

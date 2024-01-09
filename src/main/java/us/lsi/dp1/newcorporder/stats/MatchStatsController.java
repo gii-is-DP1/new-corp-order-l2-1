@@ -18,7 +18,7 @@ public class MatchStatsController {
     }
 
     @GetMapping("/matches/{match}/stats")
-    public MatchStatsView getStats(@PathVariable String match) {
+    public MatchStatsView getStats(@PathVariable("match") String match) {
         return matchStatsService.getStats(match);
     }
 
@@ -26,4 +26,5 @@ public class MatchStatsController {
     public GameMetricsResponse getMetrics() {
         return matchStatsService.getMetrics();
     }
+
 }

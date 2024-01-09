@@ -14,9 +14,13 @@ import {useNavigate, useParams} from "react-router-dom";
 import tokenService from "../services/token.service";
 import {FriendsTab} from "./FriendsTab";
 import {LastMatchesTab} from "./LastMatchesTab";
+import AchievementPicture from "../components/AchievementPicture";
+import {AchievementsTab} from "./achievement/AchievementsTab";
 
 export function ProfilePage() {
     const [userData, setUserData] = useState(null)
+    const [achievementsData, setAchievementsData] = useState(null)
+    const [completedAchievementsData, setCompletedAchievementsData] = useState(null)
     const {username, select} = useParams()
     const navigate = useNavigate()
     const [userStats, setUserStats] = useState(null)
@@ -34,6 +38,24 @@ export function ProfilePage() {
         }
     };
 
+    const fetchAchievementsData = async () => {
+        try {
+            setAchievementsData(await fetchAuthenticated(`/api/v1/achievements`, "GET")
+                .then(async response => await response.json()));
+        } catch (error) {
+            navigate('')
+        }
+    };
+
+    const fetchCompletedAchievementsData = async () => {
+        try {
+            setCompletedAchievementsData(await fetchAuthenticated(`/api/v1/achievements/completed/${username}`, "GET")
+                .then(async response => await response.json()));
+        } catch (error) {
+            navigate('')
+        }
+    };
+
     const fetchUserStats = async () => {
         try {
             setUserStats(await fetchAuthenticated(`/api/v1/players/${username}/stats`, "GET")
@@ -45,6 +67,9 @@ export function ProfilePage() {
 
     useEffect(() => {
         fetchUserData()
+        fetchAchievementsData()
+        fetchCompletedAchievementsData()
+
         fetchUserStats()
     }, [select, username]);
 
@@ -87,15 +112,6 @@ export function ProfilePage() {
         gap: "5px"
     }
 
-    let achievementsItems = []
-    for (let i = 1; i < 20; i++) {
-        achievementsItems.push(
-            <ListLine sideContent={<Button buttonType={ButtonType.primary}>Logrado? si: no </Button>}>
-                <Subtitle>· Achievement #{i} |</Subtitle>
-                <Subtitle> Blablabla</Subtitle>
-            </ListLine>
-        )
-    }
 
     return (
         <div style={{display: "flex", flexDirection: "column", height: "100%", backgroundColor: black}}>
@@ -157,9 +173,12 @@ export function ProfilePage() {
                             />}
 
                         {select === "achievements" &&
-                            <List style={rowListStyle}>
-                                {achievementsItems}
-                            </List>}
+                            <AchievementsTab achievementsCompleatedData={completedAchievementsData}
+                                             allAchievementsData={achievementsData}
+                                             isMe={isMe()}
+                                             rowListStyle={rowListStyle}
+                                             username={username}
+                            />}
                     </div>
                 </section>
             </div>

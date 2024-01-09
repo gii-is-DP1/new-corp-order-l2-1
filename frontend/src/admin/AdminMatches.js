@@ -39,7 +39,13 @@ export function AdminMatches() {
                     Select a match to join (if currently playing) or view stats
                 </Subtitle>
                 <div>
-                    <List style={{maxHeight: "650px", width: "800px", backgroundColor: black, overflow: "auto"}}>
+                    <List style={{
+                        marginTop: "15px",
+                        maxHeight: "635px",
+                        width: "800px",
+                        backgroundColor: black,
+                        overflow: "auto"
+                    }}>
                         {matchItems}
                     </List>
                 </div>

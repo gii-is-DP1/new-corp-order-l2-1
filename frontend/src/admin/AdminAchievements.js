@@ -25,7 +25,7 @@ export function AdminAchievements() {
 
     const textInputStyle = {
         width: "500px",
-        fontSize:"20px",
+        fontSize: "20px",
         textTransform: "uppercase",
     }
 
@@ -57,7 +57,7 @@ export function AdminAchievements() {
         )}>
             <AchievementPicture url={achievement.imageUrl} style={{width: "40px", height: "40px"}} earned={true}/>
             <Subtitle> {achievement.name} </Subtitle>
-            <Subtitle style={{fontSize: '12px', color:grayDarker}}> {achievement.description} </Subtitle>
+            <Subtitle style={{fontSize: '12px', color: grayDarker}}> {achievement.description} </Subtitle>
         </ListLine>
     })
 
@@ -65,7 +65,7 @@ export function AdminAchievements() {
         <div style={{height: "100%", backgroundColor: black}}>
             <AppNavbar/>
             <section style={content}>
-                <div style={{gap:"15px", display:"flex", flexDirection:"column", alignItems: "center"}}>
+                <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
                     <Title style={{fontSize: "60px", color: white}}>
                         achievements
                     </Title>

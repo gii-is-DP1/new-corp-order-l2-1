@@ -71,13 +71,13 @@ export function AdminModeration() {
                     </Subtitle>
                     <div style={{display:'flex', flexDirection:"row", gap:'20px'}}>
                         <TextInput onClick={setFilter}
-                                   style={{width: "600px", fontSize:"20px",  textTransform: "uppercase"}}
+                                   style={{width: "600px", fontSize: "20px", textTransform: "uppercase"}}
                                    placeholder="Filter..."/>
                         {filter != "" && <Button onClick={() => setFilter("")} buttonType={ButtonType.danger} style={{fontSize: "20px", textTransform: "uppercase"}}>Delete filter</Button>}
                     </div>
                 </div>
                 <div style={{marginTop:"22px"}}>
-                    <List style={{maxHeight: "525px", width: "800px", backgroundColor: black, overflow: "auto"}}>
+                    <List style={{maxHeight: "650px", width: "800px", backgroundColor: black, overflow: "auto"}}>
                         {usersItem}
                     </List>
                 </div>

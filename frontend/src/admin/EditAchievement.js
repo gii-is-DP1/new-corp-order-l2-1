@@ -1,11 +1,10 @@
 import AppNavbar from "../AppNavbar";
-import {black, white, grayDarker, orange} from "../util/Colors";
+import {black, orange, white} from "../util/Colors";
 import Button, {ButtonType} from "../components/Button";
 import React, {useEffect, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import FormInput from "../components/FormInput";
 import DropDownPicker from "../components/DropDownPicker";
-import tokenService from "../services/token.service";
 import {Text} from "../components/Text";
 import fetchAuthenticatedWithBody from "../util/fetchAuthenticatedWithBody";
 import {Title} from "../components/Title";
@@ -18,6 +17,7 @@ export function EditAchievements() {
     const [selectedValue, setSelectedValue] = useState("");
     const [message, setMessage] = useState();
     const [title, setTitle] = useState('');
+    const [buttonText, setButtonText] = useState('');
     const {achievementId} = useParams();
 
     const content = {
@@ -94,9 +94,11 @@ export function EditAchievements() {
             });
             setIsLoaded(true);
             setTitle('Create achievement')
+            setButtonText('Create achievement')
         }else{
             fetchAchievementData()
             setTitle('Edit achievement: ')
+            setButtonText('Edit achievement')
         }
     }, [achievementId]);
 
@@ -137,9 +139,6 @@ export function EditAchievements() {
         }
     }
 
-
-
-
     return (
         <div style={{height: "100%", backgroundColor: black}}>
             <AppNavbar/>
@@ -164,12 +163,12 @@ export function EditAchievements() {
                                       threshold: e.target.threshold.value
                                   });
                               }}>
-                            <FormInput labelStyle={labelStyle} name={"name"} defaultValue={achievementData?.name}
+                            <FormInput labelStyle={labelStyle} name={"name"} defaultValue={achievementData.name}
                                        placeholder={"Type the achievement's name"}></FormInput>
                             <FormInput labelStyle={labelStyle} name={"description"}
-                                       defaultValue={achievementData?.description}
+                                       defaultValue={achievementData.description}
                                        placeholder={"Type the achievement's description"}></FormInput>
-                            <FormInput labelStyle={labelStyle} name={"image_url"} defaultValue={achievementData?.imageUrl}
+                            <FormInput labelStyle={labelStyle} name={"image_url"} defaultValue={achievementData.imageUrl}
                                        placeholder={"Put the url of the image the achievement will have"}></FormInput>
                             <label style={textStyle} htmlFor={'stat'}>
                                 stat
@@ -177,11 +176,11 @@ export function EditAchievements() {
                             <DropDownPicker style={{width: "600px"}} options={statsOptions} onChange={handleDropDownChange}
                                             defaultValue={achievementData.stat}/>
                             <FormInput labelStyle={labelStyle} name={"threshold"} type={'number'} minValue={0}
-                                       maxValue={9999} defaultValue={achievementData?.threshold}
+                                       maxValue={9999} defaultValue={achievementData.threshold}
                                        placeholder={"Put the threshold of the stat necessary to gain the achievement"}></FormInput>
                             <div style={buttonStyle}>
                                 {message && <Text style={{textTransform: "none", color: "red"}}>{message}</Text>}
-                                <Button buttonType={ButtonType.primary} type="submit">Edit Achievement</Button>
+                                <Button buttonType={ButtonType.primary} type="submit">{buttonText}</Button>
                             </div>
                         </form>
                     ):

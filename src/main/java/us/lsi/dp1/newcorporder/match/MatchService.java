@@ -1,20 +1,28 @@
 package us.lsi.dp1.newcorporder.match;
 
 import com.google.common.base.Preconditions;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import us.lsi.dp1.newcorporder.friendship.FriendshipService;
 import us.lsi.dp1.newcorporder.match.payload.response.MatchAssignmentResponse;
+import us.lsi.dp1.newcorporder.match.payload.response.MatchResponse;
 import us.lsi.dp1.newcorporder.match.player.MatchPlayer;
 import us.lsi.dp1.newcorporder.match.view.MatchView;
 import us.lsi.dp1.newcorporder.notification.InviteNotification;
 import us.lsi.dp1.newcorporder.notification.Notification;
 import us.lsi.dp1.newcorporder.notification.NotificationService;
 import us.lsi.dp1.newcorporder.player.Player;
+import us.lsi.dp1.newcorporder.stats.MatchStatsService;
 import us.lsi.dp1.newcorporder.user.User;
+import us.lsi.dp1.newcorporder.util.OffsetPageable;
 import us.lsi.dp1.newcorporder.util.RestPreconditions;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class MatchService {
@@ -22,12 +30,43 @@ public class MatchService {
     // TODO: synchronize
     private final FriendshipService friendshipService;
     private final NotificationService notificationService;
+    private final MatchStatsService matchStatsService;
     private final MatchRepository matchRepository;
 
-    public MatchService(FriendshipService friendshipService, NotificationService notificationService, MatchRepository matchRepository) {
+    public MatchService(FriendshipService friendshipService, NotificationService notificationService, MatchStatsService matchStatsService, MatchRepository matchRepository) {
         this.friendshipService = friendshipService;
         this.notificationService = notificationService;
+        this.matchStatsService = matchStatsService;
         this.matchRepository = matchRepository;
+    }
+
+    public List<MatchResponse> getMatches(Pageable pageable) {
+        List<MatchResponse> playing = this.getPlayingMatches(pageable);
+        int statsPageSize = pageable.getPageSize() - playing.size();
+
+        // add finished matches from db after the matches in play
+        if (statsPageSize > 0) {
+            long statsOffset = pageable.getOffset() + playing.size() - matchRepository.getMatches().size();
+            Pageable statsPageable = OffsetPageable.of(statsOffset, statsPageSize);
+            matchStatsService.findLast(statsPageable).stream()
+                .map(MatchResponse::of)
+                .forEach(playing::add);
+        }
+
+        return playing;
+    }
+
+    private List<MatchResponse> getPlayingMatches(Pageable pageable) {
+        if (pageable.getOffset() >= matchRepository.getMatches().size()) {
+            return new ArrayList<>();
+        }
+
+        return matchRepository.getMatches().stream()
+            .sorted(Comparator.comparing(Match::getCreationTime))
+            .skip(pageable.getOffset())
+            .limit(pageable.getPageSize())
+            .map(MatchResponse::of)
+            .collect(Collectors.toCollection(ArrayList::new));
     }
 
     public MatchAssignmentResponse quickPlay(Player player, MatchMode mode, int maxPlayers) {

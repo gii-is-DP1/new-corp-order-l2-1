@@ -1,15 +1,23 @@
 package us.lsi.dp1.newcorporder.stats;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface MatchStatsRepository extends CrudRepository<MatchStats, Integer> {
 
+    // for some reason jpa repositories do not accept Instant sorting, so manual query
+    @Query("SELECT matchStats FROM MatchStats matchStats ORDER BY matchStats.startTime DESC")
+    List<MatchStats> findAllSortedByStartTimeDesc(Pageable pageable);
+
     Optional<MatchStats> findByCode(String matchCode);
+
+    boolean existsByCode(String matchCode);
 
     record MatchMetrics(double averageDuration, long minDuration, long maxDuration, double averageMaxPlayers) {}
 

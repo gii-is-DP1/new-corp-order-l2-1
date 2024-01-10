@@ -31,13 +31,15 @@ function ContextCode() {
 function KickedModal(){
     const [show, setShow] = useState(false);
     const navigate = useNavigate();
-    if(info.hasBeenKicked)
-    setShow(true);
+
     return (
         <Info.Consumer>
             {
                 info =>
+
                 {
+                    if(info.hasBeenKicked)
+                setShow(true);
 return <BaseModal
     title={"¡Bad news!"}
     body={"Sadly, you have been kicked from this match by its host"}

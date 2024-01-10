@@ -25,7 +25,7 @@ export default function Match() {
 
     useEffect(() => {
         fetchMatchData()
-        setInterval(() => fetchMatchData(), 5000)
+        setInterval(() => fetchMatchData(), 500)
     }, []);
 
     const isLoading = matchData == null;
@@ -60,7 +60,6 @@ function setContext(id, matchData) {
     if (matchInfo.code !== id)
     {
         matchInfo = {...defaultMatchInfo};
-        console.log("Entered new match");
     }
 
     matchInfo.code = id;

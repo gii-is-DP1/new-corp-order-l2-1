@@ -21,6 +21,9 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.bind.DefaultValue;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +34,6 @@ import us.lsi.dp1.newcorporder.user.payload.request.EditProfileRequest;
 import us.lsi.dp1.newcorporder.user.payload.response.UserView;
 import us.lsi.dp1.newcorporder.util.RestPreconditions;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -59,8 +61,9 @@ class UserController {
         description = "All users"
     )
     @GetMapping()
-    public List<UserView> findAll(@RequestParam(required = false) String username) {
-         return userService.getAllUsers(username);
+    public List<UserView> findAll(@RequestParam(required = false) @DefaultValue("") String filter,
+                                  @PageableDefault Pageable pageable) {
+        return userService.getAllUsers(filter, pageable);
     }
 
     @Operation(
@@ -77,7 +80,7 @@ class UserController {
         description = "User not found"
     )
     @GetMapping("/{username}")
-    public UserView findById(@PathVariable String username) {
+    public UserView findByName(@PathVariable String username) {
         User user = userService.findUser(username);
         RestPreconditions.checkNotNull(user, "User", "username", username);
 

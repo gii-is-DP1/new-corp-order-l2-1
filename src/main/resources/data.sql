@@ -21,7 +21,9 @@ INSERT INTO players(id, users)
 VALUES (1, 1),
        (2, 2),
        (3, 3),
-       (4, 4);
+       (4, 4),
+       (5, 5),
+       (6, 6);
 
 INSERT INTO notifications(id, user_id, state, sent_at)
 VALUES (1, 1, 1, '2023-01-01 00:00:00'),

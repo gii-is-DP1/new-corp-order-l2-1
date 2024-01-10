@@ -10,10 +10,13 @@ import fetchAuthenticated from "../util/fetchAuthenticated";
 import {useEffect, useState} from "react";
 import ProfilePicture from "../components/ProfilePicture";
 import {useNavigate} from "react-router-dom";
+import {Pressable} from "../components/Pressable";
+import {Text} from "../components/Text";
 
 export function AdminModeration() {
-    const [usersData, setUsersData] = useState(null)
+    const [usersData, setUsersData] = useState([])
     const [filter, setFilter] = useState("")
+    const [page, setPage] = useState(0)
     const navigate = useNavigate()
 
     const content = {
@@ -32,28 +35,31 @@ export function AdminModeration() {
 
     const fetchUsersData = async () => {
         try {
-            setUsersData(await fetchAuthenticated(`/api/v1/users?username=${filter}`, "GET")
-                .then(async response => await response.json()));
+            setUsersData([...usersData,
+                ...await fetchAuthenticated(`/api/v1/users?filter=${filter}&page=${page}`, "GET")
+                    .then(async response => await response.json())
+            ])
         } catch (error) {
             navigate('')
         }
     };
 
     let usersItem = usersData?.map(user => {
-       return  <ListLine sideContent={(
-            <div style = {{display:"flex", flexDirection:"row", gap: "5px"}}>
+        return <ListLine sideContent={(
+            <div style={{display: "flex", flexDirection: "row", gap: "5px"}}>
                 <Button onClick={() => fetchAuthenticated(`/api/v1/users/${user.username}`, "DELETE")
-                                    .then(() => fetchUsersData())}
+                    .then(() => fetchUsersData())}
                         style={buttonStyle}
-                        buttonType={ButtonType.danger} >
+                        buttonType={ButtonType.danger}>
                     Ban
                 </Button>
-                <Button style={buttonStyle} buttonType={ButtonType.secondaryLight} onClick={() => navigate(`/user/${user.username}`) }>
+                <Button style={buttonStyle} buttonType={ButtonType.secondaryLight}
+                        onClick={() => navigate(`/user/${user.username}`)}>
                     Profile
                 </Button>
             </div>
         )}>
-           <ProfilePicture url={user.picture} style={{width: "40px", height: "40px"}}/>
+            <ProfilePicture url={user.picture} style={{width: "40px", height: "40px"}}/>
             <Subtitle>{user.username}</Subtitle>
         </ListLine>
     })
@@ -69,11 +75,22 @@ export function AdminModeration() {
                     <Subtitle style={{marginBottom: "15px", fontSize: "15px", color: white}}>
                         Select player to view actions
                     </Subtitle>
-                    <div style={{display: 'flex', flexDirection: "row"}}>
-                        <TextInput onClick={setFilter}
+                    <div style={{display: 'flex', flexDirection: "row", gap: "10px"}}>
+                        <TextInput onClick={content => {
+                            setFilter(content)
+                            setUsersData([])
+                        }}
                                    style={{width: "600px", fontSize: "20px", textTransform: "uppercase"}}
                                    placeholder="Filter..."/>
-                        {filter != "" && <Button onClick={() => setFilter("")} buttonType={ButtonType.danger} style={{fontSize: "20px", textTransform: "uppercase"}}>Delete filter</Button>}
+                        {filter != "" &&
+                            <Button onClick={() => {
+                                setFilter("")
+                                setUsersData([])
+                            }}
+                                    buttonType={ButtonType.danger}
+                                    style={{fontSize: "20px", textTransform: "uppercase"}}>
+                                Delete filter
+                            </Button>}
                     </div>
                 </div>
                 <div style={{marginTop: "15px"}}>
@@ -81,6 +98,9 @@ export function AdminModeration() {
                         {usersItem}
                     </List>
                 </div>
+                <Pressable onClick={() => setPage(page + 1)}>
+                    <Text style={{color: white}}>View more</Text>
+                </Pressable>
             </section>
         </div>
     )

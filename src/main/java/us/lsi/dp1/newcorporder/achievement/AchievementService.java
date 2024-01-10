@@ -8,14 +8,12 @@ import org.springframework.transaction.annotation.Transactional;
 import us.lsi.dp1.newcorporder.exceptions.ResourceNotFoundException;
 import us.lsi.dp1.newcorporder.player.Player;
 import us.lsi.dp1.newcorporder.stats.MatchStatsService;
-import us.lsi.dp1.newcorporder.stats.payload.response.MatchStatsView;
 import us.lsi.dp1.newcorporder.stats.player.PlayerMatchStatsService;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class AchievementService {
@@ -64,18 +62,12 @@ public class AchievementService {
 
     @Transactional
     public List<Achievement> getAllFilteredAchievements(String name) {
-        List<Achievement> achievements = this.achievementRepository.findAll();
-        if (name == null || name.isEmpty()) {
-            return achievements;
-        }
-        return achievements.stream()
-            .filter(achievement -> achievement.getName().toLowerCase().contains(name.toLowerCase()))
-            .collect(Collectors.toList());
+        return this.achievementRepository.findByNameContainsIgnoreCase(name);
     }
 
     @Transactional
     public List<Achievement> getAllAchievementsByPlayer(Player player) {
-        List<Achievement> allAchievements = this.achievementRepository.findAll();
+        List<Achievement> allAchievements = (List<Achievement>) this.achievementRepository.findAll();
         List<Achievement> achievementsCompleted = new ArrayList<>();
         for (Achievement achievement : allAchievements) {
             if(isAchievementCompleted(achievement, player))

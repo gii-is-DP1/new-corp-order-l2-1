@@ -18,6 +18,7 @@ package us.lsi.dp1.newcorporder.user;
 import com.google.common.base.Preconditions;
 import jakarta.validation.Valid;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -31,7 +32,6 @@ import us.lsi.dp1.newcorporder.user.payload.request.EditProfileRequest;
 import us.lsi.dp1.newcorporder.user.payload.response.UserView;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -50,6 +50,12 @@ public class UserService {
 
     public Iterable<User> findAll() {
         return userRepository.findAll();
+    }
+
+    public List<UserView> getAllUsers(String filter, Pageable pageable) {
+        return userRepository.findByUsernameContainsIgnoreCase(filter, pageable).stream()
+            .map(UserView::reduced)
+            .toList();
     }
 
     public Iterable<User> findAllByAuthority(String authority) {
@@ -130,19 +136,6 @@ public class UserService {
 
     public void changeAuthority(User user, String authority) {
         user.setAuthority(authorityService.findByName(authority));
-    }
-
-    public List<UserView> getAllUsers(String username) {
-        Iterable<User> users = findAll();
-        List<UserView> userViews = new ArrayList<>();
-        for (User user : users) {
-            if (username == null) {
-                userViews.add(UserView.expanded(user, findCurrentUser()));
-            } else if (user.getUsername().toLowerCase().contains(username.toLowerCase())) {
-                userViews.add(UserView.expanded(user, findCurrentUser()));
-            }
-        }
-        return userViews;
     }
 
     public void changePassword(User user, String password) {

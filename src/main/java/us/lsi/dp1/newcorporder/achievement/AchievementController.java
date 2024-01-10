@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -41,7 +42,7 @@ public class AchievementController {
         description = "The achievements list"
     )
     @GetMapping
-    public ResponseEntity<List<Achievement>> findAll(@RequestParam(required = false) String name) {
+    public ResponseEntity<List<Achievement>> findAll(@RequestParam(required = false) @DefaultValue("") String name) {
         List<Achievement> res = achievementService.getAllFilteredAchievements(name);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }

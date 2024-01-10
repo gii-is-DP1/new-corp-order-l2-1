@@ -51,7 +51,9 @@ INSERT INTO match_stats(id, code, end_time, start_time, mode, max_players)
 VALUES (1, 'BIKEHS', '2023-01-01 01:00:00', '2023-01-01 00:00:00', 'NORMAL', 4),
        (2, 'JAKDFO', '2023-01-02 01:00:00', '2023-01-02 00:00:00', 'QUICK', 3),
        (3, 'DJCVMA', '2023-04-01 02:00:00', '2023-04-01 00:00:00', 'NORMAL', 4),
-       (4, 'OCTAVIO', '2023-05-01 03:00:00', '2023-05-01 00:00:00', 'QUICK', 2);
+       (4, 'OCTAVIO', '2023-05-01 03:00:00', '2023-05-01 00:00:00', 'QUICK', 2),
+       (5, 'ASDFGW', '2023-04-01 02:00:00', '2023-04-01 00:00:00', 'NORMAL', 3),
+       (6, 'QIWNSU', '2023-04-01 03:00:00', '2023-04-01 01:00:00', 'QUICK', 4);
 
 INSERT INTO player_match_stats(id, match_stats_id, player_id, times_infiltrated, times_plotted, times_taken_over,
                                total_victory_points, result)
@@ -61,7 +63,13 @@ VALUES (1, 1, 4, 3, 2, 1, 15, 'WON'),
        (4, 2, 2, 1, 1, 2, 4, 'TIED'),
        (5, 3, 1, 2, 3, 1, 20, 'WON'),
        (6, 4, 3, 3, 1, 2, 15, 'WON'),
-       (7, 4, 2, 0, 2, 1, 10, 'LOST');
+       (7, 4, 2, 0, 2, 1, 10, 'LOST'),
+       (8, 5, 1, 2, 1, 1, 5, 'LOST'),
+       (9, 5, 4, 1, 2, 1, 15, 'WON'),
+       (10, 6, 1, 0, 2, 1, 2, 'LOST'),
+       (11, 6, 2, 1, 1, 1, 7, 'TIED'),
+       (12, 6, 3, 3, 2, 1, 3, 'LOST'),
+       (13, 6, 4, 2, 1, 1, 7, 'TIED');
 
 INSERT INTO ability_stats(times_used, id, player_match_stats_id, type)
 VALUES (5, 1, 1, 'BROADCAST_NETWORK'),

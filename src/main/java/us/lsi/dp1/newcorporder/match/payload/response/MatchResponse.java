@@ -26,6 +26,7 @@ public class MatchResponse {
         return MatchResponse.builder()
             .code(matchStats.getCode())
             .mode(matchStats.getMode())
+            .players(matchStats.getPlayerMatchStats().size())
             .maxPlayers(matchStats.getMaxPlayers())
             .state(MatchState.FINISHED)
             .build();

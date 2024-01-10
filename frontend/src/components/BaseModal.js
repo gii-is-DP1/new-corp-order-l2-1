@@ -24,7 +24,7 @@ export default function BaseModal({title, state, body, onContinue = () => {}, ca
             >
                 <Modal.Header style={{backgroundColor:black, display: "block"}}>
                     <Modal.Title>
-                        <span>{title}</span>
+                        <span style={{color:white}}>{title}</span>
                         <XButton/>
                     </Modal.Title>
                 </Modal.Header>

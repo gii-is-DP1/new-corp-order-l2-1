@@ -40,7 +40,7 @@ public class User extends BaseEntity {
     @JoinColumn(name = "authority")
     @NotNull private Authority authority;
 
-    private String picture;
+    private Integer picture;
 
     private Instant firstSeen;
 

@@ -31,6 +31,7 @@ import {AmbientAdvertisingConglomeratesState} from "./views/takeover/AmbientAdve
 import {OnlineMarketingCompaniesState} from "./views/takeover/OnlineMarketingCompaniesState";
 import {SocialMediaHqState} from "./views/takeover/SocialMediaHqState";
 import {SocialMediaConglomerateState} from "./views/takeover/SocialMediaConglomerateState";
+import {WaitingForTurnState} from "./views/WaitingForTurnState";
 
 const frontendState = {
     plot: {//TODO: some picker should be skippable (selectors have a "canSkip" property)
@@ -70,10 +71,11 @@ const frontendState = {
      */
     DONE: DoneState,
     CHOOSE_ACTION: ChooseActionState,
+    WAITING_FOR_TURN: WaitingForTurnState,
 }
 
 export function getCurrentFrontendView(state) {
-    let currentState = frontendState.CHOOSE_ACTION;
+    let currentState = frontendState.WAITING_FOR_TURN;
 
 
    // return new frontendState.infiltrate.CORPORATE_LAWYER_PICK_COMPANY(state, frontendState).component;

@@ -4,23 +4,21 @@
 }
 
 @font-face {
-
     font-family: 'DIN Next Slab Pro';
     src: url(./fonts/din-next-slab-pro.ttf) format('truetype');
 }
 
 *{
-    color: #F8F8F8;
     font-family: 'DIN Next Slab Pro', serif;
 }
-h1, h2, h3{
+
+h1, h2{
     font-family: 'Core Magic', serif;
 }
 
 .modal-content {
     background: none !important;
 }
-
 
 .bg-navbar {
     background: #2c2c2c !important;

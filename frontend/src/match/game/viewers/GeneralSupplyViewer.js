@@ -15,6 +15,6 @@ export function GeneralSupplyViewer() {
 
 function GeneralSupply({items}) {
     return <ViewerContainer title="General Supply" containerStyle={{display: "flex", flexWrap: "wrap"}}
-                            buttonContent={<p>View General Supply</p>}
+                            buttonContent={<p>General Supply</p>}
                             items={items}/>
 }

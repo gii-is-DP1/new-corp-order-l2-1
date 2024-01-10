@@ -15,6 +15,7 @@ export const conglomerate = { //TODO make color a gradient
     MEGAMEDIA: {name: "Megamedia", color: "#f74c1e", src: "/Images/Conglomerates/megamedia.png"},
 }
 
+export const propics = [...Array(21).keys()].map(n =>   "/Images/propics/("+(n+1)+").jpg");
 
 export const CompanyType = {
     BROADCAST_NETWORK: "broadcast-network",

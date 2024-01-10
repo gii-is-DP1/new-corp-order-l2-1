@@ -51,7 +51,7 @@ public class UserView {
     private String username;
     private String email;
     private String authority;
-    private String picture;
+    private Integer picture;
 
     private Instant firstSeen;
     private Instant lastSeen;
@@ -62,8 +62,8 @@ public class UserView {
 
     private Set<Notification> notifications;
 
-    @JsonInclude(JsonInclude.Include.ALWAYS)
-    public String getPicture() {
+    @JsonInclude()
+    public Integer getPicture() {
         return picture;
     }
 }

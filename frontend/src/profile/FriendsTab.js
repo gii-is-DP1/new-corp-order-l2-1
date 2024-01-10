@@ -8,6 +8,7 @@ import {Text} from "../components/Text";
 import List from "../components/List";
 import {white} from "../util/Colors";
 import TextInput from "../components/TextInput";
+import {propics} from "../match/data/MatchEnums";
 
 export function FriendsTab({userData, navigate, fetchUserData, isMe, rowListStyle}) {
     const [formMessage, setFormMessage] = useState(<></>)
@@ -42,7 +43,7 @@ export function FriendsTab({userData, navigate, fetchUserData, isMe, rowListStyl
                     </Button>
                 </>)}
             >
-                <ProfilePicture url={friend.picture} style={{height: "30px", width: "30px"}}/>
+                <ProfilePicture url={propics[friend.picture]} style={{height: "30px", width: "30px"}}/>
                 <Text>{friend.username}</Text>
 
             </ListLine>
@@ -50,7 +51,7 @@ export function FriendsTab({userData, navigate, fetchUserData, isMe, rowListStyl
     })
 
     let friendsItems = userData.friends?.map(request => {
-        const friend = request.user
+        const friend = request.user;
         return (
             <ListLine sideContent={(
                 <>
@@ -65,7 +66,8 @@ export function FriendsTab({userData, navigate, fetchUserData, isMe, rowListStyl
                     </Button>
                 </>)}
             >
-                <ProfilePicture url={friend.picture} style={{height: "30px", width: "30px"}}/>
+
+                <ProfilePicture url={propics[friend.picture]} style={{height: "30px", width: "30px"}}/>
                 <Text>{friend.username}</Text>
             </ListLine>
         )

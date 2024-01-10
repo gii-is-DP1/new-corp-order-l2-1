@@ -1,6 +1,5 @@
 import React from "react";
 import {Route, Routes} from "react-router-dom";
-import jwt_decode from "jwt-decode";
 import {ErrorBoundary} from "react-error-boundary";
 import tokenService from "./services/token.service";
 import SwaggerDocs from "./public/swagger";
@@ -55,12 +54,6 @@ function App() {
                         {["/", "/login"].map(path => <Route path={path} element={<Login/>}/>)}
                         <Route path="/register" element={<Register/>}/>
                     </>}
-                    <Route path="/" element={<MainPage/>}/>
-                    <Route path="/match/:id" element={<Match/>}/>
-                    <Route path="/docs" element={<SwaggerDocs/>}/>
-                    <Route path="/user/:username/:select?" element={<ProfilePage/>}/>
-                    <Route path="/login" element={<Login/>}/>
-                    <Route path="/register" element={<Register/>}/>
                 </Routes>
             </ErrorBoundary>
         </>

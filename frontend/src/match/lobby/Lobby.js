@@ -81,7 +81,7 @@ function StartModal() {
                         title={"Start Game"}
                         body={"¿Do you want to start the game?"}
                         state={[startShow, setStartShow]}
-                        onContinue={startMatchRequest(info.code)}/>
+                        onContinue={() => startMatchRequest(info.code)}/>
 
                         <Button buttonType={ButtonType.primary} onClick={() => setStartShow(true)}
                                 disabled={!(info.players.length > 1)}>START</Button>

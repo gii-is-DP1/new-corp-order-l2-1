@@ -21,32 +21,6 @@ export function Game() {
     const [matchData, setMatchData] = useState(null);
     const {id} = useParams();
     const FrontendView = () => initialContext.frontendView;
-    const fetchGameData = async () => {
-        try {
-            setMatchData(await fetchAuthenticated(`/api/v1/matches/${id}`, "GET")
-                .then(async response => await response.json()));
-        } catch (error) {
-            console.log(error.message)
-        }
-    };
-
-    useEffect(() => {
-        fetchGameData()
-        setInterval(() => fetchGameData(), 2500)
-    }, []);
-
-    //console.log(matchData)
-    if(matchData != null){
-        console.log("XOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXO");
-        console.log(matchData.companyMatrix);
-        const companies = [];
-        for (let i = 0; i < matchData.companyMatrix.length; i++) {
-        const company = matchData.companyMatrix[i];
-        companies.push({company: company.company, agents: company.agents, type: company.currentConglomerate});
-        initialContext.state.game.companies = companies;
-        console.log(initialContext.state.game.companies);
-    }}
-
 
     return <div className={css.game}>
         <StateContext.Provider value={initialContext}>

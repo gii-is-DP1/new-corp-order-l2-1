@@ -8,15 +8,21 @@ import {Subtitle} from "../components/Subtitle";
 import {useEffect, useState} from "react";
 import fetchAuthenticated from "../util/fetchAuthenticated";
 import {useNavigate} from "react-router-dom";
+import {Text} from "../components/Text";
+import {Pressable} from "../components/Pressable";
 
 export function AdminMatches() {
-    const [matchesData, setMatchesData] = useState(null)
+    const [matchesData, setMatchesData] = useState([])
+    const [page, setPage] = useState(0)
     const navigate = useNavigate()
 
     const fetchMatches = async () => {
         try {
-            setMatchesData(await fetchAuthenticated(`/api/v1/matches`, "GET")
-                .then(async response => await response.json()))
+            setMatchesData([
+                ...matchesData,
+                ...await fetchAuthenticated(`/api/v1/matches?page=${page}`, "GET")
+                    .then(async response => await response.json())
+            ])
         } catch (error) {
             console.log(error)
         }
@@ -24,7 +30,7 @@ export function AdminMatches() {
 
     useEffect(() => {
         fetchMatches()
-    }, []);
+    }, [page]);
 
     if (!matchesData) {
         return <></>
@@ -72,7 +78,7 @@ export function AdminMatches() {
                 <div>
                     <List style={{
                         marginTop: "15px",
-                        maxHeight: "525px",
+                        maxHeight: "600px",
                         width: "800px",
                         backgroundColor: black,
                         overflow: "auto"
@@ -80,6 +86,9 @@ export function AdminMatches() {
                         {matchItems}
                     </List>
                 </div>
+                <Pressable onClick={() => setPage(page + 1)}>
+                    <Text style={{color: white}}>View more</Text>
+                </Pressable>
             </section>
         </div>
     )

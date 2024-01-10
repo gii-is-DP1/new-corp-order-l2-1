@@ -1,9 +1,13 @@
 import {FrontendState} from "./FrontendState";
 import React from "react";
 import tokenService from "../../../services/token.service";
+import {CompanyMatrixViewer} from "../viewers/CompanyMatrixViewer";
 
 function WaitingForTurn() {
-    return <p>Waiting for turn...</p>
+    return <>
+        <h2>Waiting for turn...</h2>
+        <CompanyMatrixViewer/>
+    </>
 }
 
 export class WaitingForTurnState extends FrontendState {

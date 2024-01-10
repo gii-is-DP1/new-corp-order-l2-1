@@ -8,8 +8,6 @@ import {GeneralSupplyViewer} from "./viewers/GeneralSupplyViewer";
 import {OpponentsHqViewer} from "./viewers/OpponentsHqViewer";
 import {CompanyMatrixViewer} from "./viewers/CompanyMatrixViewer";
 import {Info} from "../Match";
-import {propics} from "../data/MatchEnums";
-import {Player} from "../components/Player";
 import ProfilePicture from "../../components/ProfilePicture";
 import {black} from "../../util/Colors";
 
@@ -51,7 +49,7 @@ function Foreground() {
 
         <OpponentsHqViewer/>
 
-        <div style={{background:black, position:"fixed", width:"100%", height:"100%", top:0}}>
+        <div style={{background: black, position:"fixed", width:"100%", height:"100%", top:0}}>
             <FrontendView/>
         </div>
 

@@ -147,7 +147,7 @@ class MatchTest {
                 CompanyTile.builder().company(Company.WALLPAPER).currentConglomerate(Conglomerate.TOTAL_ENTERTAINMENT).agents(2).build(),
                 CompanyTile.builder().company(Company.HOLOGRAFX).currentConglomerate(Conglomerate.TOTAL_ENTERTAINMENT).agents(3).build(),
                 CompanyTile.builder().company(Company.XCURBR).currentConglomerate(Conglomerate.MEGAMEDIA).agents(3).build(),
-                CompanyTile.builder().company(Company.GENERTIC_SUB_INC).currentConglomerate(Conglomerate.MEGAMEDIA).agents(2).build(),
+                CompanyTile.builder().company(Company.GENERIC_SUB_INC).currentConglomerate(Conglomerate.MEGAMEDIA).agents(2).build(),
                 CompanyTile.builder().company(Company.CLICKBAITER).currentConglomerate(Conglomerate.TOTAL_ENTERTAINMENT).agents(1).build(),
                 CompanyTile.builder().company(Company.VISUAL_TERROR_INC).currentConglomerate(Conglomerate.TOTAL_ENTERTAINMENT).agents(1).build(),
                 CompanyTile.builder().company(Company.SLIMGROTZ_INC).currentConglomerate(Conglomerate.MEGAMEDIA).agents(1).build())

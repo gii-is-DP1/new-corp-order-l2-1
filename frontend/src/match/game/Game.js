@@ -1,4 +1,4 @@
-import React, {useContext, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {startingState} from "../data/MockupData";
 import css from "./game.module.css";
 import {State} from "../data/State";
@@ -7,6 +7,8 @@ import {HQViewer} from "./viewers/HQViewer";
 import {GeneralSupplyViewer} from "./viewers/GeneralSupplyViewer";
 import {OpponentsHqViewer} from "./viewers/OpponentsHqViewer";
 import {CompanyMatrixViewer} from "./viewers/CompanyMatrixViewer";
+import fetchAuthenticated from "../../util/fetchAuthenticated";
+import {useParams} from "react-router-dom";
 import {Info} from "../Match";
 import ProfilePicture from "../../components/ProfilePicture";
 import {black} from "../../util/Colors";
@@ -16,6 +18,9 @@ export const StateContext = React.createContext({})
 export function Game() {
     const [gameState, setGameState] = useState(startingState);
     const initialContext = new State(gameState, setGameState);
+    const [matchData, setMatchData] = useState(null);
+    const {id} = useParams();
+    const FrontendView = () => initialContext.frontendView;
 
     return <div className={css.game}>
         <StateContext.Provider value={initialContext}>

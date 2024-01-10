@@ -37,8 +37,8 @@ export default function Match() {
 
     useEffect(() => {
         fetchMatchData()
+        setInterval(() => fetchMatchData(), 500)
         fetchPropic()
-        setInterval(() => fetchMatchData(), 5000)
     }, []);
 
     const isLoading = matchData == null || propic == null;

@@ -14,7 +14,7 @@ let matchInfo = {...defaultMatchInfo};
 export default function Match() {
     const [matchData, setMatchData] = useState(null);
     const {id} = useParams();
-    matchInfo =  {...defaultMatchInfo};
+    matchInfo = {...defaultMatchInfo};
 
     const [propic, setPropic] = useState(null);
     const fetchPropic = async () => {
@@ -30,30 +30,36 @@ export default function Match() {
         try {
             setMatchData(await fetchAuthenticated(`/api/v1/matches/${id}`, "GET")
                 .then(async response => await response.json()));
+            return matchData;
         } catch (error) {
             console.log(error.message)
         }
     };
 
     useEffect(() => {
-        fetchMatchData()
-        setInterval(() => fetchMatchData(), 500)
+        fetchMatchData().then(r => console.log(r))
         fetchPropic()
     }, []);
 
+
+    useEffect(
+        () => {
+            if (matchData != null && matchData.turn !== tokenService.getUser().id)
+                console.log("a");
+               // setInterval(() => fetchMatchData(), 5000);
+        }
+    )
+
     const isLoading = matchData == null || propic == null;
-    if(isLoading) {
+    if (isLoading) {
         return <LoadingScreen/>;
-    }
-    else
-    {
-        console.log(matchData);
+    } else {
         setContext(id, matchData, propic);
         return <LoadedPage key={id}/>
     }
 }
 
-function LoadingScreen(){
+function LoadingScreen() {
     return (
         <div className={css.match}>
             <p>loading...</p>
@@ -61,10 +67,10 @@ function LoadingScreen(){
     )
 }
 
-function LoadedPage(){
+function LoadedPage() {
     return (
         <div className={css.match}>
-            <Info.Provider value = {matchInfo} >
+            <Info.Provider value={matchInfo}>
                 <Main/>
             </Info.Provider>
         </div>);
@@ -78,19 +84,20 @@ function setContext(id, matchData, propic) {
     matchInfo.inLobby = matchData.state === "WAITING";
     matchInfo.maxPlayers = matchData.maxPlayers;
     matchInfo.isAdmin = matchData.host === tokenService.getUser().id;
-    if(!matchData.isSpectating && matchData.spectating)
+    if (!matchData.isSpectating && matchData.spectating)
         matchInfo.hasBeenKicked = true;
     matchInfo.wasSpectating = matchInfo.isSpectating;
     matchInfo.isSpectating = matchData.spectating;
-    if(!matchData.spectating)
+    if (!matchData.spectating)
         matchInfo.players = [{propic: propics[propic.picture], username: tokenService.getUser().username}];
     else matchInfo.players = [];
-    matchInfo.players = matchInfo.players.concat(matchData.opponents.map(opponent => {return {propic: propics[opponent.picture],username:opponent.username}}));
+    matchInfo.players = matchInfo.players.concat(matchData.opponents.map(opponent => {
+        return {propic: propics[opponent.picture], username: opponent.username}
+    }));
 
-    if(matchData.state === "PLAYING")
-    {
+    if (matchData.state === "PLAYING") {
         startingState.game.companies = matchData.companyMatrix.map(c => {
-            return {company: Company[c.company], agents:c.agents, type: conglomerate[c.currentConglomerate]}
+            return {company: Company[c.company], agents: c.agents, type: conglomerate[c.currentConglomerate]}
         });
         startingState.turn = matchData.turn.player;
     }

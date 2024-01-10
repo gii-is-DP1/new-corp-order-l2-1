@@ -46,7 +46,7 @@ export const Company = {
     SLIMGROTZ_INC: {name: "slimgrotz-inc", type: CompanyType.BROADCAST_NETWORK},
     FLICKERING_LIGHTS: {name: "flickering-lights", type: CompanyType.BROADCAST_NETWORK},
     GLOBAL_CORP: {name: "global-corp", type: CompanyType.BROADCAST_NETWORK},
-    
+
     PAGE_ONE_CORP: {name: "page-one-corp", type: CompanyType.PRINT_MEDIA},
     READALOT: {name: "readalot", type: CompanyType.PRINT_MEDIA},
     GENERIC_SUB_INC: {name: "generic-sub-inc", type: CompanyType.PRINT_MEDIA},

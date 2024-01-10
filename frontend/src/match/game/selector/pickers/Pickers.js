@@ -23,7 +23,6 @@ export function pickOneCard(from, onConfirm) {
                      changeSelectableItems={selectQuantity(1)}
                      onConfirm={onConfirm}
                      containerStyle={conglomerateContainerStyle}
-                     key={onConfirm}
     />;
 }
 
@@ -34,7 +33,6 @@ export function pickOneorTwoCards(from, onConfirm) {
                      changeSelectableItems={selectQuantity(2)}
                      onConfirm={onConfirm}
                      containerStyle={conglomerateContainerStyle}
-                     key={onConfirm}
     />;
 }
 
@@ -45,7 +43,6 @@ export function pickTwoCards(from, onConfirm) {
                      changeSelectableItems={selectQuantity(2)}
                      onConfirm={onConfirm}
                      containerStyle={conglomerateContainerStyle}
-                     key={onConfirm}
     />;
 }
 
@@ -56,7 +53,6 @@ export function optionallyPickCard(from, onConfirm) {
                      changeSelectableItems={selectQuantity(1)}
                      onConfirm={onConfirm}
                      containerStyle={conglomerateContainerStyle}
-                     key={onConfirm}
     />;
 }
 
@@ -67,7 +63,6 @@ export function pickManyConglomeratesOfTheSameColor(from, onConfirm) {
                      changeSelectableItems={onlySelectOfSameColor}
                      onConfirm={onConfirm}
                      containerStyle={conglomerateContainerStyle}
-                     key={onConfirm}
     />
 }
 
@@ -85,7 +80,6 @@ function CompanySelector({title, selection, canConfirm, changeSelectableItem, on
                          flexShrink: 1,
                          maxWidth: "80vh"
                      }}
-                     key={onConfirm}
     />;
 }
 
@@ -136,6 +130,5 @@ export function pickConglomeratesToDiscard(from, onConfirm) {
                      changeSelectableItems={selectUntilNRemain(6)}
                      onConfirm={onConfirm}
                      containerStyle={conglomerateContainerStyle}
-                     key={onConfirm}
     />;
 }

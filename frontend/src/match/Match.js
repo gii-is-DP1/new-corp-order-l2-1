@@ -1,4 +1,4 @@
-import {defaultMatchInfo} from "./data/MockupData";
+import {defaultMatchInfo, startingState} from "./data/MockupData";
 import React, {useEffect, useState} from "react"
 import css from "./match.module.css";
 import {Main} from "./Main";
@@ -6,7 +6,7 @@ import {RightBar} from "./RightBar";
 import {useParams} from "react-router-dom";
 import fetchAuthenticated from "../util/fetchAuthenticated";
 import tokenService from "../services/token.service";
-import {propics} from "./data/MatchEnums";
+import {Company, conglomerate, propics} from "./data/MatchEnums";
 
 export const Info = React.createContext({...defaultMatchInfo})
 let matchInfo = {...defaultMatchInfo};
@@ -72,9 +72,7 @@ function LoadedPage(){
 
 function setContext(id, matchData, propic) {
     if (matchInfo.code !== id)
-    {
         matchInfo = {...defaultMatchInfo};
-    }
 
     matchInfo.code = id;
     matchInfo.inLobby = matchData.state === "WAITING";
@@ -84,9 +82,16 @@ function setContext(id, matchData, propic) {
         matchInfo.hasBeenKicked = true;
     matchInfo.wasSpectating = matchInfo.isSpectating;
     matchInfo.isSpectating = matchData.spectating;
-    console.log( propic)
     if(!matchData.spectating)
         matchInfo.players = [{propic: propics[propic.picture], username: tokenService.getUser().username}];
     else matchInfo.players = [];
     matchInfo.players = matchInfo.players.concat(matchData.opponents.map(opponent => {return {propic: propics[opponent.picture],username:opponent.username}}));
+
+    if(matchData.state === "PLAYING")
+    {
+        startingState.game.companies = matchData.companyMatrix.map(c => {
+            return {company: Company[c.company], agents:c.agents, type: conglomerate[c.currentConglomerate]}
+        });
+        startingState.turn = matchData.turn.player;
+    }
 }

@@ -55,7 +55,7 @@ function Foreground() {
             <FrontendView/>
         </div>
 
-        <div style={{display:"flex", position:"absolute", bottom:"0", width:"100%", justifyContent:"space-evenly"}}>
+        <div style={{display:"flex", position:"fixed", bottom:"0", width:"100%", justifyContent:"space-evenly"}}>
             <HandViewer/>
             <HQViewer/>
             <GeneralSupplyViewer/>

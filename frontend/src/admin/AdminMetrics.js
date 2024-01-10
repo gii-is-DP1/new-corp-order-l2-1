@@ -111,7 +111,7 @@ export function AdminMetrics() {
                         marginTop: "25px",
                         marginBottom: "10px"
                     }}>
-                        Average players per match: {matchMetrics.averageMaxPlayers}
+                        Average players per match: {matchMetrics.averageMaxPlayers.toFixed(2)}
                     </Subtitle>
                 </div>
             </section>

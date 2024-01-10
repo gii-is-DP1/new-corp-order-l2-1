@@ -69,10 +69,10 @@ export function AdminAchievements() {
                     <Title style={{fontSize: "60px", color: white}}>
                         achievements
                     </Title>
-                    <Subtitle style={{fontSize: "20px", color: white}}>
+                    <Subtitle style={{marginBottom: "15px", fontSize: "15px", color: white}}>
                         Create, modify or delete achievements
                     </Subtitle>
-                    <div style={{display:"flex", flexDirection:"row", gap:"20px"}}>
+                    <div style={{display: "flex", flexDirection: "row", gap: "10px"}}>
                         <TextInput onClick={setFilter}
                                    style={{width: "600px", fontSize:"20px",  textTransform: "uppercase"}}
                                    placeholder="Filter..."/>
@@ -82,7 +82,7 @@ export function AdminAchievements() {
                         </Button>
                     </div>
                 </div>
-                <div style={{marginTop:"22px"}}>
+                <div style={{marginTop: "15px"}}>
                     <List style={{maxHeight: "525px", width: "800px", backgroundColor: black, overflow: "auto"}}>
                         {achievementItems}
                     </List>

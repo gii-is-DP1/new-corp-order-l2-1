@@ -122,7 +122,8 @@ export function EditAchievements() {
                     window.location.href = "/admin/achievements";
                 })
                 .catch(error => {
-                    setMessage(error);
+                    const errorMessage = error.message || "An error occurred";
+                    setMessage(errorMessage);
                 });
         }else{
             await fetchAuthenticatedWithBody(`/api/v1/achievements/${achievementId}`, "PUT", body)
@@ -134,7 +135,8 @@ export function EditAchievements() {
                     window.location.href = "/admin/achievements";
                 })
                 .catch(error => {
-                    setMessage(error);
+                    const errorMessage = error.message || "An error occurred";
+                    setMessage(errorMessage);
                 });
         }
     }

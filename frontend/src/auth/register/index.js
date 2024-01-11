@@ -68,7 +68,7 @@ export default function Register() {
             body: JSON.stringify(body),
         })
             .then(function (response) {
-                if (response.status === 200) {
+                if (response.status === 201) {
                     const loginRequest = {
                         username: body.username,
                         password: body.password,

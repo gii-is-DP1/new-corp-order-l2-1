@@ -12,7 +12,7 @@ export const Info = React.createContext({...defaultMatchInfo})
 let matchInfo = {...defaultMatchInfo};
 
 export default function Match() {
-    const [matchData, setMatchData] = useState(null);
+    let [matchData, setMatchData] = useState(null);
     const {id} = useParams();
     matchInfo = {...defaultMatchInfo};
 
@@ -28,20 +28,33 @@ export default function Match() {
 
     const fetchMatchData = async () => {
         try {
-            setMatchData(await fetchAuthenticated(`/api/v1/matches/${id}`, "GET")
+            const wasEmpty = matchData === null;
+            const wasWaiting = wasEmpty ? null : matchData.state === "WAITING"
+
+            matchData = (await fetchAuthenticated(`/api/v1/matches/${id}`, "GET")
                 .then(async response => await response.json()));
+
+            console.log(matchData);
+
+            const isPLaying = matchData.state === "PLAYING";
+            if (wasEmpty || !isPLaying || (wasWaiting && isPLaying) || (matchData.turn !== null && matchData.turn.player !== tokenService.getUser().id)) {
+                setMatchData(matchData)
+            }
         } catch (error) {
             console.log(error.message)
         }
     };
 
     useEffect(() => {
-        fetchMatchData()
-        fetchPropic()
-        var interval;
-        if (matchData != null && matchData.turn !== tokenService.getUser().id) {
-            interval = setInterval(() => fetchMatchData(), 5000);
-        }
+        const fetchData = async () => {
+            await fetchPropic();
+            await fetchMatchData();
+        };
+        fetchData();
+        const interval = setInterval(() => {
+            fetchMatchData();
+        }, 5000);
+
         return () => clearInterval(interval);
     }, []);
 
@@ -49,6 +62,7 @@ export default function Match() {
     if (isLoading) {
         return <LoadingScreen/>;
     } else {
+        //     console.log(matchData)
         setContext(id, matchData, propic);
         return <LoadedPage key={id}/>
     }

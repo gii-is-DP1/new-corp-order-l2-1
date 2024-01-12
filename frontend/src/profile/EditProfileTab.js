@@ -1,5 +1,5 @@
 import {Title} from "../components/Title";
-import {white} from "../util/Colors";
+import {black, dangerBackground, grayDarker, orange, white} from "../util/Colors";
 import FormInput from "../components/FormInput";
 import {Text} from "../components/Text";
 import Button, {ButtonType} from "../components/Button";
@@ -27,6 +27,14 @@ export function EditProfileTab({username, oldEmail, userData, navigate}) {
         textTransform: "uppercase"
     }
 
+    const passwordLabelStyle = {
+        color: dangerBackground,
+        fontSize: "25px",
+        textTransform: "uppercase",
+        paddingTop: "30px"
+
+    }
+
     async function handleSubmit(body) {
         setMessage(null);
         if (body.username === username) {
@@ -36,7 +44,8 @@ export function EditProfileTab({username, oldEmail, userData, navigate}) {
             body.email = "";
         }
         if (body.password === "") {
-            body.password = null;
+            setMessage("You must write your password to confirm the changes");
+            return;
         }
         console.log(body);
         await fetchAuthenticatedWithBody(`/api/v1/users/${username}`, "PUT", body)
@@ -57,7 +66,7 @@ export function EditProfileTab({username, oldEmail, userData, navigate}) {
     }
 
     return (
-        <div>
+        <div style={{display: "flex", flexDirection: "column", alignItems: "center", gap: "15px"}}>
             <Title style={{color: white, fontSize: '40px'}}>
                 Edit Profile
             </Title>
@@ -75,13 +84,13 @@ export function EditProfileTab({username, oldEmail, userData, navigate}) {
                            label="Username"
                            name="username"
                            type="text"
-                           placeholder="If you leave empty this field empty your name won`t change"
+                           placeholder="If you leave empty this field your name won`t change"
                            defaultValue={userData.username}/>
                 <FormInput labelStyle={labelStyle}
                            label="Email"
                            name="email"
                            type="email"
-                           placeholder="If you leave empty this field empty your email won`t change"
+                           placeholder="If you leave empty this field your email won`t change"
                            defaultValue={userData.email}/>
                 <FormInput labelStyle={labelStyle}
                            label="Picture"
@@ -89,14 +98,17 @@ export function EditProfileTab({username, oldEmail, userData, navigate}) {
                            type="text"
                            placeholder={"Put the url of the image your user will have"}
                            defaultValue={userData.picture}/>
-                <FormInput labelStyle={labelStyle}
-                           label="Password"
+
+                <FormInput labelStyle={passwordLabelStyle}
+                           label="To confirm the changes, write your password"
                            name={"password"}
                            type="password"
-                           placeholder={"Write your password to confirm the changes"}/>
+                           placeholder={"Write here your password to confirm the changes"}
+                            textInputStyle={{backgroundColor: grayDarker}}/>
+
                 {message && <Text style={{textTransform: "none", color: "red"}}>{message}</Text>}
                 <div style={buttonStyle}>
-                    <Button buttonType={ButtonType.primary} type="submit">Save Changes</Button>
+                    <Button buttonType={ButtonType.primary} type="submit">Confirm Changes</Button>
                     <Button buttonType={ButtonType.danger} onClick={() => navigate(`/user/${username}/lastMatches`)}>Cancel</Button>
                 </div>
             </form>

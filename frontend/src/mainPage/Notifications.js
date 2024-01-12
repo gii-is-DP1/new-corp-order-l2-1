@@ -5,9 +5,11 @@ import {Text} from "../components/Text"
 import fetchAuthenticated from "../util/fetchAuthenticated";
 import Button, {ButtonType} from "../components/Button";
 import {useNavigate} from "react-router-dom";
+import {dangerBackground} from "../util/Colors";
 
 export function Notifications() {
     const [notifications, setNotifications] = useState(null)
+    const [error, setError] = useState(null)
     const navigate = useNavigate()
 
     const fetchNotifications = async () => {
@@ -42,8 +44,12 @@ export function Notifications() {
     }
 
     async function joinGameRequest(value) {
-        await fetchAuthenticated(`/api/v1/matches/${value}/join`, "POST")
-            .then(() => navigate(`match/${value}`))
+        try {
+            await fetchAuthenticated(`/api/v1/matches/${value}/join`, "POST")
+                .then(() => navigate(`match/${value}`))
+        } catch (error) {
+            setError(error.message)
+        }
     }
 
     async function deleteNotification(notification) {
@@ -51,27 +57,31 @@ export function Notifications() {
     }
 
     const notificationsItems = notifications?.map(notification =>
-        <ListLine style={lineStyle} sideContent={
-            <>
-                <Button onClick={async () => {
-                    await deleteNotification(notification)
-                    await joinGameRequest(notification.matchCode)
-                }}
-                        buttonType={ButtonType.success}>
-                    Play
-                </Button>
-                <Button
-                    onClick={async () => {
+        <>
+            <ListLine style={lineStyle} sideContent={
+                <>
+                    <Button onClick={async () => {
                         await deleteNotification(notification)
-                        await fetchNotifications()
+                        await joinGameRequest(notification.matchCode)
                     }}
-                    buttonType={ButtonType.danger}>
-                    Deny
-                </Button>
-            </>
-        }>
-            <Text>{notification.sender.username} invited you to match #{notification.matchCode} </Text>
-        </ListLine>
+                            buttonType={ButtonType.success}>
+                        Play
+                    </Button>
+                    <Button
+                        onClick={async () => {
+                            await deleteNotification(notification)
+                            await fetchNotifications()
+                        }}
+                        buttonType={ButtonType.danger}>
+                        Deny
+                    </Button>
+                </>
+            }>
+                <Text>{notification.sender.username} invited you to match #{notification.matchCode} </Text>
+            </ListLine>
+            {error &&
+                <Text style={{color: dangerBackground}}>{error}</Text>}
+        </>
     )
 
     return (

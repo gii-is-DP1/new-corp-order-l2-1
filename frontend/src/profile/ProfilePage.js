@@ -5,16 +5,12 @@ import {Title} from "../components/Title";
 import Button, {ButtonType} from "../components/Button";
 import {Text} from "../components/Text";
 import {PressableText} from "../components/PressableText";
-import List from "../components/List";
 import React, {useEffect, useState} from "react";
-import ListLine from "../components/ListLine";
-import {Subtitle} from "../components/Subtitle";
 import fetchAuthenticated from "../util/fetchAuthenticated";
 import {useNavigate, useParams} from "react-router-dom";
 import tokenService from "../services/token.service";
 import {FriendsTab} from "./FriendsTab";
 import {LastMatchesTab} from "./LastMatchesTab";
-import AchievementPicture from "../components/AchievementPicture";
 import {AchievementsTab} from "./achievement/AchievementsTab";
 
 export function ProfilePage() {

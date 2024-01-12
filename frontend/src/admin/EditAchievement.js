@@ -57,7 +57,7 @@ export function EditAchievements() {
         {value: 'GAMES_LOST', label: 'GAMES_LOST'},
         {value: 'GAMES_TIED', label: 'GAMES_TIED'},
         {value: 'GAMES_WON', label: 'GAMES_WON'},
-        {value: 'TIME_PLAYED', label: 'TIME_PLAYED'},
+        {value: 'TIMES_PLAYED', label: 'TIMES_PLAYED'},
         {value: 'TIMES_PLOTTED', label: 'TIMES_PLOTTED'},
         {value: 'TIMES_INFILTRATED', label: 'TIMES_INFILTRATED'},
         {value: 'TIMES_TAKEN_OVER', label: 'TIMES_TAKEN_OVER'},

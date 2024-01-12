@@ -6,7 +6,7 @@ import {black, white} from "../util/Colors";
 import {Subtitle} from "../components/Subtitle";
 import {Text} from "../components/Text";
 
-export function AdminMetrics() {
+export function Metrics() {
     const [matchMetrics, setMatchMetrics] = useState(null)
 
     const fetchMatchStats = async () => {

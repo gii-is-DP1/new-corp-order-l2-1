@@ -5,7 +5,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import us.lsi.dp1.newcorporder.player.Player;
 import us.lsi.dp1.newcorporder.stats.MatchResult;
+import us.lsi.dp1.newcorporder.stats.Stat;
 import us.lsi.dp1.newcorporder.stats.payload.response.PlayerMatchStatsView;
+import us.lsi.dp1.newcorporder.stats.payload.response.PlayerRankingResponse;
 import us.lsi.dp1.newcorporder.stats.payload.response.PlayerStatsResponse;
 
 import java.util.List;
@@ -37,11 +39,21 @@ public class PlayerMatchStatsService {
             .build();
     }
 
-    public int countMatches(Player player) {
+    public List<PlayerRankingResponse> getRanking(Stat stat, Pageable pageable) {
+        Page<PlayerRankingResponse> page = switch (stat) {
+            case GAMES_WON -> playerMatchStatsRepository.findRankingByGamesWon(pageable);
+            case TIMES_PLAYED -> playerMatchStatsRepository.findRankingByGamesPlayed(pageable);
+            default -> throw new IllegalArgumentException("Unsupported stat for rankings");
+        };
+
+        return page.getContent();
+    }
+
+    private int countMatches(Player player) {
         return playerMatchStatsRepository.countByPlayer(player);
     }
 
-    public int countMatchesByResult(Player player, MatchResult result) {
+    private int countMatchesByResult(Player player, MatchResult result) {
         return playerMatchStatsRepository.countByPlayerAndResult(player, result);
     }
 
@@ -87,5 +99,4 @@ public class PlayerMatchStatsService {
             .max()
             .orElse(0);
     }
-
 }

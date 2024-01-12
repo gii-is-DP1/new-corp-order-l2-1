@@ -21,4 +21,9 @@ public final class RestPreconditions {
         if (!expression)
             throw new AccessDeniedException();
     }
+
+    public static void checkAccess(boolean expression, String message) {
+        if (!expression)
+            throw new AccessDeniedException(message);
+    }
 }

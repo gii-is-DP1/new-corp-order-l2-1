@@ -65,7 +65,7 @@ public class Match {
     }
 
     public void start() {
-        Preconditions.checkState(state == MatchState.WAITING, "match was already started");
+        Preconditions.checkState(state == MatchState.WAITING, "match already started");
         Preconditions.checkState(players.size() > 1, "not enough players to start the match");
 
         generalSupply.init(mode, players.size());

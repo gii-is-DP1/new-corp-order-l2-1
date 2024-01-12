@@ -78,9 +78,9 @@ public class MatchController {
     )
     @PostMapping("/{match}/invite")
     @ResponseStatus(HttpStatus.CREATED)
-    public void inviteFriend(@Authenticated Player player,
-                             @RequestParam("target") List<String> friends,
-                             @FromPathVariable Match match) {
+    public void inviteFriends(@Authenticated Player player,
+                              @RequestParam("target") List<String> friends,
+                              @FromPathVariable Match match) {
         friends.forEach(friendUsername -> {
             User friend = userService.findUser(friendUsername);
             RestPreconditions.checkNotNull(friend, "User", "username", friendUsername);
@@ -96,7 +96,7 @@ public class MatchController {
     )
     @ApiResponse(
         responseCode = "200",
-        description = "The selected quick play"
+        description = "The assigned match"
     )
     @PostMapping("/quick")
     public MatchAssignmentResponse quickPlay(@Authenticated Player player,

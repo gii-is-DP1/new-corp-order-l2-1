@@ -103,7 +103,8 @@ public class MatchService {
 
     public MatchView getMatchView(Player player, Match match) {
         MatchPlayer matchPlayer = match.getPlayer(player.getId());
-        RestPreconditions.checkAccess(matchPlayer != null || canViewMatch(player, match));
+        RestPreconditions.checkAccess(matchPlayer != null || canViewMatch(player, match),
+            "Cannot spectate match: you are not friends with every player");
 
         return matchPlayer != null ? MatchView.of(match, matchPlayer) : MatchView.of(match);
     }
@@ -131,7 +132,7 @@ public class MatchService {
     }
 
     public void forceStart(Player player, Match match) {
-        RestPreconditions.checkAccess(match.isHost(player));
+        Preconditions.checkState(match.isHost(player), "You are not the match host");
         match.start();
     }
 

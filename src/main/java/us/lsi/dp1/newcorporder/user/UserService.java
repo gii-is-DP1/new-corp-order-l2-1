@@ -27,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import us.lsi.dp1.newcorporder.auth.ApplicationUserDetails;
 import us.lsi.dp1.newcorporder.authority.AuthorityService;
 import us.lsi.dp1.newcorporder.exceptions.ResourceNotFoundException;
+import us.lsi.dp1.newcorporder.user.payload.request.EditPasswordRequest;
 import us.lsi.dp1.newcorporder.user.payload.request.EditProfileRequest;
 import us.lsi.dp1.newcorporder.user.payload.response.UserView;
 import us.lsi.dp1.newcorporder.util.RandomUtils;
@@ -114,6 +115,13 @@ public class UserService {
             this.changePicture(user, request.getPicture());
         }
 
+        return this.saveUser(user);
+    }
+
+    @Transactional
+    public User editPassword(User user, @Valid EditPasswordRequest request) {
+        Preconditions.checkState(passwordEncoder.matches(request.getOldPassword(), user.getPassword()), "wrong password!");
+        this.changePassword(user, request.getNewPassword());
         return this.saveUser(user);
     }
 

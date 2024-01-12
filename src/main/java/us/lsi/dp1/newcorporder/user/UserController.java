@@ -34,6 +34,7 @@ import us.lsi.dp1.newcorporder.auth.jwt.JwtUtils;
 import us.lsi.dp1.newcorporder.auth.payload.response.MessageResponse;
 import us.lsi.dp1.newcorporder.exceptions.AccessDeniedException;
 import us.lsi.dp1.newcorporder.friendship.FriendshipService;
+import us.lsi.dp1.newcorporder.user.payload.request.EditPasswordRequest;
 import us.lsi.dp1.newcorporder.user.payload.request.EditProfileRequest;
 import us.lsi.dp1.newcorporder.user.payload.response.UserView;
 import us.lsi.dp1.newcorporder.util.RestPreconditions;
@@ -131,6 +132,33 @@ class UserController {
         response.put("user", userView);
         response.put("token", newJwt);
         return ResponseEntity.ok(response) ;
+    }
+
+    @Operation(
+        summary = "Change the password of an user",
+        description = "Change the password of an user",
+        tags = "put"
+    )
+    @ApiResponse(
+        responseCode = "200",
+        description = "The updated user"
+    )
+    @ApiResponse(
+        responseCode = "400",
+        description = "Invalid arguments"
+    )
+    @PutMapping("/{username}/password")
+    public ResponseEntity<UserView> changePassword(@PathVariable String username, @Valid @RequestBody EditPasswordRequest request) {
+        User user = userService.findUser(username);
+        User loggedIn = userService.findCurrentUser();
+
+        RestPreconditions.checkAccess(loggedIn.equals(user) || loggedIn.hasAnyAuthority("admin"));
+        RestPreconditions.checkNotNull(user, "User", "username", username);
+
+        User updatedUser = userService.editPassword(user, request);
+        UserView userView = UserView.expanded(updatedUser, loggedIn);
+
+        return ResponseEntity.ok(userView);
     }
 
     @Operation(

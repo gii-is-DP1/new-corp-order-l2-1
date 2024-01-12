@@ -109,5 +109,14 @@ function setContext(id, matchData, propic) {
             return {company: Company[c.company], agents: c.agents, type: conglomerate[c.currentConglomerate]}
         });
         startingState.turn = matchData.turn.player;
+        for (const rotatedConglomerateNumber in matchData.player.headquarter.usedConglomerateShares) {
+            console.log("XOXOXOXOXOXOXOXOXOXOXOXOXO")
+            console.log(rotatedConglomerateNumber);
+        }
+        for (const nonRotatedConglomerateNumber in matchData.player.headquarter.conglomerateShares){
+
+        }
+        //startingState.game.player = {hand: matchData.player.hand, hq: {...startingState.game.player.hq,secretObjectives: matchData.player.secretObjectives,rotatedConglomerates: matchData.player.headquarter.conglomerateShares, nonRotatedConglomerates: matchData.player.headquarter.usedConglomerateShares, consultants: matchData.player.headquarter.consultants}};
+        //console.log(startingState.game.player);
     }
 }

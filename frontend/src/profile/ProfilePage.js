@@ -144,7 +144,7 @@ export function ProfilePage() {
                     </div>
                 </section>
                 <section style={columnStyle}>
-                    {select !== "edit" && <div style={{display: "flex", gap: "25px"}}>
+                    {select !== "edit" && select !==  "editPassword" && <div style={{display: "flex", gap: "25px"}}>
                         <PressableText style={{color: white}}
                                        underlined={select === "lastMatches"}
                                        onClick={() => navigate(`/user/${userData.username}/lastMatches`)}>

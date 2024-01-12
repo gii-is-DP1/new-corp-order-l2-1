@@ -54,17 +54,16 @@ export function EditAchievements() {
     }
 
     const statsOptions = [
-        {value: 'GAMES_LOST', label: 'GAMES_LOST'},
-        {value: 'GAMES_TIED', label: 'GAMES_TIED'},
-        {value: 'GAMES_WON', label: 'GAMES_WON'},
-        {value: 'TIME_PLAYED', label: 'TIME_PLAYED'},
-        {value: 'TIMES_PLOTTED', label: 'TIMES_PLOTTED'},
-        {value: 'TIMES_INFILTRATED', label: 'TIMES_INFILTRATED'},
-        {value: 'TIMES_TAKEN_OVER', label: 'TIMES_TAKEN_OVER'},
-        {value: 'CONSULTANT_STATS_USED', label: 'CONSULTANT_STATS_USED'},
-        {value: 'ABILITIES_USED', label: 'ABILITIES_USED'},
-        {value: 'FINAL_SHARES', label: 'FINAL_SHARES'},
-        {value: 'FINAL_AGENTS', label: 'FINAL_AGENTS'}
+        {value: 'GAMES_LOST', label: 'GAMES LOST'},
+        {value: 'GAMES_TIED', label: 'GAMES TIED'},
+        {value: 'GAMES_WON', label: 'GAMES WON'},
+        {value: 'TIMES_PLAYED', label: 'TIMES PLAYED'},
+        {value: 'TIMES_PLOTTED', label: 'TIMES PLOTTED'},
+        {value: 'TIMES_INFILTRATED', label: 'TIMES INFILTRATED'},
+        {value: 'TIMES_TAKEN_OVER', label: 'TIMES TAKEN OVER'},
+        {value: 'CONSULTANT_STATS_USED', label: 'CONSULTANT STATS USED'},
+        {value: 'ABILITIES_USED', label: 'ABILITIES USED'},
+        {value: 'FINAL_SCORE', label: 'FINAL SCORE'},
     ];
 
     const fetchAchievementData = async () => {

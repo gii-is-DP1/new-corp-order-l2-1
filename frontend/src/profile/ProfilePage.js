@@ -5,17 +5,14 @@ import {Title} from "../components/Title";
 import Button, {ButtonType} from "../components/Button";
 import {Text} from "../components/Text";
 import {PressableText} from "../components/PressableText";
-import List from "../components/List";
 import React, {useEffect, useState} from "react";
-import ListLine from "../components/ListLine";
-import {Subtitle} from "../components/Subtitle";
 import fetchAuthenticated from "../util/fetchAuthenticated";
 import {useNavigate, useParams} from "react-router-dom";
 import tokenService from "../services/token.service";
 import {FriendsTab} from "./FriendsTab";
 import {LastMatchesTab} from "./LastMatchesTab";
-import AchievementPicture from "../components/AchievementPicture";
 import {AchievementsTab} from "./achievement/AchievementsTab";
+import {EditProfileTab} from "./EditProfileTab";
 
 export function ProfilePage() {
     const [userData, setUserData] = useState(null)
@@ -69,7 +66,6 @@ export function ProfilePage() {
         fetchUserData()
         fetchAchievementsData()
         fetchCompletedAchievementsData()
-
         fetchUserStats()
     }, [select, username]);
 
@@ -140,7 +136,7 @@ export function ProfilePage() {
                     </div>
                 </section>
                 <section style={columnStyle}>
-                    <div style={{display: "flex", gap: "25px"}}>
+                    {select !== "edit" && <div style={{display: "flex", gap: "25px"}}>
                         <PressableText style={{color: white}}
                                        underlined={select === "lastMatches"}
                                        onClick={() => navigate(`/user/${userData.username}/lastMatches`)}>
@@ -156,7 +152,7 @@ export function ProfilePage() {
                                        onClick={() => navigate(`/user/${userData.username}/achievements`)}>
                             Achievements
                         </PressableText>
-                    </div>
+                    </div>}
                     <div>
                         {select === "lastMatches" &&
                             <LastMatchesTab username={username}
@@ -178,7 +174,18 @@ export function ProfilePage() {
                                              isMe={isMe()}
                                              rowListStyle={rowListStyle}
                                              username={username}
+
                             />}
+
+                        {select === "edit" &&
+                            <EditProfileTab userData={userData}
+                                             username={username}
+                                             navigate={navigate}
+                                             oldEmail={userData.email}
+
+
+                            />}
+
                     </div>
                 </section>
             </div>

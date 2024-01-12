@@ -10,6 +10,7 @@ import us.lsi.dp1.newcorporder.player.Player;
 import us.lsi.dp1.newcorporder.stats.MatchStatsService;
 import us.lsi.dp1.newcorporder.stats.payload.response.MatchStatsView;
 import us.lsi.dp1.newcorporder.stats.player.PlayerMatchStatsService;
+import us.lsi.dp1.newcorporder.util.RandomUtils;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -44,7 +45,7 @@ public class AchievementService {
 
     @Transactional
     public Achievement save(@Valid Achievement achievement) throws DataAccessException {
-        if (!isValidImageUrl(achievement.getImageUrl())) achievement.setImageUrl(null);
+        if (!RandomUtils.isValidImageUrl(achievement.getImageUrl())) achievement.setImageUrl(null);
         return achievementRepository.save(achievement);
     }
 
@@ -101,22 +102,4 @@ public class AchievementService {
         };
     }
 
-    private boolean isValidImageUrl(String imageUrl) {
-        try {
-            URL url = new URL(imageUrl);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("HEAD");
-            connection.connect();
-            int responseCode = connection.getResponseCode();
-
-            // Verifica si la respuesta es exitosa y el contenido es una imagen
-            if (responseCode / 100 == 2) {
-                String contentType = connection.getContentType();
-                return contentType.startsWith("image/");
-            }
-        } catch (Exception e) {
-            System.err.println("Error al validar la URL de la imagen: " + e.getMessage());
-        }
-        return false;
-    }
 }

@@ -58,7 +58,6 @@ export default function TextInput({name, placeholder, onClick, type, style, minV
                        onKeyDown={handleEvent}
                        min={minValue}
                        max={maxValue}
-                       defaultValue={defaultValue}
                 />
                 {onClick &&
                     <button onClick={handleEvent} style={buttonStyle}>

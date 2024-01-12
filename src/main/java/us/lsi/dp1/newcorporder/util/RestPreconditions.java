@@ -1,7 +1,7 @@
 package us.lsi.dp1.newcorporder.util;
 
-import us.lsi.dp1.newcorporder.exceptions.AccessDeniedException;
-import us.lsi.dp1.newcorporder.exceptions.ResourceNotFoundException;
+import us.lsi.dp1.newcorporder.exception.AccessDeniedException;
+import us.lsi.dp1.newcorporder.exception.ResourceNotFoundException;
 
 public final class RestPreconditions {
 

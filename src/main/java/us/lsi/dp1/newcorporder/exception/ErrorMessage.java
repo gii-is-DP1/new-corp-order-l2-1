@@ -1,8 +1,8 @@
-package us.lsi.dp1.newcorporder.exceptions;
-
-import java.util.Date;
+package us.lsi.dp1.newcorporder.exception;
 
 import lombok.Getter;
+
+import java.util.Date;
 
 @Getter
 public class ErrorMessage {

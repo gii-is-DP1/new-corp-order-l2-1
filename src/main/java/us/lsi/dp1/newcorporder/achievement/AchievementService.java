@@ -5,7 +5,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import us.lsi.dp1.newcorporder.exceptions.ResourceNotFoundException;
+import us.lsi.dp1.newcorporder.exception.ResourceNotFoundException;
 import us.lsi.dp1.newcorporder.player.Player;
 import us.lsi.dp1.newcorporder.stats.MatchStatsService;
 import us.lsi.dp1.newcorporder.stats.player.PlayerMatchStatsService;

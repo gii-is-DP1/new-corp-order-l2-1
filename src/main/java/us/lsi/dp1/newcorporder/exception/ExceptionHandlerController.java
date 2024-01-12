@@ -1,4 +1,4 @@
-package us.lsi.dp1.newcorporder.exceptions;
+package us.lsi.dp1.newcorporder.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

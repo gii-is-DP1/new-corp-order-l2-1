@@ -18,8 +18,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import us.lsi.dp1.newcorporder.authority.Authority;
 import us.lsi.dp1.newcorporder.authority.AuthorityService;
 import us.lsi.dp1.newcorporder.configuration.SecurityConfiguration;
-import us.lsi.dp1.newcorporder.exceptions.AccessDeniedException;
-import us.lsi.dp1.newcorporder.exceptions.ResourceNotFoundException;
+import us.lsi.dp1.newcorporder.exception.AccessDeniedException;
+import us.lsi.dp1.newcorporder.exception.ResourceNotFoundException;
 
 import java.util.List;
 import java.util.Set;

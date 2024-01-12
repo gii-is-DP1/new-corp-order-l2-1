@@ -47,7 +47,7 @@ export function EditProfileTab({username, oldEmail, userData, navigate}) {
             .then(data => {
                 tokenService.updateLocalAccessToken(data.token);
                 tokenService.updateUsername(data.user.username);
-                navigate(`/user/${body.username}/lastMatches`);
+                navigate(`/user/${body.username || username}/lastMatches`);
             })
             .catch(error => {
                 const errorMessage = error.message || "An error occurred";

@@ -137,26 +137,32 @@ public class Match {
         Multiset<MatchPlayer> points = HashMultiset.create();
 
         for (Conglomerate conglomerate : Conglomerate.values()) {
-            List<MatchPlayer> participationRanking = rankPlayerParticipation(conglomerate)
-                .subList(0, players.size() > 2 ? 2 : 1);
-
-            int numTilesControlled = companyMatrix.countTilesControlledBy(conglomerate);
-
-            for (int i = 0; i < participationRanking.size(); i++) {
-                MatchPlayer player = participationRanking.get(i);
-                points.add(player, (2 - i) * numTilesControlled);
-
-                for (CompanyType companyType : player.getSecretObjectives()) {
-                    int numTilesControlledOfCompanyType = companyMatrix.countTilesControlledByWithCompany(conglomerate, companyType);
-                    points.add(player, 2 * numTilesControlledOfCompanyType);
-                }
-            }
+            points.addAll(this.calculateVictoryPoints(conglomerate));
         }
 
         for (MatchPlayer player : this.players.values()) {
             points.add(player, player.getHeadquarter().getConsultantsVP());
         }
 
+        return points;
+    }
+
+    private Multiset<MatchPlayer> calculateVictoryPoints(Conglomerate conglomerate) {
+        Multiset<MatchPlayer> points = HashMultiset.create();
+        int numTilesControlled = companyMatrix.countTilesControlledBy(conglomerate);
+
+        List<MatchPlayer> participationRanking = rankPlayerParticipation(conglomerate)
+            .subList(0, players.size() > 2 ? 2 : 1);
+
+        for (int i = 0; i < participationRanking.size(); i++) {
+            MatchPlayer player = participationRanking.get(i);
+            points.add(player, (2 - i) * numTilesControlled);
+
+            for (CompanyType companyType : player.getSecretObjectives()) {
+                int numTilesControlledOfCompanyType = companyMatrix.countTilesControlledByWithCompany(conglomerate, companyType);
+                points.add(player, 2 * numTilesControlledOfCompanyType);
+            }
+        }
         return points;
     }
 

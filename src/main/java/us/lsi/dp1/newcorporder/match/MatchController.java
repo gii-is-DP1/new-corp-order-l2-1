@@ -114,6 +114,10 @@ public class MatchController {
         responseCode = "200",
         description = "The requested match view"
     )
+    @ApiResponse(
+        responseCode = "403",
+        description = "You are not friends with all the players involved"
+    )
     @GetMapping("/{match}")
     public MatchView getMatch(@Authenticated Player player, @FromPathVariable Match match) {
         return matchService.getMatchView(player, match);

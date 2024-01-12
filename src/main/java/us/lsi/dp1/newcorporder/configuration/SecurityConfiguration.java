@@ -24,7 +24,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @EnableWebSecurity
 public class SecurityConfiguration {
 
-    private static final String ADMIN = "ADMIN";
+    public static final String ADMIN = "ADMIN";
     private final AuthEntryPointJwt unauthorizedHandler;
 
     public SecurityConfiguration(AuthEntryPointJwt unauthorizedHandler) {

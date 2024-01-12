@@ -91,6 +91,7 @@ public class Match {
     }
 
     public void addPlayer(MatchPlayer player) {
+        Preconditions.checkState(this.state == MatchState.WAITING, "match already started");
         Preconditions.checkState(this.players.size() < this.maxPlayers, "match is full");
         this.players.put(player.getPlayerId(), player);
     }

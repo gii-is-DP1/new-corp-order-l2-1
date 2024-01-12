@@ -1,13 +1,13 @@
 import {Title} from "../components/Title";
-import {black, dangerBackground, grayDarker, orange, white} from "../util/Colors";
+import {dangerBackground, gray, grayDarker, orange, white} from "../util/Colors";
 import FormInput from "../components/FormInput";
 import {Text} from "../components/Text";
 import Button, {ButtonType} from "../components/Button";
 import React from "react";
 import fetchAuthenticatedWithBody from "../util/fetchAuthenticatedWithBody";
 import {useState} from "react";
-import {useNavigate} from "react-router-dom";
 import tokenService from "../services/token.service";
+import {PressableText} from "../components/PressableText";
 
 export function EditProfileTab({username, oldEmail, userData, navigate}) {
     const [message, setMessage] = useState(null);
@@ -47,7 +47,6 @@ export function EditProfileTab({username, oldEmail, userData, navigate}) {
             setMessage("You must write your password to confirm the changes");
             return;
         }
-        console.log(body);
         await fetchAuthenticatedWithBody(`/api/v1/users/${username}`, "PUT", body)
             .then(response => {
                 if (response.status === 200) return response.json();
@@ -70,6 +69,7 @@ export function EditProfileTab({username, oldEmail, userData, navigate}) {
             <Title style={{color: white, fontSize: '40px'}}>
                 Edit Profile
             </Title>
+
             <form style={{display: 'flex', flexDirection: 'column', width: "600px", gap: "8px"}}
                   onSubmit={(e) => {
                       e.preventDefault();
@@ -104,12 +104,20 @@ export function EditProfileTab({username, oldEmail, userData, navigate}) {
                            name={"password"}
                            type="password"
                            placeholder={"Write here your password to confirm the changes"}
-                            textInputStyle={{backgroundColor: grayDarker}}/>
+                           textInputStyle={{backgroundColor: grayDarker}}/>
 
                 {message && <Text style={{textTransform: "none", color: "red"}}>{message}</Text>}
+                <div style={{alignItems: "none", display: "flex"}}>
+                    <PressableText
+                        style={{color: gray, fontSize: "18px", textTransform: "none", textDecoration: "underline"}}
+                        onClick={() => navigate(`/user/${username}/editPassword`)}>
+                        Change Password
+                    </PressableText>
+                </div>
                 <div style={buttonStyle}>
                     <Button buttonType={ButtonType.primary} type="submit">Confirm Changes</Button>
-                    <Button buttonType={ButtonType.danger} onClick={() => navigate(`/user/${username}/lastMatches`)}>Cancel</Button>
+                    <Button buttonType={ButtonType.danger}
+                            onClick={() => navigate(`/user/${username}/lastMatches`)}>Cancel</Button>
                 </div>
             </form>
         </div>

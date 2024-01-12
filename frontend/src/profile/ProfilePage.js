@@ -1,5 +1,5 @@
 import AppNavbar from "../AppNavbar";
-import {black, grayDarker, white} from "../util/Colors";
+import {black, gray, grayDarker, white} from "../util/Colors";
 import ProfilePicture from "../components/ProfilePicture";
 import {Title} from "../components/Title";
 import Button, {ButtonType} from "../components/Button";
@@ -13,6 +13,7 @@ import {FriendsTab} from "./FriendsTab";
 import {LastMatchesTab} from "./LastMatchesTab";
 import {AchievementsTab} from "./achievement/AchievementsTab";
 import {EditProfileTab} from "./EditProfileTab";
+import {ChangePasswordTab} from "./ChangePasswordTab";
 
 export function ProfilePage() {
     const [userData, setUserData] = useState(null)
@@ -121,13 +122,20 @@ export function ProfilePage() {
                     {isMe() && <div style={{display: "flex", flexDirection: "row", gap: "5px"}}>
                         <Button onClick={() => navigate(`/user/${userData.username}/edit`)}
                                 buttonType={ButtonType.primary}>
-                            Edit
+                            Edit  Profile
                         </Button>
                         <Button onClick={() => logout()}
                                 buttonType={ButtonType.danger}>
                             Logout
                         </Button>
                     </div>}
+                    <div style={{alignItems: "none", display: "flex"}}>
+                        <PressableText
+                            style={{color: gray, fontSize: "18px", textTransform: "none", textDecoration: "underline"}}
+                            onClick={() => navigate(`/user/${username}/editPassword`)}>
+                            Change Password
+                        </PressableText>
+                    </div>
                     <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
                         <Text style={{color: grayDarker}}>{userStats.totalMatches} matches played</Text>
                         <Text style={{color: grayDarker}}>{userStats.wins} victories</Text>
@@ -183,6 +191,15 @@ export function ProfilePage() {
                                              navigate={navigate}
                                              oldEmail={userData.email}
 
+
+                            />}
+
+                        {select === "editPassword" &&
+                            <ChangePasswordTab userData={userData}
+                                             username={username}
+                                             navigate={navigate}
+                                             oldEmail={userData.email}
+                                             editPassword={true}
 
                             />}
 

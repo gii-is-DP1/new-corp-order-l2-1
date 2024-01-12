@@ -30,25 +30,20 @@ export default function Match() {
         try {
             setMatchData(await fetchAuthenticated(`/api/v1/matches/${id}`, "GET")
                 .then(async response => await response.json()));
-            return matchData;
         } catch (error) {
             console.log(error.message)
         }
     };
 
     useEffect(() => {
-        fetchMatchData().then(r => console.log(r))
+        fetchMatchData()
         fetchPropic()
-    }, []);
-
-
-    useEffect(
-        () => {
-            if (matchData != null && matchData.turn !== tokenService.getUser().id)
-                console.log("a");
-               // setInterval(() => fetchMatchData(), 5000);
+        var interval;
+        if (matchData != null && matchData.turn !== tokenService.getUser().id) {
+            interval = setInterval(() => fetchMatchData(), 5000);
         }
-    )
+        return () => clearInterval(interval);
+    }, []);
 
     const isLoading = matchData == null || propic == null;
     if (isLoading) {

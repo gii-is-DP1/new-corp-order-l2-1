@@ -55,7 +55,6 @@ export default function Selector({
                 )}
 
             </div>
-
             <Button buttonType={ButtonType.primary}
                     disabled={!canConfirm(selection, selectedElements)}
                     onClick={() => onConfirm(selectedElements)}
@@ -67,7 +66,7 @@ export default function Selector({
                           disabled={selectedElements.length > 0}
                           onClick={() => onSkip([])}
                 >
-                    Confirm
+                    Skip
                 </Button>
                 : <></>
             }

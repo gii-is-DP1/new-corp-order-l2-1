@@ -16,6 +16,7 @@ export const conglomerateContainerStyle = {
     display: "flex",
 }
 
+
 export function pickOneCard(from, onConfirm) {
     return <Selector title={"Pick a card"}
                      selection={from}
@@ -23,6 +24,7 @@ export function pickOneCard(from, onConfirm) {
                      changeSelectableItems={selectQuantity(1)}
                      onConfirm={onConfirm}
                      containerStyle={conglomerateContainerStyle}
+                     key={{onConfirm}}
     />;
 }
 
@@ -33,6 +35,7 @@ export function pickOneorTwoCards(from, onConfirm) {
                      changeSelectableItems={selectQuantity(2)}
                      onConfirm={onConfirm}
                      containerStyle={conglomerateContainerStyle}
+                     key={{onConfirm}}
     />;
 }
 
@@ -43,16 +46,20 @@ export function pickTwoCards(from, onConfirm) {
                      changeSelectableItems={selectQuantity(2)}
                      onConfirm={onConfirm}
                      containerStyle={conglomerateContainerStyle}
+                     key={{onConfirm}}
     />;
 }
 
-export function optionallyPickCard(from, onConfirm) {
+export function optionallyPickCard(from, onConfirm, onSkip) {
     return <Selector title={"You may pick a card"}
                      selection={from}
-                     canConfirm={selectAtLeastOneOrZero}
+                     canConfirm={selectAtLeastOne}
                      changeSelectableItems={selectQuantity(1)}
                      onConfirm={onConfirm}
                      containerStyle={conglomerateContainerStyle}
+                     canSkip={true}
+                     onSkip={onSkip}
+                     key={{onConfirm}}
     />;
 }
 
@@ -63,7 +70,54 @@ export function pickManyConglomeratesOfTheSameColor(from, onConfirm) {
                      changeSelectableItems={onlySelectOfSameColor}
                      onConfirm={onConfirm}
                      containerStyle={conglomerateContainerStyle}
+                     key={{onConfirm}}
     />
+}
+
+
+
+export function pickCompany(from, onConfirm, n) {
+    return <CompanySelector
+        title={"Pick Company"}
+        selection={from}
+        canConfirm={selectAtLeastOne}
+        changeSelectableItems={selectQuantity(n)}
+        onConfirm={onConfirm}
+        key={{onConfirm}}
+    />;
+}
+
+export function pickOneOrTwoCompanies(from, onConfirm) {
+    return <CompanySelector
+        title={"Pick one or two Companies"}
+        selection={from}
+        canConfirm={selectAtLeastOneOrTwo}
+        changeSelectableItems={onlySelectOfSameColor}
+        onConfirm={onConfirm}
+        key={{onConfirm}}
+    />;
+}
+
+export function pickTwoCompanies(from, onConfirm) {
+    return <CompanySelector
+        title={"Pick one or two Companies"}
+        selection={from}
+        canConfirm={selectAtLeastTwo}
+        changeSelectableItems={selectQuantity(2)}
+        onConfirm={onConfirm}
+        key={{onConfirm}}
+    />;
+}
+
+export function pickOrthogonallyAdjacentCompanyTiles(from, onConfirm) {
+    return <CompanySelector
+        title={"Pick orthogonally adjacent Companies"}
+        selection={from}
+        canConfirm={selectAtLeastTwo}
+        changeSelectableItems={selectOrthogonallyAdjacentTiles}
+        onConfirm={onConfirm}
+        key={{onConfirm}}
+    />;
 }
 
 function CompanySelector({title, selection, canConfirm, changeSelectableItem, onConfirm}) {
@@ -80,46 +134,7 @@ function CompanySelector({title, selection, canConfirm, changeSelectableItem, on
                          flexShrink: 1,
                          maxWidth: "80vh"
                      }}
-    />;
-}
-
-export function pickCompany(from, onConfirm, n) {
-    return <CompanySelector
-        title={"Pick Company"}
-        selection={from}
-        canConfirm={selectAtLeastOne}
-        changeSelectableItems={selectQuantity(n)}
-        onConfirm={onConfirm}
-    />;
-}
-
-export function pickOneOrTwoCompanies(from, onConfirm) {
-    return <CompanySelector
-        title={"Pick one or two Companies"}
-        selection={from}
-        canConfirm={selectAtLeastOneOrTwo}
-        changeSelectableItems={onlySelectOfSameColor}
-        onConfirm={onConfirm}
-    />;
-}
-
-export function pickTwoCompanies(from, onConfirm) {
-    return <CompanySelector
-        title={"Pick one or two Companies"}
-        selection={from}
-        canConfirm={selectAtLeastTwo}
-        changeSelectableItems={selectQuantity(2)}
-        onConfirm={onConfirm}
-    />;
-}
-
-export function pickOrthogonallyAdjacentCompanyTiles(from, onConfirm) {
-    return <CompanySelector
-        title={"Pick orthogonally adjacent Companies"}
-        selection={from}
-        canConfirm={selectAtLeastTwo}
-        changeSelectableItems={selectOrthogonallyAdjacentTiles}
-        onConfirm={onConfirm}
+                     key={{onConfirm}}
     />;
 }
 
@@ -130,5 +145,6 @@ export function pickConglomeratesToDiscard(from, onConfirm) {
                      changeSelectableItems={selectUntilNRemain(6)}
                      onConfirm={onConfirm}
                      containerStyle={conglomerateContainerStyle}
+                     key={{onConfirm}}
     />;
 }

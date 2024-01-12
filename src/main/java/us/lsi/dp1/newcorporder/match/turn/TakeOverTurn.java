@@ -53,12 +53,12 @@ public class TakeOverTurn extends Turn {
 
     private boolean isValidConsultant(ConsultantType consultant) {
         return consultant == null ||
-               consultant == ConsultantType.DEAL_MAKER ||
+               consultant == ConsultantType.DEALMAKER ||
                consultant == ConsultantType.MILITARY_CONTRACTOR;
     }
 
     private void checkValidConsultant(ConsultantType consultantType) {
-        if (consultantType == ConsultantType.DEAL_MAKER && match.getGeneralSupply().getConglomerateSharesLeftInDeck() < 2) {
+        if (consultantType == ConsultantType.DEALMAKER && match.getGeneralSupply().getConglomerateSharesLeftInDeck() < 2) {
             throw new IllegalStateException("there are not enough shares left in deck to use the deal maker consultant");
         }
     }
@@ -158,7 +158,7 @@ public class TakeOverTurn extends Turn {
     }
 
     private void endTurn() {
-        if (this.isStateValidForDealMaker() && useConsultantRequest.getConsultant() == ConsultantType.DEAL_MAKER) {
+        if (this.isStateValidForDealMaker() && useConsultantRequest.getConsultant() == ConsultantType.DEALMAKER) {
             List<Conglomerate> shares = match.getGeneralSupply().takeConglomerateSharesFromDeck(2);
             shares.forEach(share -> turnSystem.getCurrentPlayer().addShareToHand(share));
 

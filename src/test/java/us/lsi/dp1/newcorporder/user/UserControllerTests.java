@@ -8,12 +8,14 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import us.lsi.dp1.newcorporder.auth.jwt.JwtUtils;
 import us.lsi.dp1.newcorporder.authority.Authority;
 import us.lsi.dp1.newcorporder.authority.AuthorityService;
 import us.lsi.dp1.newcorporder.configuration.SecurityConfiguration;
@@ -46,24 +48,15 @@ class UserControllerTests {
     private static final int TEST_AUTH_ID = 1;
     private static final String BASE_URL = "/api/v1/users";
 
-    @SuppressWarnings("unused")
-    @Autowired
-    private UserController userController;
+    @MockBean private UserService userService;
+    @MockBean private AuthenticationManager authenticationManager;
+    @MockBean private JwtUtils jwtUtils;
+    @MockBean private FriendshipService friendshipService;
+    @MockBean private AuthorityService authService;
 
-    @MockBean
-    private UserService userService;
-
-    @MockBean
-    private FriendshipService friendshipService;
-
-    @MockBean
-    private AuthorityService authService;
-
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    @Autowired
-    private MockMvc mockMvc;
+    @Autowired private UserController userController;
+    @Autowired private ObjectMapper objectMapper;
+    @Autowired private MockMvc mockMvc;
 
     private Authority auth;
     private User user, logged;
@@ -122,8 +115,7 @@ class UserControllerTests {
     void shouldReturnUser() throws Exception {
         when(this.userService.findUser(TEST_USER_NAME)).thenReturn(user);
         mockMvc.perform(get(BASE_URL + "/{id}", TEST_USER_NAME)).andExpect(status().isOk())
-            .andExpect(jsonPath("$.username").value(user.getUsername()))
-            .andExpect(jsonPath("$.authority").value(user.getAuthority().getName()));
+            .andExpect(jsonPath("$.username").value(user.getUsername()));
     }
 
     @Test

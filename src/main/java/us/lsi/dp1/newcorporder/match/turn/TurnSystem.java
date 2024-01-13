@@ -32,7 +32,7 @@ public class TurnSystem {
     }
 
     public void selectAction(Action action) {
-        Preconditions.checkState(this.currentTurn != null, "turn in progress");
+        Preconditions.checkState(this.currentTurn == null, "turn in progress");
         Preconditions.checkState(action != Action.PLOT || this.match.getGeneralSupply().getOpenDisplay().size() > 1,
             "cannot select plot action because there are not enough shares in the open display");
 

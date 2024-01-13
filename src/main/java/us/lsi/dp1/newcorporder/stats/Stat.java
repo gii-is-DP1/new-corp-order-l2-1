@@ -1,4 +1,4 @@
-package us.lsi.dp1.newcorporder.achievement;
+package us.lsi.dp1.newcorporder.stats;
 
 public enum Stat {
     GAMES_LOST,

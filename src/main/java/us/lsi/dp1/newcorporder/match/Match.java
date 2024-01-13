@@ -65,7 +65,7 @@ public class Match {
     }
 
     public void start() {
-        Preconditions.checkState(state == MatchState.WAITING, "match was already started");
+        Preconditions.checkState(state == MatchState.WAITING, "match already started");
         Preconditions.checkState(players.size() > 1, "not enough players to start the match");
 
         generalSupply.init(mode, players.size());
@@ -91,6 +91,7 @@ public class Match {
     }
 
     public void addPlayer(MatchPlayer player) {
+        Preconditions.checkState(this.state == MatchState.WAITING, "match already started");
         Preconditions.checkState(this.players.size() < this.maxPlayers, "match is full");
         this.players.put(player.getPlayerId(), player);
     }
@@ -136,26 +137,32 @@ public class Match {
         Multiset<MatchPlayer> points = HashMultiset.create();
 
         for (Conglomerate conglomerate : Conglomerate.values()) {
-            List<MatchPlayer> participationRanking = rankPlayerParticipation(conglomerate)
-                .subList(0, players.size() > 2 ? 2 : 1);
-
-            int numTilesControlled = companyMatrix.countTilesControlledBy(conglomerate);
-
-            for (int i = 0; i < participationRanking.size(); i++) {
-                MatchPlayer player = participationRanking.get(i);
-                points.add(player, (2 - i) * numTilesControlled);
-
-                for (CompanyType companyType : player.getSecretObjectives()) {
-                    int numTilesControlledOfCompanyType = companyMatrix.countTilesControlledByWithCompany(conglomerate, companyType);
-                    points.add(player, 2 * numTilesControlledOfCompanyType);
-                }
-            }
+            points.addAll(this.calculateVictoryPoints(conglomerate));
         }
 
         for (MatchPlayer player : this.players.values()) {
             points.add(player, player.getHeadquarter().getConsultantsVP());
         }
 
+        return points;
+    }
+
+    private Multiset<MatchPlayer> calculateVictoryPoints(Conglomerate conglomerate) {
+        Multiset<MatchPlayer> points = HashMultiset.create();
+        int numTilesControlled = companyMatrix.countTilesControlledBy(conglomerate);
+
+        List<MatchPlayer> participationRanking = rankPlayerParticipation(conglomerate)
+            .subList(0, players.size() > 2 ? 2 : 1);
+
+        for (int i = 0; i < participationRanking.size(); i++) {
+            MatchPlayer player = participationRanking.get(i);
+            points.add(player, (2 - i) * numTilesControlled);
+
+            for (CompanyType companyType : player.getSecretObjectives()) {
+                int numTilesControlledOfCompanyType = companyMatrix.countTilesControlledByWithCompany(conglomerate, companyType);
+                points.add(player, 2 * numTilesControlledOfCompanyType);
+            }
+        }
         return points;
     }
 

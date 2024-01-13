@@ -1,6 +1,5 @@
 import React from "react";
 import {Route, Routes} from "react-router-dom";
-import jwt_decode from "jwt-decode";
 import {ErrorBoundary} from "react-error-boundary";
 import tokenService from "./services/token.service";
 import SwaggerDocs from "./public/swagger";
@@ -14,7 +13,8 @@ import Login from "./auth/login";
 import Register from "./auth/register";
 import {EditAchievements} from "./admin/EditAchievement";
 import {MatchStats} from "./stats/MatchStats";
-import {AdminMetrics} from "./admin/AdminMetrics";
+import {Metrics} from "./stats/Metrics";
+import {Rankings} from "./stats/Rankings";
 
 function ErrorFallback({error, resetErrorBoundary}) {
     return (
@@ -43,7 +43,9 @@ function App() {
 
                         <Route path="/user/:username/:select?" element={<ProfilePage/>}/>
 
-                        <Route path="/admin/metrics" element={<AdminMetrics/>}/>
+                        <Route path="/metrics" element={<Metrics/>}/>
+                        <Route path="/rankings/:stat?" element={<Rankings/>}/>
+
                         <Route path="/admin/matches" element={<AdminMatches/>}/>
                         <Route path="/admin/moderation" element={<AdminModeration/>}/>
                         <Route path="/admin/achievements" element={<AdminAchievements/>}/>
@@ -55,12 +57,6 @@ function App() {
                         {["/", "/login"].map(path => <Route path={path} element={<Login/>}/>)}
                         <Route path="/register" element={<Register/>}/>
                     </>}
-                    <Route path="/" element={<MainPage/>}/>
-                    <Route path="/match/:id" element={<Match/>}/>
-                    <Route path="/docs" element={<SwaggerDocs/>}/>
-                    <Route path="/user/:username/:select?" element={<ProfilePage/>}/>
-                    <Route path="/login" element={<Login/>}/>
-                    <Route path="/register" element={<Register/>}/>
                 </Routes>
             </ErrorBoundary>
         </>

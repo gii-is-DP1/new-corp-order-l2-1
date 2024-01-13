@@ -6,7 +6,7 @@ import {black, white} from "../util/Colors";
 import {Subtitle} from "../components/Subtitle";
 import {Text} from "../components/Text";
 
-export function AdminMetrics() {
+export function Metrics() {
     const [matchMetrics, setMatchMetrics] = useState(null)
 
     const fetchMatchStats = async () => {
@@ -111,7 +111,7 @@ export function AdminMetrics() {
                         marginTop: "25px",
                         marginBottom: "10px"
                     }}>
-                        Average players per match: {matchMetrics.averageMaxPlayers}
+                        Average players per match: {matchMetrics.averageMaxPlayers.toFixed(2)}
                     </Subtitle>
                 </div>
             </section>

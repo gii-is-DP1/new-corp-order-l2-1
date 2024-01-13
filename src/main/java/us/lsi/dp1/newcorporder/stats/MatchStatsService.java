@@ -2,8 +2,7 @@ package us.lsi.dp1.newcorporder.stats;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import us.lsi.dp1.newcorporder.exceptions.ResourceNotFoundException;
+import us.lsi.dp1.newcorporder.exception.ResourceNotFoundException;
 import us.lsi.dp1.newcorporder.match.Match;
 import us.lsi.dp1.newcorporder.match.view.MatchSummary;
 import us.lsi.dp1.newcorporder.player.PlayerService;
@@ -65,12 +64,4 @@ public class MatchStatsService {
             .timesTakenOver(actionMetrics.timesTakenOver())
             .build();
     }
-    public List<MatchStatsView> getAllStats() {
-        return matchStatsRepository.findAll().stream()
-            .map(MatchStatsView::create)
-            .toList();
-    }
-
-
-
 }

@@ -24,7 +24,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @EnableWebSecurity
 public class SecurityConfiguration {
 
-    private static final String ADMIN = "ADMIN";
+    public static final String ADMIN = "ADMIN";
     private final AuthEntryPointJwt unauthorizedHandler;
 
     public SecurityConfiguration(AuthEntryPointJwt unauthorizedHandler) {
@@ -54,6 +54,7 @@ public class SecurityConfiguration {
 
                 .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/v1/players/{username}/stats")).authenticated()
                 .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/v1/players/{username}/lastMatches")).authenticated()
+                .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/v1/players/ranking")).authenticated()
 
                 .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/v1/matches")).hasAuthority(ADMIN)
                 .requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/matches/**")).authenticated()

@@ -7,7 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import us.lsi.dp1.newcorporder.authority.Authority;
 import us.lsi.dp1.newcorporder.authority.AuthorityService;
-import us.lsi.dp1.newcorporder.exceptions.ResourceNotFoundException;
+import us.lsi.dp1.newcorporder.exception.ResourceNotFoundException;
 
 import java.util.Collection;
 import java.util.List;

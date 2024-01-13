@@ -33,6 +33,4 @@ public interface MatchStatsRepository extends CrudRepository<MatchStats, Integer
         """)
     MatchMetrics calculateMatchMetrics();
 
-    @Override
-    List<MatchStats> findAll();
 }

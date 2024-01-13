@@ -21,25 +21,25 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.bind.DefaultValue;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-import us.lsi.dp1.newcorporder.auth.ApplicationUserDetails;
 import us.lsi.dp1.newcorporder.auth.jwt.JwtUtils;
 import us.lsi.dp1.newcorporder.auth.payload.response.MessageResponse;
-import us.lsi.dp1.newcorporder.exceptions.AccessDeniedException;
+import us.lsi.dp1.newcorporder.exception.AccessDeniedException;
 import us.lsi.dp1.newcorporder.friendship.FriendshipService;
 import us.lsi.dp1.newcorporder.user.payload.request.EditPasswordRequest;
 import us.lsi.dp1.newcorporder.user.payload.request.EditProfileRequest;
 import us.lsi.dp1.newcorporder.user.payload.response.UserView;
 import us.lsi.dp1.newcorporder.util.RestPreconditions;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,6 +54,7 @@ class UserController {
     private final FriendshipService friendshipService;
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
+
     @Autowired
     public UserController(UserService userService, FriendshipService friendshipService, AuthenticationManager authenticationManager, JwtUtils jwtUtils) {
         this.userService = userService;
@@ -72,8 +73,9 @@ class UserController {
         description = "All users"
     )
     @GetMapping()
-    public List<UserView> findAll(@RequestParam(required = false) String username) {
-         return userService.getAllUsers(username);
+    public List<UserView> findAll(@RequestParam(required = false) @DefaultValue("") String filter,
+                                  @PageableDefault Pageable pageable) {
+        return userService.getAllUsers(filter, pageable);
     }
 
     @Operation(
@@ -90,7 +92,7 @@ class UserController {
         description = "User not found"
     )
     @GetMapping("/{username}")
-    public UserView findById(@PathVariable String username) {
+    public UserView findByName(@PathVariable String username) {
         User user = userService.findUser(username);
         RestPreconditions.checkNotNull(user, "User", "username", username);
 

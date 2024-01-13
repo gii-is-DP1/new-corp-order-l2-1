@@ -34,7 +34,7 @@ export default function Match() {
             matchData = (await fetchAuthenticated(`/api/v1/matches/${id}`, "GET")
                 .then(async response => await response.json()));
 
-            console.log(matchData);
+            //console.log(matchData);
 
             const isPLaying = matchData.state === "PLAYING";
             if (wasEmpty || !isPLaying || (wasWaiting && isPLaying) || (matchData.turn !== null && matchData.turn.player !== tokenService.getUser().id)) {

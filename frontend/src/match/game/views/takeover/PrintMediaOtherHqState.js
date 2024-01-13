@@ -8,7 +8,7 @@ function PrintMediaOtherHqPicker() {
     const context = useContext(StateContext);
     const state = context.state;
     return pickOneCard(context.opponents.components, (selected) => {
-        state.takeover.ability.printMedia.otherHq = context.opponents.data[selected[0]].hq;
+        state.takeover.ability.printMedia.otherHq = context.opponents.values[selected[0]].hq;
         context.update();
     })
 

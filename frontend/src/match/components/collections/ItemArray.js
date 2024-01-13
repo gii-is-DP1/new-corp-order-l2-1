@@ -1,12 +1,12 @@
 export class ItemArray {
     constructor(data, displayFunction) {
-        this.data = data;
+        this.values = data;
         this.displayFunction = displayFunction;
         this.#setComponents();
     }
 
     #setComponents() {
-        this.components = this.data.map(this.displayFunction)
+        this.components = this.values.map(this.displayFunction)
     }
 }
 

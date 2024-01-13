@@ -12,7 +12,7 @@ function SocialMediaHqPicker() {
     players[0] = <HQViewer/>;
     players = players.concat(context.opponents.components);
     return pickOneCard(players, (selected) => {
-        state.takeover.ability.socialMedia.hq = selected[0] === 0 ? state.game.player  : context.opponents.data[selected[0]-1];
+        state.takeover.ability.socialMedia.hq = selected[0] === 0 ? state.game.player  : context.opponents.values[selected[0]-1];
         context.update();
     })
 

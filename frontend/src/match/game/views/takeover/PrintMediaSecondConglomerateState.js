@@ -12,7 +12,7 @@ function PrintMediaSecondConglomeratePicker() {
     return pickOneCard(conglomerates.components, (selected) => {
         const index = selected[0];
         state.takeover.ability.printMedia.otherIsRotated = state.takeover.ability.printMedia.otherHq.rotatedConglomerates.length > index;
-        state.takeover.ability.printMedia.otherConglomerate = conglomerates.data[index];
+        state.takeover.ability.printMedia.otherConglomerate = conglomerates.values[index];
         //TODO MAKE BETTER BUT FOR THE TIME BEING
         if(state.takeover.ability.printMedia.yourIsRotated) {
                 const index = state.game.player.hq.rotatedConglomerates.indexOf(state.takeover.ability.printMedia.yourConglomerate);

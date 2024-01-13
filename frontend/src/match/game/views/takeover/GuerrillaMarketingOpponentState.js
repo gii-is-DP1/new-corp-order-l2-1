@@ -8,7 +8,7 @@ function GuerrillaMarketingOpponentPicker() {
     const context = useContext(StateContext);
     const state = context.state;
     return pickOneCard(context.opponents.components, (selected) => {
-        state.takeover.ability.guerrillaMarketing.opponent = context.opponents.data[selected[0]];
+        state.takeover.ability.guerrillaMarketing.opponent = context.opponents.values[selected[0]];
         context.update();
     })
 

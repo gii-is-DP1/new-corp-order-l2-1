@@ -129,13 +129,13 @@ export function ProfilePage() {
                             Logout
                         </Button>
                     </div>}
-                    <div style={{alignItems: "none", display: "flex"}}>
+                    {isMe() && <div style={{alignItems: "none", display: "flex"}}>
                         <PressableText
                             style={{color: gray, fontSize: "18px", textTransform: "none", textDecoration: "underline"}}
                             onClick={() => navigate(`/user/${username}/editPassword`)}>
                             Change Password
                         </PressableText>
-                    </div>
+                    </div>}
                     <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
                         <Text style={{color: grayDarker}}>{userStats.totalMatches} matches played</Text>
                         <Text style={{color: grayDarker}}>{userStats.wins} victories</Text>
@@ -144,7 +144,7 @@ export function ProfilePage() {
                     </div>
                 </section>
                 <section style={columnStyle}>
-                    {select !== "edit" && select !==  "editPassword" && <div style={{display: "flex", gap: "25px"}}>
+                    {select !== "edit" && select !== "editPassword" && <div style={{display: "flex", gap: "25px"}}>
                         <PressableText style={{color: white}}
                                        underlined={select === "lastMatches"}
                                        onClick={() => navigate(`/user/${userData.username}/lastMatches`)}>
@@ -187,19 +187,19 @@ export function ProfilePage() {
 
                         {select === "edit" &&
                             <EditProfileTab userData={userData}
-                                             username={username}
-                                             navigate={navigate}
-                                             oldEmail={userData.email}
+                                            username={username}
+                                            navigate={navigate}
+                                            oldEmail={userData.email}
 
 
                             />}
 
                         {select === "editPassword" &&
                             <ChangePasswordTab userData={userData}
-                                             username={username}
-                                             navigate={navigate}
-                                             oldEmail={userData.email}
-                                             editPassword={true}
+                                               username={username}
+                                               navigate={navigate}
+                                               oldEmail={userData.email}
+                                               editPassword={true}
 
                             />}
 

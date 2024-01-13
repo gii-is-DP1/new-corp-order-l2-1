@@ -25,6 +25,7 @@ export function FriendsTab({userData, navigate, fetchUserData, isMe, rowListStyl
 
     useEffect(() => {
         fetchUserFriends()
+        setInterval(() => fetchUserFriends(), 5000)
     }, []);
 
     async function sendFriendRequest(value) {

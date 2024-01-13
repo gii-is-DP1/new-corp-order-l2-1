@@ -31,7 +31,7 @@ export function AdminModeration() {
 
     useEffect(() => {
         fetchUsersData()
-    }, [filter]);
+    }, [filter, page]);
 
     const fetchUsersData = async () => {
         try {

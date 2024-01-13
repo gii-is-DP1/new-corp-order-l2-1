@@ -15,6 +15,18 @@ VALUES (1, '2020-01-01', 1, '2023-01-01', 'johndoe@example.com', 'JohnDoe',
        (2, '2023-05-01', 5, '2023-12-31', 'alice@example.com', 'Alice',
         '$2a$12$19.5GDidvCHN4go6jO9dde918jIYONlxe01RgKh5USM3Yd/lFzeI2', null),
        (2, '2023-06-01', 6, '2023-12-31', 'bob@example.com', 'Bob',
+        '$2a$12$19.5GDidvCHN4go6jO9dde918jIYONlxe01RgKh5USM3Yd/lFzeI2', null),
+       (2, '2020-04-01', 7, '2023-12-31', 'emily@example.com', 'Emily',
+        '$2a$12$19.5GDidvCHN4go6jO9dde918jIYONlxe01RgKh5USM3Yd/lFzeI2', null),
+       (2, '2020-05-01', 8, '2023-12-31', 'peter@example.com', 'Peter',
+        '$2a$12$19.5GDidvCHN4go6jO9dde918jIYONlxe01RgKh5USM3Yd/lFzeI2', null),
+       (2, '2020-06-01', 9, '2023-12-31', 'susan@example.com', 'Susan',
+        '$2a$12$19.5GDidvCHN4go6jO9dde918jIYONlxe01RgKh5USM3Yd/lFzeI2', null),
+       (2, '2023-07-01', 10, '2023-12-31', 'michael@example.com', 'Michael',
+        '$2a$12$19.5GDidvCHN4go6jO9dde918jIYONlxe01RgKh5USM3Yd/lFzeI2', null),
+       (2, '2023-08-01', 11, '2023-12-31', 'olivia@example.com', 'Olivia',
+        '$2a$12$19.5GDidvCHN4go6jO9dde918jIYONlxe01RgKh5USM3Yd/lFzeI2', null),
+       (2, '2023-09-01', 12, '2023-12-31', 'william@example.com', 'William',
         '$2a$12$19.5GDidvCHN4go6jO9dde918jIYONlxe01RgKh5USM3Yd/lFzeI2', null);
 
 INSERT INTO players(id, users)
@@ -23,7 +35,13 @@ VALUES (1, 1),
        (3, 3),
        (4, 4),
        (5, 5),
-       (6, 6);
+       (6, 6),
+       (7, 7),
+       (8, 8),
+       (9, 9),
+       (10, 10),
+       (11, 11),
+       (12, 12);
 
 INSERT INTO notifications(id, user_id, state, sent_at)
 VALUES (1, 1, 1, '2023-01-01 00:00:00'),
@@ -123,7 +141,19 @@ VALUES (1, 1, 2, '2023-01-02 00:00:02'),
        (3, 1, 3, '2023-01-01 00:00:01'),
        (4, 3, 1, '2023-04-01 00:00:01'),
        (5, 2, 4, '2023-04-01 00:00:01'),
-       (6, 4, 2, '2023-05-01 00:00:02');
+       (6, 4, 2, '2023-05-01 00:00:02'),
+       (7, 5, 4, '2023-05-01 00:00:01'),
+       (8, 4, 5, '2023-05-01 00:00:01'),
+       (9, 6, 4, '2023-05-01 00:00:01'),
+       (10, 4, 6, '2023-05-01 00:00:01'),
+       (11, 7, 4, '2023-06-01 00:00:01'),
+       (12, 4, 7, '2023-06-01 00:00:01'),
+       (13, 8, 4, '2023-06-01 00:00:01'),
+       (14, 4, 8, '2023-06-01 00:00:01'),
+       (15, 9, 4, '2023-07-01 00:00:01'),
+       (16, 4, 9, '2023-07-01 00:00:01'),
+       (17, 10, 1, '2023-07-01 00:00:01'),
+       (18, 1, 10, '2023-07-01 00:00:01');
 
 INSERT INTO friendship_requests(id, sender_id, receiver_id, sent_at)
 VALUES (1, 2, 3, '2023-01-01 00:00:01'),

@@ -50,7 +50,6 @@ const AppNavbar = () => {
                     {link: '/metrics', text: 'Metrics'},
                     {link: '/admin/matches', text: 'Matches'},
                     {link: '/admin/moderation', text: 'Moderation'},
-                    {link: '/admin/achievements', text: 'Achievements'},
                     {link: `/user/${username}`, isProfilePicture: true},
                 ]);
             }
@@ -59,7 +58,6 @@ const AppNavbar = () => {
                     {link: '/rankings/games_won', text: 'Rankings'},
                     {link: '/metrics', text: 'Metrics'},
                     {link: `/user/${username}/friends`, text: 'Friends'},
-                    {link: `/user/${username}/achievements`, text: 'Achievements'},
                     {link: `/user/${username}`, isProfilePicture: true},
                     {link: '', text: 'Play now', isButton: true},
                 ]);

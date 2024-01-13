@@ -40,6 +40,7 @@ export function PlayCard({
 
     useEffect(() => {
         fetchUserFriends()
+        setInterval(() => fetchUserFriends(), 5000)
     }, [])
 
     if (!userFriends) {

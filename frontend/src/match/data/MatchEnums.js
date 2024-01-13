@@ -15,7 +15,7 @@ export const conglomerate = { //TODO make color a gradient
     MEGAMEDIA: {name: "Megamedia", color: "#f74c1e", src: "/Images/Conglomerates/megamedia.png"},
 }
 
-export function GetConglomerateName(value)
+export function getConglomerateName(value)
 {
     return Object.keys(conglomerate).find(key => conglomerate[key] === value);
 }

@@ -6,6 +6,7 @@ import lombok.Data;
 import us.lsi.dp1.newcorporder.match.Match;
 import us.lsi.dp1.newcorporder.match.MatchMode;
 import us.lsi.dp1.newcorporder.match.MatchState;
+import us.lsi.dp1.newcorporder.match.chat.Message;
 import us.lsi.dp1.newcorporder.match.company.CompanyTile;
 import us.lsi.dp1.newcorporder.match.player.MatchPlayer;
 
@@ -26,7 +27,8 @@ public class MatchView {
             .maxPlayers(match.getMaxPlayers())
             .host(match.getHost() != null ? match.getHost().getPlayerId() : null)
             .state(match.getState())
-            .opponents(buildOpponents(match, player));
+            .opponents(buildOpponents(match, player))
+            .messages(match.getChat().getMessages());
 
         if (match.getState() == MatchState.PLAYING) {
             builder
@@ -56,6 +58,8 @@ public class MatchView {
     private final CompanyTile[] companyMatrix;
     private final GeneralSupplyView generalSupply;
     private final TurnView turn;
+
+    private final List<Message> messages;
 
     @JsonInclude
     public Integer getHost() {

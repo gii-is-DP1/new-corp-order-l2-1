@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import us.lsi.dp1.newcorporder.auth.Authenticated;
 import us.lsi.dp1.newcorporder.bind.FromPathVariable;
+import us.lsi.dp1.newcorporder.match.chat.Message;
+import us.lsi.dp1.newcorporder.match.payload.request.ChatRequest;
 import us.lsi.dp1.newcorporder.match.payload.response.MatchAssignmentResponse;
 import us.lsi.dp1.newcorporder.match.payload.response.MatchResponse;
 import us.lsi.dp1.newcorporder.match.view.MatchView;
@@ -18,6 +20,7 @@ import us.lsi.dp1.newcorporder.user.User;
 import us.lsi.dp1.newcorporder.user.UserService;
 import us.lsi.dp1.newcorporder.util.RestPreconditions;
 
+import java.time.Instant;
 import java.util.List;
 
 @RestController
@@ -163,5 +166,28 @@ public class MatchController {
     @PostMapping("/{match}/start")
     public void forceStartMatch(@Authenticated Player player, @FromPathVariable Match match) {
         matchService.forceStart(player, match);
+    }
+
+    @Operation(
+        summary = "Force a match to start",
+        description = "Force a match to start",
+        tags = "post"
+    )
+    @ApiResponse(
+        responseCode = "200",
+        description = "The started match"
+    )
+    @PostMapping("/{match}/chat")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void postChatMessage(@Authenticated Player player, @RequestBody ChatRequest chatRequest, @FromPathVariable Match match) {
+        RestPreconditions.checkAccess(match.getPlayer(player.getId()) != null);
+
+        Message message = Message.builder()
+            .sender(player.getUser().getUsername())
+            .at(Instant.now())
+            .message(chatRequest.getMessage())
+            .build();
+
+        match.getChat().addMessage(message);
     }
 }

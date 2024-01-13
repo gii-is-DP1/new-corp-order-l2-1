@@ -33,12 +33,11 @@ export function AdminModeration() {
         fetchUsersData()
     }, [filter, page]);
 
-    const fetchUsersData = async () => {
+    const fetchUsersData = async (clear) => {
         try {
-            setUsersData([...usersData,
-                ...await fetchAuthenticated(`/api/v1/users?filter=${filter}&page=${page}`, "GET")
-                    .then(async response => await response.json())
-            ])
+            const fetch = await fetchAuthenticated(`/api/v1/users?filter=${filter}&page=${page}`, "GET")
+                .then(async response => await response.json())
+            setUsersData(clear ? fetch : [...usersData, ...fetch])
         } catch (error) {
             navigate('')
         }
@@ -48,7 +47,7 @@ export function AdminModeration() {
         return <ListLine sideContent={(
             <div style={{display: "flex", flexDirection: "row", gap: "5px"}}>
                 <Button onClick={() => fetchAuthenticated(`/api/v1/users/${user.username}`, "DELETE")
-                    .then(() => fetchUsersData())}
+                    .then(() => fetchUsersData(true))}
                         style={buttonStyle}
                         buttonType={ButtonType.danger}>
                     Delete

@@ -30,7 +30,6 @@ import us.lsi.dp1.newcorporder.exceptions.ResourceNotFoundException;
 import us.lsi.dp1.newcorporder.user.payload.request.EditPasswordRequest;
 import us.lsi.dp1.newcorporder.user.payload.request.EditProfileRequest;
 import us.lsi.dp1.newcorporder.user.payload.response.UserView;
-import us.lsi.dp1.newcorporder.util.RandomUtils;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -112,7 +111,7 @@ public class UserService {
         }
 
         if (!request.getPicture().isBlank()) {
-            this.changePicture(user, request.getPicture());
+            user.setPicture(request.getPicture());
         }
 
         return this.saveUser(user);
@@ -141,11 +140,6 @@ public class UserService {
 
     public void changeAuthority(User user, String authority) {
         user.setAuthority(authorityService.findByName(authority));
-    }
-
-    public void changePicture(User user, String picture) {
-        Preconditions.checkState(RandomUtils.isValidImageUrl(picture), "invalid image url!");
-        user.setPicture(picture);
     }
 
     public List<UserView> getAllUsers(String username) {

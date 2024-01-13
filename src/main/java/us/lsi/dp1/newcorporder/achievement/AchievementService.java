@@ -7,13 +7,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import us.lsi.dp1.newcorporder.exceptions.ResourceNotFoundException;
 import us.lsi.dp1.newcorporder.player.Player;
-import us.lsi.dp1.newcorporder.stats.MatchStatsService;
-import us.lsi.dp1.newcorporder.stats.payload.response.MatchStatsView;
 import us.lsi.dp1.newcorporder.stats.player.PlayerMatchStatsService;
-import us.lsi.dp1.newcorporder.util.RandomUtils;
 
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,13 +17,11 @@ import java.util.stream.Collectors;
 public class AchievementService {
 
     private final PlayerMatchStatsService playerMatchStatsService;
-    private final MatchStatsService matchStatsService;
     private final AchievementRepository achievementRepository;
 
-    public AchievementService(AchievementRepository achievementRepository, PlayerMatchStatsService playerMatchStatsService, MatchStatsService matchStatsService) {
+    public AchievementService(AchievementRepository achievementRepository, PlayerMatchStatsService playerMatchStatsService) {
         this.achievementRepository = achievementRepository;
         this.playerMatchStatsService = playerMatchStatsService;
-        this.matchStatsService = matchStatsService;
     }
 
     @Transactional(readOnly = true)
@@ -45,7 +38,6 @@ public class AchievementService {
 
     @Transactional
     public Achievement save(@Valid Achievement achievement) throws DataAccessException {
-        if (!RandomUtils.isValidImageUrl(achievement.getImageUrl())) achievement.setImageUrl(null);
         return achievementRepository.save(achievement);
     }
 
@@ -86,9 +78,8 @@ public class AchievementService {
     }
 
     @Transactional
-    public boolean isAchievementCompleted(Achievement achievement, Player player) {;
-        int threshold = achievement.getThreshold();
-        return threshold <= switch (achievement.getStat()) {
+    public boolean isAchievementCompleted(Achievement achievement, Player player) {
+        return achievement.getThreshold() <= switch (achievement.getStat()) {
             case GAMES_LOST -> playerMatchStatsService.getStats(player).getLoses();
             case GAMES_TIED -> playerMatchStatsService.getStats(player).getTies();
             case GAMES_WON -> playerMatchStatsService.getStats(player).getWins();

@@ -15,7 +15,6 @@ import us.lsi.dp1.newcorporder.auth.jwt.JwtUtils;
 import us.lsi.dp1.newcorporder.auth.payload.request.LoginRequest;
 import us.lsi.dp1.newcorporder.auth.payload.request.SignupRequest;
 import us.lsi.dp1.newcorporder.auth.payload.response.JwtResponse;
-import us.lsi.dp1.newcorporder.user.UserService;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,13 +28,10 @@ public class AuthController {
     private final JwtUtils jwtUtils;
     private final AuthService authService;
 
-    private final UserService userService;
-
-    public AuthController(AuthenticationManager authenticationManager, JwtUtils jwtUtils, AuthService authService, UserService userService) {
+    public AuthController(AuthenticationManager authenticationManager, JwtUtils jwtUtils, AuthService authService) {
         this.jwtUtils = jwtUtils;
         this.authenticationManager = authenticationManager;
         this.authService = authService;
-        this.userService = userService;
     }
 
     @PostMapping("/signup")
@@ -69,12 +65,5 @@ public class AuthController {
     @ResponseStatus(HttpStatus.OK)
     public boolean validateToken(@RequestParam String token) {
         return jwtUtils.validateJwtToken(token);
-    }
-
-    @PostMapping("/updateToken")
-        public ResponseEntity<Object> updateToken(@RequestParam String token) {
-        String passsword = userService.findUser(jwtUtils.getUserNameFromJwtToken(token)).getPassword();
-
-        return null;
     }
 }

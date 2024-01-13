@@ -17,7 +17,7 @@ VALUES (1, '2020-01-01', 1, '2023-01-01', 'johndoe@example.com', 'JohnDoe',
        (2, '2023-06-01', 6, '2023-12-31', 'bob@example.com', 'Bob',
         '$2a$12$19.5GDidvCHN4go6jO9dde918jIYONlxe01RgKh5USM3Yd/lFzeI2', null);
 
-INSERT INTO players(id, users)
+INSERT INTO players(id, user_id)
 VALUES (1, 1),
        (2, 2),
        (3, 3),

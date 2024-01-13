@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import us.lsi.dp1.newcorporder.match.consultant.ConsultantType;
 import us.lsi.dp1.newcorporder.match.player.MatchPlayer;
 import us.lsi.dp1.newcorporder.model.BaseEntity;
@@ -37,6 +39,7 @@ public class ConsultantStats extends BaseEntity {
     }
 
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private PlayerMatchStats playerMatchStats;
 
     @Enumerated(EnumType.STRING)

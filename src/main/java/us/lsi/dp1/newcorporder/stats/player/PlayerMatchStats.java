@@ -10,6 +10,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import us.lsi.dp1.newcorporder.match.Match;
 import us.lsi.dp1.newcorporder.match.company.CompanyType;
 import us.lsi.dp1.newcorporder.match.conglomerate.Conglomerate;
@@ -54,6 +56,7 @@ public class PlayerMatchStats extends BaseEntity {
     @NotNull private MatchStats matchStats;
 
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @NotNull private Player player;
 
     @Enumerated(EnumType.STRING)

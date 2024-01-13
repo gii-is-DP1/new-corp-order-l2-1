@@ -51,7 +51,7 @@ export function AdminModeration() {
                     .then(() => fetchUsersData())}
                         style={buttonStyle}
                         buttonType={ButtonType.danger}>
-                    Ban
+                    Delete
                 </Button>
                 <Button style={buttonStyle} buttonType={ButtonType.secondaryLight}
                         onClick={() => navigate(`/user/${user.username}`)}>

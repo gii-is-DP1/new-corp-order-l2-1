@@ -1,6 +1,8 @@
 import {FrontendState} from "../FrontendState";
 import {consultant} from "../../../data/MatchEnums";
-import React from "react";
+import React, {useContext} from "react";
+import {pickCompany} from "../../selector/pickers/Pickers";
+import {StateContext} from "../../Game";
 
 export class InfiltrateCompanyState extends FrontendState {
     component = <InfiltrateCompanyPicker/>;
@@ -12,5 +14,9 @@ export class InfiltrateCompanyState extends FrontendState {
 }
 
 export function InfiltrateCompanyPicker() { //TODO: implement picker
-    return <>NOT IMPLEMENTED</>
+    const context = useContext(StateContext);
+    return pickCompany(context.companyTiles.components, selected => {
+        context.state.infiltrate.companyTile = selected[0];
+        context.update();
+    }, 1);
 }

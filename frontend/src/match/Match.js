@@ -34,7 +34,7 @@ export default function Match() {
             matchData = (await fetchAuthenticated(`/api/v1/matches/${id}`, "GET")
                 .then(async response => await response.json()));
 
-            console.log(matchData);
+           // console.log(matchData);
 
             const isPLaying = matchData.state === "PLAYING";
             if (wasEmpty || !isPLaying || (wasWaiting && isPLaying) || (matchData.turn !== null && matchData.turn.player !== tokenService.getUser().id)) {
@@ -107,7 +107,7 @@ function setContext(id, matchData, propic) {
         console.log(matchData)
         startingState.game.player.hand = matchData.player.hand;
         startingState.game.player.hq.secretObjectives = matchData.player.secretObjectives.map(s => secretObjective[s]);
-        startingState.game.player.hq.consultants = matchData.player.headquarter.consultants;
+        //startingState.game.player.hq.consultants = matchData.player.headquarter.consultants;
         startingState.game.player.hq.rotatedConglomerates = /*matchData.player.headquarter.usedConglomerateShares ??*/ []; //TODO: check if are multiset or array
         startingState.game.player.hq.nonRotatedConglomerates = /*matchData.player.headquarter.conglomerateShares ??*/ [];
         startingState.game.companies = matchData.companyMatrix.map(c => {
@@ -117,6 +117,7 @@ function setContext(id, matchData, propic) {
         startingState.game.generalSupply.consultants = matchData.generalSupply.consultants;
         startingState.game.generalSupply.conglomeratesLeftInDeck = matchData.generalSupply.deckSize;
         startingState.game.generalSupply.openDisplay = matchData.generalSupply.openDisplay;
+
 
 
     }

@@ -19,9 +19,6 @@ export function selectQuantity(n) {
 }
 
 export function selectOrthogonallyAdjacentTiles(selection, selectedElements, selectableElements, setSelectableItems) { //TODO: make it works on a 4x3 grid
-    //setSelectableItems(selectedElements);
-    console.log("CHIAMANDO FUNZIONE")
-    return;
     if (selectedElements.length === 1) {
         const index = selectedElements[0];
         const selectedX = index % 4;

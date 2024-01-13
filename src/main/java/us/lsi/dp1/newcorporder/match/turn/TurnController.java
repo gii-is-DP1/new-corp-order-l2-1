@@ -10,6 +10,7 @@ import us.lsi.dp1.newcorporder.bind.FromPathVariable;
 import us.lsi.dp1.newcorporder.match.Match;
 import us.lsi.dp1.newcorporder.match.VerifyCurrentTurn;
 import us.lsi.dp1.newcorporder.match.payload.request.*;
+import us.lsi.dp1.newcorporder.match.payload.request.infiltrate.BasicInfiltrate;
 import us.lsi.dp1.newcorporder.match.payload.response.*;
 
 
@@ -111,6 +112,11 @@ public class TurnController {
     @PostMapping("/infiltrate")
     @VerifyCurrentTurn
     public InfiltrateResponse infiltrate(@RequestBody @Valid InfiltrateRequest request, @FromPathVariable Match match) {
+        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAA");
+        System.out.println(((BasicInfiltrate) request.getInfiltrate()).getNumberOfShares());
+        System.out.println(((BasicInfiltrate) request.getInfiltrate()).getTile().getX());
+        System.out.println(((BasicInfiltrate) request.getInfiltrate()).getTile().getX());
+        System.out.println(((BasicInfiltrate) request.getInfiltrate()).getConglomerateType().name());
         return match.getTurnSystem().getCurrentTurn().onInfiltrateRequest(request);
     }
 

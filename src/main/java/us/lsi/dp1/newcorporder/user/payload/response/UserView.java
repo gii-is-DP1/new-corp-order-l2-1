@@ -17,18 +17,26 @@ import java.util.Set;
 public class UserView {
 
     public static UserView reduced(User user) {
-        return UserView.of(user).build();
+        return reduced(user, false);
+    }
+
+    public static UserView reduced(User user, boolean online) {
+        return UserView.of(user, online).build();
     }
 
     public static UserView expanded(User user, User viewer) {
-        UserViewBuilder builder = UserView.of(user)
-            .authority(user.getAuthority().getName())
+        return expanded(user, viewer, false);
+    }
+
+    public static UserView expanded(User user, User viewer, boolean online) {
+        UserViewBuilder builder = UserView.of(user, online)
             .firstSeen(user.getFirstSeen())
             .lastSeen(user.getLastSeen())
             .friends(user.getFriendships().stream().map(FriendshipView::of).toList());
 
         if (user.equals(viewer) || viewer.hasAnyAuthority("ADMIN")) {
             builder
+                .authority(user.getAuthority().getName())
                 .email(user.getEmail())
                 .sentFriendshipRequests(user.getSentFriendshipRequests().stream().map(request -> FriendshipView.of(request, user)).toList())
                 .receivedFriendshipRequests(user.getReceivedFriendshipRequests().stream().map(request -> FriendshipView.of(request, user)).toList())
@@ -38,16 +46,18 @@ public class UserView {
         return builder.build();
     }
 
-    private static UserViewBuilder of(User user) {
+    private static UserViewBuilder of(User user, boolean online) {
         return UserView.builder()
             .username(user.getUsername())
-            .picture(user.getPicture());
+            .picture(user.getPicture())
+            .online(online);
     }
 
     private String username;
     private String email;
     private String authority;
     private String picture;
+    private boolean online;
 
     private Instant firstSeen;
     private Instant lastSeen;
@@ -57,6 +67,11 @@ public class UserView {
     private List<FriendshipView> receivedFriendshipRequests;
 
     private Set<Notification> notifications;
+
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+    public boolean isOnline() {
+        return online;
+    }
 
     @JsonInclude
     public String getPicture() {

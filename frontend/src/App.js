@@ -15,6 +15,7 @@ import {EditAchievements} from "./admin/EditAchievement";
 import {MatchStats} from "./stats/MatchStats";
 import {Metrics} from "./stats/Metrics";
 import {Rankings} from "./stats/Rankings";
+import {Notifications} from "./mainPage/Notifications";
 
 function ErrorFallback({error, resetErrorBoundary}) {
     return (
@@ -32,6 +33,7 @@ function App() {
 
     return (
         <>
+            {jwt && <Notifications/>}
             <ErrorBoundary FallbackComponent={ErrorFallback}>
                 <Routes>
                     <Route path="/docs" element={<SwaggerDocs/>}/>

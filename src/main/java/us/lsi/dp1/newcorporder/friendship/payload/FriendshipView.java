@@ -14,9 +14,13 @@ import java.time.Instant;
 public class FriendshipView {
 
     public static FriendshipView of(Friendship friendship) {
+        return of(friendship, false);
+    }
+
+    public static FriendshipView of(Friendship friendship, boolean online) {
         return FriendshipView.builder()
             .since(friendship.getSince())
-            .user(UserView.reduced(friendship.getFriend()))
+            .user(UserView.reduced(friendship.getFriend(), online))
             .build();
     }
 

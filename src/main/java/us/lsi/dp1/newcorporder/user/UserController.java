@@ -228,10 +228,12 @@ class UserController {
         description = "User not found"
     )
     @GetMapping("/{username}/friends")
-    public List<UserView> getFriends(@PathVariable String username) {
+    public List<UserView> getFriends(@PathVariable String username,
+                                     @RequestParam(required = false) boolean online) {
         User user = userService.findUser(username);
         RestPreconditions.checkNotNull(user, "User", "user", username);
+        online = userService.findCurrentUser().equals(user) && online;
 
-        return friendshipService.getFriends(user);
+        return friendshipService.getFriends(user, online, userService.findCurrentUser().equals(user));
     }
 }

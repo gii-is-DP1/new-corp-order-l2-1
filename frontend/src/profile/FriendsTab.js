@@ -1,17 +1,31 @@
 import fetchAuthenticated from "../util/fetchAuthenticated";
 import {buildErrorComponent, buildSuccessComponent} from "../util/formUtil";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import ListLine from "../components/ListLine";
 import Button, {ButtonType} from "../components/Button";
 import ProfilePicture from "../components/ProfilePicture";
 import {Text} from "../components/Text";
 import List from "../components/List";
-import {white} from "../util/Colors";
+import {dangerBackground, successBackground, white} from "../util/Colors";
 import TextInput from "../components/TextInput";
+import tokenService from "../services/token.service";
 
 export function FriendsTab({userData, navigate, fetchUserData, isMe, rowListStyle}) {
     const [formMessage, setFormMessage] = useState(<></>)
+    const [userFriends, setUserFriends] = useState(null)
 
+    const fetchUserFriends = async () => {
+        try {
+            setUserFriends(await fetchAuthenticated(`/api/v1/users/${tokenService.getUser().username}/friends`, "GET")
+                .then(response => response.json()));
+        } catch (error) {
+            console.log(error.message)
+        }
+    };
+
+    useEffect(() => {
+        fetchUserFriends()
+    }, []);
 
     async function sendFriendRequest(value) {
         try {
@@ -50,24 +64,26 @@ export function FriendsTab({userData, navigate, fetchUserData, isMe, rowListStyl
         )
     })
 
-    let friendsItems = userData.friends?.map(request => {
-        const friend = request.user
+    let friendsItems = userFriends?.map(request => {
         return (
             <ListLine sideContent={(
                 <>
                     <Button
-                        onClick={() => fetchAuthenticated(`/api/v1/users/friendships/${friend.username}`, "DELETE")
+                        onClick={() => fetchAuthenticated(`/api/v1/users/friendships/${request.username}`, "DELETE")
                             .then(() => fetchUserData())}
                         buttonType={ButtonType.danger}>
                         Delete
                     </Button>
-                    <Button onClick={() => navigate(`/user/${friend.username}`)} buttonType={ButtonType.secondaryLight}>
+                    <Button onClick={() => navigate(`/user/${request.username}`)}
+                            buttonType={ButtonType.secondaryLight}>
                         Visit profile
                     </Button>
                 </>)}
             >
-                <ProfilePicture url={friend.picture} style={{height: "30px", width: "30px"}}/>
-                <Text>{friend.username}</Text>
+                <ProfilePicture url={request.picture} style={{height: "30px", width: "30px"}}/>
+                <Text>{request.username} | </Text>
+                {request.online && <Text style={{color: successBackground}}>Online</Text>}
+                {!request.online && <Text style={{color: dangerBackground}}>Offline</Text>}
             </ListLine>
         )
     })

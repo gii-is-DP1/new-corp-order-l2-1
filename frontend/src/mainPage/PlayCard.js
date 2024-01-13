@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {black, orange} from "../util/Colors";
+import {black, dangerBackground, orange, successBackground} from "../util/Colors";
 import fetchAuthenticated from "../util/fetchAuthenticated";
 import ListLine from "../components/ListLine";
 import QueueIcon from "@mui/icons-material/Queue";
@@ -56,7 +56,9 @@ export function PlayCard({
             )}
             >
                 <ProfilePicture url={friend.picture} style={{height: "30px", width: "30px"}}/>
-                <Text>{friend.username}</Text>
+                <Text>{friend.username} | </Text>
+                {friend.online && <Text style={{color: successBackground}}>Online</Text>}
+                {!friend.online && <Text style={{color: dangerBackground}}>Offline</Text>}
             </ListLine>
         )
     })

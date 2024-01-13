@@ -120,11 +120,11 @@ export function pickOrthogonallyAdjacentCompanyTiles(from, onConfirm) {
     />;
 }
 
-function CompanySelector({title, selection, canConfirm, changeSelectableItem, onConfirm}) {
+function CompanySelector({title, selection, canConfirm, changeSelectableItems, onConfirm, key}) {
     return <Selector title={title}
                      selection={selection}
-                     canConfirm={() => canConfirm}
-                     changeSelectableItems={() => changeSelectableItem}
+                     canConfirm={canConfirm}
+                     changeSelectableItems={changeSelectableItems}
                      onConfirm={onConfirm}
                      itemStyle={{maxHeight: "25vh", maxWidth: "25%", flexShrink: 1}}
                      containerStyle={{
@@ -134,7 +134,7 @@ function CompanySelector({title, selection, canConfirm, changeSelectableItem, on
                          flexShrink: 1,
                          maxWidth: "80vh"
                      }}
-                     key={{onConfirm}}
+                     key={{key}}
     />;
 }
 

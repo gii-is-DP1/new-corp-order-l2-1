@@ -10,9 +10,9 @@ import us.lsi.dp1.newcorporder.match.payload.request.ability.AmbientAdvertisingA
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
 @JsonSubTypes({
-    @JsonSubTypes.Type(value = BasicInfiltrate.class),
-    @JsonSubTypes.Type(value = MediaAdvisorInfiltrate.class),
-    @JsonSubTypes.Type(value = AmbientAdvertisingAbility.class),
+    @JsonSubTypes.Type(value = BasicInfiltrate.class, name = "BasicInfiltrate"),
+    @JsonSubTypes.Type(value = MediaAdvisorInfiltrate.class, name = "MediaAdvisorInfiltrate"),
+    @JsonSubTypes.Type(value = AmbientAdvertisingAbility.class, name = "AmbientAdvertisingAbility"),
 })
 public interface Infiltrate {
 

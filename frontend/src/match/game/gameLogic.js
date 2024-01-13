@@ -6,7 +6,7 @@ import {
 
 import {
     InfiltrateConglomeratesState
-} from "./views/infiltrate/InfiltrateConglomerateState";
+} from "./views/infiltrate/InfiltrateConglomeratesState";
 import {InfiltrateConsultantState} from "./views/infiltrate/InfiltrateConsultantState";
 import {InfiltrateCompanyState} from "./views/infiltrate/InfiltrateCompanyState";
 import {MediaAdvisorConglomerateState} from "./views/infiltrate/MediaAdvisorConglomerateState";

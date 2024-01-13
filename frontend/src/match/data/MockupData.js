@@ -103,7 +103,8 @@ export const startingState = {
         secondConglomerate: null,
     },
     infiltrate: {
-        conglomerates: null,
+        conglomerate: null,
+        conglomerateQuantity: null,
         companyTile: null,
         consultant: null,
         mediaAdvisor: {

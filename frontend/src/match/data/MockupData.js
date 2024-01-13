@@ -97,6 +97,7 @@ export const mockUpData = {
 export const startingState = {
     game: mockUpData,
     turn: 0,
+    isPlaying: false,
     action: null,
     plot: {
         firstConglomerate: null,

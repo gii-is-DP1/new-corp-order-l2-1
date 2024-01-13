@@ -5,7 +5,7 @@ import {pickOneCard} from "../../selector/pickers/Pickers";
 import {Info} from "../../../Match";
 import fetchAuthenticatedWithBody from "../../../../util/fetchAuthenticatedWithBody";
 import fetchAuthenticated from "../../../../util/fetchAuthenticated";
-import {conglomerate} from "../../../data/MatchEnums";
+import {conglomerate, getConglomerateName} from "../../../data/MatchEnums";
 
 export function DrawConglomerate(isFirst) {
     const context = useContext(StateContext);
@@ -38,7 +38,7 @@ export function DrawConglomerate(isFirst) {
         if(selected[0] === openDisplayAndDeck.length - 1)
             plotRequest = {source: "DECK"}
         else {
-            conglomerateType = Object.keys(conglomerate).find(key => conglomerate[key] === selectedConglomerate);
+            conglomerateType = getConglomerateName(selectedConglomerate);
             plotRequest = {
                 source: "OPEN_DISPLAY",
                 conglomerate: conglomerateType

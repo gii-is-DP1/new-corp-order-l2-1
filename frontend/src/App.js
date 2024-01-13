@@ -22,7 +22,7 @@ function ErrorFallback({error, resetErrorBoundary}) {
 function App() {
     const jwt = tokenService.getLocalAccessToken();
     const roles = jwt ? tokenService.getRoles() : [];
-
+    //tokenService.removeUser();
     return (
         <>
             <ErrorBoundary FallbackComponent={ErrorFallback}>

@@ -30,14 +30,15 @@ export default function Match() {
         try {
             const wasEmpty = matchData === null;
             const wasWaiting = wasEmpty ? null : matchData.state === "WAITING"
+            const wasPlaying = wasEmpty ? false : matchData.playing;
 
             matchData = (await fetchAuthenticated(`/api/v1/matches/${id}`, "GET")
                 .then(async response => await response.json()));
 
-            //console.log(matchData);
+
 
             const isPLaying = matchData.state === "PLAYING";
-            if (wasEmpty || !isPLaying || (wasWaiting && isPLaying) || (matchData.turn !== null && matchData.turn.player !== tokenService.getUser().id)) {
+            if ( !(matchData.playing) || wasEmpty || !isPLaying || (wasWaiting && isPLaying) || (!wasPlaying && matchData.playing)) {
                 setMatchData(matchData)
             }
         } catch (error) {
@@ -104,7 +105,7 @@ function setContext(id, matchData, propic) {
     }));
 
     if (matchData.state === "PLAYING") {
-        console.log(matchData)
+        startingState.isPlaying = matchData.playing;
         startingState.game.player.hand = matchData.player.hand;
         startingState.game.player.hq.secretObjectives = matchData.player.secretObjectives.map(s => secretObjective[s]);
         //startingState.game.player.hq.consultants = matchData.player.headquarter.consultants;
@@ -117,7 +118,6 @@ function setContext(id, matchData, propic) {
         startingState.game.generalSupply.consultants = matchData.generalSupply.consultants;
         startingState.game.generalSupply.conglomeratesLeftInDeck = matchData.generalSupply.deckSize;
         startingState.game.generalSupply.openDisplay = matchData.generalSupply.openDisplay;
-
 
 
     }

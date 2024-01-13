@@ -32,7 +32,8 @@ public class MatchView {
             builder
             .companyMatrix(match.getCompanyMatrix().getTiles())
             .generalSupply(GeneralSupplyView.of(match.getGeneralSupply()))
-            .turn(TurnView.of(match.getTurnSystem()));
+            .turn(TurnView.of(match.getTurnSystem()))
+            .isPlaying(match.getTurnSystem().getCurrentPlayer() == player);
         return builder.build();
     }
 
@@ -44,6 +45,7 @@ public class MatchView {
     }
 
     private final boolean isSpectating;
+    private final boolean isPlaying;
     private final MatchMode mode;
     private final int maxPlayers;
     private final Integer host;

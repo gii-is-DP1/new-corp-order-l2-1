@@ -17,11 +17,9 @@ export const StateContext = React.createContext({})
 
 export function Game() {
     const [gameState, setGameState] = useState(startingState);
+    if(gameState !== startingState)
+        setGameState(startingState);
     const initialContext = new State(gameState, setGameState);
-    const [matchData, setMatchData] = useState(null);
-    const {id} = useParams();
-    const FrontendView = () => initialContext.frontendView;
-
     return <div className={css.game}>
         <StateContext.Provider value={initialContext}>
             <div style={{width:"100%"}}>

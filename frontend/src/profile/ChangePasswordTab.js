@@ -1,13 +1,10 @@
 import {Title} from "../components/Title";
-import {dangerBackground, gray, grayDarker, orange, white} from "../util/Colors";
+import {white} from "../util/Colors";
 import FormInput from "../components/FormInput";
 import {Text} from "../components/Text";
 import Button, {ButtonType} from "../components/Button";
-import React from "react";
-import fetchAuthenticatedWithBody from "../util/fetchAuthenticatedWithBody";
-import {useState} from "react";
-import tokenService from "../services/token.service";
-import {PressableText} from "../components/PressableText";
+import React, {useState} from "react";
+import fetchAuthenticated from "../util/fetchAuthenticated";
 
 export function ChangePasswordTab({username, oldEmail, userData, navigate}) {
     const [message, setMessage] = useState(null);
@@ -30,7 +27,7 @@ export function ChangePasswordTab({username, oldEmail, userData, navigate}) {
 
     async function handleSubmit(body) {
         setMessage(null);
-        await fetchAuthenticatedWithBody(`/api/v1/users/${username}/password`, "PUT", body)
+        await fetchAuthenticated(`/api/v1/users/${username}/password`, "PUT", body)
             .then(response => {
                 if (response.status === 200) return response.json();
                 else return Promise.reject("Something went wrong!");
@@ -71,13 +68,17 @@ export function ChangePasswordTab({username, oldEmail, userData, navigate}) {
                            placeholder="Write here your new password"/>
 
 
-                    {message && <Text style={{textTransform: "none", color: "red"}}>{message}</Text>}
+                {message && <Text style={{textTransform: "none", color: "red"}}>{message}</Text>}
                 <div style={buttonStyle}>
-                    <Button buttonType={ButtonType.primary} type="submit">Confirm Changes</Button>
+                    <Button buttonType={ButtonType.primary} type="submit">
+                        Confirm
+                    </Button>
                     <Button buttonType={ButtonType.danger}
-                            onClick={() => navigate(`/user/${username}/lastMatches`)}>Cancel</Button>
+                            onClick={() => navigate(`/user/${username}/lastMatches`)}>
+                        Cancel
+                    </Button>
                 </div>
             </form>
         </div>
-)
+    )
 }

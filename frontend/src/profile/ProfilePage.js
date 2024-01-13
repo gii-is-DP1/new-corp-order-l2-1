@@ -122,7 +122,7 @@ export function ProfilePage() {
                     {isMe() && <div style={{display: "flex", flexDirection: "row", gap: "5px"}}>
                         <Button onClick={() => navigate(`/user/${userData.username}/edit`)}
                                 buttonType={ButtonType.primary}>
-                            Edit  Profile
+                            Edit
                         </Button>
                         <Button onClick={() => logout()}
                                 buttonType={ButtonType.danger}>

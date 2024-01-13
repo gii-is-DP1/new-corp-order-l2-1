@@ -1,13 +1,11 @@
 import {Title} from "../components/Title";
-import {dangerBackground, gray, grayDarker, orange, white} from "../util/Colors";
+import {dangerBackground, grayDarker, white} from "../util/Colors";
 import FormInput from "../components/FormInput";
 import {Text} from "../components/Text";
 import Button, {ButtonType} from "../components/Button";
-import React from "react";
-import fetchAuthenticatedWithBody from "../util/fetchAuthenticatedWithBody";
-import {useState} from "react";
+import React, {useState} from "react";
+import fetchAuthenticated from "../util/fetchAuthenticated";
 import tokenService from "../services/token.service";
-import {PressableText} from "../components/PressableText";
 
 export function EditProfileTab({username, oldEmail, userData, navigate}) {
     const [message, setMessage] = useState(null);
@@ -47,7 +45,7 @@ export function EditProfileTab({username, oldEmail, userData, navigate}) {
             setMessage("You must write your password to confirm the changes");
             return;
         }
-        await fetchAuthenticatedWithBody(`/api/v1/users/${username}`, "PUT", body)
+        await fetchAuthenticated(`/api/v1/users/${username}`, "PUT", body)
             .then(response => {
                 if (response.status === 200) return response.json();
                 else return Promise.reject("Something went wrong!");
@@ -76,8 +74,7 @@ export function EditProfileTab({username, oldEmail, userData, navigate}) {
                       handleSubmit({
                           username: e.target.username.value,
                           email: e.target.email.value,
-                          password: e.target.password.value,
-                          picture: e.target.picture.value
+                          password: e.target.password.value
                       });
                   }}>
                 <FormInput labelStyle={labelStyle}
@@ -92,12 +89,6 @@ export function EditProfileTab({username, oldEmail, userData, navigate}) {
                            type="email"
                            placeholder="If you leave empty this field your email won`t change"
                            defaultValue={userData.email}/>
-                <FormInput labelStyle={labelStyle}
-                           label="Picture"
-                           name={"picture"}
-                           type="text"
-                           placeholder={"Put the url of the image your user will have"}
-                           defaultValue={userData.picture}/>
 
                 <FormInput labelStyle={passwordLabelStyle}
                            label="To confirm the changes, write your password"
@@ -107,17 +98,15 @@ export function EditProfileTab({username, oldEmail, userData, navigate}) {
                            textInputStyle={{backgroundColor: grayDarker}}/>
 
                 {message && <Text style={{textTransform: "none", color: "red"}}>{message}</Text>}
-                <div style={{alignItems: "none", display: "flex"}}>
-                    <PressableText
-                        style={{color: gray, fontSize: "18px", textTransform: "none", textDecoration: "underline"}}
-                        onClick={() => navigate(`/user/${username}/editPassword`)}>
-                        Change Password
-                    </PressableText>
-                </div>
+
                 <div style={buttonStyle}>
-                    <Button buttonType={ButtonType.primary} type="submit">Confirm Changes</Button>
+                    <Button buttonType={ButtonType.primary} type="submit">
+                        Confirm
+                    </Button>
                     <Button buttonType={ButtonType.danger}
-                            onClick={() => navigate(`/user/${username}/lastMatches`)}>Cancel</Button>
+                            onClick={() => navigate(`/user/${username}/lastMatches`)}>
+                        Cancel
+                    </Button>
                 </div>
             </form>
         </div>

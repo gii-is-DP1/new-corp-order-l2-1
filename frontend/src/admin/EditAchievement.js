@@ -6,7 +6,6 @@ import {useNavigate, useParams} from "react-router-dom";
 import FormInput from "../components/FormInput";
 import DropDownPicker from "../components/DropDownPicker";
 import {Text} from "../components/Text";
-import fetchAuthenticatedWithBody from "../util/fetchAuthenticatedWithBody";
 import {Title} from "../components/Title";
 import fetchAuthenticated from "../util/fetchAuthenticated";
 
@@ -82,7 +81,7 @@ export function EditAchievements() {
     }
 
     useEffect(() => {
-        if(achievementId === undefined) {
+        if (achievementId === undefined) {
             setAchievementData({
                 "id": null,
                 "name": "",
@@ -94,7 +93,7 @@ export function EditAchievements() {
             setIsLoaded(true);
             setTitle('Create achievement')
             setButtonText('Create achievement')
-        }else{
+        } else {
             fetchAchievementData()
             setTitle('Edit achievement: ')
             setButtonText('Edit achievement')
@@ -111,8 +110,8 @@ export function EditAchievements() {
             setMessage('Por favor, introduce un nombre para el logro.');
             return;
         }
-        if(achievementId === undefined){
-            await fetchAuthenticatedWithBody("/api/v1/achievements", "POST", body)
+        if (achievementId === undefined) {
+            await fetchAuthenticated("/api/v1/achievements", "POST", body)
                 .then(response => {
                     if (response.status === 201) return response.json();
                     else return Promise.reject("Invalid create achievement attempt");
@@ -124,8 +123,8 @@ export function EditAchievements() {
                     const errorMessage = error.message || "An error occurred";
                     setMessage(errorMessage);
                 });
-        }else{
-            await fetchAuthenticatedWithBody(`/api/v1/achievements/${achievementId}`, "PUT", body)
+        } else {
+            await fetchAuthenticated(`/api/v1/achievements/${achievementId}`, "PUT", body)
                 .then(response => {
                     if (response.status === 200) return response.json();
                     else return Promise.reject("Invalid edit achievement attempt");
@@ -184,7 +183,7 @@ export function EditAchievements() {
                                 <Button buttonType={ButtonType.primary} type="submit">{buttonText}</Button>
                             </div>
                         </form>
-                    ):
+                    ) :
                     (
                         <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
                             <Title style={titleStyle}>

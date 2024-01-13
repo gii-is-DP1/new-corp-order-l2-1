@@ -1,5 +1,5 @@
 import AppNavbar from "../AppNavbar";
-import {black, grayDarker, white} from "../util/Colors";
+import {black, gray, grayDarker, white} from "../util/Colors";
 import ProfilePicture from "../components/ProfilePicture";
 import {Title} from "../components/Title";
 import Button, {ButtonType} from "../components/Button";
@@ -12,6 +12,8 @@ import tokenService from "../services/token.service";
 import {FriendsTab} from "./FriendsTab";
 import {LastMatchesTab} from "./LastMatchesTab";
 import {AchievementsTab} from "./achievement/AchievementsTab";
+import {EditProfileTab} from "./EditProfileTab";
+import {ChangePasswordTab} from "./ChangePasswordTab";
 
 export function ProfilePage() {
     const [userData, setUserData] = useState(null)
@@ -65,7 +67,6 @@ export function ProfilePage() {
         fetchUserData()
         fetchAchievementsData()
         fetchCompletedAchievementsData()
-
         fetchUserStats()
     }, [select, username]);
 
@@ -128,6 +129,13 @@ export function ProfilePage() {
                             Logout
                         </Button>
                     </div>}
+                    <div style={{alignItems: "none", display: "flex"}}>
+                        <PressableText
+                            style={{color: gray, fontSize: "18px", textTransform: "none", textDecoration: "underline"}}
+                            onClick={() => navigate(`/user/${username}/editPassword`)}>
+                            Change Password
+                        </PressableText>
+                    </div>
                     <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
                         <Text style={{color: grayDarker}}>{userStats.totalMatches} matches played</Text>
                         <Text style={{color: grayDarker}}>{userStats.wins} victories</Text>
@@ -136,7 +144,7 @@ export function ProfilePage() {
                     </div>
                 </section>
                 <section style={columnStyle}>
-                    <div style={{display: "flex", gap: "25px"}}>
+                    {select !== "edit" && select !==  "editPassword" && <div style={{display: "flex", gap: "25px"}}>
                         <PressableText style={{color: white}}
                                        underlined={select === "lastMatches"}
                                        onClick={() => navigate(`/user/${userData.username}/lastMatches`)}>
@@ -152,7 +160,7 @@ export function ProfilePage() {
                                        onClick={() => navigate(`/user/${userData.username}/achievements`)}>
                             Achievements
                         </PressableText>
-                    </div>
+                    </div>}
                     <div>
                         {select === "lastMatches" &&
                             <LastMatchesTab username={username}
@@ -174,7 +182,27 @@ export function ProfilePage() {
                                              isMe={isMe()}
                                              rowListStyle={rowListStyle}
                                              username={username}
+
                             />}
+
+                        {select === "edit" &&
+                            <EditProfileTab userData={userData}
+                                             username={username}
+                                             navigate={navigate}
+                                             oldEmail={userData.email}
+
+
+                            />}
+
+                        {select === "editPassword" &&
+                            <ChangePasswordTab userData={userData}
+                                             username={username}
+                                             navigate={navigate}
+                                             oldEmail={userData.email}
+                                             editPassword={true}
+
+                            />}
+
                     </div>
                 </section>
             </div>

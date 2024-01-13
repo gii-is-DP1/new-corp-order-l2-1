@@ -5,26 +5,30 @@ export default function ProfilePicture({url, isTransparent, style}) {
         width: "100%",
         height: "100%",
         borderRadius: "50%",
-        overflow: "hidden"
+        overflow: "hidden",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
     }
 
     const backgroundStyle = {
         backgroundColor: "#F8F8F8",
-        width: "100%",
-        height: "100%",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
         opacity: isTransparent ? 0.2 : 1,
+    }
+
+    const imageAndIconStyle = {
+        maxWidth: "100%",
+        maxHeight: "100%",
+        objectFit: "cover", // Esto asegura que la imagen se recorte para llenar el área asignada
     }
 
     return <div style={{...defaultStyle, ...style}}>
         {
             url == null
-                ? <div style={backgroundStyle}>
+                ? <div style={{...backgroundStyle, ...defaultStyle}}>
                     <PersonIcon style={{width: "70%", height: "70%"}}/>
                 </div>
-                : <img width="64px" height="64px" alt="profile image" src={url}/>
+                : <img style={imageAndIconStyle} alt="profile image" src={url}/>
         }
     </div>
 }

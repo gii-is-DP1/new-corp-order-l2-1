@@ -6,7 +6,6 @@ import {useNavigate, useParams} from "react-router-dom";
 import FormInput from "../components/FormInput";
 import DropDownPicker from "../components/DropDownPicker";
 import {Text} from "../components/Text";
-import fetchAuthenticatedWithBody from "../util/fetchAuthenticatedWithBody";
 import {Title} from "../components/Title";
 import fetchAuthenticated from "../util/fetchAuthenticated";
 
@@ -54,17 +53,16 @@ export function EditAchievements() {
     }
 
     const statsOptions = [
-        {value: 'GAMES_LOST', label: 'GAMES_LOST'},
-        {value: 'GAMES_TIED', label: 'GAMES_TIED'},
-        {value: 'GAMES_WON', label: 'GAMES_WON'},
-        {value: 'TIMES_PLAYED', label: 'TIMES_PLAYED'},
-        {value: 'TIMES_PLOTTED', label: 'TIMES_PLOTTED'},
-        {value: 'TIMES_INFILTRATED', label: 'TIMES_INFILTRATED'},
-        {value: 'TIMES_TAKEN_OVER', label: 'TIMES_TAKEN_OVER'},
-        {value: 'CONSULTANT_STATS_USED', label: 'CONSULTANT_STATS_USED'},
-        {value: 'ABILITIES_USED', label: 'ABILITIES_USED'},
-        {value: 'FINAL_SHARES', label: 'FINAL_SHARES'},
-        {value: 'FINAL_AGENTS', label: 'FINAL_AGENTS'}
+        {value: 'GAMES_LOST', label: 'GAMES LOST'},
+        {value: 'GAMES_TIED', label: 'GAMES TIED'},
+        {value: 'GAMES_WON', label: 'GAMES WON'},
+        {value: 'TIMES_PLAYED', label: 'TIMES PLAYED'},
+        {value: 'TIMES_PLOTTED', label: 'TIMES PLOTTED'},
+        {value: 'TIMES_INFILTRATED', label: 'TIMES INFILTRATED'},
+        {value: 'TIMES_TAKEN_OVER', label: 'TIMES TAKEN OVER'},
+        {value: 'CONSULTANT_STATS_USED', label: 'CONSULTANT STATS USED'},
+        {value: 'ABILITIES_USED', label: 'ABILITIES USED'},
+        {value: 'FINAL_SCORE', label: 'FINAL SCORE'},
     ];
 
     const fetchAchievementData = async () => {
@@ -83,7 +81,7 @@ export function EditAchievements() {
     }
 
     useEffect(() => {
-        if(achievementId === undefined) {
+        if (achievementId === undefined) {
             setAchievementData({
                 "id": null,
                 "name": "",
@@ -95,7 +93,7 @@ export function EditAchievements() {
             setIsLoaded(true);
             setTitle('Create achievement')
             setButtonText('Create achievement')
-        }else{
+        } else {
             fetchAchievementData()
             setTitle('Edit achievement: ')
             setButtonText('Edit achievement')
@@ -112,8 +110,8 @@ export function EditAchievements() {
             setMessage('Por favor, introduce un nombre para el logro.');
             return;
         }
-        if(achievementId === undefined){
-            await fetchAuthenticatedWithBody("/api/v1/achievements", "POST", body)
+        if (achievementId === undefined) {
+            await fetchAuthenticated("/api/v1/achievements", "POST", body)
                 .then(response => {
                     if (response.status === 201) return response.json();
                     else return Promise.reject("Invalid create achievement attempt");
@@ -122,10 +120,11 @@ export function EditAchievements() {
                     window.location.href = "/admin/achievements";
                 })
                 .catch(error => {
-                    setMessage(error);
+                    const errorMessage = error.message || "An error occurred";
+                    setMessage(errorMessage);
                 });
-        }else{
-            await fetchAuthenticatedWithBody(`/api/v1/achievements/${achievementId}`, "PUT", body)
+        } else {
+            await fetchAuthenticated(`/api/v1/achievements/${achievementId}`, "PUT", body)
                 .then(response => {
                     if (response.status === 200) return response.json();
                     else return Promise.reject("Invalid edit achievement attempt");
@@ -134,7 +133,8 @@ export function EditAchievements() {
                     window.location.href = "/admin/achievements";
                 })
                 .catch(error => {
-                    setMessage(error);
+                    const errorMessage = error.message || "An error occurred";
+                    setMessage(errorMessage);
                 });
         }
     }
@@ -183,7 +183,7 @@ export function EditAchievements() {
                                 <Button buttonType={ButtonType.primary} type="submit">{buttonText}</Button>
                             </div>
                         </form>
-                    ):
+                    ) :
                     (
                         <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
                             <Title style={titleStyle}>

@@ -28,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import us.lsi.dp1.newcorporder.auth.ApplicationUserDetails;
 import us.lsi.dp1.newcorporder.authority.AuthorityService;
 import us.lsi.dp1.newcorporder.exception.ResourceNotFoundException;
+import us.lsi.dp1.newcorporder.user.payload.request.EditPasswordRequest;
 import us.lsi.dp1.newcorporder.user.payload.request.EditProfileRequest;
 import us.lsi.dp1.newcorporder.user.payload.response.UserView;
 
@@ -105,18 +106,27 @@ public class UserService {
 
     @Transactional
     public User editProfile(User user, @Valid EditProfileRequest request) {
+        Preconditions.checkState(passwordEncoder.matches(request.getPassword(), user.getPassword()), "wrong password!");
+
         if (!request.getUsername().isBlank()) {
             this.changeUsername(user, request.getUsername());
-        }
-
-        if (!request.getPassword().isBlank()) {
-            this.changePassword(user, request.getPassword());
         }
 
         if (!request.getEmail().isBlank()) {
             this.changeEmail(user, request.getEmail());
         }
 
+        if (!request.getPicture().isBlank()) {
+            user.setPicture(request.getPicture());
+        }
+
+        return this.saveUser(user);
+    }
+
+    @Transactional
+    public User editPassword(User user, @Valid EditPasswordRequest request) {
+        Preconditions.checkState(passwordEncoder.matches(request.getOldPassword(), user.getPassword()), "wrong password!");
+        this.changePassword(user, request.getNewPassword());
         return this.saveUser(user);
     }
 

@@ -12,6 +12,7 @@ import us.lsi.dp1.newcorporder.notification.InviteNotification;
 import us.lsi.dp1.newcorporder.notification.Notification;
 import us.lsi.dp1.newcorporder.notification.NotificationService;
 import us.lsi.dp1.newcorporder.player.Player;
+import us.lsi.dp1.newcorporder.player.PlayerService;
 import us.lsi.dp1.newcorporder.stats.MatchStatsService;
 import us.lsi.dp1.newcorporder.user.User;
 import us.lsi.dp1.newcorporder.util.OffsetPageable;
@@ -24,16 +25,21 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static us.lsi.dp1.newcorporder.configuration.SecurityConfiguration.ADMIN;
+
 @Service
 public class MatchService {
 
     // TODO: synchronize
+    private final PlayerService playerService;
     private final FriendshipService friendshipService;
     private final NotificationService notificationService;
     private final MatchStatsService matchStatsService;
     private final MatchRepository matchRepository;
 
-    public MatchService(FriendshipService friendshipService, NotificationService notificationService, MatchStatsService matchStatsService, MatchRepository matchRepository) {
+    public MatchService(PlayerService playerService, FriendshipService friendshipService, NotificationService notificationService,
+                        MatchStatsService matchStatsService, MatchRepository matchRepository) {
+        this.playerService = playerService;
         this.friendshipService = friendshipService;
         this.notificationService = notificationService;
         this.matchStatsService = matchStatsService;
@@ -97,7 +103,20 @@ public class MatchService {
 
     public MatchView getMatchView(Player player, Match match) {
         MatchPlayer matchPlayer = match.getPlayer(player.getId());
+        RestPreconditions.checkAccess(matchPlayer != null || canViewMatch(player, match),
+            "Cannot spectate match: you are not friends with every player");
+
         return matchPlayer != null ? MatchView.of(match, matchPlayer) : MatchView.of(match);
+    }
+
+    private boolean canViewMatch(Player viewer, Match match) {
+        if (viewer.getUser().hasAuthority(ADMIN)) {
+            return true;
+        }
+
+        return match.getPlayers().stream()
+            .map(matchPlayer -> playerService.findById(matchPlayer.getPlayerId()).getUser())
+            .allMatch(user -> friendshipService.areFriends(viewer.getUser(), user));
     }
 
     public MatchAssignmentResponse join(Player player, Match match) {
@@ -113,7 +132,7 @@ public class MatchService {
     }
 
     public void forceStart(Player player, Match match) {
-        RestPreconditions.checkAccess(match.isHost(player));
+        Preconditions.checkState(match.isHost(player), "You are not the match host");
         match.start();
     }
 

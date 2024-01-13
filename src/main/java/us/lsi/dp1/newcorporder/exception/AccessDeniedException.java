@@ -1,9 +1,7 @@
-package us.lsi.dp1.newcorporder.exceptions;
+package us.lsi.dp1.newcorporder.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
-
-import lombok.Getter;
 
 import java.io.Serial;
 

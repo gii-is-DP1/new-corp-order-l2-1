@@ -2,7 +2,7 @@ package us.lsi.dp1.newcorporder.notification;
 
 import com.google.common.base.Preconditions;
 import org.springframework.stereotype.Service;
-import us.lsi.dp1.newcorporder.exceptions.ResourceNotFoundException;
+import us.lsi.dp1.newcorporder.exception.ResourceNotFoundException;
 import us.lsi.dp1.newcorporder.user.User;
 
 import java.util.List;

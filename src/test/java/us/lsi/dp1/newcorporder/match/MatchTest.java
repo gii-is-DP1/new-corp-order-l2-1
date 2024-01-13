@@ -68,6 +68,8 @@ class MatchTest {
     @Test
     void givenMatchWith2Players_whenInitializingMatch_playersAreInitialized() {
         Match match = new Match(4, MatchMode.NORMAL, MatchVisibility.PRIVATE, null, generalSupply, companyMatrix, turnSystem);
+        when(turnSystem.getPlayers()).thenCallRealMethod();
+
         List<Conglomerate> conglomerates = getRandomConglomerates(Match.INITIAL_CONGLOMERATE_SHARES_PER_PLAYER);
         when(generalSupply.takeConglomerateSharesFromDeck(Match.INITIAL_CONGLOMERATE_SHARES_PER_PLAYER))
             .thenReturn(conglomerates);

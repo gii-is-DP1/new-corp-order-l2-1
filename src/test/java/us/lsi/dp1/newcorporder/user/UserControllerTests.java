@@ -2,7 +2,6 @@ package us.lsi.dp1.newcorporder.user;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -18,13 +17,16 @@ import org.springframework.test.web.servlet.MockMvc;
 import us.lsi.dp1.newcorporder.authority.Authority;
 import us.lsi.dp1.newcorporder.authority.AuthorityService;
 import us.lsi.dp1.newcorporder.configuration.SecurityConfiguration;
-import us.lsi.dp1.newcorporder.exceptions.AccessDeniedException;
-import us.lsi.dp1.newcorporder.exceptions.ResourceNotFoundException;
+import us.lsi.dp1.newcorporder.exception.AccessDeniedException;
+import us.lsi.dp1.newcorporder.exception.ResourceNotFoundException;
+import us.lsi.dp1.newcorporder.friendship.FriendshipService;
+import us.lsi.dp1.newcorporder.user.payload.response.UserView;
 
 import java.util.List;
 import java.util.Set;
 
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -50,6 +52,9 @@ class UserControllerTests {
 
     @MockBean
     private UserService userService;
+
+    @MockBean
+    private FriendshipService friendshipService;
 
     @MockBean
     private AuthorityService authService;
@@ -93,69 +98,27 @@ class UserControllerTests {
         return logged;
     }
 
-    @Disabled("until pagination is added")
     @Test
-    @WithMockUser("admin")
+    @WithMockUser("JohnDoe")
     void shouldFindAll() throws Exception {
-        User sara = new User();
-        sara.setId(2);
-        sara.setUsername("Sara");
+        UserView sara = UserView.builder()
+            .username("Sara")
+            .build();
 
-        User juan = new User();
-        juan.setId(3);
-        juan.setUsername("Juan");
+        UserView juan = UserView.builder()
+            .username("Juan")
+            .build();
 
-        when(this.userService.findAll()).thenReturn(List.of(user, sara, juan));
+        when(this.userService.getAllUsers(any(), any())).thenReturn(List.of(UserView.reduced(user), sara, juan));
 
         mockMvc.perform(get(BASE_URL)).andExpect(status().isOk()).andExpect(jsonPath("$.size()").value(3))
-            .andExpect(jsonPath("$[?(@.id == 1)].username").value("user"))
-            .andExpect(jsonPath("$[?(@.id == 2)].username").value("Sara"))
-            .andExpect(jsonPath("$[?(@.id == 3)].username").value("Juan"));
-    }
-
-    @Disabled("until pagination is added")
-    @Test
-    @WithMockUser("admin")
-    void shouldFindAllWithAuthority() throws Exception {
-        Authority aux = new Authority();
-        aux.setId(2);
-        aux.setName("AUX");
-
-        User sara = new User();
-        sara.setId(2);
-        sara.setUsername("Sara");
-        sara.setAuthority(aux);
-
-        User juan = new User();
-        juan.setId(3);
-        juan.setUsername("Juan");
-        juan.setAuthority(auth);
-
-        when(this.userService.findAllByAuthority(auth.getName())).thenReturn(List.of(user, juan));
-
-        mockMvc.perform(get(BASE_URL).param("auth", "VET")).andExpect(status().isOk())
-            .andExpect(jsonPath("$.size()").value(2)).andExpect(jsonPath("$[?(@.id == 1)].username").value("user"))
-            .andExpect(jsonPath("$[?(@.id == 3)].username").value("Juan"));
-    }
-
-    @Disabled("until pagination is added")
-    @Test
-    @WithMockUser("admin")
-    void shouldFindAllAuths() throws Exception {
-        Authority aux = new Authority();
-        aux.setId(2);
-        aux.setName("AUX");
-
-        when(this.authService.findAll()).thenReturn(List.of(auth, aux));
-
-        mockMvc.perform(get(BASE_URL + "/authorities")).andExpect(status().isOk())
-            .andExpect(jsonPath("$.size()").value(2))
-            .andExpect(jsonPath("$[?(@.id == 1)].name").value("VET"))
-            .andExpect(jsonPath("$[?(@.id == 2)].name").value("AUX"));
+            .andExpect(jsonPath("$[0].username").value("user"))
+            .andExpect(jsonPath("$[1].username").value("Sara"))
+            .andExpect(jsonPath("$[2].username").value("Juan"));
     }
 
     @Test
-    @WithMockUser("admin")
+    @WithMockUser("JohnDoe")
     void shouldReturnUser() throws Exception {
         when(this.userService.findUser(TEST_USER_NAME)).thenReturn(user);
         mockMvc.perform(get(BASE_URL + "/{id}", TEST_USER_NAME)).andExpect(status().isOk())
@@ -164,14 +127,14 @@ class UserControllerTests {
     }
 
     @Test
-    @WithMockUser("admin")
+    @WithMockUser("JohnDoe")
     void shouldReturnNotFoundUser() throws Exception {
         when(this.userService.findUser(TEST_USER_NAME)).thenThrow(ResourceNotFoundException.class);
         mockMvc.perform(get(BASE_URL + "/{id}", TEST_USER_NAME)).andExpect(status().isNotFound());
     }
 
     @Test
-    @WithMockUser("admin")
+    @WithMockUser("JohnDoe")
     void shouldDeleteOtherUser() throws Exception {
         logged.setId(2);
 
@@ -183,7 +146,7 @@ class UserControllerTests {
     }
 
     @Test
-    @WithMockUser("admin")
+    @WithMockUser("JohnDoe")
     void shouldNotDeleteLoggedUser() throws Exception {
         logged.setId(TEST_USER_ID);
 

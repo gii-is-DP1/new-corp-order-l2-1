@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import us.lsi.dp1.newcorporder.model.NamedEntity;
+import us.lsi.dp1.newcorporder.stats.Stat;
 
 @Getter
 @Setter

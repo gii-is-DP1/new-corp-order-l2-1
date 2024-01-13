@@ -64,12 +64,4 @@ public class MatchStatsService {
             .timesTakenOver(actionMetrics.timesTakenOver())
             .build();
     }
-    public List<MatchStatsView> getAllStats() {
-        return matchStatsRepository.findAll().stream()
-            .map(MatchStatsView::create)
-            .toList();
-    }
-
-
-
 }

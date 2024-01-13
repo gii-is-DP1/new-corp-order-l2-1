@@ -42,11 +42,13 @@ public class UserService {
 
     private final AuthorityService authorityService;
     private final UserRepository userRepository;
+    private final OnlineUserRepository onlineUserRepository;
 
-    public UserService(PasswordEncoder passwordEncoder, AuthorityService authorityService, UserRepository userRepository) {
+    public UserService(PasswordEncoder passwordEncoder, AuthorityService authorityService, UserRepository userRepository, OnlineUserRepository onlineUserRepository) {
         this.passwordEncoder = passwordEncoder;
         this.authorityService = authorityService;
         this.userRepository = userRepository;
+        this.onlineUserRepository = onlineUserRepository;
     }
 
     public Iterable<User> findAll() {
@@ -132,6 +134,14 @@ public class UserService {
 
     public boolean existsUser(String username) {
         return userRepository.existsByUsernameIgnoreCase(username);
+    }
+
+    public void updateLastPresence(User user) {
+        onlineUserRepository.updateLastPresence(user);
+    }
+
+    public boolean isOnline(User user) {
+        return onlineUserRepository.isOnline(user);
     }
 
     public void changeUsername(User user, String username) {

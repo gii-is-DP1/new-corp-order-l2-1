@@ -12,7 +12,7 @@ export class DoneState extends FrontendState {
 
     getNextState(gameState, frontendState) {
         console.log(gameState);
-        if (gameState.infiltrate.consultant >= 3 && gameState.infiltrate.takenConsultant === null)
+        if (gameState.infiltrate.conglomerateQuantity >= 3 && gameState.infiltrate.takenConsultant === null)
             return frontendState.infiltrate.TAKE_CONSULTANT;
         console.log(gameState.isPlaying)
         if (!gameState.isPlaying) {

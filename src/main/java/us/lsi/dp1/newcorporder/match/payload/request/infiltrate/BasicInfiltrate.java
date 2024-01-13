@@ -23,10 +23,11 @@ public class BasicInfiltrate implements Infiltrate {
     @Override
     public void run(Match match, UseConsultantRequest useConsultantRequests) {
         CompanyTile tile = this.tile.fromMatch(match);
-
+        System.out.println("DDDDDDDDDDDDDD");
+        System.out.println(tile.getCurrentConglomerate().name());
         Preconditions.checkState(useConsultantRequests.getConsultant() == null,
             "the infiltrate must be the same type as the consultant used");
-        Preconditions.checkArgument(tile.getCurrentConglomerate() != conglomerateType,
+        Preconditions.checkArgument(tile.getCurrentConglomerate() == conglomerateType,
             "you cannot add agents to a tile that has agents from a different conglomerate");
 
         match.getTurnSystem().getCurrentPlayer().discardSharesFromHand(conglomerateType, numberOfShares);

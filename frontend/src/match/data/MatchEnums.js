@@ -19,6 +19,10 @@ export function getConglomerateName(value)
 {
     return Object.keys(conglomerate).find(key => conglomerate[key] === value);
 }
+export function getConsultantName(value)
+{
+    return Object.keys(consultant).find(key => consultant[key] === value);
+}
 
 export const propics = [...Array(21).keys()].map(n =>   "/Images/propics/("+(n+1)+").jpg");
 

@@ -2,7 +2,7 @@ import {FrontendState} from "./FrontendState";
 import React, {useContext} from "react";
 import {StateContext} from "../Game";
 import Button, {ButtonType} from "../../../components/Button";
-import {INFILTRATE, PLOT, TAKEOVER} from "../../data/MatchEnums";
+import {getConsultantName, INFILTRATE, PLOT, TAKEOVER} from "../../data/MatchEnums";
 import {conglomerateContainerStyle, pickOneCard} from "../selector/pickers/Pickers";
 import {selectAtLeastOne} from "../selector/CanConfirmFunctions";
 import {selectQuantity} from "../selector/ChangeSelectableItemsFunctions";
@@ -64,7 +64,7 @@ export class ChooseActionState extends FrontendState {
             case PLOT:
                 return frontendState.plot.DRAW_FIRST_CONGLOMERATE;
             case INFILTRATE:
-                return frontendState.infiltrate.PICK_CONGLOMERATES
+                return frontendState.infiltrate.PICK_CONSULTANT;
             case TAKEOVER:
                 return frontendState.takeover.PICK_CONSULTANT;
         }

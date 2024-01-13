@@ -2,7 +2,7 @@ import {useContext} from "react";
 import {StateContext} from "../../Game";
 import {optionallyPickCard, pickOneCard} from "../../selector/pickers/Pickers";
 import {FrontendState} from "../FrontendState";
-import {consultant} from "../../../data/MatchEnums";
+import {consultant, getConsultantName} from "../../../data/MatchEnums";
 import fetchAuthenticated from "../../../../util/fetchAuthenticated";
 import tokenService from "../../../../services/token.service";
 import fetchAuthenticatedWithBody from "../../../../util/fetchAuthenticatedWithBody";
@@ -19,29 +19,36 @@ function InfiltrateConsultantPicker() { //TODO: add possibility of not choosing 
             context.update();
         },
         () => {
-            const body = {
-                infiltrate: {
-                    numberOfShares: context.state.infiltrate.conglomerateQuantity,
-                    conglomerateType: context.state.infiltrate.conglomerate,
-                    tile: {
-                        x: 0, //context.state.infiltrate.companyTile / 4,
-                        y: 0, //context.state.infiltrate.companyTile % 4,
-                    },
-                    type: "BasicInfiltrate"
+            const fetchAction = async () => {
+                try {
+                    await fetchAuthenticated(`/api/v1/matches/${info.code}/turn?action=INFILTRATE`, "POST");
+                } catch (error) {
+                    console.log(error.message)
                 }
             };
-            console.log(context.state.infiltrate);
-            console.log(body);
+            fetchAction();
 
+
+
+
+            //console.log(context.state.infiltrate);
+            //console.log(body);
+
+           const  body = {
+               consultant: getConsultantName(context.state.infiltrate.consultant)
+           }
             const fetch = async () => {
                 try {
-                    await fetchAuthenticatedWithBody(`/api/v1/matches/${info.code}/turn/infiltrate`, "POST", body)
+                    await fetchAuthenticatedWithBody(`/api/v1/matches/${info.code}/turn/consultants/use`, "POST", body)
                         .then(async response => await response.json());
                 } catch (error) {
                     console.log(error.message)
                 }
             };
             fetch();
+
+
+
 
             context.state.infiltrate.consultant = "NONE";
             context.update();
@@ -53,14 +60,8 @@ export class InfiltrateConsultantState extends FrontendState {
     component = <InfiltrateConsultantPicker/>;
 
     getNextState(gameState, frontendState) {
-        if (gameState.infiltrate.consultant !== null) {
-            if (gameState.infiltrate.consultant === "NONE")
-                return frontendState.DONE;
-            if (gameState.infiltrate.consultant === consultant.MEDIA_ADVISOR)
-                return frontendState.infiltrate.MEDIA_ADVISOR_PICK_CONGLOMERATE;
-            if (gameState.infiltrate.consultant === consultant.CORPORATE_LAWYER)
-                return frontendState.infiltrate.CORPORATE_LAWYER_PICK_CONGLOMERATES;
-        }
+        if (gameState.infiltrate.consultant !== null)
+            return frontendState.infiltrate.PICK_CONGLOMERATES;
     }
 }
 

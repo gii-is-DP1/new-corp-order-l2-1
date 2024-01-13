@@ -70,18 +70,22 @@ export const mockUpData = {
     },
     generalSupply: {
         conglomeratesLeftInDeck: 30,
-        openDisplay: [
-            conglomerate.GENERIC_INC,
-            conglomerate.MEGAMEDIA,
-            conglomerate.GENERIC_INC,
-            conglomerate.TOTAL_ENTERTAINMENT,
-        ],
+        openDisplay: {
+            GENERIC_INC: 1,
+            MEGAMEDIA: 2,
+            OMNICORP: 1,
+            TOTAL_ENTERTAINMENT: 1,
+        },
         consultants: {
             MEDIA_ADVISOR: 2,
-            DEALMAKER: 3,
-            CORPORATE_LAWYER: 1,
-            MILITARY_CONTRACTOR: 6,
-        },
+            DEALMAKER:
+                3,
+            CORPORATE_LAWYER:
+                1,
+            MILITARY_CONTRACTOR:
+                6,
+        }
+        ,
     },
     opponents: [
         opponent,
@@ -152,10 +156,10 @@ export const startingState = {
 
 export const defaultMatchInfo = {
     code: null,
-    isAdmin:false,
+    isAdmin: false,
     inLobby: false,
-    hasBeenKicked:false,
-    isSpectating:true,
+    hasBeenKicked: false,
+    isSpectating: true,
     maxPlayers: 4,
     players: []
 };

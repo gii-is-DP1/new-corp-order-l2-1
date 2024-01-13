@@ -6,7 +6,7 @@ import {RightBar} from "./RightBar";
 import {useParams} from "react-router-dom";
 import fetchAuthenticated from "../util/fetchAuthenticated";
 import tokenService from "../services/token.service";
-import {Company, conglomerate, propics} from "./data/MatchEnums";
+import {Company, conglomerate, propics, secretObjective} from "./data/MatchEnums";
 
 export const Info = React.createContext({...defaultMatchInfo})
 let matchInfo = {...defaultMatchInfo};
@@ -62,7 +62,6 @@ export default function Match() {
     if (isLoading) {
         return <LoadingScreen/>;
     } else {
-        //     console.log(matchData)
         setContext(id, matchData, propic);
         return <LoadedPage key={id}/>
     }
@@ -105,18 +104,20 @@ function setContext(id, matchData, propic) {
     }));
 
     if (matchData.state === "PLAYING") {
+        console.log(matchData)
+        startingState.game.player.hand = matchData.player.hand;
+        startingState.game.player.hq.secretObjectives = matchData.player.secretObjectives.map(s => secretObjective[s]);
+        startingState.game.player.hq.consultants = matchData.player.headquarter.consultants;
+        startingState.game.player.hq.rotatedConglomerates = /*matchData.player.headquarter.usedConglomerateShares ??*/ []; //TODO: check if are multiset or array
+        startingState.game.player.hq.nonRotatedConglomerates = /*matchData.player.headquarter.conglomerateShares ??*/ [];
         startingState.game.companies = matchData.companyMatrix.map(c => {
             return {company: Company[c.company], agents: c.agents, type: conglomerate[c.currentConglomerate]}
         });
         startingState.turn = matchData.turn.player;
-        for (const rotatedConglomerateNumber in matchData.player.headquarter.usedConglomerateShares) {
-            console.log("XOXOXOXOXOXOXOXOXOXOXOXOXO")
-            console.log(rotatedConglomerateNumber);
-        }
-        for (const nonRotatedConglomerateNumber in matchData.player.headquarter.conglomerateShares){
+        startingState.game.generalSupply.consultants = matchData.generalSupply.consultants;
+        startingState.game.generalSupply.conglomeratesLeftInDeck = matchData.generalSupply.deckSize;
+        startingState.game.generalSupply.openDisplay = matchData.generalSupply.openDisplay;
 
-        }
-        //startingState.game.player = {hand: matchData.player.hand, hq: {...startingState.game.player.hq,secretObjectives: matchData.player.secretObjectives,rotatedConglomerates: matchData.player.headquarter.conglomerateShares, nonRotatedConglomerates: matchData.player.headquarter.usedConglomerateShares, consultants: matchData.player.headquarter.consultants}};
-        //console.log(startingState.game.player);
+
     }
 }

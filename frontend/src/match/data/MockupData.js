@@ -9,6 +9,7 @@ const playerConsultants = {
 };
 
 const opponent = {
+    id: 1,
     username: "Beluga",
     conglomeratesInHand: 4,
     hq: {
@@ -134,6 +135,7 @@ export const startingState = {
             printMedia: {
                 yourConglomerate: null,
                 yourIsRotated: null,
+                opponent: null,
                 otherHq: null,
                 otherConglomerate: null,
                 otherIsRotated: null,

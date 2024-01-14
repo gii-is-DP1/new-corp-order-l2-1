@@ -101,7 +101,7 @@ function setContext(id, matchData, propic) {
         matchInfo.players = [{propic: propics[propic.picture], username: tokenService.getUser().username}];
     else matchInfo.players = [];
     matchInfo.players = matchInfo.players.concat(matchData.opponents.map(opponent => {
-        return {propic: propics[opponent.picture], username: opponent.username}
+        return {propic: propics[opponent.picture], username: opponent.username, id: opponent.playerId}
     }));
 
     if (matchData.state === "PLAYING") {
@@ -118,7 +118,10 @@ function setContext(id, matchData, propic) {
         startingState.game.generalSupply.consultants = matchData.generalSupply.consultants;
         startingState.game.generalSupply.conglomeratesLeftInDeck = matchData.generalSupply.deckSize;
         startingState.game.generalSupply.openDisplay = matchData.generalSupply.openDisplay;
-
+        startingState.game.opponents = matchData.opponents.map(o => {
+            return {id: o.playerId, username: o.username, conglomeratesInHand: o.handSize, hq: {rotatedConglomerates: o.headquarter.usedConglomerateShares, nonRotatedConglomerates: o.headquarter.conglomerateShares, consultants: o.headquarter.consultants} }
+        })
+        console.log(startingState);
 
     }
 }

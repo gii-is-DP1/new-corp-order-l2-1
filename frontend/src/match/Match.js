@@ -1,4 +1,4 @@
-import {defaultMatchInfo, defaultState, mockUpData} from "./data/MockupData";
+import {defaultMatchInfo, defaultState, getDefaultState} from "./data/MockupData";
 import React, {useEffect, useState} from "react"
 import css from "./match.module.css";
 import {Main} from "./Main";
@@ -35,10 +35,9 @@ export default function Match() {
             matchData = (await fetchAuthenticated(`/api/v1/matches/${id}`, "GET")
                 .then(async response => await response.json()));
 
-
-
             const isPLaying = matchData.state === "PLAYING";
-            if ( !(matchData.playing) || wasEmpty || !isPLaying || (wasWaiting && isPLaying) || (!wasPlaying && matchData.playing)) {
+            const canUpdateMatch =  !(matchData.playing) || wasEmpty || !isPLaying || (wasWaiting && isPLaying) || (!wasPlaying && matchData.playing);
+            if (canUpdateMatch) {
                 setMatchData(matchData)
             }
         } catch (error) {
@@ -87,71 +86,8 @@ function LoadedPage() {
 
 function setContext(id, matchData, propic) {
     if (matchInfo.code !== id)
-    {
         matchInfo = {...defaultMatchInfo};
-    }
-    startingState = {
-        game: mockUpData,
-        turn: 0,
-        discardedConglomerates: null,
-        isPlaying: false,
-        action: null,
-        plot: {
-            firstConglomerate: null,
-            secondConglomerate: null,
-        },
-        infiltrate: {
-            conglomerate: null,
-            conglomerateQuantity: null,
-            companyTile: null,
-            consultant: null,
-            mediaAdvisor: {
-                conglomerate: null,
-            },
-            corporateLawyer: {
-                conglomerates: null,
-                company: null,
-            },
-            takenConsultant: null
-        },
-        takeover: {
-            consultant: null,
-            conglomerates: null,
-            companyTiles: null,
-            canActivateCompanyAbility: false,
-            ability: {
-                choice: null,
-                broadcastNetwork: {
-                    companies: null,
-                },
-                guerrillaMarketing: {
-                    opponent: null,
-                    conglomerates: null,
-                },
-                printMedia: {
-                    yourConglomerate: null,
-                    yourIsRotated: null,
-                    otherHq: null,
-                    otherConglomerate: null,
-                    otherIsRotated: null,
-                },
-                ambientAdvertising: {
-                    opponent: null,
-                    conglomerates: null,
-                },
-                socialMedia: {
-                    hq: null,
-                    conglomerate: null,
-                },
-                onlineMarketing: {
-                    companies: null,
-                }
-            },
-            dealmaker: {
-                conglomerates: null,
-            }
-        }
-    };
+    startingState = getDefaultState();
 
     matchInfo.code = id;
     matchInfo.inLobby = matchData.state === "WAITING";

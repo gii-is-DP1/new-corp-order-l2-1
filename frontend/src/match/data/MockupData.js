@@ -32,6 +32,71 @@ const handConglomerates = {
     GENERIC_INC: 0
 };
 
+export function getDefaultState() {
+    return {
+        game: mockUpData,
+        turn: 0,
+        discardedConglomerates: null,
+        isPlaying: false,
+        action: null,
+        plot: {
+            firstConglomerate: null,
+            secondConglomerate: null,
+        },
+        infiltrate: {
+            conglomerate: null,
+            conglomerateQuantity: null,
+            companyTile: null,
+            consultant: null,
+            mediaAdvisor: {
+                conglomerate: null,
+            },
+            corporateLawyer: {
+                conglomerates: null,
+                company: null,
+            },
+            takenConsultant: null
+        },
+        takeover: {
+            consultant: null,
+            conglomerates: null,
+            companyTiles: null,
+            canActivateCompanyAbility: false,
+            ability: {
+                choice: null,
+                broadcastNetwork: {
+                    companies: null,
+                },
+                guerrillaMarketing: {
+                    opponent: null,
+                    conglomerates: null,
+                },
+                printMedia: {
+                    yourConglomerate: null,
+                    yourIsRotated: null,
+                    otherHq: null,
+                    otherConglomerate: null,
+                    otherIsRotated: null,
+                },
+                ambientAdvertising: {
+                    opponent: null,
+                    conglomerates: null,
+                },
+                socialMedia: {
+                    hq: null,
+                    conglomerate: null,
+                },
+                onlineMarketing: {
+                    companies: null,
+                }
+            },
+            dealmaker: {
+                conglomerates: null,
+            }
+        }
+    }
+}
+
 export const mockUpData = {
     companies: [
         {company: Company.WORDOFMOUTH, agents: 1, type: conglomerate.OMNICORP},
@@ -96,69 +161,7 @@ export const mockUpData = {
 }
 
 
-export const defaultState = {
-    game: mockUpData,
-    turn: 0,
-    discardedConglomerates: null,
-    isPlaying: false,
-    action: null,
-    plot: {
-        firstConglomerate: null,
-        secondConglomerate: null,
-    },
-    infiltrate: {
-        conglomerate: null,
-        conglomerateQuantity: null,
-        companyTile: null,
-        consultant: null,
-        mediaAdvisor: {
-            conglomerate: null,
-        },
-        corporateLawyer: {
-            conglomerates: null,
-            company: null,
-        },
-        takenConsultant: null
-    },
-    takeover: {
-        consultant: null,
-        conglomerates: null,
-        companyTiles: null,
-        canActivateCompanyAbility: false,
-        ability: {
-            choice: null,
-            broadcastNetwork: {
-                companies: null,
-            },
-            guerrillaMarketing: {
-                opponent: null,
-                conglomerates: null,
-            },
-            printMedia: {
-                yourConglomerate: null,
-                yourIsRotated: null,
-                opponent: null,
-                otherHq: null,
-                otherConglomerate: null,
-                otherIsRotated: null,
-            },
-            ambientAdvertising: {
-                opponent: null,
-                conglomerates: null,
-            },
-            socialMedia: {
-                hq: null,
-                conglomerate: null,
-            },
-            onlineMarketing: {
-                companies: null,
-            }
-        },
-        dealmaker: {
-            conglomerates: null,
-        }
-    }
-};
+export const defaultState = getDefaultState();
 
 
 export const defaultMatchInfo = {

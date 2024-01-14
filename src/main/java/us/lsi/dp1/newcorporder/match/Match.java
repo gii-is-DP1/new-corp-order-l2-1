@@ -36,6 +36,7 @@ public class Match {
     @Getter private final MatchMode mode;
     @Getter private final int maxPlayers;
     @Getter private MatchState state = MatchState.WAITING;
+    @Getter private MatchPlayer winner;
 
     @Getter @Setter private MatchPlayer host;
     private final Map<Integer, MatchPlayer> players = new HashMap<>();
@@ -72,7 +73,7 @@ public class Match {
         this.state = MatchState.FINISHED;
 
         Multiset<MatchPlayer> victoryPoints = this.calculateVictoryPoints();
-        MatchPlayer winner = victoryPoints.entrySet().stream()
+        this.winner = victoryPoints.entrySet().stream()
             .max(Comparator.comparingInt(Multiset.Entry::getCount))
             .map(Multiset.Entry::getElement)
             .orElseThrow();

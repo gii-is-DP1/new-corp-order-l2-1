@@ -5,7 +5,7 @@ import {Main} from "./Main";
 import {useParams} from "react-router-dom";
 import fetchAuthenticated from "../util/fetchAuthenticated";
 import tokenService from "../services/token.service";
-import {Company, conglomerate, propics, secretObjective} from "./data/MatchEnums";
+import {Company, conglomerate, getConglomerateName, propics, secretObjective} from "./data/MatchEnums";
 
 export const Info = React.createContext({...defaultMatchInfo})
 let matchInfo = {...defaultMatchInfo};
@@ -17,6 +17,7 @@ export default function Match() {
     matchInfo = {...defaultMatchInfo};
 
     const [propic, setPropic] = useState(null);
+
     const fetchPropic = async () => {
         try {
             setPropic(await fetchAuthenticated(`/api/v1/users/${tokenService.getUser().username}/picture`, "GET")
@@ -32,11 +33,38 @@ export default function Match() {
             const wasWaiting = wasEmpty ? null : matchData.state === "WAITING"
             const wasPlaying = wasEmpty ? false : matchData.playing;
 
+            let handCount = 0;
+            if(!wasEmpty) {
+                if (matchData.player.hand[getConglomerateName(conglomerate.OMNICORP)] !== undefined)
+                    handCount += matchData.player.hand[getConglomerateName(conglomerate.OMNICORP)];
+                if (matchData.player.hand[getConglomerateName(conglomerate.MEGAMEDIA)] !== undefined)
+                    handCount += matchData.player.hand[getConglomerateName(conglomerate.MEGAMEDIA)];
+                if (matchData.player.hand[getConglomerateName(conglomerate.TOTAL_ENTERTAINMENT)] !== undefined)
+                    handCount += matchData.player.hand[getConglomerateName(conglomerate.TOTAL_ENTERTAINMENT)];
+                if (matchData.player.hand[getConglomerateName(conglomerate.GENERIC_INC)] !== undefined)
+                    handCount += matchData.player.hand[getConglomerateName(conglomerate.GENERIC_INC)];
+            }
+
             matchData = (await fetchAuthenticated(`/api/v1/matches/${id}`, "GET")
                 .then(async response => await response.json()));
 
+
+            let newHandCount = 0;
+
+            if(matchData.player.hand[getConglomerateName(conglomerate.OMNICORP)] !== undefined)
+                newHandCount += matchData.player.hand[getConglomerateName(conglomerate.OMNICORP)];
+            if(matchData.player.hand[getConglomerateName(conglomerate.MEGAMEDIA)] !== undefined)
+                newHandCount += matchData.player.hand[getConglomerateName(conglomerate.MEGAMEDIA)];
+            if(matchData.player.hand[getConglomerateName(conglomerate.TOTAL_ENTERTAINMENT)] !== undefined)
+                newHandCount += matchData.player.hand[getConglomerateName(conglomerate.TOTAL_ENTERTAINMENT)];
+            if(matchData.player.hand[getConglomerateName(conglomerate.GENERIC_INC)] !== undefined)
+                newHandCount += matchData.player.hand[getConglomerateName(conglomerate.GENERIC_INC)];
+
+            console.log(handCount);
+            console.log(newHandCount);
+
             const isPLaying = matchData.state === "PLAYING";
-            const canUpdateMatch =  !(matchData.playing) || wasEmpty || !isPLaying || (wasWaiting && isPLaying) || (!wasPlaying && matchData.playing);
+            const canUpdateMatch =  !(matchData.playing) || wasEmpty || !isPLaying || (wasWaiting && isPLaying) || (!wasPlaying && matchData.playing) /*|| newHandCount !== handCount*/;
             if (canUpdateMatch) {
                 setMatchData(matchData)
             }
@@ -103,6 +131,8 @@ function setContext(id, matchData, propic) {
     matchInfo.players = matchInfo.players.concat(matchData.opponents.map(opponent => {
         return {propic: propics[opponent.picture], username: opponent.username, id: opponent.playerId}
     }));
+    matchInfo.isWinner = null;
+    console.log(matchInfo);
 
     if (matchData.state === "PLAYING") {
         startingState.isPlaying = matchData.playing;
@@ -130,6 +160,7 @@ function setContext(id, matchData, propic) {
         startingState.game.opponents = matchData.opponents.map(o => {
             return {id: o.playerId, username: o.username, conglomeratesInHand: o.handSize, hq: {rotatedConglomerates: o.headquarter.usedConglomerateShares, nonRotatedConglomerates: o.headquarter.conglomerateShares, consultants: o.headquarter.consultants} }
         })
-
     }
+    if (matchData.state === "FINISHED")
+        matchInfo.isWinner = matchData.isWinner;
 }

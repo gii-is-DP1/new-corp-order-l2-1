@@ -34,6 +34,9 @@ public class MatchView {
             .generalSupply(GeneralSupplyView.of(match.getGeneralSupply()))
             .turn(TurnView.of(match.getTurnSystem()))
             .isPlaying(match.getTurnSystem().getCurrentPlayer() == player);
+        if(match.getState() == MatchState.FINISHED)
+            builder
+            .isWinner(match.getWinner() == player);
         return builder.build();
     }
 
@@ -56,6 +59,8 @@ public class MatchView {
     private final CompanyTile[] companyMatrix;
     private final GeneralSupplyView generalSupply;
     private final TurnView turn;
+
+    private final Boolean isWinner;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public Integer getHost() {

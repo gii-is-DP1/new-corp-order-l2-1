@@ -166,5 +166,6 @@ export const defaultMatchInfo = {
     hasBeenKicked: false,
     isSpectating: true,
     maxPlayers: 4,
-    players: []
+    players: [],
+    isWinner: null
 };

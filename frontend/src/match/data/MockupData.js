@@ -82,7 +82,7 @@ export function getDefaultState() {
                     conglomerates: null,
                 },
                 socialMedia: {
-                    hq: null,
+                    opponent: null,
                     conglomerate: null,
                 },
                 onlineMarketing: {

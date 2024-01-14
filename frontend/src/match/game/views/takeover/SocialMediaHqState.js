@@ -12,7 +12,7 @@ function SocialMediaHqPicker() {
     players[0] = <HQViewer/>;
     players = players.concat(context.opponents.components);
     return pickOneCard(players, (selected) => {
-        state.takeover.ability.socialMedia.hq = selected[0] === 0 ? state.game.player  : context.opponents.values[selected[0]-1];
+        state.takeover.ability.socialMedia.opponent = selected[0] === 0 ? state.game.player  : context.opponents.values[selected[0]-1];
         context.update();
     })
 
@@ -22,7 +22,7 @@ export class SocialMediaHqState extends FrontendState {
     component = <SocialMediaHqPicker/>
 
     getNextState(gameState, frontendState) {
-        if (gameState.takeover.ability.socialMedia.hq !== null)
+        if (gameState.takeover.ability.socialMedia.opponent !== null)
             return frontendState.takeover.SOCIAL_MEDIA_PICK_CONGLOMERATE;
     }
 }

@@ -50,6 +50,7 @@ const AppNavbar = () => {
                     {link: '/metrics', text: 'Metrics'},
                     {link: '/admin/matches', text: 'Matches'},
                     {link: '/admin/moderation', text: 'Moderation'},
+                    {link: '/admin/achievements', text: 'Achievements'},
                     {link: `/user/${username}`, isProfilePicture: true},
                 ]);
             }

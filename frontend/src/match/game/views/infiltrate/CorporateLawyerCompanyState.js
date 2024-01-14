@@ -11,7 +11,7 @@ function CorporateLawyerCompanyPicker() {
     const info = useContext(Info);
 
     return pickCompany(context.companyTiles.components, (selected) => {
-        context.state.infiltrate.corporateLawyer.company = context.state.game.companies[selected[0]];
+        context.state.infiltrate.corporateLawyer.company = selected[0];
         context.update();
 
         const infiltrateBody = {
@@ -23,7 +23,8 @@ function CorporateLawyerCompanyPicker() {
                         tile: {
                             x: context.state.infiltrate.companyTile % 4,
                             y: Math.floor(context.state.infiltrate.companyTile / 4),
-                        }
+                        },
+                        type: "BasicInfiltrate"
                     },
                     {
                         numberOfShares: context.state.infiltrate.corporateLawyer.conglomerates.quantity,
@@ -32,6 +33,7 @@ function CorporateLawyerCompanyPicker() {
                             x: context.state.infiltrate.corporateLawyer.company % 4,
                             y: Math.floor(context.state.infiltrate.corporateLawyer.company / 4),
                         },
+                        type: "BasicInfiltrate"
                     }
                 ],
                 type: "CorporateLawyerInfiltrate"

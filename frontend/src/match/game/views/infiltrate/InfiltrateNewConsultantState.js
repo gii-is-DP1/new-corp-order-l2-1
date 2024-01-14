@@ -13,7 +13,6 @@ function InfiltrateNewConsultantDrawer() {
     const info = useContext(Info);
     if(state.infiltrate.takenConsultant !== null)
     {
-        console.log("THIS SHOULD NO HAPPEN")
         return;
     }
 

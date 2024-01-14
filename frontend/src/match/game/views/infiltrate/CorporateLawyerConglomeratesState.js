@@ -2,11 +2,12 @@ import {useContext} from "react";
 import {StateContext} from "../../Game";
 import {pickManyConglomeratesOfTheSameColor} from "../../selector/pickers/Pickers";
 import {FrontendState} from "../FrontendState";
+import {getConglomerateName} from "../../../data/MatchEnums";
 
 function CorporateLawyerConglomeratesPicker() {
     const context = useContext(StateContext);
     return pickManyConglomeratesOfTheSameColor(context.hand.components, (selected) => {
-        context.state.infiltrate.corporateLawyer.conglomerates = {type: context.hand.values[selected[0]], quantity: selected.length}
+        context.state.infiltrate.corporateLawyer.conglomerates = {type: getConglomerateName(context.hand.values[selected[0]]), quantity: selected.length}
         context.update();
     })
 }

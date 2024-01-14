@@ -8,9 +8,12 @@ import {selectAtLeastOne} from "../selector/CanConfirmFunctions";
 import {selectQuantity} from "../selector/ChangeSelectableItemsFunctions";
 import Selector from "../selector/Selector";
 import css from "../game.module.css";
+import fetchAuthenticated from "../../../util/fetchAuthenticated";
+import {Info} from "../../Match";
 
 function ActionChooser() { //TODO: use picker to substitute this method
     const context = useContext(StateContext);
+    const info = useContext(Info);
     const setMoveState = (action) => {
         context.state.action = action;
         context.update();
@@ -27,6 +30,19 @@ function ActionChooser() { //TODO: use picker to substitute this method
         const selectedComponent = selection[selectedItemIndex];
         const action = selectedComponent.props.action;
         setMoveState(action);
+
+        switch (action)
+        {
+            case INFILTRATE:
+                const fetchAction = async () => {
+                    try {
+                        await fetchAuthenticated(`/api/v1/matches/${info.code}/turn?action=INFILTRATE`, "POST");
+                    } catch (error) {
+                        console.log(error.message)
+                    }
+                };
+                fetchAction();
+        }
     }
 
     return <Selector title={"What will you do?"}

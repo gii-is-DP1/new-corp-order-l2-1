@@ -4,7 +4,7 @@ import {
     selectAtLeastOne,
     selectAtLeastOneOrTwo,
     selectAtLeastOneOrZero,
-    selectAtLeastTwo
+    selectAtLeastTwo, selectAtLeastTwoOrThree
 } from "../CanConfirmFunctions";
 import {
     onlySelectOfSameColor,
@@ -105,6 +105,17 @@ export function pickOneOrTwoCompanies(from, onConfirm) {
         selection={from}
         canConfirm={selectAtLeastOneOrTwo}
         changeSelectableItems={onlySelectOfSameColor}
+        onConfirm={onConfirm}
+        key={{onConfirm}}
+    />;
+}
+
+export function pickTwoOrThreeCompanies(from, onConfirm) {
+    return <CompanySelector
+        title={"Pick two or three companies"}
+        selection={from}
+        canConfirm={selectAtLeastTwoOrThree}
+        changeSelectableItems={selectQuantity(3)}
         onConfirm={onConfirm}
         key={{onConfirm}}
     />;

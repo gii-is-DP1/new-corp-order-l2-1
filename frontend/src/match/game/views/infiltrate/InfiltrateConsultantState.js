@@ -12,46 +12,33 @@ function InfiltrateConsultantPicker() { //TODO: add possibility of not choosing 
     const context = useContext(StateContext);
     const info = useContext(Info);
 
+
+    const fetchConsultant = (body) => async () => {
+        try {
+            await fetchAuthenticatedWithBody(`/api/v1/matches/${info.code}/turn/consultants/use`, "POST", body)
+                .then(async response => await response.json());
+        } catch (error) {
+            console.log(error.message)
+        }
+    };
+    const makeRequest = (context) => {
+
+        const  body = {
+            consultant: getConsultantName(context.state.infiltrate.consultant)
+        }
+        fetchConsultant(body)();
+    }
+
     return optionallyPickCard(context.playerConsultants.components,
         (selected) => {
-            const index = selected[0];
-            context.state.infiltrate.consultant = context.playerConsultants.values[index];
+            context.state.infiltrate.consultant = context.playerConsultants.values[selected[0]];
             context.update();
+            makeRequest(context);
         },
         () => {
-            const fetchAction = async () => {
-                try {
-                    await fetchAuthenticated(`/api/v1/matches/${info.code}/turn?action=INFILTRATE`, "POST");
-                } catch (error) {
-                    console.log(error.message)
-                }
-            };
-            fetchAction();
-
-
-
-
-            //console.log(context.state.infiltrate);
-            //console.log(body);
-
-           const  body = {
-               consultant: getConsultantName(context.state.infiltrate.consultant)
-           }
-            const fetch = async () => {
-                try {
-                    await fetchAuthenticatedWithBody(`/api/v1/matches/${info.code}/turn/consultants/use`, "POST", body)
-                        .then(async response => await response.json());
-                } catch (error) {
-                    console.log(error.message)
-                }
-            };
-            fetch();
-
-
-
-
             context.state.infiltrate.consultant = "NONE";
             context.update();
+            makeRequest(context);
         }
     )
 }

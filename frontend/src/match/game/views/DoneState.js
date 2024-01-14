@@ -10,11 +10,13 @@ function Done() {
 export class DoneState extends FrontendState {
     component = <Done/>
 
-    getNextState(gameState, frontendState) {
-        console.log(gameState);
-        if (gameState.infiltrate.conglomerateQuantity >= 3 && gameState.infiltrate.takenConsultant === null)
+    getNextState(gameState, frontendState){
+        console.log(gameState.infiltrate.takenConsultant);
+        if ((gameState.infiltrate.conglomerateQuantity + gameState.infiltrate.extraConglomerate != null ? 1 : 0 >= 3)
+            && gameState.infiltrate.takenConsultant === null){
             return frontendState.infiltrate.TAKE_CONSULTANT;
-        console.log(gameState.isPlaying)
+        }
+
         if (!gameState.isPlaying) {
             return frontendState.WAITING_FOR_TURN;
         }

@@ -19,9 +19,10 @@ export const conglomerateContainerStyle = {
     display: "flex",
 }
 
-export function pickOneCard(from, onConfirm) {
+export function pickOneCard(from, onConfirm, selectableElements = [...Array(from.length).keys()]) {
     return <Selector title={"Pick a card"}
                      selection={from}
+                     selectableElements={selectableElements}
                      canConfirm={selectAtLeastOne}
                      changeSelectableItems={selectQuantity(1)}
                      onConfirm={onConfirm}
@@ -63,10 +64,11 @@ export function pickTwoCards(from, onConfirm) {
     />;
 }
 
-export function optionallyPickCard(from, onConfirm, onSkip) {
+export function optionallyPickCard(from, onConfirm, onSkip, selectableElements = [...Array(from.length).keys()]) {
     return <Selector title={"You may pick a card"}
                      selection={from}
                      canConfirm={selectAtLeastOne}
+                     selectableElements = {selectableElements}
                      changeSelectableItems={selectQuantity(1)}
                      onConfirm={onConfirm}
                      containerStyle={conglomerateContainerStyle}
@@ -157,12 +159,11 @@ export function pickOrthogonallyAdjacentCompanyTiles(from, onConfirm) {
 //selectableElements = {[...Array(from.length).keys()].filter((i) => getConglomerateName(companies[i].type) === conglomerateType)}
 
 export function pickOrthogonallyAdjacentCompanyTilesWithColors(from, onConfirm, conglomerateType, companies) {
-    console.log(conglomerateType)
     return <CompanySelector
         title={"Pick orthogonally adjacent Companies"}
         help={
             <>
-                <p> You have selected {conglomerateType} </p>
+                <p> You have selected {conglomerateType}, therefore the first company ability you select must contain agents of type {conglomerateType}! </p>
             </>
         }
         selection={from}

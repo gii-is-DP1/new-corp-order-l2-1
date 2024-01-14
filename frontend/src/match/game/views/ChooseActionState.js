@@ -45,6 +45,10 @@ function ActionChooser() { //TODO: use picker to substitute this method
         }
     }
 
+    const selectableElements = [0,2];
+    if(context.hand.values.length > 0)
+        selectableElements.push(1);
+
     return <Selector title={"What will you do?"}
                      help={
                          <>
@@ -67,6 +71,7 @@ function ActionChooser() { //TODO: use picker to substitute this method
                                  "space-around"
                          }
                      }
+                     selectableElements={selectableElements}
                      key={onConfirm}
     />
 }

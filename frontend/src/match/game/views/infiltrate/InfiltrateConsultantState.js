@@ -29,6 +29,15 @@ function InfiltrateConsultantPicker() { //TODO: add possibility of not choosing 
         fetchConsultant(body)();
     }
 
+    const selectableElements = [];
+
+    if(context.hand.values.length > 1)
+        for(let i = 0; i < context.playerConsultants.values.length; i++){
+            const c = context.playerConsultants.values[i];
+            if(c === consultant.CORPORATE_LAWYER || c === consultant.MEDIA_ADVISOR)
+                selectableElements.push(i)
+        }
+
     return optionallyPickCard(context.playerConsultants.components,
         (selected) => {
             context.state.infiltrate.consultant = context.playerConsultants.values[selected[0]];
@@ -39,8 +48,9 @@ function InfiltrateConsultantPicker() { //TODO: add possibility of not choosing 
             context.state.infiltrate.consultant = "NONE";
             context.update();
             makeRequest(context);
-        }
-    )
+        },
+        selectableElements
+    );
 }
 
 export class InfiltrateConsultantState extends FrontendState {

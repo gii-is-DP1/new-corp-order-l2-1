@@ -2,7 +2,6 @@ import {FrontendState} from "../FrontendState";
 import {useContext} from "react";
 import {StateContext} from "../../Game";
 import {
-    pickOrthogonallyAdjacentCompanyTiles,
     pickOrthogonallyAdjacentCompanyTilesWithColors
 } from "../../selector/pickers/Pickers";
 import fetchAuthenticatedWithBody from "../../../../util/fetchAuthenticatedWithBody";

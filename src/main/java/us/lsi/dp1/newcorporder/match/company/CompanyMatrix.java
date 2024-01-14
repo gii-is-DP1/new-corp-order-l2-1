@@ -8,10 +8,7 @@ import lombok.Getter;
 import us.lsi.dp1.newcorporder.match.MatchSize;
 import us.lsi.dp1.newcorporder.match.conglomerate.Conglomerate;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class CompanyMatrix {
 
@@ -44,10 +41,11 @@ public class CompanyMatrix {
 
         List<Company> companies = createCompanies(matchSize);
         List<Conglomerate> agents = createAgents(matchSize);
+        Random r = new Random();
 
         // fill the matrix with the companies in random order and a random agent on every tile
         for (int i = 0; i < tiles.length; i++) {
-            tiles[i] = new CompanyTile(companies.get(i), agents.get(i));
+            tiles[i] = new CompanyTile(companies.get(i), agents.get(i), r.nextInt(1,4));
         }
 
         this.matchSize = matchSize;

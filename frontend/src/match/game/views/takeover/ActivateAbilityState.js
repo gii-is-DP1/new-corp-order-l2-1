@@ -4,9 +4,12 @@ import React, {useContext} from "react";
 import {StateContext} from "../../Game";
 import {pickOneCard} from "../../selector/pickers/Pickers";
 import Button, {ButtonType} from "../../../../components/Button";
+import fetchAuthenticatedWithBody from "../../../../util/fetchAuthenticatedWithBody";
+import {Info} from "../../../Match";
 
 function AbilityChooser() { //TODO:implement boolean choice
     const context= useContext(StateContext);
+    const info = useContext(Info);
     const state = context.state;
     const confirmButton = [];
     confirmButton[0] = <Button buttonType={ButtonType.primary} value={true}>
@@ -21,8 +24,19 @@ function AbilityChooser() { //TODO:implement boolean choice
         const choice = confirmButton[selected[0]].props.value;
         if(choice === true)
             state.takeover.ability.choice = state.takeover.companyTiles[1].company.type;
-        else
+        else {
             state.takeover.ability.choice = choice;
+            const body = {companyAbility: null};
+            const fetchCompany = async () => {
+                try {
+                    await fetchAuthenticatedWithBody(`/api/v1/matches/${info.code}/turn/company-abilities`, "POST", body)
+                        .then(async response => await response.json());
+                } catch (error) {
+                    console.log(error.message)
+                }
+            };
+            fetchCompany();
+        }
         context.update();
     })
 }

@@ -61,7 +61,6 @@ class DefaultInfiltrateTest {
         CompanyTile tile = CompanyTile.builder()
             .agents(1)
             .build();
-        lenient().when(tileReference.fromMatch(match)).thenReturn(tile);
 
         DefaultInfiltrate action = DefaultInfiltrate.builder()
             .tile(tileReference)

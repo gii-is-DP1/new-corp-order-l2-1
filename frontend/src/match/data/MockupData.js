@@ -8,6 +8,7 @@ const playerConsultants = {
 };
 
 const opponent = {
+    id: 1,
     username: "Beluga",
     conglomeratesInHand: 4,
     hq: {

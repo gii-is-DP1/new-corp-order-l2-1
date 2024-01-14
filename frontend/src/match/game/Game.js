@@ -49,13 +49,14 @@ function Foreground() {
             </div>
         )}
 
-        <OpponentsHqViewer/>
+
 
         <div style={{background: black, position:"fixed", width:"100%", height:"100%", top:0}}>
             <FrontendView/>
         </div>
 
         <div style={{display:"flex", position:"fixed", bottom:"0", width:"100%", justifyContent:"space-evenly"}}>
+            <OpponentsHqViewer/>
             <HandViewer/>
             <HQViewer/>
             <GeneralSupplyViewer/>

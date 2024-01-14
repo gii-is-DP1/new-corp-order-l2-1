@@ -3,16 +3,18 @@ import {useContext} from "react";
 import {StateContext} from "../../Game";
 import {pickOneCard} from "../../selector/pickers/Pickers";
 import {Conglomerates} from "../../../components/collections/Conglomerates";
+import {ConglomerateMultiset} from "../../../components/multisets/ConglomerateMultiset";
 
 
 function PrintMediaFirstConglomeratePicker() {
     const context = useContext(StateContext);
     const state = context.state;
-    const conglomerates = new Conglomerates(state.game.player.hq.rotatedConglomerates.concat(state.game.player.hq.nonRotatedConglomerates));
-    return pickOneCard(conglomerates.components, (selected) => {
+    const components =  [...context.rotatedHqConglomerates.components,...context.nonrotatedHqConglomerates.components];
+    const values =  [...context.rotatedHqConglomerates.values,...context.nonrotatedHqConglomerates.values];
+    return pickOneCard(components, (selected) => {
         const index = selected[0];
         state.takeover.ability.printMedia.yourIsRotated = state.game.player.hq.rotatedConglomerates.length > index;
-        state.takeover.ability.printMedia.yourConglomerate = conglomerates.values[index];
+        state.takeover.ability.printMedia.yourConglomerate = values[index];
         context.update();
     })
 

@@ -25,14 +25,15 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true, of = {})
 public class ConsultantStats extends BaseEntity {
 
-    public static List<ConsultantStats> create(MatchPlayer player) {
+    public static List<ConsultantStats> create(MatchPlayer player, PlayerMatchStats playerMatchStats) {
         return Arrays.stream(ConsultantType.values())
-            .map(type -> ConsultantStats.create(player, type))
+            .map(type -> ConsultantStats.create(player, playerMatchStats, type))
             .toList();
     }
 
-    public static ConsultantStats create(MatchPlayer player, ConsultantType type) {
+    public static ConsultantStats create(MatchPlayer player, PlayerMatchStats playerMatchStats, ConsultantType type) {
         return ConsultantStats.builder()
+            .playerMatchStats(playerMatchStats)
             .type(type)
             .timesUsed(player.getConsultantUses().count(type))
             .build();

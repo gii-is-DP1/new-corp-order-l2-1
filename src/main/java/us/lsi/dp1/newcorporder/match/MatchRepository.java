@@ -36,20 +36,15 @@ public class MatchRepository {
             .findFirst();
     }
 
+    public void registerMatch(Match match) {
+        this.matches.put(match.getCode(), match);
+    }
+
     public Optional<Match> getByMatchCode(String matchCode) {
         return Optional.ofNullable(this.matches.get(matchCode));
     }
 
-    public Match createNewMatch(MatchMode mode, MatchVisibility visibility, int maxPlayers) {
-        String matchCode = this.buildValidMatchCode();
-
-        Match match = Match.create(maxPlayers, mode, visibility, matchCode);
-        this.matches.put(matchCode, match);
-
-        return match;
-    }
-
-    private String buildValidMatchCode() {
+    public String buildValidMatchCode() {
         String matchCode = null;
         while (matchCode == null || getByMatchCode(matchCode).isPresent() || matchStatsRepository.existsByCode(matchCode)) {
             matchCode = RandomUtils.getRandomMatchCode();

@@ -25,14 +25,15 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true, of = {})
 public class ConglomerateStats extends BaseEntity {
 
-    public static List<ConglomerateStats> create(MatchPlayer player) {
+    public static List<ConglomerateStats> create(MatchPlayer player, PlayerMatchStats playerMatchStats) {
         return Arrays.stream(Conglomerate.values())
-            .map(conglomerate -> ConglomerateStats.create(player, conglomerate))
+            .map(conglomerate -> ConglomerateStats.create(player, playerMatchStats, conglomerate))
             .toList();
     }
 
-    public static ConglomerateStats create(MatchPlayer player, Conglomerate conglomerate) {
+    public static ConglomerateStats create(MatchPlayer player, PlayerMatchStats playerMatchStats, Conglomerate conglomerate) {
         return ConglomerateStats.builder()
+            .playerMatchStats(playerMatchStats)
             .conglomerate(conglomerate)
             .sharesUsed(player.getShareUses().count(conglomerate))
             .agentsUsed(player.getAgentUses().count(conglomerate))

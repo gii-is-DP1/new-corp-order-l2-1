@@ -7,17 +7,18 @@ import {getConglomerateName} from "../../../data/MatchEnums";
 import fetchAuthenticatedWithBody from "../../../../util/fetchAuthenticatedWithBody";
 import {Info} from "../../../Match";
 import {ConglomerateMultiset} from "../../../components/multisets/ConglomerateMultiset";
+import {RotatedConglomerateMultiset} from "../../../components/multisets/RotatedConglomerateMultiset";
 
 
 function PrintMediaSecondConglomeratePicker() {
     const context = useContext(StateContext);
     const info = useContext(Info);
     const state = context.state;
-    const components =  [...new ConglomerateMultiset(state.takeover.ability.printMedia.opponent.hq.rotatedConglomerates).components,...new ConglomerateMultiset(state.takeover.ability.printMedia.opponent.hq.nonRotatedConglomerate).components];
-    const values = [...new ConglomerateMultiset(state.takeover.ability.printMedia.opponent.hq.rotatedConglomerates).values,...new ConglomerateMultiset(state.takeover.ability.printMedia.opponent.hq.nonRotatedConglomerate).values];;
+    const components =  [...(new RotatedConglomerateMultiset(state.takeover.ability.printMedia.opponent.hq.rotatedConglomerates).components),...(new ConglomerateMultiset(state.takeover.ability.printMedia.opponent.hq.nonRotatedConglomerates).components)];
+    const values = [...new RotatedConglomerateMultiset(state.takeover.ability.printMedia.opponent.hq.rotatedConglomerates).values,...new ConglomerateMultiset(state.takeover.ability.printMedia.opponent.hq.nonRotatedConglomerates).values];
     return pickOneCard(components, (selected) => {
         const index = selected[0];
-        state.takeover.ability.printMedia.otherIsRotated = state.takeover.ability.printMedia.opponent.hq.rotatedConglomerates.length > index;
+        state.takeover.ability.printMedia.otherIsRotated = new ConglomerateMultiset(state.takeover.ability.printMedia.opponent.hq.rotatedConglomerates).values.length > index;
         state.takeover.ability.printMedia.otherConglomerate = values[index];
         const body = {companyAbility: {type: "PrintMediaAbility",
                 playerId: state.takeover.ability.printMedia.opponent.id,

@@ -13,7 +13,7 @@ function PrintMediaFirstConglomeratePicker() {
     const values =  [...context.rotatedHqConglomerates.values,...context.nonrotatedHqConglomerates.values];
     return pickOneCard(components, (selected) => {
         const index = selected[0];
-        state.takeover.ability.printMedia.yourIsRotated = state.game.player.hq.rotatedConglomerates.length > index;
+        state.takeover.ability.printMedia.yourIsRotated = context.rotatedHqConglomerates.values.length > index;
         state.takeover.ability.printMedia.yourConglomerate = values[index];
         context.update();
     })

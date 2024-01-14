@@ -1,9 +1,8 @@
 import {FrontendState} from "../FrontendState";
-import {consultant} from "../../../data/MatchEnums";
 import {AbilityChooser} from "./ActivateAbilityState";
 
-function DrawTwoCardsFromDeck() { //TODO: implement component
-    return <>Unimplemented component</>
+function DrawTwoCardsFromDeck() {
+    return <></>
 }
 
 export class DealmakerDrawTwoCardsFromDeckState extends FrontendState {

@@ -3,8 +3,6 @@ import {useContext} from "react";
 import {StateContext} from "../../Game";
 import {pickManyConglomeratesOfTheSameColor} from "../../selector/pickers/Pickers";
 import {Info} from "../../../Match";
-import fetchAuthenticatedWithBody from "../../../../util/fetchAuthenticatedWithBody";
-import {RotatableConglomerates} from "../../../components/collections/RotatableConglomerates";
 
 function TakeoverConglomeratesPicker() {
     const context = useContext(StateContext);

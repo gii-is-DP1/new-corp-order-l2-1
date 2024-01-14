@@ -4,15 +4,16 @@ import {
     selectAtLeastOne,
     selectAtLeastOneOrTwo,
     selectAtLeastOneOrZero,
-    selectAtLeastTwo, selectAtLeastTwoOrThree
+    selectAtLeastTwo, selectAtLeastTwoOrThree, selectAtLeastTwoTakeover
 } from "../CanConfirmFunctions";
 import {
     onlySelectOfSameColor,
-    selectOrthogonallyAdjacentTiles,
+    selectOrthogonallyAdjacentTiles, selectOrthogonallyAdjacentTilesWithColors,
     selectQuantity, selectUntilNRemain
 } from "../ChangeSelectableItemsFunctions";
 import React from "react";
-import {getConglomerateName} from "../../../data/MatchEnums";
+import {conglomerate, getConglomerateName} from "../../../data/MatchEnums";
+import Conglomerate from "../../../components/Conglomerate";
 
 export const conglomerateContainerStyle = {
     display: "flex",
@@ -29,7 +30,7 @@ export function pickOneCard(from, onConfirm) {
     />;
 }
 
-export function pickNCards(title, from, onConfirm,n) {
+export function pickNCards(title, from, onConfirm, n) {
     return <Selector title={title}
                      selection={from}
                      canConfirm={selectAtLeastN(n)}
@@ -101,7 +102,7 @@ export function pickCompanyWithSameColor(from, onConfirm, n, conglomerateType, c
     return <CompanySelector
         title={"Pick Company"}
         selection={from}
-        selectableElements = {[...Array(from.length).keys()].filter((i) => getConglomerateName(companies[i].type) === conglomerateType)}
+        selectableElements={[...Array(from.length).keys()].filter((i) => getConglomerateName(companies[i].type) === conglomerateType)}
         canConfirm={selectAtLeastOne}
         changeSelectableItems={selectQuantity(n)}
         onConfirm={onConfirm}
@@ -153,8 +154,37 @@ export function pickOrthogonallyAdjacentCompanyTiles(from, onConfirm) {
     />;
 }
 
-function CompanySelector({title, selection, canConfirm, changeSelectableItems, onConfirm, key, selectableElements = [...Array(selection.length).keys()]}) {
+//selectableElements = {[...Array(from.length).keys()].filter((i) => getConglomerateName(companies[i].type) === conglomerateType)}
+
+export function pickOrthogonallyAdjacentCompanyTilesWithColors(from, onConfirm, conglomerateType, companies) {
+    console.log(conglomerateType)
+    return <CompanySelector
+        title={"Pick orthogonally adjacent Companies"}
+        help={
+            <>
+                <p> You have selected {conglomerateType} </p>
+            </>
+        }
+        selection={from}
+        canConfirm={selectAtLeastTwoTakeover(conglomerateType, companies)}
+        changeSelectableItems={selectOrthogonallyAdjacentTilesWithColors(companies)}
+        onConfirm={onConfirm}
+        key={{onConfirm}}
+    />;
+}
+
+function CompanySelector({
+                             title,
+                             help = <></>,
+                             selection,
+                             canConfirm,
+                             changeSelectableItems,
+                             onConfirm,
+                             key,
+                             selectableElements = [...Array(selection.length).keys()]
+                         }) {
     return <Selector title={title}
+                     help={help}
                      selection={selection}
                      canConfirm={canConfirm}
                      changeSelectableItems={changeSelectableItems}

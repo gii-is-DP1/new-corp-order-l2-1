@@ -24,8 +24,6 @@ export class State {
         this.frontendView = getCurrentFrontendView(state);
         this.opponents = new Opponents(state.game.opponents);
         this.update = () => {setGameState({...state})}
-
-        console.log(this);
     }
 }
 

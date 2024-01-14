@@ -2,9 +2,9 @@ import {Company, conglomerate, secretObjective} from "./MatchEnums";
 
 const playerConsultants = {
     MEDIA_ADVISOR: 1,
-    DEALMAKER: 0,
-    CORPORATE_LAWYER: 2,
-    MILITARY_CONTRACTOR: 0,
+    DEALMAKER: 1,
+    CORPORATE_LAWYER: 1,
+    MILITARY_CONTRACTOR: 1,
 };
 
 const opponent = {

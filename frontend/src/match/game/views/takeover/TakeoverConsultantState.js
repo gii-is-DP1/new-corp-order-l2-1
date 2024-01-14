@@ -5,6 +5,7 @@ import {optionallyPickCard} from "../../selector/pickers/Pickers";
 import fetchAuthenticated from "../../../../util/fetchAuthenticated";
 import {Info} from "../../../Match";
 import fetchAuthenticatedWithBody from "../../../../util/fetchAuthenticatedWithBody";
+import {getConsultantName} from "../../../data/MatchEnums";
 
 function TakeoverConsultantPicker() {
     const context = useContext(StateContext);
@@ -19,25 +20,29 @@ function TakeoverConsultantPicker() {
         }
     };
 
+    const fetchConsultant =(body) => async () => {
+        try {
+            await fetchAuthenticatedWithBody(`/api/v1/matches/${info.code}/turn/consultants/use`, "POST", body)
+                .then(async response => await response.json());
+        } catch (error) {
+            console.log(error.message)
+        }
+    };
+
     return optionallyPickCard(context.playerConsultants.components,
         (selected) => {
             fetchAction();
             const index = selected[0];
-            state.takeover.consultant = context.playerConsultants.values[index];
+            state.takeover.consultant = getConsultantName(context.playerConsultants.values[index]);
+
+            const body = {consultant: state.takeover.consultant};
+            fetchConsultant(body)();
             context.update();
         },
         () => {
             fetchAction();
             const body = {consultant: null};
-            const fetchConsultant = async () => {
-                try {
-                    await fetchAuthenticatedWithBody(`/api/v1/matches/${info.code}/turn/consultants/use`, "POST", body)
-                        .then(async response => await response.json());
-                } catch (error) {
-                    console.log(error.message)
-                }
-            };
-            fetchConsultant();
+            fetchConsultant(body)();
             state.takeover.consultant = -1;
             context.update();
         })

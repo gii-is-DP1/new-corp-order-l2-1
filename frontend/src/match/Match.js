@@ -117,7 +117,7 @@ function setContext(id, matchData, propic) {
             startingState.game.player.hand[conglomerate.GENERIC_INC] = 0;
 
         startingState.game.player.hq.secretObjectives = matchData.player.secretObjectives.map(s => secretObjective[s]);
-        startingState.game.player.hq.consultants = matchData.player.headquarter.consultants;
+    //    startingState.game.player.hq.consultants = matchData.player.headquarter.consultants;
         startingState.game.player.hq.rotatedConglomerates = matchData.player.headquarter.usedConglomerateShares ?? []; //TODO: check if are multiset or array
         startingState.game.player.hq.nonRotatedConglomerates = matchData.player.headquarter.conglomerateShares ?? [];
         startingState.game.companies = matchData.companyMatrix.map(c => {
@@ -130,7 +130,6 @@ function setContext(id, matchData, propic) {
         startingState.game.opponents = matchData.opponents.map(o => {
             return {id: o.playerId, username: o.username, conglomeratesInHand: o.handSize, hq: {rotatedConglomerates: o.headquarter.usedConglomerateShares, nonRotatedConglomerates: o.headquarter.conglomerateShares, consultants: o.headquarter.consultants} }
         })
-        console.log(startingState);
 
     }
 }

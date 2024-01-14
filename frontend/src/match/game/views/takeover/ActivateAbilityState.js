@@ -16,7 +16,7 @@ function AbilityChooser() { //TODO:implement boolean choice
         <p>ACTIVATE ABILITY</p>
     </Button>;
     confirmButton[1] = <Button buttonType={ButtonType.primary} value={false}>
-            <p>NOT ACTIVATE ABILITY</p>
+            <p>DON'T ACTIVATE ABILITY</p>
         </Button>;
 
 
@@ -44,7 +44,14 @@ function AbilityChooser() { //TODO:implement boolean choice
 export class ActivateAbilityState extends FrontendState {
     component = <AbilityChooser/>
 
-    getNextState(gameState, frontendState) {
+    getNextState(gameState, frontendState) { // {company: Company.WORDOFMOUTH, agents: 1, type: conglomerate.OMNICORP}
+        if(gameState.takeover.companyTiles[0].agents > gameState.takeover.companyTiles[1].agents ||
+            (
+                gameState.takeover.consultant === consultant.MILITARY_CONTRACTOR &&
+                gameState.takeover.companyTiles[0].agents >= gameState.takeover.companyTiles[1].agents
+            )
+        )
+
         if (gameState.takeover.ability.choice === false)
             if (gameState.takeover.consultant === consultant.DEALMAKER)
                 return frontendState.takeover.DEALMAKER_DRAW_TWO_CARDS_FROM_DECK;

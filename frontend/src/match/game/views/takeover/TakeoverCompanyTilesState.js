@@ -1,16 +1,20 @@
 import {FrontendState} from "../FrontendState";
 import {useContext} from "react";
 import {StateContext} from "../../Game";
-import {pickOrthogonallyAdjacentCompanyTiles} from "../../selector/pickers/Pickers";
+import {
+    pickOrthogonallyAdjacentCompanyTiles,
+    pickOrthogonallyAdjacentCompanyTilesWithColors
+} from "../../selector/pickers/Pickers";
 import fetchAuthenticatedWithBody from "../../../../util/fetchAuthenticatedWithBody";
 import {Info} from "../../../Match";
+import {getConglomerateName} from "../../../data/MatchEnums";
 
- function TakeoverCompanyTilesPicker(){
+function TakeoverCompanyTilesPicker() {
     const context = useContext(StateContext);
     const info = useContext(Info);
     const state = context.state;
 
-    return pickOrthogonallyAdjacentCompanyTiles(context.companyTiles.components, (selected) => {
+    return pickOrthogonallyAdjacentCompanyTilesWithColors(context.companyTiles.components, (selected) => {
         state.takeover.companyTiles = selected.map(index => state.game.companies[index]);
         const body = {
             agents: state.takeover.conglomerates.agents,
@@ -27,7 +31,7 @@ import {Info} from "../../../Match";
         };
         fetchAction();
         context.update();
-    })
+    }, getConglomerateName(state.takeover.conglomerates.type) ,context.companyTiles.values)
 }
 
 export class TakeoverCompanyTilesState extends FrontendState {

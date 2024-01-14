@@ -21,7 +21,6 @@ import java.util.List;
 
 @Getter
 public class TakeOverTurn extends Turn {
-
     private enum State implements TurnState {SELECTING_CONSULTANT, TAKING_OVER, CHOOSING_ABILITY_PROPERTIES, DISCARDING_SHARES_FROM_HAND, NONE}
 
     private State state = State.SELECTING_CONSULTANT;

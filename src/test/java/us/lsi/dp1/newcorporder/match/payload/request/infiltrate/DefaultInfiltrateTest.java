@@ -3,6 +3,7 @@ package us.lsi.dp1.newcorporder.match.payload.request.infiltrate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoSettings;
 import us.lsi.dp1.newcorporder.match.GeneralSupply;
@@ -42,6 +43,16 @@ class DefaultInfiltrateTest {
             .build();
 
         lenient().when(turnSystem.getCurrentPlayer()).thenReturn(currentPlayer);
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {1, 2, 3, 4})
+    void givenInfiltrate_whenGettingTotalNumberOfShares_returnsSameAsGiven(int numberOfShares) {
+        DefaultInfiltrate action = DefaultInfiltrate.builder()
+            .numberOfShares(numberOfShares)
+            .build();
+
+        assertThat(action.getTotalNumberOfShares()).isEqualTo(numberOfShares);
     }
 
     @ParameterizedTest
@@ -101,5 +112,6 @@ class DefaultInfiltrateTest {
         assertThat(currentPlayer.getHand()).isEmpty();
         assertThat(currentPlayer.getHeadquarter().getConglomerateShares(conglomerate)).isEqualTo(2);
         assertThat(tile.getAgents()).isEqualTo(3);
+        assertThat(currentPlayer.getShareUses()).hasSize(2);
     }
 }

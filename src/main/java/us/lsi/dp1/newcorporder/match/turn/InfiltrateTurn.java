@@ -43,10 +43,12 @@ public class InfiltrateTurn extends Turn {
         checkState(State.SELECTING_CONSULTANT);
         long numDifferentConglomerates = turnSystem.getCurrentPlayer().getHand().entrySet().size();
 
-        Preconditions.checkArgument(!(request.getConsultant() == ConsultantType.MEDIA_ADVISOR && numDifferentConglomerates <= 1),
-            "you cannot use the Consultant 'Media Advisor' if you only have one type of conglomerate share in hand");
         Preconditions.checkArgument(isValidConsultant(request.getConsultant()),
             "invalid consultant for an infiltrate turn");
+        Preconditions.checkArgument(!(request.getConsultant() == ConsultantType.CORPORATE_LAWYER && match.getPlayers().size() == 2),
+            "you cannot use the consultant 'Corporate lawyer' when playing with 2 players");
+        Preconditions.checkArgument(!(request.getConsultant() == ConsultantType.MEDIA_ADVISOR && numDifferentConglomerates <= 1),
+            "you cannot use the consultant 'Media Advisor' if you only have one type of conglomerate share in hand");
 
         this.useConsultantRequest = request;
         this.state = State.INFILTRATE;

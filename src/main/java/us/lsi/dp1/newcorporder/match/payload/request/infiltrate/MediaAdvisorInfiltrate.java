@@ -1,6 +1,8 @@
 package us.lsi.dp1.newcorporder.match.payload.request.infiltrate;
 
 import com.google.common.base.Preconditions;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.Builder;
 import lombok.Data;
 import us.lsi.dp1.newcorporder.match.Match;
@@ -14,11 +16,11 @@ import us.lsi.dp1.newcorporder.match.payload.request.UseConsultantRequest;
 @Builder
 public class MediaAdvisorInfiltrate implements Infiltrate {
 
-    private CompanyTileReference tile;
-    private Conglomerate conglomerateType;
-    private int numberOfShares;
+    @NotNull private CompanyTileReference tile;
+    @NotNull private Conglomerate conglomerateType;
+    @NotNull @Positive private Integer numberOfShares;
 
-    private Conglomerate extraConglomerate;
+    @NotNull private Conglomerate extraConglomerate;
 
     @Override
     public int getTotalNumberOfShares() {

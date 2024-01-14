@@ -21,6 +21,8 @@ import us.lsi.dp1.newcorporder.match.payload.response.UseConsultantResponse;
 import us.lsi.dp1.newcorporder.match.player.MatchPlayer;
 import us.lsi.dp1.newcorporder.match.turn.InfiltrateTurn.State;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static us.lsi.dp1.newcorporder.match.player.MatchPlayerTestUtils.playerWithId;
@@ -63,6 +65,20 @@ class InfiltrateTurnTest {
     }
 
     @Test
+    void givenCorporateLawyerConsultantAndPlayingWith2Players_whenUsingConsultant_exceptionIsThrown() {
+        InfiltrateTurn turn = InfiltrateTurn.builder()
+            .match(match)
+            .currentState(State.SELECTING_CONSULTANT)
+            .build();
+
+        when(turnSystem.getPlayers()).thenReturn(List.of(playerWithId(1), playerWithId(2)));
+        UseConsultantRequest request = new UseConsultantRequest(ConsultantType.CORPORATE_LAWYER);
+
+        assertThatThrownBy(() -> turn.onUseConsultantRequest(request))
+            .hasMessageContaining("you cannot use the consultant 'Corporate lawyer'");
+    }
+
+    @Test
     void givenMediaAdvisorConsultantAndOnlyOneTypeOfConglomerateInHand_whenUsingConsultant_exceptionIsThrown() {
         InfiltrateTurn turn = InfiltrateTurn.builder()
             .match(match)
@@ -74,7 +90,7 @@ class InfiltrateTurnTest {
         currentPlayer.getHeadquarter().addConsultant(ConsultantType.MEDIA_ADVISOR, 2);
 
         assertThatThrownBy(() -> turn.onUseConsultantRequest(request))
-            .hasMessageContaining("you cannot use the Consultant 'Media Advisor' if you only have one type of conglomerate share in hand");
+            .hasMessageContaining("you cannot use the consultant 'Media Advisor' if you only have one type of conglomerate share in hand");
     }
 
     @ParameterizedTest

@@ -1,6 +1,5 @@
 import {Company, conglomerate, secretObjective} from "./MatchEnums";
 
-
 const playerConsultants = {
     MEDIA_ADVISOR: 1,
     DEALMAKER: 0,
@@ -159,10 +158,6 @@ export const mockUpData = {
         opponent
     ],
 }
-
-
-export const defaultState = getDefaultState();
-
 
 export const defaultMatchInfo = {
     code: null,

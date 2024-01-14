@@ -2,12 +2,17 @@ import {FrontendState} from "../FrontendState";
 import {useContext} from "react";
 import {StateContext} from "../../Game";
 import {pickManyConglomeratesOfTheSameColor} from "../../selector/pickers/Pickers";
+import {Info} from "../../../Match";
+import fetchAuthenticatedWithBody from "../../../../util/fetchAuthenticatedWithBody";
+import {RotatableConglomerates} from "../../../components/collections/RotatableConglomerates";
 
 function TakeoverConglomeratesPicker() {
     const context = useContext(StateContext);
+    const info = useContext(Info);
     const state = context.state;
-    return pickManyConglomeratesOfTheSameColor(context.hand.components, (selected) => {
-        state.takeover.conglomerates = selected.map(index => context.hand.values[index]);
+    return pickManyConglomeratesOfTheSameColor(context.nonrotatedHqConglomerates.components, (selected) => {
+        const conglomerates = selected.map(index => context.nonrotatedHqConglomerates.values[index]);
+        state.takeover.conglomerates = {agents: conglomerates.length, type: conglomerates[0]}
         context.update();
     })
 }

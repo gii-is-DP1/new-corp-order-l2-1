@@ -2,13 +2,30 @@ import {FrontendState} from "../FrontendState";
 import {useContext} from "react";
 import {StateContext} from "../../Game";
 import {pickOrthogonallyAdjacentCompanyTiles} from "../../selector/pickers/Pickers";
+import fetchAuthenticatedWithBody from "../../../../util/fetchAuthenticatedWithBody";
+import {Info} from "../../../Match";
 
  function TakeoverCompanyTilesPicker(){
-    const context= useContext(StateContext);
+    const context = useContext(StateContext);
+    const info = useContext(Info);
     const state = context.state;
 
     return pickOrthogonallyAdjacentCompanyTiles(context.companyTiles.components, (selected) => {
         state.takeover.companyTiles = selected.map(index => state.game.companies[index]);
+        const body = {
+            agents: state.takeover.conglomerates.agents,
+            sourceCompany: {x: selected[0] % 4, y: Math.floor(selected[0] / 4)},
+            targetCompany: {x: selected[1] % 4, y: Math.floor(selected[1] / 4)}
+        };
+        const fetchAction = async () => {
+            try {
+                await fetchAuthenticatedWithBody(`/api/v1/matches/${info.code}/turn/take-over`, "POST", body)
+                    .then(async response => await response.json());
+            } catch (error) {
+                console.log(error.message)
+            }
+        };
+        fetchAction();
         context.update();
     })
 }

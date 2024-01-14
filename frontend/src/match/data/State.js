@@ -11,7 +11,9 @@ export class State {
     constructor(state, setGameState) {
         this.state = state;
         this.hqConsultants = new ConsultantMultiset(state.game.player.hq.consultants);
-        this.hqConglomerates = new RotatableConglomerates(state.game.player.hq.nonRotatedConglomerates, state.game.player.hq.rotatedConglomerates);
+        this.nonrotatedHqConglomerates = new ConglomerateMultiset(state.game.player.hq.nonRotatedConglomerates);
+        this.rotatedHqConglomerates = new ConglomerateMultiset(state.game.player.hq.rotatedConglomerates);
+        this.hqConglomerates = new RotatableConglomerates(this.nonrotatedHqConglomerates.values,this.rotatedHqConglomerates.values);
         this.generalSupplyConsultants = new ConsultantMultiset(state.game.generalSupply.consultants);
         this.secretObjectives = new SecretObjectives(state.game.player.hq.secretObjectives);
         this.openDisplay = new ConglomerateMultiset(state.game.generalSupply.openDisplay);

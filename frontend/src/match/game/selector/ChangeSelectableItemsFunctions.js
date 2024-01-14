@@ -22,10 +22,10 @@ export function selectOrthogonallyAdjacentTiles(selection, selectedElements, sel
     if (selectedElements.length === 1) {
         const index = selectedElements[0];
         const selectedX = index % 4;
-        const selectedY = index / 4;
+        const selectedY = Math.floor(index / 4);
         selectableElements = selectableElements.filter((i) => {
             const x = i % 4;
-            const y = i / 4;
+            const y = Math.floor(i / 4);
             const difference = Math.abs(selectedX - x) + Math.abs(selectedY - y);
             return difference === 1 || difference === 0;
         });

@@ -1,7 +1,7 @@
 import {FrontendState} from "../FrontendState";
 import {consultant} from "../../../data/MatchEnums";
 import React, {useContext} from "react";
-import {pickCompany} from "../../selector/pickers/Pickers";
+import {pickCompany, pickCompanyWithSameColor} from "../../selector/pickers/Pickers";
 import {StateContext} from "../../Game";
 import fetchAuthenticatedWithBody from "../../../../util/fetchAuthenticatedWithBody";
 import {Info} from "../../../Match";
@@ -24,7 +24,7 @@ export class InfiltrateCompanyState extends FrontendState {
 export function InfiltrateCompanyPicker() { //TODO: implement picker
     const context = useContext(StateContext);
     const info = useContext(Info);
-    return pickCompany(context.companyTiles.components, selected => {
+    return pickCompanyWithSameColor(context.companyTiles.components, selected => {
         context.state.infiltrate.companyTile = selected[0];
         context.update();
 
@@ -51,5 +51,5 @@ export function InfiltrateCompanyPicker() { //TODO: implement picker
             };
             infiltrateFetch();
         }
-    }, 1);
+    }, 1, context.state.infiltrate.conglomerate, context.companyTiles.values);
 }

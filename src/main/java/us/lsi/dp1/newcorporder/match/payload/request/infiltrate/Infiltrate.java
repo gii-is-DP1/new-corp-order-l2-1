@@ -5,20 +5,18 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import us.lsi.dp1.newcorporder.match.Match;
 import us.lsi.dp1.newcorporder.match.payload.request.UseConsultantRequest;
-import us.lsi.dp1.newcorporder.match.payload.request.ability.AmbientAdvertisingAbility;
 
-
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "consultant", defaultImpl = DefaultInfiltrate.class)
 @JsonSubTypes({
-    @JsonSubTypes.Type(value = BasicInfiltrate.class),
-    @JsonSubTypes.Type(value = MediaAdvisorInfiltrate.class),
-    @JsonSubTypes.Type(value = AmbientAdvertisingAbility.class),
+    @JsonSubTypes.Type(value = DefaultInfiltrate.class, name = "none"),
+    @JsonSubTypes.Type(value = MediaAdvisorInfiltrate.class, name = "MEDIA_ADVISOR"),
+    @JsonSubTypes.Type(value = CorporateLawyerInfiltrate.class, name = "CORPORATE_LAWYER"),
 })
 public interface Infiltrate {
 
     @JsonIgnore
     int getTotalNumberOfShares();
 
-    void run(Match match, UseConsultantRequest useConsultantRequests);
+    void apply(Match match, UseConsultantRequest useConsultantRequests);
 
 }

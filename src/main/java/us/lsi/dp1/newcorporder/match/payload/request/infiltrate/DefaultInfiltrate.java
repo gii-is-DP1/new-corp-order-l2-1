@@ -1,6 +1,9 @@
 package us.lsi.dp1.newcorporder.match.payload.request.infiltrate;
 
 import com.google.common.base.Preconditions;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import lombok.Builder;
 import lombok.Data;
 import us.lsi.dp1.newcorporder.match.Match;
 import us.lsi.dp1.newcorporder.match.company.CompanyTile;
@@ -9,11 +12,12 @@ import us.lsi.dp1.newcorporder.match.payload.CompanyTileReference;
 import us.lsi.dp1.newcorporder.match.payload.request.UseConsultantRequest;
 
 @Data
-public class BasicInfiltrate implements Infiltrate {
+@Builder
+public class DefaultInfiltrate implements Infiltrate {
 
-    private CompanyTileReference tile;
-    private Conglomerate conglomerateType;
-    private int numberOfShares;
+    @NotNull private CompanyTileReference tile;
+    @NotNull private Conglomerate conglomerateType;
+    @NotNull @Positive private Integer numberOfShares;
 
     @Override
     public int getTotalNumberOfShares() {
@@ -21,12 +25,12 @@ public class BasicInfiltrate implements Infiltrate {
     }
 
     @Override
-    public void run(Match match, UseConsultantRequest useConsultantRequests) {
-        CompanyTile tile = this.tile.fromMatch(match);
+    public void apply(Match match, UseConsultantRequest useConsultantRequests) {
+        Preconditions.checkArgument(useConsultantRequests.getConsultant() == null,
+            "invalid request for the selected consultant: %s", useConsultantRequests.getConsultant());
 
-        Preconditions.checkState(useConsultantRequests.getConsultant() == null,
-            "the infiltrate must be the same type as the consultant used");
-        Preconditions.checkArgument(tile.getCurrentConglomerate() != conglomerateType,
+        CompanyTile tile = this.tile.fromMatch(match);
+        Preconditions.checkArgument(tile.getCurrentConglomerate() == conglomerateType,
             "you cannot add agents to a tile that has agents from a different conglomerate");
 
         match.getTurnSystem().getCurrentPlayer().discardSharesFromHand(conglomerateType, numberOfShares);

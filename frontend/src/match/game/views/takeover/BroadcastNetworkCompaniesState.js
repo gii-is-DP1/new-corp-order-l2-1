@@ -9,8 +9,6 @@ function BroadcastNetworkCompaniesPicker(){
     const context= useContext(StateContext);
     const info = useContext(Info);
     const state = context.state;
-    //TODO ADD SAME COLOR CHECK FOR SOURCE TO DEST
-    //TODO CHECK SAME COLOR PICKER FOR CONGLOMERATE USE ONLY
     return pickTwoOrThreeCompanies(context.companyTiles.components, (selected) => {
         state.takeover.ability.broadcastNetwork.companies = selected.map(index => state.game.companies[index]);
         let body;
@@ -36,7 +34,9 @@ function BroadcastNetworkCompaniesPicker(){
         };
         fetchCompany();
         context.update();
-    })
+    },
+        context.companyTiles.values
+    )
 }
 
 export class BroadcastNetworkCompaniesState extends FrontendState {

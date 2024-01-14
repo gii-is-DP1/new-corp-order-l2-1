@@ -12,7 +12,6 @@ function TakeoverCompanyTilesPicker() {
     const context = useContext(StateContext);
     const info = useContext(Info);
     const state = context.state;
-
     return pickOrthogonallyAdjacentCompanyTilesWithColors(context.companyTiles.components, (selected) => {
         state.takeover.companyTiles = selected.map(index => state.game.companies[index]);
         const body = {
@@ -30,7 +29,7 @@ function TakeoverCompanyTilesPicker() {
         };
         fetchAction();
         context.update();
-    }, getConglomerateName(state.takeover.conglomerates.type) ,context.companyTiles.values)
+    }, getConglomerateName(state.takeover.conglomerates.type), state.takeover.conglomerates.agents, context.companyTiles.values)
 }
 
 export class TakeoverCompanyTilesState extends FrontendState {

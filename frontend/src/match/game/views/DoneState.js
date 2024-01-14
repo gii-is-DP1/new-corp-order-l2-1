@@ -14,8 +14,6 @@ export class DoneState extends FrontendState {
         const canTakeConsultant = ((gameState.infiltrate.conglomerateQuantity + ((gameState.infiltrate.mediaAdvisor.conglomerate  === undefined || gameState.infiltrate.extraConglomerate === null)  ? 0 : 1) >= 3)
             && gameState.infiltrate.takenConsultant === null);
 
-        console.log(gameState.infiltrate.conglomerateQuantity)
-        console.log(gameState.infiltrate.mediaAdvisor.conglomerate )
         if (canTakeConsultant)
             return frontendState.infiltrate.TAKE_CONSULTANT;
 

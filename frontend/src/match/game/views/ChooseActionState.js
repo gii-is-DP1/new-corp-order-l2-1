@@ -45,9 +45,11 @@ function ActionChooser() { //TODO: use picker to substitute this method
         }
     }
 
-    const selectableElements = [0,2];
+    const selectableElements = [0];
     if(context.hand.values.length > 0)
         selectableElements.push(1);
+    if(context.nonrotatedHqConglomerates.values.length > 0)
+        selectableElements.push(2);
 
     return <Selector title={"What will you do?"}
                      help={

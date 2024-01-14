@@ -74,7 +74,7 @@ export function getDefaultState() {
                 printMedia: {
                     yourConglomerate: null,
                     yourIsRotated: null,
-                    otherHq: null,
+                    opponent: null,
                     otherConglomerate: null,
                     otherIsRotated: null,
                 },

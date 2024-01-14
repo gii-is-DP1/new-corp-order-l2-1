@@ -11,8 +11,8 @@ export class RotatedConglomerateMultiset extends ItemMultiset {
 
     getConglomerateComponentOfType(value, quantity) {
         return [...Array(quantity)]
-            .map(() =>
-                <Rotatable key={key} isRotated={true}>
+            .map((i) =>
+                <Rotatable key={i} isRotated={true}>
                     <Conglomerate conglomerate={value}/>
                 </Rotatable>);
     }

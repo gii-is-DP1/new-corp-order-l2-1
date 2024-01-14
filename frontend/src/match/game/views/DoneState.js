@@ -4,21 +4,27 @@ import {Info} from "../../Match";
 import {StateContext} from "../Game";
 
 function Done() {
-    return <p>Done</p>
+    return <p>Loading...</p>
 }
 
 export class DoneState extends FrontendState {
     component = <Done/>
 
     getNextState(gameState, frontendState){
-        console.log(gameState.infiltrate.takenConsultant);
-        if ((gameState.infiltrate.conglomerateQuantity + gameState.infiltrate.extraConglomerate != null ? 1 : 0 >= 3)
-            && gameState.infiltrate.takenConsultant === null){
+        const canTakeConsultant = (gameState.infiltrate.conglomerateQuantity + (gameState.infiltrate.extraConglomerate != null ? 1 : 0) >= 3)
+            && gameState.infiltrate.takenConsultant === null;
+        if (canTakeConsultant)
             return frontendState.infiltrate.TAKE_CONSULTANT;
-        }
 
-        if (!gameState.isPlaying) {
+        const conglomeratesInHand = gameState.game.player.hand.GENERIC_INC
+            + gameState.game.player.hand.MEGAMEDIA
+            + gameState.game.player.hand.OMNICORP
+            + gameState.game.player.hand.TOTAL_ENTERTAINMENT;
+        const maxConglomeratesInHand = 6;
+        if(conglomeratesInHand > maxConglomeratesInHand)
+            return frontendState.DISCARD;
+
+        if (!gameState.isPlaying)
             return frontendState.WAITING_FOR_TURN;
-        }
     }
 }

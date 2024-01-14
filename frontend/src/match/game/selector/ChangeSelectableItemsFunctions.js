@@ -18,21 +18,24 @@ export function selectQuantity(n) {
     }
 }
 
-export function selectOrthogonallyAdjacentTiles(selection, selectedElements, selectableElements, setSelectableItems) { //TODO: make it works on a 4x3 grid
-    if (selectedElements.length === 1) {
-        const index = selectedElements[0];
-        const selectedX = index % 4;
-        const selectedY = Math.floor(index / 4);
-        selectableElements = selectableElements.filter((i) => {
-            const x = i % 4;
-            const y = Math.floor(i / 4);
-            const difference = Math.abs(selectedX - x) + Math.abs(selectedY - y);
-            return difference === 1 || difference === 0;
-        });
-        setSelectableItems(selectableElements);
-    } else if (selectedElements.length === 2)
-        setSelectableItems(selectedElements);
-    else setSelectableItems(selectableElements);
+export function selectOrthogonallyAdjacentTiles() {
+    return (selection, selectedElements, selectableElements, setSelectableItems) =>
+    {
+        if (selectedElements.length === 1) {
+            const index = selectedElements[0];
+            const selectedX = index % 4;
+            const selectedY = Math.floor(index / 4);
+            selectableElements = selectableElements.filter((i) => {
+                const x = i % 4;
+                const y = Math.floor(i / 4);
+                const difference = Math.abs(selectedX - x) + Math.abs(selectedY - y);
+                return difference === 1 || difference === 0;
+            });
+            setSelectableItems(selectableElements);
+        } else if (selectedElements.length === 2)
+            setSelectableItems(selectedElements);
+        else setSelectableItems(selectableElements);
+    }
 }
 
 export function selectUntilNRemain(n){

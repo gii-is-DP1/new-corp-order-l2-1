@@ -1,8 +1,7 @@
-import {defaultMatchInfo, startingState} from "./data/MockupData";
+import {defaultMatchInfo, defaultState, mockUpData} from "./data/MockupData";
 import React, {useEffect, useState} from "react"
 import css from "./match.module.css";
 import {Main} from "./Main";
-import {RightBar} from "./RightBar";
 import {useParams} from "react-router-dom";
 import fetchAuthenticated from "../util/fetchAuthenticated";
 import tokenService from "../services/token.service";
@@ -10,6 +9,7 @@ import {Company, conglomerate, propics, secretObjective} from "./data/MatchEnums
 
 export const Info = React.createContext({...defaultMatchInfo})
 let matchInfo = {...defaultMatchInfo};
+export let startingState = {...defaultState};
 
 export default function Match() {
     let [matchData, setMatchData] = useState(null);
@@ -87,7 +87,71 @@ function LoadedPage() {
 
 function setContext(id, matchData, propic) {
     if (matchInfo.code !== id)
+    {
         matchInfo = {...defaultMatchInfo};
+    }
+    startingState = {
+        game: mockUpData,
+        turn: 0,
+        discardedConglomerates: null,
+        isPlaying: false,
+        action: null,
+        plot: {
+            firstConglomerate: null,
+            secondConglomerate: null,
+        },
+        infiltrate: {
+            conglomerate: null,
+            conglomerateQuantity: null,
+            companyTile: null,
+            consultant: null,
+            mediaAdvisor: {
+                conglomerate: null,
+            },
+            corporateLawyer: {
+                conglomerates: null,
+                company: null,
+            },
+            takenConsultant: null
+        },
+        takeover: {
+            consultant: null,
+            conglomerates: null,
+            companyTiles: null,
+            canActivateCompanyAbility: false,
+            ability: {
+                choice: null,
+                broadcastNetwork: {
+                    companies: null,
+                },
+                guerrillaMarketing: {
+                    opponent: null,
+                    conglomerates: null,
+                },
+                printMedia: {
+                    yourConglomerate: null,
+                    yourIsRotated: null,
+                    otherHq: null,
+                    otherConglomerate: null,
+                    otherIsRotated: null,
+                },
+                ambientAdvertising: {
+                    opponent: null,
+                    conglomerates: null,
+                },
+                socialMedia: {
+                    hq: null,
+                    conglomerate: null,
+                },
+                onlineMarketing: {
+                    companies: null,
+                }
+            },
+            dealmaker: {
+                conglomerates: null,
+            }
+        }
+    };
 
     matchInfo.code = id;
     matchInfo.inLobby = matchData.state === "WAITING";
@@ -107,8 +171,17 @@ function setContext(id, matchData, propic) {
     if (matchData.state === "PLAYING") {
         startingState.isPlaying = matchData.playing;
         startingState.game.player.hand = matchData.player.hand;
+        if(startingState.game.player.hand[conglomerate.OMNICORP] === undefined)
+            startingState.game.player.hand[conglomerate.OMNICORP] = 0;
+        if(startingState.game.player.hand[conglomerate.MEGAMEDIA] === undefined)
+            startingState.game.player.hand[conglomerate.MEGAMEDIA] = 0;
+        if(startingState.game.player.hand[conglomerate.TOTAL_ENTERTAINMENT] === undefined)
+            startingState.game.player.hand[conglomerate.TOTAL_ENTERTAINMENT] = 0;
+        if(startingState.game.player.hand[conglomerate.GENERIC_INC] === undefined)
+            startingState.game.player.hand[conglomerate.GENERIC_INC] = 0;
+
         startingState.game.player.hq.secretObjectives = matchData.player.secretObjectives.map(s => secretObjective[s]);
-        //startingState.game.player.hq.consultants = matchData.player.headquarter.consultants;
+        startingState.game.player.hq.consultants = matchData.player.headquarter.consultants;
         startingState.game.player.hq.rotatedConglomerates = matchData.player.headquarter.usedConglomerateShares ?? []; //TODO: check if are multiset or array
         startingState.game.player.hq.nonRotatedConglomerates = matchData.player.headquarter.conglomerateShares ?? [];
         startingState.game.companies = matchData.companyMatrix.map(c => {

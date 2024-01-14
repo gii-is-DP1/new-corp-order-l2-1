@@ -1,5 +1,6 @@
 import Selector from "../Selector";
 import {
+    selectAtLeastN,
     selectAtLeastOne,
     selectAtLeastOneOrTwo,
     selectAtLeastOneOrZero,
@@ -11,17 +12,28 @@ import {
     selectQuantity, selectUntilNRemain
 } from "../ChangeSelectableItemsFunctions";
 import React from "react";
+import {getConglomerateName} from "../../../data/MatchEnums";
 
 export const conglomerateContainerStyle = {
     display: "flex",
 }
-
 
 export function pickOneCard(from, onConfirm) {
     return <Selector title={"Pick a card"}
                      selection={from}
                      canConfirm={selectAtLeastOne}
                      changeSelectableItems={selectQuantity(1)}
+                     onConfirm={onConfirm}
+                     containerStyle={conglomerateContainerStyle}
+                     key={{onConfirm}}
+    />;
+}
+
+export function pickNCards(title, from, onConfirm,n) {
+    return <Selector title={title}
+                     selection={from}
+                     canConfirm={selectAtLeastN(n)}
+                     changeSelectableItems={selectQuantity(n)}
                      onConfirm={onConfirm}
                      containerStyle={conglomerateContainerStyle}
                      key={{onConfirm}}
@@ -74,12 +86,22 @@ export function pickManyConglomeratesOfTheSameColor(from, onConfirm) {
     />
 }
 
-
-
 export function pickCompany(from, onConfirm, n) {
     return <CompanySelector
         title={"Pick Company"}
         selection={from}
+        canConfirm={selectAtLeastOne}
+        changeSelectableItems={selectQuantity(n)}
+        onConfirm={onConfirm}
+        key={{onConfirm}}
+    />;
+}
+
+export function pickCompanyWithSameColor(from, onConfirm, n, conglomerateType, companies) {
+    return <CompanySelector
+        title={"Pick Company"}
+        selection={from}
+        selectableElements = {[...Array(from.length).keys()].filter((i) => getConglomerateName(companies[i].type) === conglomerateType)}
         canConfirm={selectAtLeastOne}
         changeSelectableItems={selectQuantity(n)}
         onConfirm={onConfirm}
@@ -131,11 +153,12 @@ export function pickOrthogonallyAdjacentCompanyTiles(from, onConfirm) {
     />;
 }
 
-function CompanySelector({title, selection, canConfirm, changeSelectableItems, onConfirm, key}) {
+function CompanySelector({title, selection, canConfirm, changeSelectableItems, onConfirm, key, selectableElements = [...Array(selection.length).keys()]}) {
     return <Selector title={title}
                      selection={selection}
                      canConfirm={canConfirm}
                      changeSelectableItems={changeSelectableItems}
+                     selectableElements={selectableElements}
                      onConfirm={onConfirm}
                      itemStyle={{maxHeight: "25vh", maxWidth: "25%", flexShrink: 1}}
                      containerStyle={{

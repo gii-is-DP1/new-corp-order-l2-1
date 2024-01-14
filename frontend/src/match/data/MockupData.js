@@ -95,9 +95,11 @@ export const mockUpData = {
     ],
 }
 
-export const startingState = {
+
+export const defaultState = {
     game: mockUpData,
     turn: 0,
+    discardedConglomerates: null,
     isPlaying: false,
     action: null,
     plot: {
@@ -157,6 +159,7 @@ export const startingState = {
         }
     }
 };
+
 
 export const defaultMatchInfo = {
     code: null,

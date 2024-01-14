@@ -2,15 +2,21 @@ import {FrontendState} from "../FrontendState";
 import {PlotFirstConglomeratePicker} from "../plot/PlotFirstConglomeratePicker";
 import {useContext} from "react";
 import {StateContext} from "../../Game";
-import {pickCompany, pickManyConglomeratesOfTheSameColor, pickOneCard} from "../../selector/pickers/Pickers";
+import {
+    pickCompany,
+    pickCompanyWithSameColor,
+    pickManyConglomeratesOfTheSameColor,
+    pickOneCard
+} from "../../selector/pickers/Pickers";
 import fetchAuthenticatedWithBody from "../../../../util/fetchAuthenticatedWithBody";
 import {Info} from "../../../Match";
+import {selectQuantityOfSameColor} from "../../selector/ChangeSelectableItemsFunctions";
 
 function CorporateLawyerCompanyPicker() {
     const context = useContext(StateContext);
     const info = useContext(Info);
 
-    return pickCompany(context.companyTiles.components, (selected) => {
+    return pickCompanyWithSameColor(context.companyTiles.components, (selected) => {
         context.state.infiltrate.corporateLawyer.company = selected[0];
         context.update();
 
@@ -49,7 +55,7 @@ function CorporateLawyerCompanyPicker() {
             }
         };
         infiltrateFetch();
-    }, 1)
+    }, 1,  context.state.infiltrate.corporateLawyer.conglomerates.type, context.companyTiles.values)
 }
 
 export class CorporateLawyerCompanyState extends FrontendState {

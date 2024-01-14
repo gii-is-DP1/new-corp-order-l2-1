@@ -1,4 +1,4 @@
-import {defaultMatchInfo, defaultState, getDefaultState} from "./data/MockupData";
+import {defaultMatchInfo, getDefaultState} from "./data/MockupData";
 import React, {useEffect, useState} from "react"
 import css from "./match.module.css";
 import {Main} from "./Main";
@@ -9,7 +9,7 @@ import {Company, conglomerate, propics, secretObjective} from "./data/MatchEnums
 
 export const Info = React.createContext({...defaultMatchInfo})
 let matchInfo = {...defaultMatchInfo};
-export let startingState = {...defaultState};
+export let startingState = {...getDefaultState()};
 
 export default function Match() {
     let [matchData, setMatchData] = useState(null);
@@ -127,7 +127,5 @@ function setContext(id, matchData, propic) {
         startingState.game.generalSupply.consultants = matchData.generalSupply.consultants;
         startingState.game.generalSupply.conglomeratesLeftInDeck = matchData.generalSupply.deckSize;
         startingState.game.generalSupply.openDisplay = matchData.generalSupply.openDisplay;
-
-
     }
 }

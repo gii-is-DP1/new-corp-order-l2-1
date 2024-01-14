@@ -1,115 +1,105 @@
 package us.lsi.dp1.newcorporder.match.payload.request.infiltrate;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoSettings;
-import us.lsi.dp1.newcorporder.match.*;
+import us.lsi.dp1.newcorporder.match.GeneralSupply;
+import us.lsi.dp1.newcorporder.match.Match;
+import us.lsi.dp1.newcorporder.match.MatchMode;
 import us.lsi.dp1.newcorporder.match.company.CompanyTile;
+import us.lsi.dp1.newcorporder.match.conglomerate.Conglomerate;
+import us.lsi.dp1.newcorporder.match.consultant.ConsultantType;
 import us.lsi.dp1.newcorporder.match.payload.CompanyTileReference;
 import us.lsi.dp1.newcorporder.match.payload.request.UseConsultantRequest;
-import us.lsi.dp1.newcorporder.match.player.Headquarter;
 import us.lsi.dp1.newcorporder.match.player.MatchPlayer;
 import us.lsi.dp1.newcorporder.match.turn.TurnSystem;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
+import static us.lsi.dp1.newcorporder.match.player.MatchPlayerTestUtils.playerWithId;
 
 @MockitoSettings
 public class MediaAdvisorInfiltrateTest {
 
     @Mock TurnSystem turnSystem;
-
-    @Mock UseConsultantRequest useConsultantRequest;
     @Mock GeneralSupply generalSupply;
     @Mock CompanyTileReference tileReference;
-    CompanyTile companyTile;
+
+    MatchPlayer currentPlayer = playerWithId(1);
     Match match;
-    MatchPlayer currentPlayer;
-    Infiltrate action;
 
     @BeforeEach
     void setUp() {
         match = Match.builder()
             .maxPlayers(4)
-            .matchMode(MatchMode.NORMAL)
+            .mode(MatchMode.NORMAL)
             .generalSupply(generalSupply)
             .turnSystem(turnSystem)
             .build();
-        currentPlayer = new MatchPlayer(1, Headquarter.create());
-        currentPlayer.addSharesToHand(Conglomerate.TOTAL_ENTERTAINMENT, 4);
-        currentPlayer.addSharesToHand(Conglomerate.OMNICORP, 2);
-        companyTile = CompanyTile.builder()
-            .currentConglomerate(Conglomerate.TOTAL_ENTERTAINMENT)
+
+        lenient().when(turnSystem.getCurrentPlayer()).thenReturn(currentPlayer);
+    }
+
+    @ParameterizedTest
+    @EnumSource(value = ConsultantType.class, names = "MEDIA_ADVISOR", mode = EnumSource.Mode.EXCLUDE)
+    void givenConsultantDifferentThanMediaAdvisor_whenInfiltrating_exceptionIsThrown(ConsultantType consultantType) {
+        CompanyTile tile = CompanyTile.builder()
             .agents(1)
             .build();
-        when(tileReference.fromMatch(match)).thenReturn(companyTile);
-        action = MediaAdvisorInfiltrate.builder()
+        lenient().when(tileReference.fromMatch(match)).thenReturn(tile);
+
+        MediaAdvisorInfiltrate action = MediaAdvisorInfiltrate.builder()
             .tile(tileReference)
-            .conglomerateType(Conglomerate.TOTAL_ENTERTAINMENT)
-            .numberOfShares(2)
-            .extraConglomerate(Conglomerate.OMNICORP)
             .build();
+
+        assertThatThrownBy(() -> action.apply(match, new UseConsultantRequest(consultantType)))
+            .hasMessageContaining("invalid request for the selected consultant: %s", consultantType);
+        assertThat(tile.getAgents()).isEqualTo(1);
     }
 
-    @Test
-    void whenMediaAdvisorInfiltrate_usedConglomeratesSharesAreRemovedFromHandAndAddedToHeadquartersAndTile() {
-        when(turnSystem.getCurrentPlayer()).thenReturn(currentPlayer);
-        when(useConsultantRequest.getConsultant()).thenReturn(ConsultantType.MEDIA_ADVISOR);
-        action.apply(match, useConsultantRequest);
-
-        assertEquals(2, currentPlayer.getHand().count(Conglomerate.TOTAL_ENTERTAINMENT));
-        assertEquals(1, currentPlayer.getHand().count(Conglomerate.OMNICORP));
-        assertEquals(3, currentPlayer.getHeadquarter().getConglomerateShares(Conglomerate.TOTAL_ENTERTAINMENT));
-        assertEquals(4, companyTile.getAgents());
-    }
-
-    @Test
-    void givenMediaAdvisorInfiltrate_whenTileIsFromDifferentConglomerate_ExceptionIsTrown() {
-        when(tileReference.fromMatch(match)).thenReturn(CompanyTile.builder()
-            .currentConglomerate(Conglomerate.OMNICORP)
+    @ParameterizedTest
+    @EnumSource(Conglomerate.class)
+    void givenTileWithDifferentConglomerateThanWantedToInfiltrate_whenInfiltrating_exceptionIsThrown(Conglomerate conglomerate) {
+        CompanyTile tile = CompanyTile.builder()
+            .currentConglomerate(conglomerate)
             .agents(1)
-            .build());
-        when(useConsultantRequest.getConsultant()).thenReturn(ConsultantType.MEDIA_ADVISOR);
-        assertThrows(IllegalArgumentException.class, () -> {
-            action.apply(match, useConsultantRequest);
-        }, "you cannot add agents to a tile that has agents from a different conglomerate");
-
-        assertIfNothingChange();
-    }
-
-    @Test
-    void givenMediaAdvisorInfiltrate_whenExtraConglomerateIsSameAsMain_ExceptionIsTrown() {
-        when(useConsultantRequest.getConsultant()).thenReturn(ConsultantType.MEDIA_ADVISOR);
-        action = MediaAdvisorInfiltrate.builder()
-            .tile(tileReference)
-            .conglomerateType(Conglomerate.TOTAL_ENTERTAINMENT)
-            .numberOfShares(2)
-            .extraConglomerate(Conglomerate.TOTAL_ENTERTAINMENT)
             .build();
-        assertThrows(IllegalArgumentException.class, () -> {
-            action.apply(match, useConsultantRequest);
-        }, "your extra conglomerate share cannot be the same type as your main conglomerate shares");
+        when(tileReference.fromMatch(match)).thenReturn(tile);
 
-        assertIfNothingChange();
+        MediaAdvisorInfiltrate action = MediaAdvisorInfiltrate.builder()
+            .tile(tileReference)
+            .conglomerateType(conglomerate.nextValue())
+            .build();
+
+        assertThatThrownBy(() -> action.apply(match, new UseConsultantRequest(ConsultantType.MEDIA_ADVISOR)))
+            .hasMessageContaining("cannot add agents to a tile that has agents from a different conglomerate");
+        assertThat(tile.getAgents()).isEqualTo(1);
     }
 
-    @Test
-    void givenMediaAdvisorInfiltrate_whenMediaAdvisorIsNotUsed_ExceptionIsTrown() {
-        when(useConsultantRequest.getConsultant()).thenReturn(ConsultantType.CORPORATE_LAWYER);
-        assertThrows(IllegalStateException.class, () -> {
-            action.apply(match, useConsultantRequest);
-        }, "the infiltrate must be the same type as the consultant used");
+    @ParameterizedTest
+    @EnumSource(Conglomerate.class)
+    void givenValidArguments_whenInfiltrating_sharesAreMovedToHeadquarterAndAgentsAreAddedToTile(Conglomerate conglomerate) {
+        CompanyTile tile = CompanyTile.builder()
+            .currentConglomerate(conglomerate)
+            .agents(1)
+            .build();
+        when(tileReference.fromMatch(match)).thenReturn(tile);
 
-        assertIfNothingChange();
-    }
+        DefaultInfiltrate action = DefaultInfiltrate.builder()
+            .tile(tileReference)
+            .conglomerateType(conglomerate)
+            .numberOfShares(2)
+            .build();
 
-    private void assertIfNothingChange(){
+        currentPlayer.addSharesToHand(conglomerate, 2);
+        action.apply(match, new UseConsultantRequest());
 
-        assertEquals(4, currentPlayer.getHand().count(Conglomerate.TOTAL_ENTERTAINMENT));
-        assertEquals(2, currentPlayer.getHand().count(Conglomerate.OMNICORP));
-        assertEquals(0, currentPlayer.getHeadquarter().getConglomerateShares(Conglomerate.TOTAL_ENTERTAINMENT));
-        assertEquals(1, companyTile.getAgents());
+        assertThat(currentPlayer.getHand()).isEmpty();
+        assertThat(currentPlayer.getHeadquarter().getConglomerateShares(conglomerate)).isEqualTo(2);
+        assertThat(tile.getAgents()).isEqualTo(3);
     }
 }

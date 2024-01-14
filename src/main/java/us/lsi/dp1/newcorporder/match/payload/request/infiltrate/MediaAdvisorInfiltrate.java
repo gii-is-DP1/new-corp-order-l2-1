@@ -3,10 +3,10 @@ package us.lsi.dp1.newcorporder.match.payload.request.infiltrate;
 import com.google.common.base.Preconditions;
 import lombok.Builder;
 import lombok.Data;
-import us.lsi.dp1.newcorporder.match.Conglomerate;
-import us.lsi.dp1.newcorporder.match.ConsultantType;
 import us.lsi.dp1.newcorporder.match.Match;
 import us.lsi.dp1.newcorporder.match.company.CompanyTile;
+import us.lsi.dp1.newcorporder.match.conglomerate.Conglomerate;
+import us.lsi.dp1.newcorporder.match.consultant.ConsultantType;
 import us.lsi.dp1.newcorporder.match.payload.CompanyTileReference;
 import us.lsi.dp1.newcorporder.match.payload.request.UseConsultantRequest;
 
@@ -40,5 +40,8 @@ public class MediaAdvisorInfiltrate implements Infiltrate {
         match.getTurnSystem().getCurrentPlayer().discardSharesFromHand(extraConglomerate, 1);
         match.getTurnSystem().getCurrentPlayer().getHeadquarter().addConglomerates(conglomerateType, numberOfShares + 1);
         tile.addAgents(numberOfShares + 1);
+
+        match.getTurnSystem().getCurrentPlayer().addShareUses(conglomerateType, numberOfShares);
+        match.getTurnSystem().getCurrentPlayer().addShareUses(extraConglomerate, 1);
     }
 }

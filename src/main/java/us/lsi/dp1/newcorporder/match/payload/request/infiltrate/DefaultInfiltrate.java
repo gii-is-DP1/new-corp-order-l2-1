@@ -3,9 +3,9 @@ package us.lsi.dp1.newcorporder.match.payload.request.infiltrate;
 import com.google.common.base.Preconditions;
 import lombok.Builder;
 import lombok.Data;
-import us.lsi.dp1.newcorporder.match.Conglomerate;
 import us.lsi.dp1.newcorporder.match.Match;
 import us.lsi.dp1.newcorporder.match.company.CompanyTile;
+import us.lsi.dp1.newcorporder.match.conglomerate.Conglomerate;
 import us.lsi.dp1.newcorporder.match.payload.CompanyTileReference;
 import us.lsi.dp1.newcorporder.match.payload.request.UseConsultantRequest;
 
@@ -34,5 +34,7 @@ public class DefaultInfiltrate implements Infiltrate {
         match.getTurnSystem().getCurrentPlayer().discardSharesFromHand(conglomerateType, numberOfShares);
         match.getTurnSystem().getCurrentPlayer().getHeadquarter().addConglomerates(conglomerateType, numberOfShares);
         tile.addAgents(numberOfShares);
+
+        match.getTurnSystem().getCurrentPlayer().addShareUses(conglomerateType, numberOfShares);
     }
 }

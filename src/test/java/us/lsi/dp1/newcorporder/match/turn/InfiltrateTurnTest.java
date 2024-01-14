@@ -6,7 +6,11 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoSettings;
-import us.lsi.dp1.newcorporder.match.*;
+import us.lsi.dp1.newcorporder.match.GeneralSupply;
+import us.lsi.dp1.newcorporder.match.Match;
+import us.lsi.dp1.newcorporder.match.MatchMode;
+import us.lsi.dp1.newcorporder.match.conglomerate.Conglomerate;
+import us.lsi.dp1.newcorporder.match.consultant.ConsultantType;
 import us.lsi.dp1.newcorporder.match.payload.request.DiscardShareRequest;
 import us.lsi.dp1.newcorporder.match.payload.request.InfiltrateRequest;
 import us.lsi.dp1.newcorporder.match.payload.request.TakeConsultantRequest;
@@ -14,12 +18,12 @@ import us.lsi.dp1.newcorporder.match.payload.request.UseConsultantRequest;
 import us.lsi.dp1.newcorporder.match.payload.request.infiltrate.Infiltrate;
 import us.lsi.dp1.newcorporder.match.payload.response.InfiltrateResponse;
 import us.lsi.dp1.newcorporder.match.payload.response.UseConsultantResponse;
-import us.lsi.dp1.newcorporder.match.player.Headquarter;
 import us.lsi.dp1.newcorporder.match.player.MatchPlayer;
 import us.lsi.dp1.newcorporder.match.turn.InfiltrateTurn.State;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import static us.lsi.dp1.newcorporder.match.player.MatchPlayerTestUtils.playerWithId;
 
 @MockitoSettings
 class InfiltrateTurnTest {
@@ -28,18 +32,17 @@ class InfiltrateTurnTest {
     @Mock GeneralSupply generalSupply;
 
     Match match;
-    MatchPlayer currentPlayer;
+    MatchPlayer currentPlayer = playerWithId(1);
 
     @BeforeEach
     void setUp() {
         match = Match.builder()
             .maxPlayers(4)
-            .matchMode(MatchMode.NORMAL)
+            .mode(MatchMode.NORMAL)
             .generalSupply(generalSupply)
             .turnSystem(turnSystem)
             .build();
 
-        currentPlayer = new MatchPlayer(1, Headquarter.create());
         lenient().when(turnSystem.getCurrentPlayer()).thenReturn(currentPlayer);
     }
 

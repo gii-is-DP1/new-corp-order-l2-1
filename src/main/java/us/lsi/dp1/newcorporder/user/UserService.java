@@ -15,34 +15,54 @@
  */
 package us.lsi.dp1.newcorporder.user;
 
+import com.google.common.base.Preconditions;
 import jakarta.validation.Valid;
-import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import us.lsi.dp1.newcorporder.exceptions.ResourceNotFoundException;
+import us.lsi.dp1.newcorporder.auth.ApplicationUserDetails;
+import us.lsi.dp1.newcorporder.authority.AuthorityService;
+import us.lsi.dp1.newcorporder.exception.ResourceNotFoundException;
+import us.lsi.dp1.newcorporder.user.payload.request.EditPasswordRequest;
+import us.lsi.dp1.newcorporder.user.payload.request.EditProfileRequest;
+import us.lsi.dp1.newcorporder.user.payload.response.UserView;
+
+import java.time.Instant;
+import java.util.List;
 
 @Service
 public class UserService {
 
+    private final PasswordEncoder passwordEncoder;
+
+    private final AuthorityService authorityService;
     private final UserRepository userRepository;
+    private final OnlineUserRepository onlineUserRepository;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(PasswordEncoder passwordEncoder, AuthorityService authorityService, UserRepository userRepository, OnlineUserRepository onlineUserRepository) {
+        this.passwordEncoder = passwordEncoder;
+        this.authorityService = authorityService;
         this.userRepository = userRepository;
+        this.onlineUserRepository = onlineUserRepository;
     }
 
-    @Transactional
-    public User saveUser(User user) throws DataAccessException {
-        userRepository.save(user);
-        return user;
+    public Iterable<User> findAll() {
+        return userRepository.findAll();
     }
 
-    @Transactional(readOnly = true)
-    public User findUser(String username) {
-        return userRepository.findByUsername(username)
-            .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+    public List<UserView> getAllUsers(String filter, Pageable pageable) {
+        return userRepository.findByUsernameContainsIgnoreCase(filter, pageable).stream()
+            .map(UserView::reduced)
+            .toList();
+    }
+
+    public Iterable<User> findAllByAuthority(String authority) {
+        return userRepository.findAllByAuthority(authority);
     }
 
     @Transactional(readOnly = true)
@@ -51,40 +71,95 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public User findCurrentUser() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth == null)
-            throw new ResourceNotFoundException("Nobody authenticated!");
-        else
-            return userRepository.findByUsername(auth.getName())
-                .orElseThrow(() -> new ResourceNotFoundException("User", "Username", auth.getName()));
+    public User findUser(String username) {
+        return userRepository.findByUsernameIgnoreCase(username)
+            .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
     }
 
-    public Boolean existsUser(String username) {
-        return userRepository.existsByUsername(username);
+    @Transactional
+    public User saveUser(User user) throws DataAccessException {
+        user.setLastSeen(Instant.now());
+        userRepository.save(user);
+        return user;
     }
 
     @Transactional(readOnly = true)
-    public Iterable<User> findAll() {
-        return userRepository.findAll();
-    }
+    public User findCurrentUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-    public Iterable<User> findAllByAuthority(String auth) {
-        return userRepository.findAllByAuthority(auth);
+        if (auth == null) {
+            throw new ResourceNotFoundException("Nobody authenticated!");
+        }
+
+        if (auth.getPrincipal() instanceof ApplicationUserDetails userDetails) {
+            return userDetails.getUser();
+        }
+
+        UserDetails userDetails = (UserDetails) auth.getPrincipal();
+        return userRepository.findByUsernameIgnoreCase(userDetails.getUsername())
+            .orElseThrow(() -> new ResourceNotFoundException("User", "Username", auth.getName()));
     }
 
     @Transactional
-    public User updateUser(@Valid User user, Integer idToUpdate) {
-        User toUpdate = findUser(idToUpdate);
-        BeanUtils.copyProperties(user, toUpdate, "id");
-        userRepository.save(toUpdate);
-
-        return toUpdate;
-    }
-
-    @Transactional
-    public void deleteUser(Integer id) {
-        User toDelete = findUser(id);
+    public void deleteUser(String username) {
+        User toDelete = findUser(username);
         userRepository.delete(toDelete);
+    }
+
+    @Transactional
+    public User editProfile(User user, @Valid EditProfileRequest request) {
+        Preconditions.checkState(passwordEncoder.matches(request.getPassword(), user.getPassword()), "wrong password!");
+
+        if (!request.getUsername().isBlank()) {
+            this.changeUsername(user, request.getUsername());
+        }
+
+        if (!request.getEmail().isBlank()) {
+            this.changeEmail(user, request.getEmail());
+        }
+
+        if (!request.getPicture().isBlank()) {
+            user.setPicture(request.getPicture());
+        }
+
+        return this.saveUser(user);
+    }
+
+    @Transactional
+    public User editPassword(User user, @Valid EditPasswordRequest request) {
+        Preconditions.checkState(passwordEncoder.matches(request.getOldPassword(), user.getPassword()), "wrong password!");
+        this.changePassword(user, request.getNewPassword());
+        return this.saveUser(user);
+    }
+
+    public boolean existsUser(String username) {
+        return userRepository.existsByUsernameIgnoreCase(username);
+    }
+
+    public void updateLastPresence(User user) {
+        onlineUserRepository.updateLastPresence(user);
+    }
+
+    public boolean isOnline(User user) {
+        return onlineUserRepository.isOnline(user);
+    }
+
+    public void changeUsername(User user, String username) {
+        Preconditions.checkState(!this.existsUser(username), "username already taken!");
+        user.setUsername(username);
+    }
+
+    public void changeEmail(User user, String email) {
+        Preconditions.checkState(!userRepository.existsByEmail(email), "email already taken!");
+        user.setEmail(email);
+    }
+
+    public void changeAuthority(User user, String authority) {
+        user.setAuthority(authorityService.findByName(authority));
+    }
+
+    public void changePassword(User user, String password) {
+        Preconditions.checkState(password.length() > 5 && password.length() < 30, "password length must be between 5 and 30 characters");
+        user.setPassword(passwordEncoder.encode(password));
     }
 }

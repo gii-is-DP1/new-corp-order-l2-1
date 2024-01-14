@@ -3,14 +3,13 @@ package us.lsi.dp1.newcorporder.match.payload.request.infiltrate;
 import com.google.common.base.Preconditions;
 import lombok.Builder;
 import lombok.Data;
-import us.lsi.dp1.newcorporder.match.Conglomerate;
-import us.lsi.dp1.newcorporder.match.ConsultantType;
 import us.lsi.dp1.newcorporder.match.Match;
 import us.lsi.dp1.newcorporder.match.company.CompanyTile;
+import us.lsi.dp1.newcorporder.match.conglomerate.Conglomerate;
+import us.lsi.dp1.newcorporder.match.consultant.ConsultantType;
 import us.lsi.dp1.newcorporder.match.payload.CompanyTileReference;
 import us.lsi.dp1.newcorporder.match.payload.request.UseConsultantRequest;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -36,18 +35,6 @@ public class CorporateLawyerInfiltrate implements Infiltrate {
         actions.forEach(action -> infiltrate(match, action.getConglomerateType(), action.getNumberOfShares(), action.getTile()));
     }
 
-    private int getDifferentConglomerates() {
-        int res = 0;
-        List<Conglomerate> ls = new ArrayList<>();
-        for (DefaultInfiltrate b : actions) {
-        	if(!ls.contains(b.getConglomerateType())) {
-        		ls.add(b.getConglomerateType());
-        		res++;
-        	}
-        }
-        return res;
-            }
-
     private void infiltrate(Match match, Conglomerate conglomerateType, int conglomerateShares, CompanyTileReference tileReference) {
         CompanyTile tile = tileReference.fromMatch(match);
 
@@ -57,5 +44,7 @@ public class CorporateLawyerInfiltrate implements Infiltrate {
         match.getTurnSystem().getCurrentPlayer().discardSharesFromHand(conglomerateType, conglomerateShares);
         match.getTurnSystem().getCurrentPlayer().getHeadquarter().addConglomerates(conglomerateType, conglomerateShares);
         tile.addAgents(conglomerateShares);
+
+        match.getTurnSystem().getCurrentPlayer().addShareUses(conglomerateType, conglomerateShares);
     }
 }

@@ -12,15 +12,9 @@ public class SignupRequest {
     private String username;
 
     @NotBlank
-    private String authority;
-
-    @NotBlank
     private String password;
 
     @NotBlank
-    private String firstName;
-
-    @NotBlank
-    private String lastName;
+    private String email;
 
 }

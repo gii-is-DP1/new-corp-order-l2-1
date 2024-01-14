@@ -17,12 +17,14 @@ package us.lsi.dp1.newcorporder.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.EqualsAndHashCode;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 @Setter
 @SuperBuilder
 @MappedSuperclass
+@EqualsAndHashCode(of = "id")
 public abstract class BaseEntity implements Model {
 
     @Id

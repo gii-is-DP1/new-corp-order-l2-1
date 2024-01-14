@@ -7,15 +7,14 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoSettings;
-import us.lsi.dp1.newcorporder.match.Conglomerate;
 import us.lsi.dp1.newcorporder.match.GeneralSupply;
 import us.lsi.dp1.newcorporder.match.Match;
 import us.lsi.dp1.newcorporder.match.MatchMode;
+import us.lsi.dp1.newcorporder.match.conglomerate.Conglomerate;
 import us.lsi.dp1.newcorporder.match.payload.request.DiscardShareRequest;
-import us.lsi.dp1.newcorporder.match.payload.request.TakeShareRequest;
+import us.lsi.dp1.newcorporder.match.payload.request.PlotRequest;
 import us.lsi.dp1.newcorporder.match.payload.response.DiscardShareResponse;
-import us.lsi.dp1.newcorporder.match.payload.response.TakeShareResponse;
-import us.lsi.dp1.newcorporder.match.player.Headquarter;
+import us.lsi.dp1.newcorporder.match.payload.response.PlotResponse;
 import us.lsi.dp1.newcorporder.match.player.MatchPlayer;
 import us.lsi.dp1.newcorporder.match.turn.PlotTurn.State;
 
@@ -24,6 +23,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
+import static us.lsi.dp1.newcorporder.match.player.MatchPlayerTestUtils.playerWithId;
 
 @MockitoSettings
 class PlotTurnTest {
@@ -31,19 +31,18 @@ class PlotTurnTest {
     @Mock TurnSystem turnSystem;
     @Mock GeneralSupply generalSupply;
 
+    MatchPlayer currentPlayer = playerWithId(1);
     Match match;
-    MatchPlayer currentPlayer;
 
     @BeforeEach
     void setUp() {
         match = Match.builder()
             .maxPlayers(4)
-            .matchMode(MatchMode.NORMAL)
+            .mode(MatchMode.NORMAL)
             .generalSupply(generalSupply)
             .turnSystem(turnSystem)
             .build();
 
-        currentPlayer = new MatchPlayer(1, Headquarter.create());
         lenient().when(turnSystem.getCurrentPlayer()).thenReturn(currentPlayer);
     }
 
@@ -63,11 +62,11 @@ class PlotTurnTest {
             .currentState(state)
             .build();
 
-        TakeShareRequest request = TakeShareRequest.builder()
-            .source(TakeShareRequest.Source.DECK)
+        PlotRequest request = PlotRequest.builder()
+            .source(PlotRequest.Source.DECK)
             .build();
 
-        assertThatThrownBy(() -> turn.onTakeShareRequest(request))
+        assertThatThrownBy(() -> turn.onPlotRequest(request))
             .hasMessageContaining("illegal turn state");
     }
 
@@ -80,8 +79,8 @@ class PlotTurnTest {
             .currentState(State.SELECTING_FIRST_SHARE)
             .build();
 
-        TakeShareResponse response = turn.onTakeShareRequest(TakeShareRequest.builder()
-            .source(TakeShareRequest.Source.DECK)
+        PlotResponse response = turn.onPlotRequest(PlotRequest.builder()
+            .source(PlotRequest.Source.DECK)
             .build());
 
         verify(generalSupply).takeConglomerateShareFromDeck();
@@ -97,8 +96,8 @@ class PlotTurnTest {
             .currentState(State.SELECTING_FIRST_SHARE)
             .build();
 
-        assertThatThrownBy(() -> turn.onTakeShareRequest(TakeShareRequest.builder()
-            .source(TakeShareRequest.Source.OPEN_DISPLAY)
+        assertThatThrownBy(() -> turn.onPlotRequest(PlotRequest.builder()
+            .source(PlotRequest.Source.OPEN_DISPLAY)
             .build())
         ).hasMessageContaining("conglomerate must be specified");
     }
@@ -110,8 +109,8 @@ class PlotTurnTest {
             .currentState(State.SELECTING_FIRST_SHARE)
             .build();
 
-        TakeShareResponse response = turn.onTakeShareRequest(TakeShareRequest.builder()
-            .source(TakeShareRequest.Source.OPEN_DISPLAY)
+        PlotResponse response = turn.onPlotRequest(PlotRequest.builder()
+            .source(PlotRequest.Source.OPEN_DISPLAY)
             .conglomerate(Conglomerate.GENERIC_INC)
             .build());
 
@@ -129,8 +128,8 @@ class PlotTurnTest {
             .build();
 
         currentPlayer.addSharesToHand(Conglomerate.GENERIC_INC, Match.MAX_SHARES_IN_HAND);
-        TakeShareResponse response = turn.onTakeShareRequest(TakeShareRequest.builder()
-            .source(TakeShareRequest.Source.OPEN_DISPLAY)
+        PlotResponse response = turn.onPlotRequest(PlotRequest.builder()
+            .source(PlotRequest.Source.OPEN_DISPLAY)
             .conglomerate(Conglomerate.GENERIC_INC)
             .build());
 
@@ -146,8 +145,8 @@ class PlotTurnTest {
             .build();
 
         currentPlayer.addSharesToHand(Conglomerate.GENERIC_INC, Match.MAX_SHARES_IN_HAND);
-        TakeShareResponse response = turn.onTakeShareRequest(TakeShareRequest.builder()
-            .source(TakeShareRequest.Source.OPEN_DISPLAY)
+        PlotResponse response = turn.onPlotRequest(PlotRequest.builder()
+            .source(PlotRequest.Source.OPEN_DISPLAY)
             .conglomerate(Conglomerate.GENERIC_INC)
             .build());
 
@@ -165,8 +164,8 @@ class PlotTurnTest {
             .build());
         doNothing().when(turn).endTurn();
 
-        TakeShareResponse response = turn.onTakeShareRequest(TakeShareRequest.builder()
-            .source(TakeShareRequest.Source.DECK)
+        PlotResponse response = turn.onPlotRequest(PlotRequest.builder()
+            .source(PlotRequest.Source.DECK)
             .build());
 
         verify(turn).endTurn();

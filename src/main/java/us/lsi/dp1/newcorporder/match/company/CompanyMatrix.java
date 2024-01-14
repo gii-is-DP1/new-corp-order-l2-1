@@ -1,14 +1,12 @@
 package us.lsi.dp1.newcorporder.match.company;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multiset;
 import lombok.Getter;
-import us.lsi.dp1.newcorporder.match.Conglomerate;
 import us.lsi.dp1.newcorporder.match.MatchSize;
+import us.lsi.dp1.newcorporder.match.conglomerate.Conglomerate;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,13 +24,19 @@ public class CompanyMatrix {
         return new CompanyMatrix();
     }
 
-    @JsonIgnore
-    @Getter private MatchSize matchSize;
+    public static CompanyMatrixBuilder builder() {
+        return new CompanyMatrixBuilder();
+    }
 
-    @JsonInclude
+    @Getter private MatchSize matchSize;
     private CompanyTile[] tiles;
 
     private CompanyMatrix() {
+    }
+
+    private CompanyMatrix(MatchSize matchSize, CompanyTile... tiles) {
+        this.matchSize = matchSize;
+        this.tiles = tiles;
     }
 
     public void init(MatchSize matchSize) {
@@ -106,5 +110,24 @@ public class CompanyMatrix {
             .filter(tile -> tile.getCurrentConglomerate() == conglomerate)
             .filter(tile -> tile.getCompany().getType() == companyType)
             .count();
+    }
+
+    public static class CompanyMatrixBuilder {
+        private MatchSize matchSize;
+        private CompanyTile[] tiles;
+
+        public CompanyMatrixBuilder matchSize(MatchSize matchSize) {
+            this.matchSize = matchSize;
+            return this;
+        }
+
+        public CompanyMatrixBuilder tiles(CompanyTile... tiles) {
+            this.tiles = tiles;
+            return this;
+        }
+
+        public CompanyMatrix build() {
+            return new CompanyMatrix(matchSize, tiles);
+        }
     }
 }

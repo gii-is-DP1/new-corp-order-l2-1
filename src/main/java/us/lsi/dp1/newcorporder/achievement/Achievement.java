@@ -10,13 +10,14 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import us.lsi.dp1.newcorporder.model.NamedEntity;
+import us.lsi.dp1.newcorporder.stats.Stat;
 
 @Getter
 @Setter
-@EqualsAndHashCode(of = "id")
-@SuperBuilder
-@Table(name = "achievements")
 @Entity
+@Table(name = "achievements")
+@SuperBuilder
+@EqualsAndHashCode(callSuper = true, of = {})
 public class Achievement extends NamedEntity {
 
     @Size(max=256)

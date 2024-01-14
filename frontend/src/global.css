@@ -1,0 +1,40 @@
+@font-face {
+    font-family: 'Core Magic';
+    src: url(./fonts/core-magic.ttf) format('truetype');
+}
+
+@font-face {
+    font-family: 'DIN Next Slab Pro';
+    src: url(./fonts/din-next-slab-pro.ttf) format('truetype');
+}
+
+.cardContainer {
+    height: 200px;
+    display: flex;
+}
+
+.cardElement {
+    height: 200px;
+    display: block;
+}
+
+.cardElement img {
+    max-height: 100%;
+}
+
+.matchCode {
+    margin: auto;
+    font-size: 36px;
+    opacity: 0.7;
+    flex: 0.5;
+}
+
+.modal-content {
+    background: none !important;
+}
+
+
+.bg-navbar {
+    background: #2c2c2c !important;
+    --bs-bg-opacity: 1;
+}

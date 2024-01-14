@@ -1,33 +1,40 @@
 package us.lsi.dp1.newcorporder.match.turn;
 
 import com.google.common.base.Preconditions;
-import us.lsi.dp1.newcorporder.match.Conglomerate;
-import us.lsi.dp1.newcorporder.match.ConsultantType;
+import lombok.Getter;
 import us.lsi.dp1.newcorporder.match.Match;
 import us.lsi.dp1.newcorporder.match.company.CompanyTile;
+import us.lsi.dp1.newcorporder.match.conglomerate.Conglomerate;
+import us.lsi.dp1.newcorporder.match.consultant.ConsultantType;
 import us.lsi.dp1.newcorporder.match.payload.CompanyTileReference;
-import us.lsi.dp1.newcorporder.match.payload.request.CompanyAbilityRequest;
 import us.lsi.dp1.newcorporder.match.payload.request.DiscardShareRequest;
 import us.lsi.dp1.newcorporder.match.payload.request.TakeOverRequest;
+import us.lsi.dp1.newcorporder.match.payload.request.UseCompanyAbilityRequest;
 import us.lsi.dp1.newcorporder.match.payload.request.UseConsultantRequest;
 import us.lsi.dp1.newcorporder.match.payload.request.ability.CompanyAbility;
-import us.lsi.dp1.newcorporder.match.payload.response.CompanyAbilityResponse;
 import us.lsi.dp1.newcorporder.match.payload.response.DiscardShareResponse;
 import us.lsi.dp1.newcorporder.match.payload.response.TakeOverResponse;
+import us.lsi.dp1.newcorporder.match.payload.response.UseCompanyAbilityResponse;
 import us.lsi.dp1.newcorporder.match.payload.response.UseConsultantResponse;
 
 import java.util.List;
 
+@Getter
 public class TakeOverTurn extends Turn {
 
     private enum State implements TurnState {SELECTING_CONSULTANT, TAKING_OVER, CHOOSING_ABILITY_PROPERTIES, DISCARDING_SHARES_FROM_HAND, NONE}
 
-    private State currentState = State.SELECTING_CONSULTANT;
+    private State state = State.SELECTING_CONSULTANT;
     private UseConsultantRequest useConsultantRequest;
     private TakeOverRequest takeOverRequest;
 
     public TakeOverTurn(Match match) {
-        super(match);
+        super(Action.TAKE_OVER, match);
+    }
+
+    @Override
+    public ConsultantType getChosenConsultant() {
+        return this.useConsultantRequest.getConsultant();
     }
 
     @Override
@@ -38,10 +45,11 @@ public class TakeOverTurn extends Turn {
         checkValidConsultant(request.getConsultant());
 
         this.useConsultantRequest = request;
-        this.currentState = State.TAKING_OVER;
+        this.state = State.TAKING_OVER;
         this.turnSystem.getCurrentPlayer().getHeadquarter().removeConsultant(request.getConsultant());
+        this.turnSystem.getCurrentPlayer().addConsultantUse(request.getConsultant());
 
-        return new UseConsultantResponse(currentState);
+        return new UseConsultantResponse(state);
     }
 
     private boolean isValidConsultant(ConsultantType consultant) {
@@ -81,7 +89,7 @@ public class TakeOverTurn extends Turn {
         return TakeOverResponse.builder()
             .hand(turnSystem.getCurrentPlayer().getHand())
             .sourceConglomerate(source.getCurrentConglomerate())
-            .nextState(currentState)
+            .nextState(state)
             .build();
     }
 
@@ -108,7 +116,7 @@ public class TakeOverTurn extends Turn {
         target.takeOver(source.getCurrentConglomerate(), target.getAgents());
         this.turnSystem.getCurrentPlayer().getHeadquarter().captureAgent(target.getCurrentConglomerate());
 
-        this.currentState = State.CHOOSING_ABILITY_PROPERTIES;
+        this.state = State.CHOOSING_ABILITY_PROPERTIES;
     }
 
     private boolean canTakeOver(CompanyTile source, CompanyTile target) {
@@ -118,10 +126,11 @@ public class TakeOverTurn extends Turn {
 
     private void rotateCards(Conglomerate conglomerate, int amount) {
         this.turnSystem.getCurrentPlayer().getHeadquarter().rotateConglomerates(conglomerate, amount);
+        this.turnSystem.getCurrentPlayer().addAgentUses(conglomerate, amount);
     }
 
     @Override
-    public CompanyAbilityResponse onCompanyAbilityRequest(CompanyAbilityRequest request) {
+    public UseCompanyAbilityResponse onUseCompanyAbilityRequest(UseCompanyAbilityRequest request) {
         checkState(State.CHOOSING_ABILITY_PROPERTIES);
 
         CompanyAbility ability = request.getCompanyAbility();
@@ -129,47 +138,49 @@ public class TakeOverTurn extends Turn {
             Preconditions.checkState(ability.getCompanyType() == takeOverRequest.getTargetCompany().fromMatch(match).getCompany().getType(),
                 "the chosen ability must belong to the taken company type");
             ability.activate(match, takeOverRequest);
+            turnSystem.getCurrentPlayer().addAbilityUse(ability.getCompanyType());
         }
 
         this.endTurn();
-        return CompanyAbilityResponse.builder()
+        return UseCompanyAbilityResponse.builder()
             .hand(turnSystem.getCurrentPlayer().getHand())
-            .nextState(currentState)
+            .nextState(state)
             .build();
     }
 
     @Override
     public DiscardShareResponse onDiscardShareRequest(DiscardShareRequest discardShareRequest) {
-        Preconditions.checkState(currentState == State.DISCARDING_SHARES_FROM_HAND,
+        Preconditions.checkState(state == State.DISCARDING_SHARES_FROM_HAND,
             "cannot discard a share on your turn state");
 
         DiscardShareResponse response = super.onDiscardShareRequest(discardShareRequest);
         this.endTurn();
-        response.setNextState(this.currentState);
+        response.setNextState(this.state);
 
         return response;
     }
 
-    void endTurn() {
+    private void endTurn() {
         if (this.isStateValidForDealMaker() && useConsultantRequest.getConsultant() == ConsultantType.DEAL_MAKER) {
             List<Conglomerate> shares = match.getGeneralSupply().takeConglomerateSharesFromDeck(2);
             shares.forEach(share -> turnSystem.getCurrentPlayer().addShareToHand(share));
 
             if (turnSystem.getCurrentPlayer().getHand().size() > Match.MAX_SHARES_IN_HAND) {
-                currentState = State.DISCARDING_SHARES_FROM_HAND;
+                state = State.DISCARDING_SHARES_FROM_HAND;
                 return;
             }
         }
 
-        this.currentState = State.NONE;
+        this.turnSystem.getCurrentPlayer().addTimeTakenOver();
+        this.state = State.NONE;
         this.turnSystem.passTurn();
     }
 
     private boolean isStateValidForDealMaker() {
-        return currentState == State.TAKING_OVER || currentState == State.CHOOSING_ABILITY_PROPERTIES;
+        return state == State.TAKING_OVER || state == State.CHOOSING_ABILITY_PROPERTIES;
     }
 
     private void checkState(State state) {
-        Preconditions.checkState(currentState == state, "invalid action for the current state (%s)", state);
+        Preconditions.checkState(this.state == state, "invalid action for the current state (%s)", state);
     }
 }

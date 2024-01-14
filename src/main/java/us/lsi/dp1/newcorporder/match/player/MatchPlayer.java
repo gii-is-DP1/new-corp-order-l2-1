@@ -2,29 +2,47 @@ package us.lsi.dp1.newcorporder.match.player;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.*;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import us.lsi.dp1.newcorporder.match.Conglomerate;
-import us.lsi.dp1.newcorporder.match.ConsultantType;
+import lombok.*;
 import us.lsi.dp1.newcorporder.match.company.CompanyType;
+import us.lsi.dp1.newcorporder.match.conglomerate.Conglomerate;
+import us.lsi.dp1.newcorporder.match.consultant.ConsultantType;
+import us.lsi.dp1.newcorporder.player.Player;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+@AllArgsConstructor
+@Builder
 @EqualsAndHashCode(of = "playerId")
 public class MatchPlayer {
 
+    public static MatchPlayer create(Player player) {
+        return MatchPlayer.builder()
+            .playerId(player.getId())
+            .username(player.getUser().getUsername())
+            .picture(player.getUser().getPicture())
+            .secretObjectives(new ArrayList<>(2))
+            .headquarter(Headquarter.create())
+            .build();
+    }
+
     @Getter private final Integer playerId;
-    @Getter private final Headquarter headquarter;
+    @Getter private final String username;
+    @Getter private final String picture;
+    @Getter @Setter private boolean online;
 
     private final Multiset<Conglomerate> hand = HashMultiset.create();
-    private final List<CompanyType> secretObjectives = new ArrayList<>(2);
+    private final List<CompanyType> secretObjectives;
+    @Getter private final Headquarter headquarter;
 
-    public MatchPlayer(Integer playerId, Headquarter headquarter) {
-        this.playerId = playerId;
-        this.headquarter = headquarter;
-    }
+    @Getter private int timesPlotted;
+    @Getter private int timesInfiltrated;
+    @Getter private int timesTakenOver;
+    @Getter private final Multiset<CompanyType> abilityUses = HashMultiset.create();
+    @Getter private final Multiset<Conglomerate> shareUses = HashMultiset.create();
+    @Getter private final Multiset<Conglomerate> agentUses = HashMultiset.create();
+    @Getter private final Multiset<ConsultantType> consultantUses = HashMultiset.create();
 
     public void init(ConsultantType initialConsultant, List<Conglomerate> initialHand) {
         this.hand.addAll(initialHand);
@@ -68,5 +86,33 @@ public class MatchPlayer {
     public int getParticipationPoints(Conglomerate conglomerateType) {
         return headquarter.getTotalConglomeratesShares(conglomerateType) +
                (headquarter.getAgentsCaptured(conglomerateType) * 2);
+    }
+
+    public void addTimePlotted() {
+        this.timesPlotted++;
+    }
+
+    public void addTimeInfiltrated() {
+        this.timesInfiltrated++;
+    }
+
+    public void addTimeTakenOver() {
+        this.timesTakenOver++;
+    }
+
+    public void addAbilityUse(CompanyType type) {
+        this.abilityUses.add(type);
+    }
+
+    public void addShareUses(Conglomerate conglomerate, int uses) {
+        this.shareUses.add(conglomerate, uses);
+    }
+
+    public void addAgentUses(Conglomerate conglomerate, int uses) {
+        this.agentUses.add(conglomerate);
+    }
+
+    public void addConsultantUse(ConsultantType type) {
+        this.consultantUses.add(type);
     }
 }

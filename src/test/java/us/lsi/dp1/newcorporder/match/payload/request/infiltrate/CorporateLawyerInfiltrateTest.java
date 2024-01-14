@@ -4,12 +4,15 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoSettings;
-import us.lsi.dp1.newcorporder.match.*;
+import us.lsi.dp1.newcorporder.match.GeneralSupply;
+import us.lsi.dp1.newcorporder.match.Match;
+import us.lsi.dp1.newcorporder.match.MatchMode;
 import us.lsi.dp1.newcorporder.match.company.CompanyTile;
+import us.lsi.dp1.newcorporder.match.conglomerate.Conglomerate;
+import us.lsi.dp1.newcorporder.match.consultant.ConsultantType;
 import us.lsi.dp1.newcorporder.match.payload.CompanyTileReference;
 import us.lsi.dp1.newcorporder.match.payload.request.InfiltrateRequest;
 import us.lsi.dp1.newcorporder.match.payload.request.UseConsultantRequest;
-import us.lsi.dp1.newcorporder.match.player.Headquarter;
 import us.lsi.dp1.newcorporder.match.player.MatchPlayer;
 import us.lsi.dp1.newcorporder.match.turn.TurnSystem;
 
@@ -18,6 +21,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
+import static us.lsi.dp1.newcorporder.match.player.MatchPlayerTestUtils.playerWithId;
 
 @MockitoSettings
 class CorporateLawyerInfiltrateTest {
@@ -41,11 +45,11 @@ class CorporateLawyerInfiltrateTest {
     void setUp() {
         match = Match.builder()
             .maxPlayers(4)
-            .matchMode(MatchMode.NORMAL)
+            .mode(MatchMode.NORMAL)
             .generalSupply(generalSupply)
             .turnSystem(turnSystem)
             .build();
-        currentPlayer = new MatchPlayer(1, Headquarter.create());
+        currentPlayer = playerWithId(1);
         currentPlayer.addSharesToHand(Conglomerate.TOTAL_ENTERTAINMENT, 4);
         currentPlayer.addSharesToHand(Conglomerate.OMNICORP, 2);
         companyTile1 = CompanyTile.builder()
@@ -145,7 +149,7 @@ class CorporateLawyerInfiltrateTest {
                 .build();;
         when(useConsultantRequest.getConsultant()).thenReturn(ConsultantType.MEDIA_ADVISOR);
         // then
-        assertThrows(IllegalStateException.class, () -> {
+        assertThrows(IllegalArgumentException.class, () -> {
             action.apply(match, useConsultantRequest);
         }, "the infiltrate must be the same type as the consultant used");
         assertIfNothingChange();

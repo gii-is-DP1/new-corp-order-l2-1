@@ -5,11 +5,14 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoSettings;
-import us.lsi.dp1.newcorporder.match.*;
+import us.lsi.dp1.newcorporder.match.GeneralSupply;
+import us.lsi.dp1.newcorporder.match.Match;
+import us.lsi.dp1.newcorporder.match.MatchMode;
 import us.lsi.dp1.newcorporder.match.company.CompanyTile;
+import us.lsi.dp1.newcorporder.match.conglomerate.Conglomerate;
+import us.lsi.dp1.newcorporder.match.consultant.ConsultantType;
 import us.lsi.dp1.newcorporder.match.payload.CompanyTileReference;
 import us.lsi.dp1.newcorporder.match.payload.request.UseConsultantRequest;
-import us.lsi.dp1.newcorporder.match.player.Headquarter;
 import us.lsi.dp1.newcorporder.match.player.MatchPlayer;
 import us.lsi.dp1.newcorporder.match.turn.TurnSystem;
 
@@ -17,6 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
+import static us.lsi.dp1.newcorporder.match.player.MatchPlayerTestUtils.playerWithId;
 
 @MockitoSettings
 class DefaultInfiltrateTest {
@@ -25,19 +29,18 @@ class DefaultInfiltrateTest {
     @Mock GeneralSupply generalSupply;
     @Mock CompanyTileReference tileReference;
 
-    MatchPlayer currentPlayer;
+    MatchPlayer currentPlayer = playerWithId(1);
     Match match;
 
     @BeforeEach
     void setUp() {
         match = Match.builder()
             .maxPlayers(4)
-            .matchMode(MatchMode.NORMAL)
+            .mode(MatchMode.NORMAL)
             .generalSupply(generalSupply)
             .turnSystem(turnSystem)
             .build();
 
-        currentPlayer = new MatchPlayer(1, Headquarter.create());
         lenient().when(turnSystem.getCurrentPlayer()).thenReturn(currentPlayer);
     }
 

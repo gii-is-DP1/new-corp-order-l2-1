@@ -1,3 +1,5 @@
+import jwt_decode from "jwt-decode";
+
 class TokenService {
     getLocalRefreshToken() {
         const user = JSON.parse(localStorage.getItem("user"));
@@ -5,12 +7,20 @@ class TokenService {
     }
 
     getLocalAccessToken() {
-        const jwt = JSON.parse(localStorage.getItem("jwt"));
-        return jwt ? jwt : null;
+        try {
+            const jwt = JSON.parse(localStorage.getItem("jwt"));
+            return jwt?.accessToken;
+        } catch (e) {
+            return null;
+        }
     }
 
     updateLocalAccessToken(token) {
-        window.localStorage.setItem("jwt", JSON.stringify(token));
+        window.localStorage.setItem("jwt", JSON.stringify({accessToken: token}));
+    }
+
+    getRoles() {
+        return jwt_decode(this.getLocalAccessToken()).authorities;
     }
 
     getUser() {
@@ -19,6 +29,14 @@ class TokenService {
 
     setUser(user) {
         window.localStorage.setItem("user", JSON.stringify(user));
+    }
+
+    updateUsername(newUsername) {
+        const oldUser = this.getUser();
+        if (oldUser) {
+            const newUser = {...oldUser, username: newUsername};
+            this.setUser(newUser);
+        }
     }
 
     removeUser() {

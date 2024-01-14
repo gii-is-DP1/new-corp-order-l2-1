@@ -1,11 +1,14 @@
 package us.lsi.dp1.newcorporder.match.player;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.ImmutableMultiset;
 import com.google.common.collect.Multiset;
-import us.lsi.dp1.newcorporder.match.Conglomerate;
-import us.lsi.dp1.newcorporder.match.ConsultantType;
+import lombok.Builder;
+import us.lsi.dp1.newcorporder.match.conglomerate.Conglomerate;
+import us.lsi.dp1.newcorporder.match.consultant.ConsultantType;
 
 import java.util.Comparator;
 import java.util.List;
@@ -16,12 +19,27 @@ public class Headquarter {
         return new Headquarter();
     }
 
+    @JsonSerialize
     private final Multiset<Conglomerate> capturedAgents = HashMultiset.create();
+
+    @JsonSerialize
     private final Multiset<ConsultantType> consultants = HashMultiset.create();
+
+    @JsonSerialize
     private final Multiset<Conglomerate> conglomerateShares = HashMultiset.create();
+
+    @JsonSerialize
     private final Multiset<Conglomerate> usedConglomerateShares = HashMultiset.create();
 
     private Headquarter() {
+    }
+
+    @Builder
+    private Headquarter(Multiset<Conglomerate> capturedAgents, Multiset<ConsultantType> consultants, Multiset<Conglomerate> conglomerateShares, Multiset<Conglomerate> usedConglomerateShares) {
+        this.capturedAgents.addAll(capturedAgents);
+        this.consultants.addAll(consultants);
+        this.conglomerateShares.addAll(conglomerateShares);
+        this.usedConglomerateShares.addAll(usedConglomerateShares);
     }
 
     /**
@@ -48,6 +66,7 @@ public class Headquarter {
      *
      * @return the quantity of captured agents
      */
+    @JsonIgnore
     public int getCapturedAgentsCount() {
         return capturedAgents.size();
     }
@@ -191,16 +210,15 @@ public class Headquarter {
         return this.capturedAgents.count(conglomerateType);
     }
 
+    @JsonIgnore
     public int getConsultantsVP() {
         Multiset<ConsultantType> consultants = HashMultiset.create(this.consultants);
         List<ConsultantType> bestMatchConsultants = rankBestConsultantToMatch(consultants);
         int vp = 0;
-
         // punto extra por tener 4 consultores diferentes
         if (consultants.elementSet().size() >= 4) {
             vp++;
         }
-
         while (consultants.size() > 1 && bestMatchConsultants.size() > 1) {
             vp++;
             consultants.remove(bestMatchConsultants.get(0), 1);

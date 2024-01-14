@@ -3,7 +3,7 @@ package us.lsi.dp1.newcorporder.match.payload.request;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import us.lsi.dp1.newcorporder.match.ConsultantType;
+import us.lsi.dp1.newcorporder.match.consultant.ConsultantType;
 
 import javax.annotation.Nullable;
 

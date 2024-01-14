@@ -9,8 +9,9 @@ function AmbientAdvertisingOpponentPicker() {
     const context = useContext(StateContext);
     const state = context.state;
     let players = [];
-    players[0] = <HQViewer/>;
-    players = players.concat(context.opponents.components);
+    players[0] = <p>You</p>;
+    const components = context.opponents.values.map(item => <p>{item.username}</p>);
+    players = players.concat(components);
     return pickOneCard(players, (selected) => {
         state.takeover.ability.ambientAdvertising.opponent = selected[0] === 0 ? state.game.player  : context.opponents.values[selected[0]-1];
         context.update();

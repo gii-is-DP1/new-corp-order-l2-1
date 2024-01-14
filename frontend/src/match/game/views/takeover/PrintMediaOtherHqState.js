@@ -7,7 +7,8 @@ import {pickOneCard} from "../../selector/pickers/Pickers";
 function PrintMediaOtherHqPicker() {
     const context = useContext(StateContext);
     const state = context.state;
-    return pickOneCard(context.opponents.components, (selected) => {
+    const components = context.opponents.values.map(item => <p>{item.username}</p>);
+    return pickOneCard(components, (selected) => {
         state.takeover.ability.printMedia.opponent = context.opponents.values[selected[0]];
         context.update();
     })

@@ -19,9 +19,10 @@ export const conglomerateContainerStyle = {
     display: "flex",
 }
 
-export function pickOneCard(from, onConfirm) {
+export function pickOneCard(from, onConfirm, selectableElements = [...Array(from.length).keys()]) {
     return <Selector title={"Pick a card"}
                      selection={from}
+                     selectableElements={selectableElements}
                      canConfirm={selectAtLeastOne}
                      changeSelectableItems={selectQuantity(1)}
                      onConfirm={onConfirm}
@@ -63,10 +64,11 @@ export function pickTwoCards(from, onConfirm) {
     />;
 }
 
-export function optionallyPickCard(from, onConfirm, onSkip) {
+export function optionallyPickCard(from, onConfirm, onSkip, selectableElements = [...Array(from.length).keys()]) {
     return <Selector title={"You may pick a card"}
                      selection={from}
                      canConfirm={selectAtLeastOne}
+                     selectableElements={selectableElements}
                      changeSelectableItems={selectQuantity(1)}
                      onConfirm={onConfirm}
                      containerStyle={conglomerateContainerStyle}
@@ -76,9 +78,10 @@ export function optionallyPickCard(from, onConfirm, onSkip) {
     />;
 }
 
-export function pickManyConglomeratesOfTheSameColor(from, onConfirm) {
-    return <Selector title={"Pick a conglomerate"}
+export function pickManyConglomeratesOfTheSameColor(from, onConfirm, selectableElements = [...Array(from.length).keys()]) {
+    return <Selector title={"Pick one or many conglomerates of the same color"}
                      selection={from}
+                     selectableElements={selectableElements}
                      canConfirm={selectAtLeastOne}
                      changeSelectableItems={onlySelectOfSameColor}
                      onConfirm={onConfirm}
@@ -121,11 +124,22 @@ export function pickOneOrTwoCompanies(from, onConfirm) {
     />;
 }
 
-export function pickTwoOrThreeCompanies(from, onConfirm) {
+export function pickTwoOrThreeCompanies(from, onConfirm, companies) {
     return <CompanySelector
-        title={"Pick two or three companies"}
+        title={"Broadcast Network Ability"}
+        help={
+            <>
+                <h2>Explanations</h2>
+                <p>You can move 2 conglomerates from the source company to one or two others</p>
+                <h2>SOURCE COMPANY</h2>
+                <p>the source company is the first you select</p>
+                <p>it must have at lest two conglomerates</p>
+                <h2>OTHER COMPANIES</h2>
+                <p>the comapanies agents must be of the same color</p>
+            </>
+        }
         selection={from}
-        canConfirm={selectAtLeastTwoOrThree}
+        canConfirm={selectAtLeastTwoOrThree(companies)}
         changeSelectableItems={selectQuantity(3)}
         onConfirm={onConfirm}
         key={{onConfirm}}
@@ -156,17 +170,21 @@ export function pickOrthogonallyAdjacentCompanyTiles(from, onConfirm) {
 
 //selectableElements = {[...Array(from.length).keys()].filter((i) => getConglomerateName(companies[i].type) === conglomerateType)}
 
-export function pickOrthogonallyAdjacentCompanyTilesWithColors(from, onConfirm, conglomerateType, companies) {
-    console.log(conglomerateType)
+export function pickOrthogonallyAdjacentCompanyTilesWithColors(from, onConfirm, conglomerateType, conglomerateQuantity, companies) {
     return <CompanySelector
         title={"Pick orthogonally adjacent Companies"}
         help={
             <>
-                <p> You have selected {conglomerateType} </p>
+                <h2>Pay attention to the color</h2>
+                <p> You have selected {conglomerateType}, therefore the first company ability you select must contain
+                    agents of type {conglomerateType}! </p>
+                <h2>Pay attention to the agents</h2>
+                <p> You have selected {conglomerateQuantity} conglomerates, therefore the first company ability you
+                    select must contain at least {conglomerateQuantity} agents!</p>
             </>
         }
         selection={from}
-        canConfirm={selectAtLeastTwoTakeover(conglomerateType, companies)}
+        canConfirm={selectAtLeastTwoTakeover(conglomerateType, conglomerateQuantity, companies)}
         changeSelectableItems={selectOrthogonallyAdjacentTilesWithColors(companies)}
         onConfirm={onConfirm}
         key={{onConfirm}}

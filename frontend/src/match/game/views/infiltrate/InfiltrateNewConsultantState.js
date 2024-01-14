@@ -4,7 +4,7 @@ import {StateContext} from "../../Game";
 import {optionallyPickCard, pickOneCard} from "../../selector/pickers/Pickers";
 import fetchAuthenticated from "../../../../util/fetchAuthenticated";
 import {Info} from "../../../Match";
-import {getConsultantName} from "../../../data/MatchEnums";
+import {consultant, getConsultantName} from "../../../data/MatchEnums";
 import fetchAuthenticatedWithBody from "../../../../util/fetchAuthenticatedWithBody";
 
 function InfiltrateNewConsultantDrawer() {
@@ -12,10 +12,16 @@ function InfiltrateNewConsultantDrawer() {
     const state = context.state;
     const info = useContext(Info);
     if(state.infiltrate.takenConsultant !== null)
-    {
         return;
-    }
 
+    const selectableElements = [];
+    const previouslyUsedConsultant = state.infiltrate.consultant;
+
+    for(let i = 0; i < context.playerConsultants.values.length; i++){
+        const c = context.playerConsultants.values[i];
+        if(c !== previouslyUsedConsultant)
+            selectableElements.push(i)
+    }
 
     return optionallyPickCard(context.generalSupplyConsultants.components,
         (selected) => {
@@ -53,7 +59,8 @@ function InfiltrateNewConsultantDrawer() {
                 }
             };
             fetch();
-        }
+        },
+        selectableElements
     )
 }
 

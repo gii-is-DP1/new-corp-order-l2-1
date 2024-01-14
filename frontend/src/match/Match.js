@@ -137,17 +137,17 @@ function setContext(id, matchData, propic) {
     if (matchData.state === "PLAYING") {
         startingState.isPlaying = matchData.playing;
         startingState.game.player.hand = matchData.player.hand;
-        if(startingState.game.player.hand[conglomerate.OMNICORP] === undefined)
+        if (startingState.game.player.hand[conglomerate.OMNICORP] === undefined)
             startingState.game.player.hand[conglomerate.OMNICORP] = 0;
-        if(startingState.game.player.hand[conglomerate.MEGAMEDIA] === undefined)
+        if (startingState.game.player.hand[conglomerate.MEGAMEDIA] === undefined)
             startingState.game.player.hand[conglomerate.MEGAMEDIA] = 0;
-        if(startingState.game.player.hand[conglomerate.TOTAL_ENTERTAINMENT] === undefined)
+        if (startingState.game.player.hand[conglomerate.TOTAL_ENTERTAINMENT] === undefined)
             startingState.game.player.hand[conglomerate.TOTAL_ENTERTAINMENT] = 0;
-        if(startingState.game.player.hand[conglomerate.GENERIC_INC] === undefined)
+        if (startingState.game.player.hand[conglomerate.GENERIC_INC] === undefined)
             startingState.game.player.hand[conglomerate.GENERIC_INC] = 0;
-
+        startingState.game.generalSupply.conglomeratesLeftInDeck = matchData.generalSupply.deckSize;
         startingState.game.player.hq.secretObjectives = matchData.player.secretObjectives.map(s => secretObjective[s]);
-    //    startingState.game.player.hq.consultants = matchData.player.headquarter.consultants;
+        //    startingState.game.player.hq.consultants = matchData.player.headquarter.consultants;
         startingState.game.player.hq.rotatedConglomerates = matchData.player.headquarter.usedConglomerateShares ?? []; //TODO: check if are multiset or array
         startingState.game.player.hq.nonRotatedConglomerates = matchData.player.headquarter.conglomerateShares ?? [];
         startingState.game.companies = matchData.companyMatrix.map(c => {
@@ -158,7 +158,16 @@ function setContext(id, matchData, propic) {
         startingState.game.generalSupply.conglomeratesLeftInDeck = matchData.generalSupply.deckSize;
         startingState.game.generalSupply.openDisplay = matchData.generalSupply.openDisplay;
         startingState.game.opponents = matchData.opponents.map(o => {
-            return {id: o.playerId, username: o.username, conglomeratesInHand: o.handSize, hq: {rotatedConglomerates: o.headquarter.usedConglomerateShares, nonRotatedConglomerates: o.headquarter.conglomerateShares, consultants: o.headquarter.consultants} }
+            return {
+                id: o.playerId,
+                username: o.username,
+                conglomeratesInHand: o.handSize,
+                hq: {
+                    rotatedConglomerates: o.headquarter.usedConglomerateShares,
+                    nonRotatedConglomerates: o.headquarter.conglomerateShares,
+                    consultants: o.headquarter.consultants
+                }
+            }
         })
     }
     if (matchData.state === "FINISHED")

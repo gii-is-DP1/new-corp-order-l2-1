@@ -2,7 +2,7 @@ import React, {useContext} from "react";
 import {StateContext} from "../../Game";
 import Deck from "../../../components/Deck";
 import {pickOneCard} from "../../selector/pickers/Pickers";
-import {Info} from "../../../Match";
+import {Info, startingState} from "../../../Match";
 import fetchAuthenticatedWithBody from "../../../../util/fetchAuthenticatedWithBody";
 import fetchAuthenticated from "../../../../util/fetchAuthenticated";
 import {conglomerate, getConglomerateName} from "../../../data/MatchEnums";
@@ -10,10 +10,12 @@ import {conglomerate, getConglomerateName} from "../../../data/MatchEnums";
 export function DrawConglomerate(isFirst) {
     const context = useContext(StateContext);
     const info = useContext(Info);
-    const openDisplayAndDeck = [...context.openDisplay.components, <Deck/>];
 
+    const openDisplayAndDeck = [...context.openDisplay.components];
+    if(context.state.game.generalSupply.conglomeratesLeftInDeck > 0)
+        openDisplayAndDeck.push(<Deck/>);
 
-    return pickOneCard(openDisplayAndDeck, selected => {
+    const picker = pickOneCard(openDisplayAndDeck, selected => {
         const index = selected[0];
         const selectedConglomerate = context.openDisplay.values[index];
         if (isFirst) {
@@ -53,14 +55,19 @@ export function DrawConglomerate(isFirst) {
         };
         postPlot();
 
-        if (conglomerateType !== null)
-        {
+        if (conglomerateType !== null) {
             context.state.game.generalSupply.openDisplay[conglomerateType]--;
-            if(context.state.game.player.hand[conglomerateType] === undefined)
+            if (context.state.game.player.hand[conglomerateType] === undefined)
                 context.state.game.player.hand[conglomerateType] = 0;
             context.state.game.player.hand[conglomerateType]++;
         }
 
         context.update();
     })
+
+    return (
+        <>
+            {picker}
+            <p>Deck contains {context.state.game.generalSupply.conglomeratesLeftInDeck} conglomerates</p>
+        </>);
 }

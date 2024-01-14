@@ -5,7 +5,7 @@ import {optionallyPickCard} from "../../selector/pickers/Pickers";
 import fetchAuthenticated from "../../../../util/fetchAuthenticated";
 import {Info} from "../../../Match";
 import fetchAuthenticatedWithBody from "../../../../util/fetchAuthenticatedWithBody";
-import {getConsultantName} from "../../../data/MatchEnums";
+import {consultant, getConsultantName} from "../../../data/MatchEnums";
 
 function TakeoverConsultantPicker() {
     const context = useContext(StateContext);
@@ -29,6 +29,13 @@ function TakeoverConsultantPicker() {
         }
     };
 
+    const selectableElements = [];
+    for(let i = 0; i < context.playerConsultants.values.length; i++){
+        const c = context.playerConsultants.values[i];
+        if(c === consultant.DEALMAKER || c === consultant.MILITARY_CONTRACTOR)
+            selectableElements.push(i)
+    }
+
     return optionallyPickCard(context.playerConsultants.components,
         (selected) => {
             fetchAction();
@@ -45,7 +52,9 @@ function TakeoverConsultantPicker() {
             fetchConsultant(body)();
             state.takeover.consultant = -1;
             context.update();
-        })
+        },
+        selectableElements
+    )
 }
 
 export class TakeoverConsultantState extends FrontendState {

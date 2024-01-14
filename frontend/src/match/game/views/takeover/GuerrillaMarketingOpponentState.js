@@ -3,15 +3,14 @@ import {useContext} from "react";
 import {StateContext} from "../../Game";
 import {pickOneCard} from "../../selector/pickers/Pickers";
 
-
 function GuerrillaMarketingOpponentPicker() {
     const context = useContext(StateContext);
     const state = context.state;
-    return pickOneCard(context.opponents.components, (selected) => {
+    const components = context.opponents.values.map(item => <p>{item.username}</p>);
+    return pickOneCard(components, (selected) => {
         state.takeover.ability.guerrillaMarketing.opponent = context.opponents.values[selected[0]];
         context.update();
     })
-
 }
 
 export class GuerrillaMarketingOpponentState extends FrontendState {

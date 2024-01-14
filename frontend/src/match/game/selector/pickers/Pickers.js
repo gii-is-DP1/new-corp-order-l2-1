@@ -1,5 +1,6 @@
 import Selector from "../Selector";
 import {
+    selectAtLeastN,
     selectAtLeastOne,
     selectAtLeastOneOrTwo,
     selectAtLeastOneOrZero,
@@ -22,6 +23,17 @@ export function pickOneCard(from, onConfirm) {
                      selection={from}
                      canConfirm={selectAtLeastOne}
                      changeSelectableItems={selectQuantity(1)}
+                     onConfirm={onConfirm}
+                     containerStyle={conglomerateContainerStyle}
+                     key={{onConfirm}}
+    />;
+}
+
+export function pickNCards(title, from, onConfirm,n) {
+    return <Selector title={title}
+                     selection={from}
+                     canConfirm={selectAtLeastN(n)}
+                     changeSelectableItems={selectQuantity(n)}
                      onConfirm={onConfirm}
                      containerStyle={conglomerateContainerStyle}
                      key={{onConfirm}}

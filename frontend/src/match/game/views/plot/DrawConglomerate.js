@@ -27,15 +27,14 @@ export function DrawConglomerate(isFirst) {
                 }
             };
             fetchAction();
-        }
-        else{
+        } else {
             context.state.plot.secondConglomerate = selectedConglomerate;
         }
 
         let plotRequest;
         let conglomerateType;
 
-        if(selected[0] === openDisplayAndDeck.length - 1)
+        if (selected[0] === openDisplayAndDeck.length - 1)
             plotRequest = {source: "DECK"}
         else {
             conglomerateType = getConglomerateName(selectedConglomerate);
@@ -45,16 +44,23 @@ export function DrawConglomerate(isFirst) {
             }
         }
         const postPlot = async () => {
-        try {
-            await fetchAuthenticatedWithBody(`/api/v1/matches/${info.code}/turn/plot`, "POST", plotRequest)
-                .then(async response => await response.json());
-        } catch (error) {
-            console.log(error.message)
-        }
+            try {
+                await fetchAuthenticatedWithBody(`/api/v1/matches/${info.code}/turn/plot`, "POST", plotRequest)
+                    .then(async response => await response.json());
+            } catch (error) {
+                console.log(error.message)
+            }
         };
         postPlot();
-        if(conglomerateType !== null)
+
+        if (conglomerateType !== null)
+        {
             context.state.game.generalSupply.openDisplay[conglomerateType]--;
+            if(context.state.game.player.hand[conglomerateType] === undefined)
+                context.state.game.player.hand[conglomerateType] = 0;
+            context.state.game.player.hand[conglomerateType]++;
+        }
+
         context.update();
     })
 }

@@ -32,9 +32,10 @@ import {OnlineMarketingCompaniesState} from "./views/takeover/OnlineMarketingCom
 import {SocialMediaHqState} from "./views/takeover/SocialMediaHqState";
 import {SocialMediaConglomerateState} from "./views/takeover/SocialMediaConglomerateState";
 import {WaitingForTurnState} from "./views/WaitingForTurnState";
+import {DiscardState} from "./views/DiscardState";
 
 const frontendState = {
-    plot: {//TODO: some picker should be skippable (selectors have a "canSkip" property)
+    plot: {
         DRAW_FIRST_CONGLOMERATE: PlotFirstConglomerateState,
         DRAW_SECOND_CONGLOMERATE: PlotSecondConglomerateState
     },
@@ -65,10 +66,7 @@ const frontendState = {
         SOCIAL_MEDIA_PICK_CONGLOMERATE: SocialMediaConglomerateState,
         ONLINE_MARKETING_PICK_COMPANIES: OnlineMarketingCompaniesState,
     },
-    /*TODO: implement company abilities states and Discard state
-
     DISCARD:DiscardState,
-     */
     DONE: DoneState,
     CHOOSE_ACTION: ChooseActionState,
     WAITING_FOR_TURN: WaitingForTurnState,

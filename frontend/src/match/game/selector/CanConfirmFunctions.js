@@ -13,3 +13,10 @@ export function selectAtLeastTwo(selection, selectedElements){
 export function selectAtLeastOneOrTwo(selection, selectedElements){
     return selectedElements.length >= 1 && selectedElements.length <= 2;
 }
+
+export function selectAtLeastN(n){
+    return (selection, selectedElements) =>
+    {
+        return selectedElements.length === n;
+    }
+}

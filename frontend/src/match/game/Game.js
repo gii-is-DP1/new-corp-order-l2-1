@@ -1,5 +1,4 @@
 import React, {useContext, useEffect, useState} from "react";
-import {startingState} from "../data/MockupData";
 import css from "./game.module.css";
 import {State} from "../data/State";
 import {HandViewer} from "./viewers/HandViewer";
@@ -9,7 +8,7 @@ import {OpponentsHqViewer} from "./viewers/OpponentsHqViewer";
 import {CompanyMatrixViewer} from "./viewers/CompanyMatrixViewer";
 import fetchAuthenticated from "../../util/fetchAuthenticated";
 import {useParams} from "react-router-dom";
-import {Info} from "../Match";
+import {Info, startingState} from "../Match";
 import ProfilePicture from "../../components/ProfilePicture";
 import {black} from "../../util/Colors";
 

@@ -37,8 +37,6 @@ public class TurnController {
     @PostMapping
     @VerifyCurrentTurn
     public void selectTurn(@RequestParam("action") Action action, @FromPathVariable Match match) {
-        System.out.println("BBBBBBBBBBB");
-        System.out.println(action);
         match.getTurnSystem().selectAction(action);
     }
 
@@ -115,8 +113,6 @@ public class TurnController {
     @PostMapping("/infiltrate")
     @VerifyCurrentTurn
     public InfiltrateResponse infiltrate(@RequestBody @Valid InfiltrateRequest request, @FromPathVariable Match match) {
-        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAA");
-        System.out.println(request);
         return match.getTurnSystem().getCurrentTurn().onInfiltrateRequest(request);
     }
 

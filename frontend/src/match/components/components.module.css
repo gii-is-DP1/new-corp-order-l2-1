@@ -1,0 +1,9 @@
+.player {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.conglomerate {
+    max-height: 200px;
+}

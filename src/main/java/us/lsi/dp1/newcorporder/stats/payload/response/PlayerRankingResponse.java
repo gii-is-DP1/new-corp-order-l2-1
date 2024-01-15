@@ -13,7 +13,7 @@ public class PlayerRankingResponse {
     private UserView user;
     private long amount;
 
-    public PlayerRankingResponse(String username, String picture, long amount) {
+    public PlayerRankingResponse(String username, Integer picture, long amount) {
         this.user = UserView.builder().username(username).picture(picture).build();
         this.amount = amount;
     }

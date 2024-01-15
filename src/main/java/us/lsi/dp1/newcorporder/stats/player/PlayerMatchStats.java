@@ -34,10 +34,11 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true, of = {})
 public class PlayerMatchStats extends BaseEntity {
 
-    public static PlayerMatchStats create(Match match, MatchSummary matchSummary, Player player) {
+    public static PlayerMatchStats create(Match match, MatchSummary matchSummary, Player player, MatchStats matchStats) {
         MatchPlayer matchPlayer = match.getPlayer(player.getId());
 
-        return PlayerMatchStats.builder()
+        PlayerMatchStats stats = PlayerMatchStats.builder()
+            .matchStats(matchStats)
             .player(player)
             .result(matchSummary.getWinners().contains(matchPlayer)
                 ? matchSummary.getWinners().size() > 1 ? MatchResult.TIED : MatchResult.WON
@@ -46,10 +47,13 @@ public class PlayerMatchStats extends BaseEntity {
             .timesPlotted(matchPlayer.getTimesPlotted())
             .timesInfiltrated(matchPlayer.getTimesInfiltrated())
             .timesTakenOver(matchPlayer.getTimesTakenOver())
-            .abilityStats(AbilityStats.create(matchPlayer))
-            .conglomerateStats(ConglomerateStats.create(matchPlayer))
-            .consultantStats(ConsultantStats.create(matchPlayer))
             .build();
+
+        stats.setAbilityStats(AbilityStats.create(matchPlayer, stats));
+        stats.setConglomerateStats(ConglomerateStats.create(matchPlayer, stats));
+        stats.setConsultantStats(ConsultantStats.create(matchPlayer, stats));
+
+        return stats;
     }
 
     @ManyToOne

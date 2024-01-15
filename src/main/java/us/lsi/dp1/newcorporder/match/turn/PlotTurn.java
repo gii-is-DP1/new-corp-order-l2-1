@@ -2,6 +2,7 @@ package us.lsi.dp1.newcorporder.match.turn;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
+import lombok.Builder;
 import lombok.Getter;
 import us.lsi.dp1.newcorporder.match.Match;
 import us.lsi.dp1.newcorporder.match.conglomerate.Conglomerate;
@@ -23,6 +24,12 @@ public class PlotTurn extends Turn {
 
     public PlotTurn(Match match) {
         super(Action.PLOT, match);
+    }
+
+    @Builder
+    public PlotTurn(Match match, State currentState) {
+        this(match);
+        this.state = currentState;
     }
 
     @Override

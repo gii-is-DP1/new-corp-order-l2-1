@@ -10,6 +10,7 @@ import fetchAuthenticated from "../util/fetchAuthenticated";
 import {useNavigate, useParams} from "react-router-dom";
 import tokenService from "../services/token.service";
 import {FriendsTab} from "./FriendsTab";
+import {propics} from "../match/data/MatchEnums";
 import {LastMatchesTab} from "./LastMatchesTab";
 import {AchievementsTab} from "./achievement/AchievementsTab";
 import {EditProfileTab} from "./EditProfileTab";
@@ -38,7 +39,7 @@ export function ProfilePage() {
 
     const fetchAchievementsData = async () => {
         try {
-            setAchievementsData(await fetchAuthenticated(`/api/v1/achievements`, "GET")
+            setAchievementsData(await fetchAuthenticated(`/api/v1/achievements?name=`, "GET")
                 .then(async response => await response.json()));
         } catch (error) {
             navigate('')
@@ -117,7 +118,7 @@ export function ProfilePage() {
 
             <div style={content}>
                 <section style={columnStyle}>
-                    <ProfilePicture url={userData.picture} style={{height: "150px", width: "150px"}}/>
+                    <ProfilePicture url={propics[userData.picture]} style={{height: "150px", width: "150px"}}/>
                     <Title style={{color: white, fontSize: "35px"}}>{userData.username}</Title>
                     {isMe() && <div style={{display: "flex", flexDirection: "row", gap: "5px"}}>
                         <Button onClick={() => navigate(`/user/${userData.username}/edit`)}

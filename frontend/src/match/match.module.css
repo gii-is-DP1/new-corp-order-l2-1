@@ -1,0 +1,27 @@
+.main{
+    background-color: #404040;
+    flex:1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color:#f8f8f8
+}
+
+
+
+.rightBar{
+    background-color: #404040;
+    flex: 0.3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+.match{
+    display: flex;
+    width: 100%;
+    height: 100vh;
+    overflow:hidden;
+    background-color: #404040;
+}

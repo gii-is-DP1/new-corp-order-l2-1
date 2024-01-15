@@ -35,7 +35,7 @@ class MatchTest {
 
     @Test
     void givenMatchWith2Players_whenInitializingMatch_generalSupplyIsInitialized() {
-        Match match = new Match(4, MatchMode.NORMAL, MatchVisibility.PRIVATE, null, generalSupply, companyMatrix, turnSystem);
+        Match match = new Match(4, MatchMode.NORMAL, MatchVisibility.PRIVATE, null, generalSupply, companyMatrix, turnSystem, null);
         match.addPlayer(playerWithId(1));
         match.addPlayer(playerWithId(2));
         match.start();
@@ -45,7 +45,7 @@ class MatchTest {
 
     @Test
     void givenMatchWith2Players_whenInitializingMatch_companyMatrixIsInitializedWithCoupleMatchSize() {
-        Match match = new Match(4, MatchMode.NORMAL, MatchVisibility.PRIVATE, null, generalSupply, companyMatrix, turnSystem);
+        Match match = new Match(4, MatchMode.NORMAL, MatchVisibility.PRIVATE, null, generalSupply, companyMatrix, turnSystem, null);
         match.addPlayer(playerWithId(1));
         match.addPlayer(playerWithId(2));
         match.start();
@@ -56,7 +56,7 @@ class MatchTest {
     @ParameterizedTest
     @ValueSource(ints = {3, 4})
     void givenMatchWithMoreThan2Players_whenInitializingMatch_companyMatrixIsInitializedWithGroupMatchSize(int players) {
-        Match match = new Match(4, MatchMode.NORMAL, MatchVisibility.PRIVATE, null, generalSupply, companyMatrix, turnSystem);
+        Match match = new Match(4, MatchMode.NORMAL, MatchVisibility.PRIVATE, null, generalSupply, companyMatrix, turnSystem, null);
         for (int i = 0; i < players; i++) {
             match.addPlayer(playerWithId(i));
         }
@@ -67,7 +67,7 @@ class MatchTest {
 
     @Test
     void givenMatchWith2Players_whenInitializingMatch_playersAreInitialized() {
-        Match match = new Match(4, MatchMode.NORMAL, MatchVisibility.PRIVATE, null, generalSupply, companyMatrix, turnSystem);
+        Match match = new Match(4, MatchMode.NORMAL, MatchVisibility.PRIVATE, null, generalSupply, companyMatrix, turnSystem, null);
         when(turnSystem.getPlayers()).thenCallRealMethod();
 
         List<Conglomerate> conglomerates = getRandomConglomerates(Match.INITIAL_CONGLOMERATE_SHARES_PER_PLAYER);
@@ -98,7 +98,7 @@ class MatchTest {
 
     @Test
     void whenRankingParticipation_calculationsAreDoneCorrectly() {
-        Match match = new Match(4, MatchMode.NORMAL, MatchVisibility.PRIVATE, null, generalSupply, companyMatrix, turnSystem);
+        Match match = new Match(4, MatchMode.NORMAL, MatchVisibility.PRIVATE, null, generalSupply, companyMatrix, turnSystem, null);
 
         MatchPlayer matchPlayer1 = MatchPlayer.builder()
             .playerId(1)
@@ -135,7 +135,7 @@ class MatchTest {
         match.addPlayer(matchPlayer2);
         match.addPlayer(matchPlayer3);
 
-        List<MatchPlayer> ranking = match.rankPlayerParticipation(Conglomerate.MEGA_MEDIA);
+        List<MatchPlayer> ranking = match.rankPlayerParticipation(Conglomerate.MEGAMEDIA);
         assertThat(ranking.get(0)).isEqualTo(matchPlayer1);
         assertThat(ranking.get(1)).isEqualTo(matchPlayer2);
         assertThat(ranking.get(2)).isEqualTo(matchPlayer3);
@@ -145,17 +145,17 @@ class MatchTest {
     void whenCalculatingVictoryPoints_calculationIsDoneCorrectly() {
         CompanyMatrix companyMatrix = CompanyMatrix.builder()
             .matchSize(MatchSize.GROUP)
-            .tiles(CompanyTile.builder().company(Company.READALOT).currentConglomerate(Conglomerate.MEGA_MEDIA).agents(1).build(),
+            .tiles(CompanyTile.builder().company(Company.READALOT).currentConglomerate(Conglomerate.MEGAMEDIA).agents(1).build(),
                 CompanyTile.builder().company(Company.WALLPAPER).currentConglomerate(Conglomerate.TOTAL_ENTERTAINMENT).agents(2).build(),
                 CompanyTile.builder().company(Company.HOLOGRAFX).currentConglomerate(Conglomerate.TOTAL_ENTERTAINMENT).agents(3).build(),
-                CompanyTile.builder().company(Company.XCURBR).currentConglomerate(Conglomerate.MEGA_MEDIA).agents(3).build(),
-                CompanyTile.builder().company(Company.GENERTIC_SUB_INC).currentConglomerate(Conglomerate.MEGA_MEDIA).agents(2).build(),
+                CompanyTile.builder().company(Company.XCURBR).currentConglomerate(Conglomerate.MEGAMEDIA).agents(3).build(),
+                CompanyTile.builder().company(Company.GENERIC_SUB_INC).currentConglomerate(Conglomerate.MEGAMEDIA).agents(2).build(),
                 CompanyTile.builder().company(Company.CLICKBAITER).currentConglomerate(Conglomerate.TOTAL_ENTERTAINMENT).agents(1).build(),
                 CompanyTile.builder().company(Company.VISUAL_TERROR_INC).currentConglomerate(Conglomerate.TOTAL_ENTERTAINMENT).agents(1).build(),
-                CompanyTile.builder().company(Company.SLIMGROTZ_INC).currentConglomerate(Conglomerate.MEGA_MEDIA).agents(1).build())
+                CompanyTile.builder().company(Company.SLIMGROTZ_INC).currentConglomerate(Conglomerate.MEGAMEDIA).agents(1).build())
             .build();
 
-        Match match = spy(new Match(4, MatchMode.NORMAL, MatchVisibility.PRIVATE, null, generalSupply, companyMatrix, turnSystem));
+        Match match = spy(new Match(4, MatchMode.NORMAL, MatchVisibility.PRIVATE, null, generalSupply, companyMatrix, turnSystem, null));
 
         MatchPlayer player1 = MatchPlayer.builder()
             .playerId(1)
@@ -173,7 +173,7 @@ class MatchTest {
             .secretObjectives(Arrays.asList(CompanyType.BROADCAST_NETWORK, CompanyType.PRINT_MEDIA))
             .build();
 
-        when(match.rankPlayerParticipation(Conglomerate.MEGA_MEDIA)).thenReturn(List.of(player1, player2, player3));
+        when(match.rankPlayerParticipation(Conglomerate.MEGAMEDIA)).thenReturn(List.of(player1, player2, player3));
         when(match.rankPlayerParticipation(Conglomerate.TOTAL_ENTERTAINMENT)).thenReturn(List.of(player2, player3, player1));
         when(match.rankPlayerParticipation(Conglomerate.OMNICORP)).thenReturn(List.of(player1, player2, player3));
         when(match.rankPlayerParticipation(Conglomerate.GENERIC_INC)).thenReturn(List.of(player1, player2, player3));
@@ -190,7 +190,7 @@ class MatchTest {
 
     Multiset<Conglomerate> createMegaMedia(int i) {
         Multiset<Conglomerate> conglomerates = HashMultiset.create();
-        conglomerates.add(Conglomerate.MEGA_MEDIA, i);
+        conglomerates.add(Conglomerate.MEGAMEDIA, i);
         return conglomerates;
     }
 }

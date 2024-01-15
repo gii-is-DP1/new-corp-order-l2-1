@@ -20,6 +20,7 @@ import us.lsi.dp1.newcorporder.player.Player;
 
 import java.time.Instant;
 import java.util.*;
+import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 public class Match {
@@ -28,12 +29,13 @@ public class Match {
     public static final int MAX_SHARES_IN_HAND = 6;
     public static final int SHARES_IN_OPEN_DISPLAY = 4;
 
-    public static Match create(int maxPlayers, MatchMode matchMode, MatchVisibility visibility, String inviteCode) {
+    public static Match create(int maxPlayers, MatchMode matchMode, MatchVisibility visibility, String inviteCode,
+                               BiConsumer<Match, MatchSummary> endCallback) {
         GeneralSupply generalSupply = GeneralSupply.create();
         CompanyMatrix companyMatrix = CompanyMatrix.create();
         TurnSystem turnSystem = TurnSystem.create();
 
-        return new Match(maxPlayers, matchMode, visibility, inviteCode, generalSupply, companyMatrix, turnSystem);
+        return new Match(maxPlayers, matchMode, visibility, inviteCode, generalSupply, companyMatrix, turnSystem, endCallback);
     }
 
     @Getter private final String code;
@@ -41,6 +43,7 @@ public class Match {
     @Getter private final MatchMode mode;
     @Getter private final int maxPlayers;
     @Getter private MatchState state = MatchState.WAITING;
+    @Getter private MatchPlayer winner;
 
     @Getter @Setter private MatchPlayer host;
     private final Map<Integer, MatchPlayer> players = new HashMap<>();
@@ -54,9 +57,11 @@ public class Match {
     @Getter private Instant startTime;
     @Getter private Instant endTime;
 
+    private final BiConsumer<Match, MatchSummary> endCallback;
+
     @Builder
     Match(int maxPlayers, MatchMode mode, MatchVisibility visibility, String code, GeneralSupply generalSupply,
-          CompanyMatrix companyMatrix, TurnSystem turnSystem) {
+          CompanyMatrix companyMatrix, TurnSystem turnSystem, BiConsumer<Match, MatchSummary> endCallback) {
         this.code = code;
         this.maxPlayers = maxPlayers;
         this.mode = mode;
@@ -64,6 +69,7 @@ public class Match {
         this.generalSupply = generalSupply;
         this.companyMatrix = companyMatrix;
         this.turnSystem = turnSystem;
+        this.endCallback = endCallback;
     }
 
     public void start() {
@@ -79,17 +85,25 @@ public class Match {
         startTime = Instant.now();
     }
 
-    public MatchSummary end() {
+    public void end() {
         this.state = MatchState.FINISHED;
         this.endTime = Instant.now();
 
         Multiset<MatchPlayer> victoryPoints = this.calculateVictoryPoints();
+        this.winner = victoryPoints.entrySet().stream()
+            .max(Comparator.comparingInt(Multiset.Entry::getCount))
+            .map(Multiset.Entry::getElement)
+            .orElseThrow();
+        //TODO generate and save stats
+        /*
         Set<MatchPlayer> winners = this.getWinners(victoryPoints);
 
-        return MatchSummary.builder()
+        MatchSummary summary = MatchSummary.builder()
             .victoryPoints(victoryPoints)
             .winners(winners)
             .build();
+        this.endCallback.accept(this, summary);
+        */
     }
 
     public void addPlayer(MatchPlayer player) {

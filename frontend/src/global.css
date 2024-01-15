@@ -8,31 +8,21 @@
     src: url(./fonts/din-next-slab-pro.ttf) format('truetype');
 }
 
-.cardContainer {
-    height: 200px;
-    display: flex;
+*{
+    font-family: 'DIN Next Slab Pro', serif;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
-.cardElement {
-    height: 200px;
-    display: block;
-}
-
-.cardElement img {
-    max-height: 100%;
-}
-
-.matchCode {
-    margin: auto;
-    font-size: 36px;
-    opacity: 0.7;
-    flex: 0.5;
+h1, h2{
+    font-family: 'Core Magic', serif;
 }
 
 .modal-content {
     background: none !important;
 }
-
 
 .bg-navbar {
     background: #2c2c2c !important;

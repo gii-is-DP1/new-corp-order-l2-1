@@ -8,10 +8,7 @@ import lombok.Getter;
 import us.lsi.dp1.newcorporder.match.MatchSize;
 import us.lsi.dp1.newcorporder.match.conglomerate.Conglomerate;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class CompanyMatrix {
 
@@ -62,10 +59,10 @@ public class CompanyMatrix {
      * @return the tile at the given position
      */
     public CompanyTile getTile(int x, int y) {
-        Preconditions.checkArgument(x < this.matchSize.getRows() && x > 0, "matrix has only %d rows (x = %d)", this.matchSize.getRows(), x);
-        Preconditions.checkArgument(y < this.matchSize.getColumns() && y > 0, "matrix has only %d columns (y = %d)", this.matchSize.getColumns(), y);
+        Preconditions.checkArgument(x < this.matchSize.getRows() && x >= 0, "matrix has only %d rows (x = %d)", this.matchSize.getRows(), x);
+        Preconditions.checkArgument(y < this.matchSize.getColumns() && y >= 0, "matrix has only %d columns (y = %d)", this.matchSize.getColumns(), y);
 
-        return tiles[x * matchSize.getColumns() + y];
+        return tiles[y * matchSize.getRows() + x];
     }
 
     public CompanyTile[] getTiles() {

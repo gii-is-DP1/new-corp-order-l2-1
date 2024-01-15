@@ -46,6 +46,9 @@ public class MatchService {
         this.matchRepository = matchRepository;
     }
 
+    public Optional<Match> getMatch(String code) {
+        return matchRepository.getByMatchCode(code);
+    }
     public List<MatchResponse> getMatches(Pageable pageable) {
         List<MatchResponse> playing = this.getPlayingMatches(pageable);
         int statsPageSize = pageable.getPageSize() - playing.size();
@@ -76,16 +79,25 @@ public class MatchService {
     }
 
     public MatchAssignmentResponse quickPlay(Player player, MatchMode mode, int maxPlayers) {
-        Match match = matchRepository.findRandomPublicMatch(player, mode, maxPlayers)
-            .orElseGet(() -> matchRepository.createNewMatch(mode, MatchVisibility.PUBLIC, maxPlayers));
-
-        return this.join(player, match);
+        Optional<Match> match = matchRepository.findRandomPublicMatch(player, mode, maxPlayers);
+        System.out.println(match.isPresent() ? match.get().getCode() : "");
+        if (match.isEmpty()) return createNewMatch(player, mode, maxPlayers, MatchVisibility.PUBLIC);
+        else
+            return this.join(player, match.get());
     }
 
     public MatchAssignmentResponse createPrivateMatch(Player player, MatchMode mode, int maxPlayers) {
-        Match match = matchRepository.createNewMatch(mode, MatchVisibility.PRIVATE, maxPlayers);
+        return createNewMatch(player, mode, maxPlayers, MatchVisibility.PRIVATE);
+    }
 
-        return this.join(player, match);
+    public MatchAssignmentResponse createNewMatch(Player host, MatchMode mode, int maxPlayers, MatchVisibility matchVisibility) {
+        String matchCode = matchRepository.buildValidMatchCode();
+        Match match = Match.create(maxPlayers, mode, matchVisibility, matchCode, matchStatsService::registerMatchStats);
+        matchRepository.registerMatch(match);
+        MatchAssignmentResponse mr = join(host, match);
+        match.setHost(match.getPlayer(host.getId()));
+        return mr;
+
     }
 
     public void inviteFriend(User user, User friend, Match match) {

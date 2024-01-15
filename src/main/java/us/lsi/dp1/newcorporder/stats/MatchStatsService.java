@@ -33,11 +33,21 @@ public class MatchStatsService {
     }
 
     public MatchStats createMatchStats(Match match, MatchSummary matchSummary) {
-        List<PlayerMatchStats> playerStats = match.getPlayers().stream()
-            .map(player -> PlayerMatchStats.create(match, matchSummary, playerService.findById(player.getPlayerId())))
-            .toList();
+        MatchStats matchStats = MatchStats.create(match);
+        matchStats.setPlayerMatchStats(match.getPlayers().stream()
+            .map(player -> PlayerMatchStats.create(match, matchSummary, playerService.findById(player.getPlayerId()), matchStats))
+            .toList());
 
-        return MatchStats.create(match, playerStats);
+        return matchStats;
+    }
+
+    public void registerMatchStats(Match match, MatchSummary matchSummary) {
+        try {
+            matchStatsRepository.save(this.createMatchStats(match, matchSummary));
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
     }
 
     public MatchStatsView getStats(String matchCode) {

@@ -83,7 +83,7 @@ public class GeneralSupply {
      * @throws java.util.NoSuchElementException if there are no consultants left for the given type
      */
     public void takeConsultant(ConsultantType consultantType) {
-        if (!this.consultants.contains(consultantType)) {
+        if (consultantType != null && !this.consultants.contains(consultantType)) {
             throw new NoSuchElementException("there are no " + consultantType + " consultants left in the general supply");
         }
         this.consultants.remove(consultantType);

@@ -11,6 +11,7 @@ import ListLine from "../components/ListLine";
 import {Title} from "../components/Title";
 import {Subtitle} from "../components/Subtitle";
 import {Pressable} from "../components/Pressable";
+import {propics} from "../match/data/MatchEnums";
 
 export function Rankings() {
     const {stat} = useParams()
@@ -44,7 +45,7 @@ export function Rankings() {
     let items = rankingData?.map(request => {
         return (
             <ListLine>
-                <ProfilePicture url={request.user.picture} style={{height: "30px", width: "30px"}}/>
+                <ProfilePicture url={propics[request.user.picture]} style={{height: "30px", width: "30px"}}/>
                 <Text>{request.user.username}: {request.amount}</Text>
             </ListLine>
         )

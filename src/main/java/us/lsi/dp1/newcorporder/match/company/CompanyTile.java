@@ -21,7 +21,7 @@ public class CompanyTile {
     }
 
     @Builder
-    private CompanyTile(Company company, Conglomerate currentConglomerate, int agents) {
+    public CompanyTile(Company company, Conglomerate currentConglomerate, int agents) {
         this.company = company;
         this.currentConglomerate = currentConglomerate;
         this.agents = agents;

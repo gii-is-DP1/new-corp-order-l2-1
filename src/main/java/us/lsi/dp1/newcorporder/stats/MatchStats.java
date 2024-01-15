@@ -24,14 +24,13 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true, of = {})
 public class MatchStats extends BaseEntity {
 
-    public static MatchStats create(Match match, List<PlayerMatchStats> playerStats) {
+    public static MatchStats create(Match match) {
         return MatchStats.builder()
             .code(match.getCode())
             .mode(match.getMode())
             .maxPlayers(match.getMaxPlayers())
             .startTime(match.getStartTime())
             .endTime(match.getEndTime())
-            .playerMatchStats(playerStats)
             .build();
     }
 

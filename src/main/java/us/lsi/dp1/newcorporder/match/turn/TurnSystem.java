@@ -32,10 +32,9 @@ public class TurnSystem {
     }
 
     public void selectAction(Action action) {
-        Preconditions.checkState(this.currentTurn != null, "turn in progress");
+        Preconditions.checkState(this.currentTurn == null, "turn in progress");
         Preconditions.checkState(action != Action.PLOT || this.match.getGeneralSupply().getOpenDisplay().size() > 1,
             "cannot select plot action because there are not enough shares in the open display");
-
         switch (action) {
             case PLOT -> this.currentTurn = new PlotTurn(match);
             case INFILTRATE -> this.currentTurn = new InfiltrateTurn(match);
@@ -44,7 +43,7 @@ public class TurnSystem {
     }
 
     public void passTurn() {
-        if (Objects.equals(lastPlayerBeforeMatchEnds, currentPlayer)) {
+        if (this.isFinalTurn()) {
             this.match.end();
             return;
         }
@@ -60,13 +59,17 @@ public class TurnSystem {
         currentTurn = null;
     }
 
+    public void activateFinalRound() {
+        Preconditions.checkState(!this.isFinalRound(), "final round is already activated");
+        this.lastPlayerBeforeMatchEnds = this.currentPlayer;
+    }
+
     public boolean isFinalRound() {
         return this.lastPlayerBeforeMatchEnds != null;
     }
 
-    public void activateFinalRound() {
-        Preconditions.checkState(!this.isFinalRound(), "final round is already activated");
-        this.lastPlayerBeforeMatchEnds = this.currentPlayer;
+    public boolean isFinalTurn() {
+        return Objects.equals(lastPlayerBeforeMatchEnds, currentPlayer);
     }
 
     // for testing purposes

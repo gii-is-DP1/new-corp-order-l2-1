@@ -12,7 +12,7 @@ public class HeadquarterTest {
         headquarter.addConsultant(ConsultantType.CORPORATE_LAWYER);
         headquarter.addConsultant(ConsultantType.MEDIA_ADVISOR);
         headquarter.addConsultant(ConsultantType.MILITARY_CONTRACTOR);
-        headquarter.addConsultant(ConsultantType.DEAL_MAKER);
+        headquarter.addConsultant(ConsultantType.DEALMAKER);
         assertThat(headquarter.getConsultantsVP()).isEqualTo(3);
     }
 

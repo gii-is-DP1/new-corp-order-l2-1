@@ -118,9 +118,9 @@ public class UserService {
             this.changeEmail(user, request.getEmail());
         }
 
-        if (!request.getPicture().isBlank()) {
+        /*if (!request.getPicture().isBlank()) {
             user.setPicture(request.getPicture());
-        }
+        }*/
 
         return this.saveUser(user);
     }
@@ -152,6 +152,10 @@ public class UserService {
     public void changeEmail(User user, String email) {
         Preconditions.checkState(!userRepository.existsByEmail(email), "email already taken!");
         user.setEmail(email);
+    }
+
+    public void changePropic(User user, Integer propic) {
+        user.setPicture(propic);
     }
 
     public void changeAuthority(User user, String authority) {

@@ -7,6 +7,7 @@ import {Title} from "../components/Title";
 import {Subtitle} from "../components/Subtitle";
 import {Text} from "../components/Text";
 import ProfilePicture from "../components/ProfilePicture";
+import {propics} from "../match/data/MatchEnums";
 
 export function MatchStats() {
     const [matchStats, setMatchStats] = useState(null)
@@ -100,7 +101,7 @@ export function MatchStats() {
         return (
             <div style={{display: "flex", flexDirection: "column"}}>
                 <div style={statsStyle}>
-                    <ProfilePicture url={request.user.picture} style={{width: "25px", height: "25px"}}/>
+                    <ProfilePicture url={propics[request.user.picture]} style={{width: "25px", height: "25px"}}/>
                     <Text style={{color: white}}>{request.user.username}</Text>
                 </div>
                 <div style={{display: "flex", flexDirection: "column"}}>

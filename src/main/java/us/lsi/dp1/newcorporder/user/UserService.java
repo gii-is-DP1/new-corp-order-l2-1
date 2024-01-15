@@ -118,9 +118,9 @@ public class UserService {
             this.changeEmail(user, request.getEmail());
         }
 
-        if (!request.getPicture().isBlank()) {
+        /*if (!request.getPicture().isBlank()) {
             user.setPicture(request.getPicture());
-        }
+        }*/
 
         return this.saveUser(user);
     }

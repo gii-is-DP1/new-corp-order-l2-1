@@ -81,7 +81,7 @@ export default function Match() {
         fetchData();
         const interval = setInterval(() => {
             fetchMatchData();
-        }, 5000);
+        }, 1500);
 
         return () => clearInterval(interval);
     }, []);
@@ -147,8 +147,8 @@ function setContext(id, matchData, propic) {
             startingState.game.player.hand[conglomerate.GENERIC_INC] = 0;
         startingState.game.generalSupply.conglomeratesLeftInDeck = matchData.generalSupply.deckSize;
         startingState.game.player.hq.secretObjectives = matchData.player.secretObjectives.map(s => secretObjective[s]);
-        //    startingState.game.player.hq.consultants = matchData.player.headquarter.consultants;
-        startingState.game.player.hq.rotatedConglomerates = matchData.player.headquarter.usedConglomerateShares ?? []; //TODO: check if are multiset or array
+        startingState.game.player.hq.consultants = matchData.player.headquarter.consultants;
+        startingState.game.player.hq.rotatedConglomerates = matchData.player.headquarter.usedConglomerateShares ?? [];
         startingState.game.player.hq.nonRotatedConglomerates = matchData.player.headquarter.conglomerateShares ?? [];
         startingState.game.companies = matchData.companyMatrix.map(c => {
             return {company: Company[c.company], agents: c.agents, type: conglomerate[c.currentConglomerate]}

@@ -10,7 +10,6 @@ import us.lsi.dp1.newcorporder.bind.FromPathVariable;
 import us.lsi.dp1.newcorporder.match.Match;
 import us.lsi.dp1.newcorporder.match.VerifyCurrentTurn;
 import us.lsi.dp1.newcorporder.match.payload.request.*;
-import us.lsi.dp1.newcorporder.match.payload.request.infiltrate.BasicInfiltrate;
 import us.lsi.dp1.newcorporder.match.payload.request.infiltrate.MediaAdvisorInfiltrate;
 import us.lsi.dp1.newcorporder.match.payload.response.*;
 

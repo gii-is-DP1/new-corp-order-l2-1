@@ -39,10 +39,9 @@ public class GeneralSupply {
         LinkedList<Conglomerate> deck = new LinkedList<>();
 
         // add matchMode#getSharesPerConglomerateInDeck() shares of each Conglomerate to the deck
-        for (int i = 0; i < 5/*matchMode.getSharesPerConglomerateInDeck()*/; i++) {
+        for (int i = 0; i < matchMode.getSharesPerConglomerateInDeck(); i++) {
             deck.addAll(Arrays.asList(Conglomerate.values()));
         }
-        deck.add(Conglomerate.GENERIC_INC);
 
         Collections.shuffle(deck);
         this.deck.addAll(deck);

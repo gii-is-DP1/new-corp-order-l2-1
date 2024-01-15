@@ -21,7 +21,7 @@ function CorporateLawyerCompanyPicker() {
         context.update();
 
         const infiltrateBody = {
-            infiltrate: {
+            action: {
                 actions: [
                     {
                         numberOfShares: context.state.infiltrate.conglomerateQuantity,

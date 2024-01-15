@@ -30,7 +30,7 @@ export function InfiltrateCompanyPicker() { //TODO: implement picker
 
         if(context.state.infiltrate.consultant === "NONE") {
             const infiltrateBody = {
-                infiltrate: {
+                action: {
                     numberOfShares: context.state.infiltrate.conglomerateQuantity,
                     conglomerateType: context.state.infiltrate.conglomerate,
                     tile: {

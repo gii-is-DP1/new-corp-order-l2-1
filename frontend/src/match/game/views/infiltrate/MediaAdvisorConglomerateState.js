@@ -23,7 +23,7 @@ function MediaAdvisorConglomeratePicker() {
         context.update();
 
         const infiltrateBody = {
-            infiltrate: {
+            action: {
                 numberOfShares: context.state.infiltrate.conglomerateQuantity,
                 conglomerateType: context.state.infiltrate.conglomerate,
                 tile: {

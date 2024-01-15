@@ -41,11 +41,10 @@ public class CompanyMatrix {
 
         List<Company> companies = createCompanies(matchSize);
         List<Conglomerate> agents = createAgents(matchSize);
-        Random r = new Random();
 
         // fill the matrix with the companies in random order and a random agent on every tile
         for (int i = 0; i < tiles.length; i++) {
-            tiles[i] = new CompanyTile(companies.get(i), agents.get(i), r.nextInt(1,5));
+            tiles[i] = new CompanyTile(companies.get(i), agents.get(i));
         }
 
         this.matchSize = matchSize;

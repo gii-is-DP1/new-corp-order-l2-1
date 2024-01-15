@@ -30,11 +30,23 @@ function ActionChooser() { //TODO: use picker to substitute this method
         const selectedComponent = selection[selectedItemIndex];
         const action = selectedComponent.props.action;
         setMoveState(action);
+        let fetchAction;
 
         switch (action)
         {
+            case TAKEOVER:
+                fetchAction = async () => {
+                    try {
+                        await fetchAuthenticated(`/api/v1/matches/${info.code}/turn?action=TAKE_OVER`, "POST")
+                            .then(async response => await response.json());
+                    } catch (error) {
+                        console.log(error.message)
+                    }
+                };
+                fetchAction();
+                break;
             case INFILTRATE:
-                const fetchAction = async () => {
+                fetchAction = async () => {
                     try {
                         await fetchAuthenticated(`/api/v1/matches/${info.code}/turn?action=INFILTRATE`, "POST");
                     } catch (error) {
@@ -42,7 +54,9 @@ function ActionChooser() { //TODO: use picker to substitute this method
                     }
                 };
                 fetchAction();
+                break;
         }
+
     }
 
     const selectableElements = [0];

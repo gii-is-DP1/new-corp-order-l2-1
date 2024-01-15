@@ -8,7 +8,7 @@ import us.lsi.dp1.newcorporder.match.payload.request.UseConsultantRequest;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "consultant", defaultImpl = DefaultInfiltrate.class)
 @JsonSubTypes({
-    @JsonSubTypes.Type(value = BasicInfiltrate.class, name = "BasicInfiltrate"),
+    @JsonSubTypes.Type(value = DefaultInfiltrate.class, name = "BasicInfiltrate"),
     @JsonSubTypes.Type(value = MediaAdvisorInfiltrate.class, name = "MediaAdvisorInfiltrate"),
     @JsonSubTypes.Type(value = CorporateLawyerInfiltrate.class, name = "CorporateLawyerInfiltrate"),
 })

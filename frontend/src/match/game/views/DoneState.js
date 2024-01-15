@@ -11,7 +11,7 @@ export class DoneState extends FrontendState {
     component = <Done/>
 
     getNextState(gameState, frontendState){
-        const canTakeConsultant = ((gameState.infiltrate.conglomerateQuantity + ((gameState.infiltrate.mediaAdvisor.conglomerate  === undefined || gameState.infiltrate.extraConglomerate === null)  ? 0 : 1) >= 3)
+        const canTakeConsultant = ((gameState.infiltrate.conglomerateQuantity + ((gameState.infiltrate.mediaAdvisor.conglomerate  === undefined || gameState.infiltrate.mediaAdvisor.conglomerate === null)  ? 0 : 1) >= 3)
             && gameState.infiltrate.takenConsultant === null);
 
         if (canTakeConsultant)

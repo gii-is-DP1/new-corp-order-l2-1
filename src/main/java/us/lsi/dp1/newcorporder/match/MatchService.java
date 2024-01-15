@@ -91,7 +91,9 @@ public class MatchService {
     }
 
     public MatchAssignmentResponse createNewMatch(Player host, MatchMode mode, int maxPlayers, MatchVisibility matchVisibility) {
-        Match match = matchRepository.createNewMatch(mode, matchVisibility, maxPlayers);
+        String matchCode = matchRepository.buildValidMatchCode();
+        Match match = Match.create(maxPlayers, mode, matchVisibility, matchCode, matchStatsService::registerMatchStats);
+        matchRepository.registerMatch(match);
         MatchAssignmentResponse mr = join(host, match);
         match.setHost(match.getPlayer(host.getId()));
         return mr;

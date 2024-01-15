@@ -15,6 +15,18 @@ VALUES (1, '2020-01-01', 1, '2023-01-01', 'johndoe@example.com', 'JohnDoe',
        (2, '2023-05-01', 5, '2023-12-31', 'alice@example.com', 'Alice',
         '$2a$12$19.5GDidvCHN4go6jO9dde918jIYONlxe01RgKh5USM3Yd/lFzeI2', 5),
        (2, '2023-06-01', 6, '2023-12-31', 'bob@example.com', 'Bob',
+        '$2a$12$19.5GDidvCHN4go6jO9dde918jIYONlxe01RgKh5USM3Yd/lFzeI2', 6),
+       (2, '2020-04-01', 7, '2023-12-31', 'emily@example.com', 'Emily',
+        '$2a$12$19.5GDidvCHN4go6jO9dde918jIYONlxe01RgKh5USM3Yd/lFzeI2', 1),
+       (2, '2020-05-01', 8, '2023-12-31', 'peter@example.com', 'Peter',
+        '$2a$12$19.5GDidvCHN4go6jO9dde918jIYONlxe01RgKh5USM3Yd/lFzeI2', 2),
+       (2, '2020-06-01', 9, '2023-12-31', 'susan@example.com', 'Susan',
+        '$2a$12$19.5GDidvCHN4go6jO9dde918jIYONlxe01RgKh5USM3Yd/lFzeI2', 3),
+       (2, '2023-07-01', 10, '2023-12-31', 'michael@example.com', 'Michael',
+        '$2a$12$19.5GDidvCHN4go6jO9dde918jIYONlxe01RgKh5USM3Yd/lFzeI2', 4),
+       (2, '2023-08-01', 11, '2023-12-31', 'olivia@example.com', 'Olivia',
+        '$2a$12$19.5GDidvCHN4go6jO9dde918jIYONlxe01RgKh5USM3Yd/lFzeI2', 5),
+       (2, '2023-09-01', 12, '2023-12-31', 'william@example.com', 'William',
         '$2a$12$19.5GDidvCHN4go6jO9dde918jIYONlxe01RgKh5USM3Yd/lFzeI2', 6);
 
 INSERT INTO players(id, user_id)
@@ -118,7 +130,7 @@ VALUES (10, 1, 1, 500, 'OMNICORP'),
 INSERT INTO consultant_stats(id, player_match_stats_id, times_used, type)
 VALUES (1, 1, 2, 'MEDIA_ADVISOR'),
        (2, 2, 3, 'CORPORATE_LAWYER'),
-       (3, 2, 2, 'DEAL_MAKER'),
+       (3, 2, 2, 'DEALMAKER'),
        (4, 2, 1, 'MEDIA_ADVISOR'),
        (5, 3, 3, 'MEDIA_ADVISOR'),
        (6, 4, 1, 'CORPORATE_LAWYER');

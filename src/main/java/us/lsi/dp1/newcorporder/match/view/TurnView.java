@@ -19,14 +19,7 @@ public class TurnView {
             .player(turnSystem.getCurrentPlayer() != null ? turnSystem.getCurrentPlayer().getPlayerId() : null)
             .action(turn == null ? null : turn.getAction())
             .state(turn == null ? null : turn.getState())
-            .usingConsultant(turn == null ? null : turn.getChosenConsultant())
-            .build();
-
-        if (turn != null) {
-            builder.action(turn.getAction())
-                .state(turn.getState())
-                .usingConsultant(turn.getChosenConsultant());
-        }
+            .usingConsultant(turn == null ? null : turn.getChosenConsultant());
 
         if (turn instanceof TakeOverTurn takeOverTurn && takeOverTurn.getTakeOverRequest() != null) {
             builder.targetCompany(takeOverTurn.getTakeOverRequest().getTargetCompany());

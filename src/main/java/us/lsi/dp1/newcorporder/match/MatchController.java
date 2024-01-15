@@ -160,6 +160,15 @@ public class MatchController {
         matchService.leave(player, match);
     }
 
+    @Operation(
+        summary = "Kick a player from a match",
+        description = "Kick a player from a match",
+        tags = "post"
+    )
+    @ApiResponse(
+        responseCode = "200",
+        description = "The kicked player"
+    )
     @PostMapping("/{match}/kick/{username}")
     public void kickPlayer(@Authenticated Player player, @PathVariable String username, @FromPathVariable Match match) {
         Player p = playerService.findByUserId(userService.findUser(username).getId());

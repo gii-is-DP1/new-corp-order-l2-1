@@ -17,6 +17,7 @@ import Conglomerate from "../../../components/Conglomerate";
 
 export const conglomerateContainerStyle = {
     display: "flex",
+    overflowX:"auto"
 }
 
 export function pickOneCard(from, onConfirm, selectableElements = [...Array(from.length).keys()]) {

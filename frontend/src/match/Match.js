@@ -6,6 +6,8 @@ import {useParams} from "react-router-dom";
 import fetchAuthenticated from "../util/fetchAuthenticated";
 import tokenService from "../services/token.service";
 import {Company, conglomerate, getConglomerateName, propics, secretObjective} from "./data/MatchEnums";
+import {getCurrentFrontendState, getCurrentFrontendView} from "./game/gameLogic";
+import {DoneState} from "./game/views/DoneState";
 
 export const Info = React.createContext({...defaultMatchInfo})
 let matchInfo = {...defaultMatchInfo};
@@ -33,35 +35,13 @@ export default function Match() {
             const wasWaiting = wasEmpty ? null : matchData.state === "WAITING"
             const wasPlaying = wasEmpty ? false : matchData.playing;
 
-            let handCount = 0;
-            if(!wasEmpty) {
-                if (matchData.player.hand[getConglomerateName(conglomerate.OMNICORP)] !== undefined)
-                    handCount += matchData.player.hand[getConglomerateName(conglomerate.OMNICORP)];
-                if (matchData.player.hand[getConglomerateName(conglomerate.MEGAMEDIA)] !== undefined)
-                    handCount += matchData.player.hand[getConglomerateName(conglomerate.MEGAMEDIA)];
-                if (matchData.player.hand[getConglomerateName(conglomerate.TOTAL_ENTERTAINMENT)] !== undefined)
-                    handCount += matchData.player.hand[getConglomerateName(conglomerate.TOTAL_ENTERTAINMENT)];
-                if (matchData.player.hand[getConglomerateName(conglomerate.GENERIC_INC)] !== undefined)
-                    handCount += matchData.player.hand[getConglomerateName(conglomerate.GENERIC_INC)];
-            }
-
             matchData = (await fetchAuthenticated(`/api/v1/matches/${id}`, "GET")
                 .then(async response => await response.json()));
 
-
-            let newHandCount = 0;
-
-            if(matchData.player.hand[getConglomerateName(conglomerate.OMNICORP)] !== undefined)
-                newHandCount += matchData.player.hand[getConglomerateName(conglomerate.OMNICORP)];
-            if(matchData.player.hand[getConglomerateName(conglomerate.MEGAMEDIA)] !== undefined)
-                newHandCount += matchData.player.hand[getConglomerateName(conglomerate.MEGAMEDIA)];
-            if(matchData.player.hand[getConglomerateName(conglomerate.TOTAL_ENTERTAINMENT)] !== undefined)
-                newHandCount += matchData.player.hand[getConglomerateName(conglomerate.TOTAL_ENTERTAINMENT)];
-            if(matchData.player.hand[getConglomerateName(conglomerate.GENERIC_INC)] !== undefined)
-                newHandCount += matchData.player.hand[getConglomerateName(conglomerate.GENERIC_INC)];
-
             const isPLaying = matchData.state === "PLAYING";
-            const canUpdateMatch =  !(matchData.playing) || wasEmpty || !isPLaying || (wasWaiting && isPLaying) || (!wasPlaying && matchData.playing) /*|| newHandCount !== handCount*/;
+            const startedPlayingGame = wasWaiting && isPLaying;
+            const startedPlayingTurn =  !wasPlaying && matchData.playing;
+            const canUpdateMatch = !matchData.playing || wasEmpty || !isPLaying || startedPlayingTurn || startedPlayingGame;
             if (canUpdateMatch) {
                 setMatchData(matchData)
             }
@@ -78,11 +58,10 @@ export default function Match() {
         fetchData();
         const interval = setInterval(() => {
             fetchMatchData();
-        }, 1500);
+        }, 500);
 
         return () => clearInterval(interval);
     }, []);
-
 
     const isLoading = matchData == null || propic == null;
     if (isLoading) {
@@ -110,7 +89,6 @@ function LoadedPage() {
         </div>);
 }
 
-
 function setContext(id, matchData, propic) {
     if (matchInfo.code !== id)
         matchInfo = {...defaultMatchInfo};
@@ -135,14 +113,16 @@ function setContext(id, matchData, propic) {
     if (matchData.state === "PLAYING") {
         startingState.isPlaying = matchData.playing;
         startingState.game.player.hand = matchData.player.hand;
-        if (startingState.game.player.hand[conglomerate.OMNICORP] === undefined)
-            startingState.game.player.hand[conglomerate.OMNICORP] = 0;
-        if (startingState.game.player.hand[conglomerate.MEGAMEDIA] === undefined)
-            startingState.game.player.hand[conglomerate.MEGAMEDIA] = 0;
-        if (startingState.game.player.hand[conglomerate.TOTAL_ENTERTAINMENT] === undefined)
-            startingState.game.player.hand[conglomerate.TOTAL_ENTERTAINMENT] = 0;
-        if (startingState.game.player.hand[conglomerate.GENERIC_INC] === undefined)
-            startingState.game.player.hand[conglomerate.GENERIC_INC] = 0;
+
+        if (startingState.game.player.hand[getConglomerateName(conglomerate.OMNICORP)] === undefined)
+            startingState.game.player.hand[getConglomerateName(conglomerate.OMNICORP)] = 0;
+        if (startingState.game.player.hand[getConglomerateName(conglomerate.MEGAMEDIA)] === undefined)
+            startingState.game.player.hand[getConglomerateName(conglomerate.MEGAMEDIA)] = 0;
+        if (startingState.game.player.hand[getConglomerateName(conglomerate.TOTAL_ENTERTAINMENT)] === undefined)
+            startingState.game.player.hand[getConglomerateName(conglomerate.TOTAL_ENTERTAINMENT)] = 0;
+        if (startingState.game.player.hand[getConglomerateName(conglomerate.GENERIC_INC)] === undefined)
+            startingState.game.player.hand[getConglomerateName(conglomerate.GENERIC_INC)] = 0;
+
         startingState.game.generalSupply.conglomeratesLeftInDeck = matchData.generalSupply.deckSize;
         startingState.game.player.hq.secretObjectives = matchData.player.secretObjectives.map(s => secretObjective[s]);
         startingState.game.player.hq.consultants = matchData.player.headquarter.consultants;

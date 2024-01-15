@@ -17,8 +17,8 @@ function InfiltrateNewConsultantDrawer() {
     const selectableElements = [];
     const previouslyUsedConsultant = state.infiltrate.consultant;
 
-    for(let i = 0; i < context.playerConsultants.values.length; i++){
-        const c = context.playerConsultants.values[i];
+    for(let i = 0; i < context.generalSupplyConsultants.values.length; i++){
+        const c = context.generalSupplyConsultants.values[i];
         if(c !== previouslyUsedConsultant)
             selectableElements.push(i)
     }

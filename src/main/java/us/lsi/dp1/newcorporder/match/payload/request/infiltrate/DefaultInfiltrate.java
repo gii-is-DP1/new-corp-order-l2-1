@@ -8,6 +8,7 @@ import lombok.Data;
 import us.lsi.dp1.newcorporder.match.Match;
 import us.lsi.dp1.newcorporder.match.company.CompanyTile;
 import us.lsi.dp1.newcorporder.match.conglomerate.Conglomerate;
+import us.lsi.dp1.newcorporder.match.consultant.ConsultantType;
 import us.lsi.dp1.newcorporder.match.payload.CompanyTileReference;
 import us.lsi.dp1.newcorporder.match.payload.request.UseConsultantRequest;
 
@@ -26,6 +27,9 @@ public class DefaultInfiltrate implements Infiltrate {
 
     @Override
     public void apply(Match match, UseConsultantRequest useConsultantRequests) {
+        System.out.println("BBBBBBBBBBBBBBB");
+        System.out.println(useConsultantRequests.getConsultant());
+        System.out.println(useConsultantRequests.getConsultant() == ConsultantType.MEDIA_ADVISOR);
         Preconditions.checkArgument(useConsultantRequests.getConsultant() == null,
             "invalid request for the selected consultant: %s", useConsultantRequests.getConsultant());
 

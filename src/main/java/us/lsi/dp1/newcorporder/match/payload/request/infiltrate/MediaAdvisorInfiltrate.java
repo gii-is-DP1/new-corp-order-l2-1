@@ -30,7 +30,9 @@ public class MediaAdvisorInfiltrate implements Infiltrate {
     @Override
     public void apply(Match match, UseConsultantRequest useConsultantRequests) {
         CompanyTile tile = this.tile.fromMatch(match);
-
+        System.out.println("AAAAAAAAAAAAAAAAAAA");
+        System.out.println(useConsultantRequests.getConsultant());
+        System.out.println(useConsultantRequests.getConsultant() == ConsultantType.MEDIA_ADVISOR);
         Preconditions.checkArgument(useConsultantRequests.getConsultant() == ConsultantType.MEDIA_ADVISOR,
             "invalid request for the selected consultant: %s", useConsultantRequests.getConsultant());
         Preconditions.checkArgument(conglomerateType != extraConglomerate,

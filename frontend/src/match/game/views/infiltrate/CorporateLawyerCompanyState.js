@@ -30,7 +30,7 @@ function CorporateLawyerCompanyPicker() {
                             x: context.state.infiltrate.companyTile % 4,
                             y: Math.floor(context.state.infiltrate.companyTile / 4),
                         },
-                        type: "BasicInfiltrate"
+                        consultant: "BasicInfiltrate"
                     },
                     {
                         numberOfShares: context.state.infiltrate.corporateLawyer.conglomerates.quantity,
@@ -39,10 +39,10 @@ function CorporateLawyerCompanyPicker() {
                             x: context.state.infiltrate.corporateLawyer.company % 4,
                             y: Math.floor(context.state.infiltrate.corporateLawyer.company / 4),
                         },
-                        type: "BasicInfiltrate"
+                        consultant: "BasicInfiltrate"
                     }
                 ],
-                type: "CorporateLawyerInfiltrate"
+                consultant: "CorporateLawyerInfiltrate"
             }
         };
 

@@ -111,7 +111,7 @@ class CorporateLawyerInfiltrateTest {
             .agents(1)
             .build();
         CompanyTile tile2 = CompanyTile.builder()
-            .company(Company.GENERTIC_SUB_INC)
+            .company(Company.GENERIC_SUB_INC)
             .currentConglomerate(conglomerate)
             .agents(1)
             .build();
@@ -137,7 +137,7 @@ class CorporateLawyerInfiltrateTest {
             .agents(1)
             .build();
         CompanyTile tile2 = CompanyTile.builder()
-            .company(Company.GENERTIC_SUB_INC)
+            .company(Company.GENERIC_SUB_INC)
             .currentConglomerate(Conglomerate.OMNICORP)
             .agents(2)
             .build();
@@ -174,7 +174,7 @@ class CorporateLawyerInfiltrateTest {
             .agents(1)
             .build();
         CompanyTile tile2 = CompanyTile.builder()
-            .company(Company.GENERTIC_SUB_INC)
+            .company(Company.GENERIC_SUB_INC)
             .currentConglomerate(Conglomerate.OMNICORP)
             .agents(2)
             .build();

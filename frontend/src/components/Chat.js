@@ -9,6 +9,10 @@ import {set} from "msw";
 import Button, {ButtonType} from "./Button";
 
 export function Chat() {
+    const [matchData, setMatchData] = useState(null)
+    const [isShown, setIsShown] = useState(false);
+    const {id} = useParams()
+
     const style = {
         background: "#a3a3a3",
         width: "400px",
@@ -19,10 +23,7 @@ export function Chat() {
         position: "fixed",
         height: "80vh"
     }
-    const [matchData, setMatchData] = useState(null)
-    const {id} = useParams()
 
-    const [isShown, setIsShown] = useState(false);
     const fetchMatchData = async () => {
         try {
             setMatchData((await fetchAuthenticated(`/api/v1/matches/${id}`, "GET")
@@ -64,12 +65,13 @@ export function Chat() {
     return (
         <>
             <Button buttonType={ButtonType.primary} onClick={() => setIsShown(!isShown)}> Toggle chat</Button>
-            <div style={{...style, overflow: "scroll", opacity: isShown ? 1 : 0}}>
-                <List style={{flex: 1, overflow: "scroll"}}>
-                    {messagesItems}
-                </List>
-                <TextInput placeholder={"Enter your message..."} onClick={sendMessage}></TextInput>
-            </div>
+            {isShown &&
+                <div style={{...style, overflow: "scroll"}}>
+                    <List style={{flex: 1, overflow: "scroll"}}>
+                        {messagesItems}
+                    </List>
+                    <TextInput placeholder={"Enter your message..."} onClick={sendMessage}></TextInput>
+                </div>}
         </>
     )
 }

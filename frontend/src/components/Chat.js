@@ -57,7 +57,8 @@ export function Chat() {
     })
 
     async function sendMessage(message) {
-        await fetchAuthenticated(`/api/v1/matches/${id}/chat`, "POST", {message: message})
+        await fetchAuthenticated(`/api/v1/matches/${id}/chat`, "POST", {message: message});
+
     }
 
     return (

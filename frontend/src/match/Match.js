@@ -6,7 +6,6 @@ import {useParams} from "react-router-dom";
 import fetchAuthenticated from "../util/fetchAuthenticated";
 import tokenService from "../services/token.service";
 import {Company, conglomerate, getConglomerateName, propics, secretObjective} from "./data/MatchEnums";
-import {Chat} from "../components/Chat";
 
 export const Info = React.createContext({...defaultMatchInfo})
 let matchInfo = {...defaultMatchInfo};
@@ -84,22 +83,6 @@ export default function Match() {
         return () => clearInterval(interval);
     }, []);
 
-    function LoadingScreen() {
-        return (
-            <div className={css.match}>
-                <p>loading...</p>
-            </div>
-        )
-    }
-
-    function LoadedPage() {
-        return (
-            <div className={css.match}>
-                <Info.Provider value={matchInfo}>
-                    <Main/>
-                </Info.Provider>
-            </div>);
-    }
 
     const isLoading = matchData == null || propic == null;
     if (isLoading) {
@@ -109,6 +92,24 @@ export default function Match() {
         return <LoadedPage key={id}/>
     }
 }
+
+function LoadingScreen() {
+    return (
+        <div className={css.match}>
+            <p>loading...</p>
+        </div>
+    )
+}
+
+function LoadedPage() {
+    return (
+        <div className={css.match}>
+            <Info.Provider value={matchInfo}>
+                <Main/>
+            </Info.Provider>
+        </div>);
+}
+
 
 function setContext(id, matchData, propic) {
     if (matchInfo.code !== id)

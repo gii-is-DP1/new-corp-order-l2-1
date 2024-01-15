@@ -34,6 +34,18 @@ function ActionChooser() { //TODO: use picker to substitute this method
 
         switch (action)
         {
+            case PLOT:
+                 fetchAction = async () => {
+                    try {
+                        await fetchAuthenticated(`/api/v1/matches/${info.code}/turn?action=PLOT`, "POST")
+                            .then(async (response) => await response.json())
+                            .then((data) => {console.log(data)})
+                    } catch (error) {
+                        console.log(error.message)
+                    }
+                };
+                fetchAction();
+                break;
             case TAKEOVER:
                 fetchAction = async () => {
                     try {

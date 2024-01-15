@@ -75,8 +75,6 @@ const frontendState = {
 export function getCurrentFrontendView(state) {
     let currentState = frontendState.WAITING_FOR_TURN;
 
-
-   // return new frontendState.infiltrate.CORPORATE_LAWYER_PICK_COMPANY(state, frontendState).component;
     while (true) {
         const instance = new currentState(state, frontendState);
         const nextState = instance.nextState;
@@ -86,9 +84,15 @@ export function getCurrentFrontendView(state) {
     }
 }
 
-/*
-    if (hand.values.length > 6)
-        return frontendState.DISCARD;
-    return frontendState.DONE;
+export function getCurrentFrontendState(state) {
+    let currentState = frontendState.WAITING_FOR_TURN;
+
+    while (true) {
+        const instance = new currentState(state, frontendState);
+        const nextState = instance.nextState;
+        if (nextState == null)
+            return currentState;
+        currentState = nextState;
+    }
 }
-*/
+

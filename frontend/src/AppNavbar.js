@@ -8,6 +8,7 @@ import Button, {ButtonType} from "./components/Button";
 import ProfilePicture from "./components/ProfilePicture";
 import {Pressable} from "./components/Pressable";
 import fetchAuthenticated from "./util/fetchAuthenticated";
+import {propics} from "./match/data/MatchEnums";
 
 const AppNavbar = () => {
     const [roles, setRoles] = useState([]);
@@ -90,7 +91,7 @@ const AppNavbar = () => {
 
                 {item.isProfilePicture &&
                     <Pressable onClick={() => navigate(`${item.link}`)}>
-                        <ProfilePicture url={userPicture}
+                        <ProfilePicture url={propics[userPicture]}
                                         style={{width: "45px", height: "45px"}}
                                         alt={"user picture"}/>
                     </Pressable>}

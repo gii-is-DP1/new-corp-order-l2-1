@@ -26,16 +26,18 @@ public class MatchView {
             .maxPlayers(match.getMaxPlayers())
             .host(match.getHost() != null ? match.getHost().getPlayerId() : null)
             .state(match.getState())
-            .opponents(buildOpponents(match, player));
-
-        if (match.getState() == MatchState.PLAYING) {
+            .player(player != null ? OwnPlayerView.of(player) : null)
+            .opponents(buildOpponents(match, player))
+            .isSpectating(!match.getPlayers().contains(player));
+        if(match.getState() == MatchState.PLAYING)
             builder
-                .player(player != null ? OwnPlayerView.of(player) : null)
-                .companyMatrix(match.getCompanyMatrix().getTiles())
-                .generalSupply(GeneralSupplyView.of(match.getGeneralSupply()))
-                .turn(TurnView.of(match.getTurnSystem()));
-        }
-
+            .companyMatrix(match.getCompanyMatrix().getTiles())
+            .generalSupply(GeneralSupplyView.of(match.getGeneralSupply()))
+            .turn(TurnView.of(match.getTurnSystem()))
+            .isPlaying(match.getTurnSystem().getCurrentPlayer() == player);
+        if(match.getState() == MatchState.FINISHED)
+            builder
+            .isWinner(match.getWinner() == player);
         return builder.build();
     }
 
@@ -46,6 +48,8 @@ public class MatchView {
             .toList();
     }
 
+    private final boolean isSpectating;
+    private final boolean isPlaying;
     private final MatchMode mode;
     private final int maxPlayers;
     private final Integer host;
@@ -56,6 +60,8 @@ public class MatchView {
     private final CompanyTile[] companyMatrix;
     private final GeneralSupplyView generalSupply;
     private final TurnView turn;
+
+    private final Boolean isWinner;
 
     @JsonInclude
     public Integer getHost() {

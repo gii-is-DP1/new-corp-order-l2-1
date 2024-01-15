@@ -154,6 +154,10 @@ public class UserService {
         user.setEmail(email);
     }
 
+    public void changePropic(User user, Integer propic) {
+        user.setPicture(propic);
+    }
+
     public void changeAuthority(User user, String authority) {
         user.setAuthority(authorityService.findByName(authority));
     }

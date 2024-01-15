@@ -8,6 +8,7 @@ import {Text} from "../components/Text";
 import List from "../components/List";
 import {dangerBackground, successBackground, white} from "../util/Colors";
 import TextInput from "../components/TextInput";
+import {propics} from "../match/data/MatchEnums";
 import tokenService from "../services/token.service";
 
 export function FriendsTab({userData, navigate, fetchUserData, isMe, rowListStyle}) {
@@ -58,7 +59,7 @@ export function FriendsTab({userData, navigate, fetchUserData, isMe, rowListStyl
                     </Button>
                 </>)}
             >
-                <ProfilePicture url={friend.picture} style={{height: "30px", width: "30px"}}/>
+                <ProfilePicture url={propics[friend.picture]} style={{height: "30px", width: "30px"}}/>
                 <Text>{friend.username}</Text>
 
             </ListLine>

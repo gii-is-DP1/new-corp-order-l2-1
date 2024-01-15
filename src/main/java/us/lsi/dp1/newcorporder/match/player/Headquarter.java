@@ -77,6 +77,13 @@ public class Headquarter {
      * @param consultant the consultant to add
      */
     public void addConsultant(ConsultantType consultant) {
+        /*
+        for (Conglomerate c: Conglomerate.values()) { //DUMMY VALUES
+            this.conglomerateShares.add(c, 5);
+            this.usedConglomerateShares.add(c,5);
+        }
+        this.consultants.add(consultant);
+         */
         this.addConsultant(consultant, 1);
     }
 
@@ -161,6 +168,12 @@ public class Headquarter {
      * @param quantity     the quantity of shares to rotate
      */
     public void rotateConglomerates(Conglomerate conglomerate, int quantity) {
+        System.out.println("BELLO STO GIOCO");
+        System.out.println(conglomerate);
+        System.out.println(this.conglomerateShares.count(conglomerate));
+        for (Conglomerate c: conglomerateShares) {
+            System.out.println(c);
+        }
         Preconditions.checkArgument(
             this.conglomerateShares.count(conglomerate) >= quantity,
             "not enough conglomerate shares to use");

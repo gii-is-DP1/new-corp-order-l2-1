@@ -56,7 +56,7 @@ public class UserView {
     private String username;
     private String email;
     private String authority;
-    private String picture;
+    private Integer picture;
     private boolean online;
 
     private Instant firstSeen;
@@ -68,13 +68,14 @@ public class UserView {
 
     private Set<Notification> notifications;
 
+    @JsonInclude()
+    public Integer getPicture() {
+              return picture;
+    }
+    
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     public boolean isOnline() {
         return online;
     }
 
-    @JsonInclude
-    public String getPicture() {
-        return picture;
-    }
 }

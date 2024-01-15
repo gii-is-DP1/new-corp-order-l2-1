@@ -61,7 +61,6 @@ public class MediaAdvisorInfiltrateTest {
         CompanyTile tile = CompanyTile.builder()
             .agents(1)
             .build();
-        lenient().when(tileReference.fromMatch(match)).thenReturn(tile);
 
         MediaAdvisorInfiltrate action = MediaAdvisorInfiltrate.builder()
             .tile(tileReference)

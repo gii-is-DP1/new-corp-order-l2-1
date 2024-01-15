@@ -48,6 +48,9 @@ public class CorporateLawyerInfiltrate implements Infiltrate {
     private void infiltrate(Match match, Conglomerate conglomerateType, int conglomerateShares, CompanyTileReference tileReference) {
         CompanyTile tile = tileReference.fromMatch(match);
 
+        Preconditions.checkArgument(tile.getCurrentConglomerate() == conglomerateType,
+            "you cannot add agents to a tile that has agents from a different conglomerate");
+
         match.getTurnSystem().getCurrentPlayer().discardSharesFromHand(conglomerateType, conglomerateShares);
         match.getTurnSystem().getCurrentPlayer().getHeadquarter().addConglomerates(conglomerateType, conglomerateShares);
         tile.addAgents(conglomerateShares);

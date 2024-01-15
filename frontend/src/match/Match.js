@@ -1,99 +1,175 @@
+import {defaultMatchInfo, getDefaultState} from "./data/MockupData";
+import React, {useEffect, useState} from "react"
+import css from "./match.module.css";
+import {Main} from "./Main";
 import {useParams} from "react-router-dom";
-import {useState} from "react";
-import GoBackButton from "../components/GoBackButton";
-import Chat from "../chat/chat";
-import {black} from "../util/Colors";
-import {Lobby} from "./Lobby";
-import {Game} from "./Game";
+import fetchAuthenticated from "../util/fetchAuthenticated";
+import tokenService from "../services/token.service";
+import {Company, conglomerate, getConglomerateName, propics, secretObjective} from "./data/MatchEnums";
 
-/* Possible actions
-1) Card Select View
-    1 Select n conglomerates of the same color from hand (Infiltrate)
-    2 Select n conglomerates of any color from hand (To discard)
-    3 Select n conglomerates of the same color from hq (Takeover)
-    4 Select card from deck and/or Open Display (Plot)
-    16 Select two cards from deck (Takeover -> Dealmaker)
-    5 Select (a not used in this turn) consultant from General Supply (Infiltrate)
-2) Simple View
-    6 View secret objectives
-    7 View General Supply
-3) Company tile Select View
-    8 Select a company tile with agents of a specific color (Infiltrate, Takeover)
-    9 Select a company tile orthogonally adjacent at a specific one (Takeover)
-4) Company Abilities
-    10 Select if you want to use a specific company ability (Takeover)
-    11 Select one or two company tiles with agents of a specific color (Broadcast Network)
-    12 Select one HQ from everyone's HQ conglomerates (Guerrilla Marketing, Ambient Advertising, Social Media)
-    13 Select n (one or two) conglomerates from a specific HQ (Guerrilla Marketing, Ambient Advertising, Social Media)
-    14 Select one conglomerate from your HQ and one from everyone else's HQ Conglomerate (Print Media)
-    15 Select two different company tiles
- */
+export const Info = React.createContext({...defaultMatchInfo})
+let matchInfo = {...defaultMatchInfo};
+export let startingState = {...getDefaultState()};
 
-const matchInfo = {
-    maxPlayers: 4,
-    players: [
-        {
-            username: "Gioacchino",
-            propic: "https://th.bing.com/th/id/OIG.brPoGXf3gGgrVkV9ixtc?w=173&h=173&c=6&r=0&o=5&dpr=1.3&pid=ImgGn"
-        },
-        {
-            username: "beluga",
-            propic: "https://th.bing.com/th/id/OIG.oi__xz_IswoFyfQ60TwA?w=173&h=173&c=6&r=0&o=5&dpr=1.3&pid=ImgGn"
-        }
-    ]
-};
-const isAdmin = true;
-const inLobby = false;
-let matchCode;
-
-function Match(/*{isAdmin, matchInfo}*/) {
+export default function Match() {
+    let [matchData, setMatchData] = useState(null);
     const {id} = useParams();
-    matchCode = id;
-    const [count, setCount] = useState(0);
+    matchInfo = {...defaultMatchInfo};
 
-    const style = {
-        display: "flex",
-        width: "100%",
-        height: "100vh",
-        overflow:"hidden",
-    }
+    const [propic, setPropic] = useState(null);
 
-    return (
-        <div style={style}>
-            <Main matchInfo={matchInfo} isAdmin={isAdmin} className="mainPart"/>
-            <RightBar/>
-        </div>)
-}
-
-function Main() {
-    const style = {
-        backgroundColor: black,
-        flex: 0.7,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-    }
-
-    return <div style={style}>
-        {inLobby
-            ? <Lobby matchInfo={matchInfo} isAdmin={isAdmin} matchCode={matchCode}/>
-            : <Game/>
+    const fetchPropic = async () => {
+        try {
+            setPropic(await fetchAuthenticated(`/api/v1/users/${tokenService.getUser().username}/picture`, "GET")
+                .then(async response => await response.json()));
+        } catch (error) {
+            console.log(error.message)
         }
-    </div>
-}
+    };
 
-function RightBar() {
-    const style = {
-        backgroundColor: "#404040",
-        flex: 0.3,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
+    const fetchMatchData = async () => {
+        try {
+            const wasEmpty = matchData === null;
+            const wasWaiting = wasEmpty ? null : matchData.state === "WAITING"
+            const wasPlaying = wasEmpty ? false : matchData.playing;
+
+            let handCount = 0;
+            if(!wasEmpty) {
+                if (matchData.player.hand[getConglomerateName(conglomerate.OMNICORP)] !== undefined)
+                    handCount += matchData.player.hand[getConglomerateName(conglomerate.OMNICORP)];
+                if (matchData.player.hand[getConglomerateName(conglomerate.MEGAMEDIA)] !== undefined)
+                    handCount += matchData.player.hand[getConglomerateName(conglomerate.MEGAMEDIA)];
+                if (matchData.player.hand[getConglomerateName(conglomerate.TOTAL_ENTERTAINMENT)] !== undefined)
+                    handCount += matchData.player.hand[getConglomerateName(conglomerate.TOTAL_ENTERTAINMENT)];
+                if (matchData.player.hand[getConglomerateName(conglomerate.GENERIC_INC)] !== undefined)
+                    handCount += matchData.player.hand[getConglomerateName(conglomerate.GENERIC_INC)];
+            }
+
+            matchData = (await fetchAuthenticated(`/api/v1/matches/${id}`, "GET")
+                .then(async response => await response.json()));
+
+
+            let newHandCount = 0;
+
+            if(matchData.player.hand[getConglomerateName(conglomerate.OMNICORP)] !== undefined)
+                newHandCount += matchData.player.hand[getConglomerateName(conglomerate.OMNICORP)];
+            if(matchData.player.hand[getConglomerateName(conglomerate.MEGAMEDIA)] !== undefined)
+                newHandCount += matchData.player.hand[getConglomerateName(conglomerate.MEGAMEDIA)];
+            if(matchData.player.hand[getConglomerateName(conglomerate.TOTAL_ENTERTAINMENT)] !== undefined)
+                newHandCount += matchData.player.hand[getConglomerateName(conglomerate.TOTAL_ENTERTAINMENT)];
+            if(matchData.player.hand[getConglomerateName(conglomerate.GENERIC_INC)] !== undefined)
+                newHandCount += matchData.player.hand[getConglomerateName(conglomerate.GENERIC_INC)];
+
+            console.log(handCount);
+            console.log(newHandCount);
+
+            const isPLaying = matchData.state === "PLAYING";
+            const canUpdateMatch =  !(matchData.playing) || wasEmpty || !isPLaying || (wasWaiting && isPLaying) || (!wasPlaying && matchData.playing) /*|| newHandCount !== handCount*/;
+            if (canUpdateMatch) {
+                setMatchData(matchData)
+            }
+        } catch (error) {
+            console.log(error.message)
+        }
+    };
+
+    useEffect(() => {
+        const fetchData = async () => {
+            await fetchPropic();
+            await fetchMatchData();
+        };
+        fetchData();
+        const interval = setInterval(() => {
+            fetchMatchData();
+        }, 5000);
+
+        return () => clearInterval(interval);
+    }, []);
+
+    const isLoading = matchData == null || propic == null;
+    if (isLoading) {
+        return <LoadingScreen/>;
+    } else {
+        setContext(id, matchData, propic);
+        return <LoadedPage key={id}/>
     }
-    return <div style={style}>
-        <GoBackButton/>
-        <Chat/>
-    </div>
 }
 
-export default Match;
+function LoadingScreen() {
+    return (
+        <div className={css.match}>
+            <p>loading...</p>
+        </div>
+    )
+}
+
+function LoadedPage() {
+    return (
+        <div className={css.match}>
+            <Info.Provider value={matchInfo}>
+                <Main/>
+            </Info.Provider>
+        </div>);
+}
+
+function setContext(id, matchData, propic) {
+    if (matchInfo.code !== id)
+        matchInfo = {...defaultMatchInfo};
+    startingState = getDefaultState();
+
+    matchInfo.code = id;
+    matchInfo.inLobby = matchData.state === "WAITING";
+    matchInfo.maxPlayers = matchData.maxPlayers;
+    matchInfo.isAdmin = matchData.host === tokenService.getUser().id;
+    if (!matchData.isSpectating && matchData.spectating)
+        matchInfo.hasBeenKicked = true;
+    matchInfo.wasSpectating = matchInfo.isSpectating;
+    matchInfo.isSpectating = matchData.spectating;
+    if (!matchData.spectating)
+        matchInfo.players = [{propic: propics[propic.picture], username: tokenService.getUser().username}];
+    else matchInfo.players = [];
+    matchInfo.players = matchInfo.players.concat(matchData.opponents.map(opponent => {
+        return {propic: propics[opponent.picture], username: opponent.username, id: opponent.playerId}
+    }));
+    matchInfo.isWinner = null;
+    console.log(matchInfo);
+
+    if (matchData.state === "PLAYING") {
+        startingState.isPlaying = matchData.playing;
+        startingState.game.player.hand = matchData.player.hand;
+        if (startingState.game.player.hand[conglomerate.OMNICORP] === undefined)
+            startingState.game.player.hand[conglomerate.OMNICORP] = 0;
+        if (startingState.game.player.hand[conglomerate.MEGAMEDIA] === undefined)
+            startingState.game.player.hand[conglomerate.MEGAMEDIA] = 0;
+        if (startingState.game.player.hand[conglomerate.TOTAL_ENTERTAINMENT] === undefined)
+            startingState.game.player.hand[conglomerate.TOTAL_ENTERTAINMENT] = 0;
+        if (startingState.game.player.hand[conglomerate.GENERIC_INC] === undefined)
+            startingState.game.player.hand[conglomerate.GENERIC_INC] = 0;
+        startingState.game.generalSupply.conglomeratesLeftInDeck = matchData.generalSupply.deckSize;
+        startingState.game.player.hq.secretObjectives = matchData.player.secretObjectives.map(s => secretObjective[s]);
+        //    startingState.game.player.hq.consultants = matchData.player.headquarter.consultants;
+        startingState.game.player.hq.rotatedConglomerates = matchData.player.headquarter.usedConglomerateShares ?? []; //TODO: check if are multiset or array
+        startingState.game.player.hq.nonRotatedConglomerates = matchData.player.headquarter.conglomerateShares ?? [];
+        startingState.game.companies = matchData.companyMatrix.map(c => {
+            return {company: Company[c.company], agents: c.agents, type: conglomerate[c.currentConglomerate]}
+        });
+        startingState.turn = matchData.turn.player;
+        startingState.game.generalSupply.consultants = matchData.generalSupply.consultants;
+        startingState.game.generalSupply.conglomeratesLeftInDeck = matchData.generalSupply.deckSize;
+        startingState.game.generalSupply.openDisplay = matchData.generalSupply.openDisplay;
+        startingState.game.opponents = matchData.opponents.map(o => {
+            return {
+                id: o.playerId,
+                username: o.username,
+                conglomeratesInHand: o.handSize,
+                hq: {
+                    rotatedConglomerates: o.headquarter.usedConglomerateShares,
+                    nonRotatedConglomerates: o.headquarter.conglomerateShares,
+                    consultants: o.headquarter.consultants
+                }
+            }
+        })
+    }
+    if (matchData.state === "FINISHED")
+        matchInfo.isWinner = matchData.isWinner;
+}

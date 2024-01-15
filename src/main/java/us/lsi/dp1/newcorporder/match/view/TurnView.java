@@ -16,7 +16,11 @@ public class TurnView {
 
         TurnViewBuilder builder = TurnView.builder()
             .finalRound(turnSystem.isFinalRound())
-            .player(turnSystem.getCurrentPlayer() != null ? turnSystem.getCurrentPlayer().getPlayerId() : null);
+            .player(turnSystem.getCurrentPlayer() != null ? turnSystem.getCurrentPlayer().getPlayerId() : null)
+            .action(turn == null ? null : turn.getAction())
+            .state(turn == null ? null : turn.getState())
+            .usingConsultant(turn == null ? null : turn.getChosenConsultant())
+            .build();
 
         if (turn != null) {
             builder.action(turn.getAction())

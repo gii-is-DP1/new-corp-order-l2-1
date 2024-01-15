@@ -1,4 +1,5 @@
 import PersonIcon from '@mui/icons-material/Person';
+import {black, grayDarker} from "../util/Colors";
 
 export default function ProfilePicture({url, isTransparent, style}) {
     const defaultStyle = {
@@ -12,7 +13,12 @@ export default function ProfilePicture({url, isTransparent, style}) {
     }
 
     const backgroundStyle = {
-        backgroundColor: "#F8F8F8",
+        backgroundColor: grayDarker,
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
         opacity: isTransparent ? 0.2 : 1,
     }
 

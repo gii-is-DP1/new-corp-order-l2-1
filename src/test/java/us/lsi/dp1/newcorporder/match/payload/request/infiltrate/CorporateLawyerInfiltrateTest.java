@@ -89,8 +89,6 @@ class CorporateLawyerInfiltrateTest {
         CompanyTile tile2 = CompanyTile.builder()
             .agents(1)
             .build();
-        lenient().when(tileReference1.fromMatch(match)).thenReturn(tile);
-        lenient().when(tileReference2.fromMatch(match)).thenReturn(tile2);
 
         CorporateLawyerInfiltrate action = CorporateLawyerInfiltrate.builder()
             .actions(List.of(

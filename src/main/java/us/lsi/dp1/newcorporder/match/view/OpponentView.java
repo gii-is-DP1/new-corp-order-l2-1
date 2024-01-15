@@ -26,7 +26,7 @@ public class OpponentView {
 
     private final int playerId;
     private final String username;
-    private final String picture;
+    private final Integer picture;
     private final boolean online;
 
     private final int handSize;

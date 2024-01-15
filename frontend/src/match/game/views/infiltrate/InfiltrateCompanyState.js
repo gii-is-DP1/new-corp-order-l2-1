@@ -37,7 +37,7 @@ export function InfiltrateCompanyPicker() { //TODO: implement picker
                         x: context.state.infiltrate.companyTile % 4,
                         y: Math.floor(context.state.infiltrate.companyTile / 4),
                     },
-                    type: "BasicInfiltrate"
+                    consultant: "BasicInfiltrate"
                 }
             };
 

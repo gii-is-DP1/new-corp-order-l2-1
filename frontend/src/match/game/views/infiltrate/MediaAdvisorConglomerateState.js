@@ -31,7 +31,7 @@ function MediaAdvisorConglomeratePicker() {
                     y: Math.floor(context.state.infiltrate.companyTile / 4),
                 },
                 extraConglomerate: context.state.infiltrate.mediaAdvisor.conglomerate,
-                type: "MediaAdvisorInfiltrate"
+                consultant: "MediaAdvisorInfiltrate"
             }
         };
 

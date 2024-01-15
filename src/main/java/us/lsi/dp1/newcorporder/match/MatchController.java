@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import us.lsi.dp1.newcorporder.auth.Authenticated;
 import us.lsi.dp1.newcorporder.bind.FromPathVariable;
+import us.lsi.dp1.newcorporder.match.chat.Message;
+import us.lsi.dp1.newcorporder.match.payload.request.ChatRequest;
 import us.lsi.dp1.newcorporder.match.payload.response.MatchAssignmentResponse;
 import us.lsi.dp1.newcorporder.match.payload.response.MatchResponse;
 import us.lsi.dp1.newcorporder.match.view.MatchView;
@@ -21,6 +23,7 @@ import us.lsi.dp1.newcorporder.user.UserService;
 import us.lsi.dp1.newcorporder.util.RestPreconditions;
 
 import java.util.LinkedList;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -124,23 +127,9 @@ public class MatchController {
         responseCode = "403",
         description = "You are not friends with all the players involved"
     )
-    @GetMapping("/{match}/{sdjosof}")
+    @GetMapping("/{match}")
     public MatchView getMatch(@Authenticated Player player, @FromPathVariable Match match) {
         return matchService.getMatchView(player, match);
-    }
-
-    @Operation(
-        summary = "Get a match",
-        description = "Get a match",
-        tags = "get"
-    )
-    @ApiResponse(
-        responseCode = "200",
-        description = "The requested match "
-    )
-    @GetMapping("/{matchCode}")
-    public MatchView getMatchWithCode(@Authenticated Player player, @PathVariable String matchCode) {
-        return matchService.getMatchView(player,matchService.getMatch(matchCode).get());
     }
 
     @Operation(
@@ -203,5 +192,28 @@ public class MatchController {
     @PostMapping("/{match}/start")
     public void forceStartMatch(@Authenticated Player player, @FromPathVariable Match match) {
         matchService.forceStart(player, match);
+    }
+
+    @Operation(
+        summary = "Force a match to start",
+        description = "Force a match to start",
+        tags = "post"
+    )
+    @ApiResponse(
+        responseCode = "200",
+        description = "The started match"
+    )
+    @PostMapping("/{match}/chat")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void postChatMessage(@Authenticated Player player, @RequestBody ChatRequest chatRequest, @FromPathVariable Match match) {
+        RestPreconditions.checkAccess(match.getPlayer(player.getId()) != null);
+
+        Message message = Message.builder()
+            .sender(player.getUser().getUsername())
+            .at(Instant.now())
+            .message(chatRequest.getMessage())
+            .build();
+
+        match.getChat().addMessage(message);
     }
 }

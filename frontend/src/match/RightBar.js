@@ -1,7 +1,7 @@
 import css from "./match.module.css";
 import GoBackButton from "../components/GoBackButton";
-import Chat from "./chat/chat";
 import React from "react";
+import {Chat} from "../components/Chat";
 
 export function RightBar() {
     return <div className={css.rightBar}>

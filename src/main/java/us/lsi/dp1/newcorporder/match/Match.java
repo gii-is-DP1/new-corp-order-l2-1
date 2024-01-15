@@ -7,6 +7,7 @@ import com.google.common.collect.Multiset;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import us.lsi.dp1.newcorporder.match.chat.MatchChat;
 import us.lsi.dp1.newcorporder.match.company.CompanyMatrix;
 import us.lsi.dp1.newcorporder.match.company.CompanyType;
 import us.lsi.dp1.newcorporder.match.conglomerate.Conglomerate;
@@ -47,6 +48,7 @@ public class Match {
     @Getter @Setter private MatchPlayer host;
     private final Map<Integer, MatchPlayer> players = new HashMap<>();
 
+    @Getter private final MatchChat chat = new MatchChat();
     @Getter private final GeneralSupply generalSupply;
     @Getter private final CompanyMatrix companyMatrix;
     @Getter private final TurnSystem turnSystem;

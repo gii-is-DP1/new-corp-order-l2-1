@@ -6,6 +6,7 @@ import lombok.Data;
 import us.lsi.dp1.newcorporder.match.Match;
 import us.lsi.dp1.newcorporder.match.MatchMode;
 import us.lsi.dp1.newcorporder.match.MatchState;
+import us.lsi.dp1.newcorporder.match.chat.Message;
 import us.lsi.dp1.newcorporder.match.company.CompanyTile;
 import us.lsi.dp1.newcorporder.match.player.MatchPlayer;
 
@@ -28,7 +29,8 @@ public class MatchView {
             .state(match.getState())
             .player(player != null ? OwnPlayerView.of(player) : null)
             .opponents(buildOpponents(match, player))
-            .isSpectating(!match.getPlayers().contains(player));
+            .isSpectating(!match.getPlayers().contains(player))
+            .messages(match.getChat().getMessages());
         if(match.getState() == MatchState.PLAYING)
             builder
             .companyMatrix(match.getCompanyMatrix().getTiles())
@@ -62,6 +64,8 @@ public class MatchView {
     private final TurnView turn;
 
     private final Boolean isWinner;
+
+    private final List<Message> messages;
 
     @JsonInclude
     public Integer getHost() {

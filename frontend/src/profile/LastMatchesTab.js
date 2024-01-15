@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import fetchAuthenticated from "../util/fetchAuthenticated";
-import {dangerBackground, orange, successBackground} from "../util/Colors";
+import {dangerBackground, orange, successBackground, white} from "../util/Colors";
 import ListLine from "../components/ListLine";
 import Button, {ButtonType} from "../components/Button";
 import {Text} from "../components/Text";
@@ -39,11 +39,17 @@ export function LastMatchesTab({username, navigate, rowListStyle}) {
         )
     })
 
+    if (!lastMatchesItems) {
+        return <></>
+    }
+    
     return (
         <div>
             <List style={rowListStyle}>
                 {lastMatchesItems}
             </List>
+            {lastMatchesItems.length === 0 &&
+                <Text style={{display: "flex", justifyContent: "center", color: white}}>No matches played yet</Text>}
         </div>
     )
 }

@@ -37,7 +37,7 @@ export function FriendsTab({userData, navigate, fetchUserData, isMe, rowListStyl
         } catch (error) {
             setFormMessage(buildErrorComponent(error.message))
         }
-        setTimeout(() => setFormMessage(("")), 2000)
+        setTimeout(() => setFormMessage(("")), 500)
     }
 
     let friendsRequest = userData.receivedFriendshipRequests?.map(request => {
@@ -90,6 +90,10 @@ export function FriendsTab({userData, navigate, fetchUserData, isMe, rowListStyl
         )
     })
 
+    if (!friendsItems) {
+        return <></>
+    }
+
     return (
         <div style={{width: "100%", display: "flex", flexDirection: "column"}}>
 
@@ -114,7 +118,8 @@ export function FriendsTab({userData, navigate, fetchUserData, isMe, rowListStyl
             <List style={rowListStyle}>
                 {friendsItems}
             </List>
-
+            {friendsItems.length === 0 &&
+                <Text style={{display: "flex", justifyContent: "center", color: white}}>No matches played yet</Text>}
         </div>
     )
 }

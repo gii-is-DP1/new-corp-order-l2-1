@@ -1,9 +1,8 @@
-
 import React, {useEffect, useState} from "react";
 import List from "../../components/List";
 import {AchievementExpandedView} from "./AchievementExpandedView";
 
-export function AchievementsTab({achievementsCompleatedData, allAchievementsData, isMe, rowListStyle, username}) {
+export function AchievementsTab({achievementsCompleatedData, allAchievementsData, isMe, rowListStyle}) {
     const [selectedAchievement, setSelectedAchievement] = useState(null)
     const [notCompletedAchievementsData, setNotCompleatedAchievementsData] = useState([]);
 
@@ -16,12 +15,14 @@ export function AchievementsTab({achievementsCompleatedData, allAchievementsData
     }, []);
 
     let compleatedAchievementsItems = achievementsCompleatedData?.map(achievement => {
-        return <AchievementExpandedView achievement={achievement} setSelectedAchievement={setSelectedAchievement} selectedAchievement={selectedAchievement} earned={true}/>
+        return <AchievementExpandedView achievement={achievement} setSelectedAchievement={setSelectedAchievement}
+                                        selectedAchievement={selectedAchievement} earned={true}/>
     });
 
 
     let notCompleatedAchievementsItems = notCompletedAchievementsData?.map(achievement => {
-        return <AchievementExpandedView achievement={achievement} setSelectedAchievement={setSelectedAchievement} selectedAchievement={selectedAchievement} earned={false}/>
+        return <AchievementExpandedView achievement={achievement} setSelectedAchievement={setSelectedAchievement}
+                                        selectedAchievement={selectedAchievement} earned={false}/>
     });
 
     return (
@@ -30,7 +31,6 @@ export function AchievementsTab({achievementsCompleatedData, allAchievementsData
                 {compleatedAchievementsItems}
                 {isMe && notCompleatedAchievementsItems}
             </List>
-
         </div>
     )
 }

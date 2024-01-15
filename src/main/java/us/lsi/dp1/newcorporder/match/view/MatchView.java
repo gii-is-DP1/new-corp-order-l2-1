@@ -37,7 +37,7 @@ public class MatchView {
             .isPlaying(match.getTurnSystem().getCurrentPlayer() == player);
         if(match.getState() == MatchState.FINISHED)
             builder
-            .isWinner(match.getWinner() == player);
+            .isWinner(match.getWinnerList().contains(player));
         return builder.build();
     }
 

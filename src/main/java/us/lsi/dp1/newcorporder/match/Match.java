@@ -42,7 +42,7 @@ public class Match {
     @Getter private final MatchMode mode;
     @Getter private final int maxPlayers;
     @Getter private MatchState state = MatchState.WAITING;
-    @Getter private MatchPlayer winner;
+    @Getter private Set<MatchPlayer> winnerList;
 
     @Getter @Setter private MatchPlayer host;
     private final Map<Integer, MatchPlayer> players = new HashMap<>();
@@ -88,20 +88,21 @@ public class Match {
         this.endTime = Instant.now();
 
         Multiset<MatchPlayer> victoryPoints = this.calculateVictoryPoints();
-        this.winner = victoryPoints.entrySet().stream()
+        /*this.winner = victoryPoints.entrySet().stream()
             .max(Comparator.comparingInt(Multiset.Entry::getCount))
             .map(Multiset.Entry::getElement)
-            .orElseThrow();
-        //TODO generate and save stats
-        /*
+            .orElseThrow();*/
+
         Set<MatchPlayer> winners = this.getWinners(victoryPoints);
+
+        this.winnerList = winners;
 
         MatchSummary summary = MatchSummary.builder()
             .victoryPoints(victoryPoints)
             .winners(winners)
             .build();
         this.endCallback.accept(this, summary);
-        */
+
     }
 
     public void addPlayer(MatchPlayer player) {

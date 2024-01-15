@@ -88,7 +88,7 @@ export default function Match() {
         fetchData();
         const interval = setInterval(() => {
             fetchMatchData();
-        }, 1500);
+        }, 500);
 
         return () => clearInterval(interval);
     }, []);

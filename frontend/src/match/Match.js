@@ -6,6 +6,7 @@ import {useParams} from "react-router-dom";
 import fetchAuthenticated from "../util/fetchAuthenticated";
 import tokenService from "../services/token.service";
 import {Company, conglomerate, getConglomerateName, propics, secretObjective} from "./data/MatchEnums";
+import {Chat} from "../components/Chat";
 
 export const Info = React.createContext({...defaultMatchInfo})
 let matchInfo = {...defaultMatchInfo};
@@ -13,6 +14,7 @@ export let startingState = {...getDefaultState()};
 
 export default function Match() {
     let [matchData, setMatchData] = useState(null);
+    const [chatData, setChatData] = useState([]);
     const {id} = useParams();
     matchInfo = {...defaultMatchInfo};
 
@@ -48,6 +50,7 @@ export default function Match() {
             matchData = (await fetchAuthenticated(`/api/v1/matches/${id}`, "GET")
                 .then(async response => await response.json()));
 
+            setChatData(matchData.messages)
 
             let newHandCount = 0;
 
@@ -86,6 +89,24 @@ export default function Match() {
         return () => clearInterval(interval);
     }, []);
 
+    function LoadingScreen() {
+        return (
+            <div className={css.match}>
+                <p>loading...</p>
+            </div>
+        )
+    }
+
+    function LoadedPage() {
+        return (
+            <div className={css.match}>
+                <Info.Provider value={matchInfo}>
+                    <Main/>
+                    <Chat chatData={chatData} matchCode={id}/>
+                </Info.Provider>
+            </div>);
+    }
+
     const isLoading = matchData == null || propic == null;
     if (isLoading) {
         return <LoadingScreen/>;
@@ -93,23 +114,6 @@ export default function Match() {
         setContext(id, matchData, propic);
         return <LoadedPage key={id}/>
     }
-}
-
-function LoadingScreen() {
-    return (
-        <div className={css.match}>
-            <p>loading...</p>
-        </div>
-    )
-}
-
-function LoadedPage() {
-    return (
-        <div className={css.match}>
-            <Info.Provider value={matchInfo}>
-                <Main/>
-            </Info.Provider>
-        </div>);
 }
 
 function setContext(id, matchData, propic) {

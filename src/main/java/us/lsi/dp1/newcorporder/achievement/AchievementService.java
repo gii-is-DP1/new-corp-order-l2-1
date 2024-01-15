@@ -9,6 +9,8 @@ import us.lsi.dp1.newcorporder.exception.ResourceNotFoundException;
 import us.lsi.dp1.newcorporder.player.Player;
 import us.lsi.dp1.newcorporder.stats.player.PlayerMatchStatsService;
 
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,11 +39,17 @@ public class AchievementService {
 
     @Transactional
     public Achievement save(@Valid Achievement achievement) throws DataAccessException {
+        if (achievement.getImageUrl().isEmpty()) {
+            achievement.setImageUrl(null);
+        }
         return achievementRepository.save(achievement);
     }
 
     @Transactional
     public Achievement updateAchievement(@Valid Achievement achievement, Integer idToUpdate) {
+        if (achievement.getImageUrl().isEmpty()) {
+            achievement.setImageUrl(null);
+        }
         Achievement toUpdate = findById(idToUpdate);
         BeanUtils.copyProperties(achievement, toUpdate, "id");
         save(toUpdate);

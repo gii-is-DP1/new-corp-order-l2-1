@@ -19,7 +19,7 @@ export function MainPage() {
         flex: 1,
         display: "flex",
         flexDirection: "row",
-        backgroundImage: "url(/Images/BackgroundImage.svg)",
+        backgroundImage: "url(/images/BackgroundImage.svg)",
         backgroundSize: "cover",
         backgroundPositionY: "bottom"
     }

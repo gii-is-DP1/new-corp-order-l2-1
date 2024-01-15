@@ -16,7 +16,7 @@ export default function Login() {
         flexDirection: "row",
         justifyContent: "space-evenly",
         alignItems: "space-between",
-        backgroundImage: "url(/Images/BackgroundImage.svg)",
+        backgroundImage: "url(/images/BackgroundImage.svg)",
         backgroundSize: "cover",
         backgroundPositionY: "bottom"
     }
@@ -80,7 +80,7 @@ export default function Login() {
     return (
         <div style={content}>
             <div style={columnStyle}>
-                <img src={"Images/New-corp-order-logo.png"} alt={"New Corp Order logo"}></img>
+                <img src={"images/New-corp-order-logo.png"} alt={"New Corp Order logo"}></img>
             </div>
             <div style={columnStyle}>
                 <Card style={cardStyle}

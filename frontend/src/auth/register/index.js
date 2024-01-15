@@ -19,7 +19,7 @@ export default function Register() {
         flexDirection: "row",
         justifyContent: "space-evenly",
         alignItems: "space-between",
-        backgroundImage: "url(/Images/BackgroundImage.svg)",
+        backgroundImage: "url(/images/BackgroundImage.svg)",
         backgroundSize: "cover",
         backgroundPositionY: "bottom"
     }

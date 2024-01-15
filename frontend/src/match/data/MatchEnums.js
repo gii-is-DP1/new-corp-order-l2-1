@@ -5,14 +5,14 @@ export const INFILTRATE = "infiltrate";
 export const TAKEOVER = "takeover";
 
 export const conglomerate = { //TODO make color a gradient
-    OMNICORP: {name: "Omnicorp", color: "#c6c2a9", src: "/Images/Conglomerates/omnicorp.png"},
+    OMNICORP: {name: "Omnicorp", color: "#c6c2a9", src: "/images/Conglomerates/omnicorp.png"},
     TOTAL_ENTERTAINMENT: {
         name: "Total Entertainment",
         color: "#258b9f",
-        src: "/Images/Conglomerates/totalentertainment.png"
+        src: "/images/Conglomerates/totalentertainment.png"
     },
-    GENERIC_INC: {name: "Generic Inc", color: "#3e2f21", src: "/Images/Conglomerates/genericinc.png"},
-    MEGAMEDIA: {name: "Megamedia", color: "#f74c1e", src: "/Images/Conglomerates/megamedia.png"},
+    GENERIC_INC: {name: "Generic Inc", color: "#3e2f21", src: "/images/Conglomerates/genericinc.png"},
+    MEGAMEDIA: {name: "Megamedia", color: "#f74c1e", src: "/images/Conglomerates/megamedia.png"},
 }
 
 export function getConglomerateName(value)
@@ -24,7 +24,7 @@ export function getConsultantName(value)
     return Object.keys(consultant).find(key => consultant[key] === value);
 }
 
-export const propics = [...Array(21).keys()].map(n =>   "/Images/propics/("+(n+1)+").jpg");
+export const propics = [...Array(21).keys()].map(n =>   "/images/propics/("+(n+1)+").jpg");
 
 export const CompanyType = {
     BROADCAST_NETWORK: "broadcast-network",
@@ -43,12 +43,12 @@ export const consultant = {
 };
 
 export const secretObjective = {
-    BROADCAST_NETWORK: "/Images/secret-objectives/broadcast-network.png",
-    PRINT_MEDIA: "/Images/secret-objectives/print-media.png",
-    GUERRILLA_MARKETING: "/Images/secret-objectives/guerrilla-marketing.png",
-    AMBIENT_ADVERTISING: "/Images/secret-objectives/ambient-advertising.png",
-    ONLINE_MARKETING: "/Images/secret-objectives/online-marketing.png",
-    SOCIAL_MEDIA: "/Images/secret-objectives/social-media.png",
+    BROADCAST_NETWORK: "/images/secret-objectives/broadcast-network.png",
+    PRINT_MEDIA: "/images/secret-objectives/print-media.png",
+    GUERRILLA_MARKETING: "/images/secret-objectives/guerrilla-marketing.png",
+    AMBIENT_ADVERTISING: "/images/secret-objectives/ambient-advertising.png",
+    ONLINE_MARKETING: "/images/secret-objectives/online-marketing.png",
+    SOCIAL_MEDIA: "/images/secret-objectives/social-media.png",
 }
 
 export const Company = {

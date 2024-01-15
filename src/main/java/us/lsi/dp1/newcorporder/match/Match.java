@@ -43,7 +43,7 @@ public class Match {
     @Getter private final MatchMode mode;
     @Getter private final int maxPlayers;
     @Getter private MatchState state = MatchState.WAITING;
-    @Getter private Set<MatchPlayer> winnerList;
+    @Getter private Set<MatchPlayer> winners;
 
     @Getter @Setter private MatchPlayer host;
     private final Map<Integer, MatchPlayer> players = new HashMap<>();
@@ -75,13 +75,13 @@ public class Match {
     public void start() {
         Preconditions.checkState(state == MatchState.WAITING, "match already started");
         Preconditions.checkState(players.size() > 1, "not enough players to start the match");
+        state = MatchState.PLAYING;
 
         generalSupply.init(mode, players.size());
         companyMatrix.init(players.size() > 2 ? MatchSize.GROUP : MatchSize.COUPLE);
         initPlayers();
 
         turnSystem.init(this, new ArrayList<>(players.values()));
-        state = MatchState.PLAYING;
         startTime = Instant.now();
     }
 
@@ -90,21 +90,13 @@ public class Match {
         this.endTime = Instant.now();
 
         Multiset<MatchPlayer> victoryPoints = this.calculateVictoryPoints();
-        /*this.winner = victoryPoints.entrySet().stream()
-            .max(Comparator.comparingInt(Multiset.Entry::getCount))
-            .map(Multiset.Entry::getElement)
-            .orElseThrow();*/
-
-        Set<MatchPlayer> winners = this.getWinners(victoryPoints);
-
-        this.winnerList = winners;
+        this.winners = this.getWinners(victoryPoints);
 
         MatchSummary summary = MatchSummary.builder()
             .victoryPoints(victoryPoints)
-            .winners(winners)
+            .winners(this.winners)
             .build();
         this.endCallback.accept(this, summary);
-
     }
 
     public void addPlayer(MatchPlayer player) {

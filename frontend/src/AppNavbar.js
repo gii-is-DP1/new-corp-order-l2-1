@@ -104,7 +104,7 @@ const AppNavbar = () => {
         <header style={navBarStyle}>
             <Link to="/">
                 <img
-                    src="/Images/New-corp-order-logo.png"
+                    src="/images/New-corp-order-logo.png"
                     alt="logo"
                     style={{maxHeight: "60px", cursor: 'pointer'}}
                 />

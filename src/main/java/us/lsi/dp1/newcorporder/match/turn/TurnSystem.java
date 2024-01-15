@@ -43,7 +43,7 @@ public class TurnSystem {
     }
 
     public void passTurn() {
-        if (Objects.equals(lastPlayerBeforeMatchEnds, currentPlayer)) {
+        if (this.isFinalTurn()) {
             this.match.end();
             return;
         }
@@ -59,13 +59,17 @@ public class TurnSystem {
         currentTurn = null;
     }
 
+    public void activateFinalRound() {
+        Preconditions.checkState(!this.isFinalRound(), "final round is already activated");
+        this.lastPlayerBeforeMatchEnds = this.currentPlayer;
+    }
+
     public boolean isFinalRound() {
         return this.lastPlayerBeforeMatchEnds != null;
     }
 
-    public void activateFinalRound() {
-        Preconditions.checkState(!this.isFinalRound(), "final round is already activated");
-        this.lastPlayerBeforeMatchEnds = this.currentPlayer;
+    public boolean isFinalTurn() {
+        return Objects.equals(lastPlayerBeforeMatchEnds, currentPlayer);
     }
 
     // for testing purposes

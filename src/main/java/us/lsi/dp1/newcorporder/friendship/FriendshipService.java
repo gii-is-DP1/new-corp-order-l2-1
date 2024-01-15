@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import us.lsi.dp1.newcorporder.friendship.payload.FriendshipView;
 import us.lsi.dp1.newcorporder.user.User;
+import us.lsi.dp1.newcorporder.user.UserService;
 import us.lsi.dp1.newcorporder.user.payload.response.UserView;
 
 import java.time.Instant;
@@ -17,23 +18,26 @@ public class FriendshipService {
     @Value("${newcorporder.app.maxFriendshipRequests}")
     private int maxFriendshipRequests;
 
+    private final UserService userService;
     private final FriendshipRepository friendshipRepository;
     private final FriendshipRequestRepository friendshipRequestRepository;
 
-    public FriendshipService(FriendshipRepository friendshipRepository, FriendshipRequestRepository friendshipRequestRepository) {
+    public FriendshipService(UserService userService, FriendshipRepository friendshipRepository, FriendshipRequestRepository friendshipRequestRepository) {
+        this.userService = userService;
         this.friendshipRepository = friendshipRepository;
         this.friendshipRequestRepository = friendshipRequestRepository;
     }
 
-    public List<FriendshipView> getFriendships(User user) {
+    public List<FriendshipView> getFriendships(User user, boolean showOnline) {
         return friendshipRepository.findByUser(user).stream()
-            .map(FriendshipView::of)
+            .map(friendship -> FriendshipView.of(friendship, showOnline && userService.isOnline(friendship.getFriend())))
             .toList();
     }
 
-    public List<UserView> getFriends(User user) {
+    public List<UserView> getFriends(User user, boolean onlyOnline, boolean showOnline) {
         return friendshipRepository.findByUser(user).stream()
-            .map(friendship -> UserView.minimal(friendship.getFriend()))
+            .filter(friendship -> !onlyOnline || userService.isOnline(friendship.getFriend()))
+            .map(friendship -> UserView.reduced(friendship.getFriend(), showOnline && userService.isOnline(friendship.getFriend())))
             .toList();
     }
 

@@ -1,5 +1,6 @@
 package us.lsi.dp1.newcorporder.match;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
@@ -13,9 +14,13 @@ import us.lsi.dp1.newcorporder.match.consultant.ConsultantInitializer;
 import us.lsi.dp1.newcorporder.match.consultant.ConsultantType;
 import us.lsi.dp1.newcorporder.match.player.MatchPlayer;
 import us.lsi.dp1.newcorporder.match.turn.TurnSystem;
+import us.lsi.dp1.newcorporder.match.view.MatchSummary;
 import us.lsi.dp1.newcorporder.player.Player;
 
+import java.time.Instant;
 import java.util.*;
+import java.util.function.BiConsumer;
+import java.util.stream.Collectors;
 
 public class Match {
 
@@ -23,12 +28,13 @@ public class Match {
     public static final int MAX_SHARES_IN_HAND = 6;
     public static final int SHARES_IN_OPEN_DISPLAY = 4;
 
-    public static Match create(int maxPlayers, MatchMode matchMode, MatchVisibility visibility, String inviteCode) {
+    public static Match create(int maxPlayers, MatchMode matchMode, MatchVisibility visibility, String inviteCode,
+                               BiConsumer<Match, MatchSummary> endCallback) {
         GeneralSupply generalSupply = GeneralSupply.create();
         CompanyMatrix companyMatrix = CompanyMatrix.create();
         TurnSystem turnSystem = TurnSystem.create();
 
-        return new Match(maxPlayers, matchMode, visibility, inviteCode, generalSupply, companyMatrix, turnSystem);
+        return new Match(maxPlayers, matchMode, visibility, inviteCode, generalSupply, companyMatrix, turnSystem, endCallback);
     }
 
     @Getter private final String code;
@@ -45,9 +51,15 @@ public class Match {
     @Getter private final CompanyMatrix companyMatrix;
     @Getter private final TurnSystem turnSystem;
 
+    @Getter private final Instant creationTime = Instant.now();
+    @Getter private Instant startTime;
+    @Getter private Instant endTime;
+
+    private final BiConsumer<Match, MatchSummary> endCallback;
+
     @Builder
     Match(int maxPlayers, MatchMode mode, MatchVisibility visibility, String code, GeneralSupply generalSupply,
-          CompanyMatrix companyMatrix, TurnSystem turnSystem) {
+          CompanyMatrix companyMatrix, TurnSystem turnSystem, BiConsumer<Match, MatchSummary> endCallback) {
         this.code = code;
         this.maxPlayers = maxPlayers;
         this.mode = mode;
@@ -55,10 +67,11 @@ public class Match {
         this.generalSupply = generalSupply;
         this.companyMatrix = companyMatrix;
         this.turnSystem = turnSystem;
+        this.endCallback = endCallback;
     }
 
     public void start() {
-        Preconditions.checkState(state == MatchState.WAITING, "match was already started");
+        Preconditions.checkState(state == MatchState.WAITING, "match already started");
         Preconditions.checkState(players.size() > 1, "not enough players to start the match");
 
         generalSupply.init(mode, players.size());
@@ -67,10 +80,12 @@ public class Match {
 
         turnSystem.init(this, new ArrayList<>(players.values()));
         state = MatchState.PLAYING;
+        startTime = Instant.now();
     }
 
     public void end() {
         this.state = MatchState.FINISHED;
+        this.endTime = Instant.now();
 
         Multiset<MatchPlayer> victoryPoints = this.calculateVictoryPoints();
         this.winner = victoryPoints.entrySet().stream()
@@ -78,9 +93,19 @@ public class Match {
             .map(Multiset.Entry::getElement)
             .orElseThrow();
         //TODO generate and save stats
+        /*
+        Set<MatchPlayer> winners = this.getWinners(victoryPoints);
+
+        MatchSummary summary = MatchSummary.builder()
+            .victoryPoints(victoryPoints)
+            .winners(winners)
+            .build();
+        this.endCallback.accept(this, summary);
+        */
     }
 
     public void addPlayer(MatchPlayer player) {
+        Preconditions.checkState(this.state == MatchState.WAITING, "match already started");
         Preconditions.checkState(this.players.size() < this.maxPlayers, "match is full");
         this.players.put(player.getPlayerId(), player);
     }
@@ -90,7 +115,7 @@ public class Match {
     }
 
     public boolean isHost(Player player) {
-        return Objects.equals(player.getId(), this.host.getPlayerId());
+        return this.host == null || Objects.equals(player.getId(), this.host.getPlayerId());
     }
 
     public void removePlayer(MatchPlayer player) {
@@ -101,8 +126,8 @@ public class Match {
         }
     }
 
-    public Collection<MatchPlayer> getPlayers() {
-        return players.values();
+    public List<MatchPlayer> getPlayers() {
+        return Optional.ofNullable(this.turnSystem.getPlayers()).orElseGet(() -> new ArrayList<>(this.players.values()));
     }
 
     private void initPlayers() {
@@ -126,20 +151,7 @@ public class Match {
         Multiset<MatchPlayer> points = HashMultiset.create();
 
         for (Conglomerate conglomerate : Conglomerate.values()) {
-            List<MatchPlayer> participationRanking = rankPlayerParticipation(conglomerate)
-                .subList(0, players.size() > 2 ? 2 : 1);
-
-            int numTilesControlled = companyMatrix.countTilesControlledBy(conglomerate);
-
-            for (int i = 0; i < participationRanking.size(); i++) {
-                MatchPlayer player = participationRanking.get(i);
-                points.add(player, (2 - i) * numTilesControlled);
-
-                for (CompanyType companyType : player.getSecretObjectives()) {
-                    int numTilesControlledOfCompanyType = companyMatrix.countTilesControlledByWithCompany(conglomerate, companyType);
-                    points.add(player, 2 * numTilesControlledOfCompanyType);
-                }
-            }
+            points.addAll(this.calculateVictoryPoints(conglomerate));
         }
 
         for (MatchPlayer player : this.players.values()) {
@@ -149,11 +161,43 @@ public class Match {
         return points;
     }
 
-    public List<MatchPlayer> rankPlayerParticipation(Conglomerate conglomerateType) {
+    private Multiset<MatchPlayer> calculateVictoryPoints(Conglomerate conglomerate) {
+        Multiset<MatchPlayer> points = HashMultiset.create();
+        int numTilesControlled = companyMatrix.countTilesControlledBy(conglomerate);
+
+        List<MatchPlayer> participationRanking = rankPlayerParticipation(conglomerate)
+            .subList(0, players.size() > 2 ? 2 : 1);
+
+        for (int i = 0; i < participationRanking.size(); i++) {
+            MatchPlayer player = participationRanking.get(i);
+            points.add(player, (2 - i) * numTilesControlled);
+
+            for (CompanyType companyType : player.getSecretObjectives()) {
+                int numTilesControlledOfCompanyType = companyMatrix.countTilesControlledByWithCompany(conglomerate, companyType);
+                points.add(player, 2 * numTilesControlledOfCompanyType);
+            }
+        }
+        return points;
+    }
+
+    @VisibleForTesting
+    List<MatchPlayer> rankPlayerParticipation(Conglomerate conglomerateType) {
         return this.players.values().stream()
             .sorted(Comparator.<MatchPlayer>comparingInt(player -> player.getParticipationPoints(conglomerateType))
                 .thenComparingInt(x -> x.getHeadquarter().getAgentsCaptured(conglomerateType))
                 .reversed())
             .toList();
+    }
+
+    public Set<MatchPlayer> getWinners(Multiset<MatchPlayer> victoryPoints) {
+        int maximumVictoryPoints = victoryPoints.entrySet().stream()
+            .mapToInt(Multiset.Entry::getCount)
+            .max()
+            .orElseThrow();
+
+        return victoryPoints.entrySet().stream()
+            .filter(entry -> entry.getCount() == maximumVictoryPoints)
+            .map(Multiset.Entry::getElement)
+            .collect(Collectors.toSet());
     }
 }

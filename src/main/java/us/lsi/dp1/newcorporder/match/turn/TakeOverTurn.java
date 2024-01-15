@@ -46,6 +46,7 @@ public class TakeOverTurn extends Turn {
         this.useConsultantRequest = request;
         this.state = State.TAKING_OVER;
         this.turnSystem.getCurrentPlayer().getHeadquarter().removeConsultant(request.getConsultant());
+        this.turnSystem.getCurrentPlayer().addConsultantUse(request.getConsultant());
 
         return new UseConsultantResponse(state);
     }
@@ -124,6 +125,7 @@ public class TakeOverTurn extends Turn {
 
     private void rotateCards(Conglomerate conglomerate, int amount) {
         this.turnSystem.getCurrentPlayer().getHeadquarter().rotateConglomerates(conglomerate, amount);
+        this.turnSystem.getCurrentPlayer().addAgentUses(conglomerate, amount);
     }
 
     @Override
@@ -135,6 +137,7 @@ public class TakeOverTurn extends Turn {
             Preconditions.checkState(ability.getCompanyType() == takeOverRequest.getTargetCompany().fromMatch(match).getCompany().getType(),
                 "the chosen ability must belong to the taken company type");
             ability.activate(match, takeOverRequest);
+            turnSystem.getCurrentPlayer().addAbilityUse(ability.getCompanyType());
         }
 
         this.endTurn();
@@ -167,6 +170,7 @@ public class TakeOverTurn extends Turn {
             }
         }
 
+        this.turnSystem.getCurrentPlayer().addTimeTakenOver();
         this.state = State.NONE;
         this.turnSystem.passTurn();
     }

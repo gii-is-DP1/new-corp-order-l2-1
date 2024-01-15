@@ -35,7 +35,7 @@ class MatchTest {
 
     @Test
     void givenMatchWith2Players_whenInitializingMatch_generalSupplyIsInitialized() {
-        Match match = new Match(4, MatchMode.NORMAL, MatchVisibility.PRIVATE, null, generalSupply, companyMatrix, turnSystem);
+        Match match = new Match(4, MatchMode.NORMAL, MatchVisibility.PRIVATE, null, generalSupply, companyMatrix, turnSystem, null);
         match.addPlayer(playerWithId(1));
         match.addPlayer(playerWithId(2));
         match.start();
@@ -45,7 +45,7 @@ class MatchTest {
 
     @Test
     void givenMatchWith2Players_whenInitializingMatch_companyMatrixIsInitializedWithCoupleMatchSize() {
-        Match match = new Match(4, MatchMode.NORMAL, MatchVisibility.PRIVATE, null, generalSupply, companyMatrix, turnSystem);
+        Match match = new Match(4, MatchMode.NORMAL, MatchVisibility.PRIVATE, null, generalSupply, companyMatrix, turnSystem, null);
         match.addPlayer(playerWithId(1));
         match.addPlayer(playerWithId(2));
         match.start();
@@ -56,7 +56,7 @@ class MatchTest {
     @ParameterizedTest
     @ValueSource(ints = {3, 4})
     void givenMatchWithMoreThan2Players_whenInitializingMatch_companyMatrixIsInitializedWithGroupMatchSize(int players) {
-        Match match = new Match(4, MatchMode.NORMAL, MatchVisibility.PRIVATE, null, generalSupply, companyMatrix, turnSystem);
+        Match match = new Match(4, MatchMode.NORMAL, MatchVisibility.PRIVATE, null, generalSupply, companyMatrix, turnSystem, null);
         for (int i = 0; i < players; i++) {
             match.addPlayer(playerWithId(i));
         }
@@ -67,7 +67,9 @@ class MatchTest {
 
     @Test
     void givenMatchWith2Players_whenInitializingMatch_playersAreInitialized() {
-        Match match = new Match(4, MatchMode.NORMAL, MatchVisibility.PRIVATE, null, generalSupply, companyMatrix, turnSystem);
+        Match match = new Match(4, MatchMode.NORMAL, MatchVisibility.PRIVATE, null, generalSupply, companyMatrix, turnSystem, null);
+        when(turnSystem.getPlayers()).thenCallRealMethod();
+
         List<Conglomerate> conglomerates = getRandomConglomerates(Match.INITIAL_CONGLOMERATE_SHARES_PER_PLAYER);
         when(generalSupply.takeConglomerateSharesFromDeck(Match.INITIAL_CONGLOMERATE_SHARES_PER_PLAYER))
             .thenReturn(conglomerates);
@@ -96,7 +98,7 @@ class MatchTest {
 
     @Test
     void whenRankingParticipation_calculationsAreDoneCorrectly() {
-        Match match = new Match(4, MatchMode.NORMAL, MatchVisibility.PRIVATE, null, generalSupply, companyMatrix, turnSystem);
+        Match match = new Match(4, MatchMode.NORMAL, MatchVisibility.PRIVATE, null, generalSupply, companyMatrix, turnSystem, null);
 
         MatchPlayer matchPlayer1 = MatchPlayer.builder()
             .playerId(1)
@@ -153,7 +155,7 @@ class MatchTest {
                 CompanyTile.builder().company(Company.SLIMGROTZ_INC).currentConglomerate(Conglomerate.MEGAMEDIA).agents(1).build())
             .build();
 
-        Match match = spy(new Match(4, MatchMode.NORMAL, MatchVisibility.PRIVATE, null, generalSupply, companyMatrix, turnSystem));
+        Match match = spy(new Match(4, MatchMode.NORMAL, MatchVisibility.PRIVATE, null, generalSupply, companyMatrix, turnSystem, null));
 
         MatchPlayer player1 = MatchPlayer.builder()
             .playerId(1)

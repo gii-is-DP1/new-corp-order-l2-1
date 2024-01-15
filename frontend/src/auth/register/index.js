@@ -60,8 +60,6 @@ export default function Register() {
     }
 
     function handleSubmit(body) {
-        console.log("nigga")
-
         let state = "";
 
         fetch("/api/v1/auth/signup", {
@@ -70,7 +68,7 @@ export default function Register() {
             body: JSON.stringify(body),
         })
             .then(function (response) {
-                if (response.status === 200) {
+                if (response.status === 201) {
                     const loginRequest = {
                         username: body.username,
                         password: body.password,

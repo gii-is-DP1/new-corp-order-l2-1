@@ -47,16 +47,19 @@ const AppNavbar = () => {
         roles.forEach((role) => {
             if (role === 'ADMIN') {
                 navLinks = createNavLinks([
-                    {link: '/matches', text: 'Matches'},
-                    {link: '/moderation', text: 'Moderation'},
-                    {link: '/achievements', text: 'Achievements'},
+                    {link: '/rankings/games_won', text: 'Rankings'},
+                    {link: '/metrics', text: 'Metrics'},
+                    {link: '/admin/matches', text: 'Matches'},
+                    {link: '/admin/moderation', text: 'Moderation'},
+                    {link: '/admin/achievements', text: 'Achievements'},
                     {link: `/user/${username}`, isProfilePicture: true},
                 ]);
             }
             if (role === 'USER') {
                 navLinks = createNavLinks([
+                    {link: '/rankings/games_won', text: 'Rankings'},
+                    {link: '/metrics', text: 'Metrics'},
                     {link: `/user/${username}/friends`, text: 'Friends'},
-                    {link: `/user/${username}/achievements`, text: 'Achievements'},
                     {link: `/user/${username}`, isProfilePicture: true},
                     {link: '', text: 'Play now', isButton: true},
                 ]);

@@ -1,24 +1,28 @@
 import AppNavbar from "../AppNavbar";
-import {black, grayDarker, white} from "../util/Colors";
+import {black, gray, grayDarker, white} from "../util/Colors";
 import ProfilePicture from "../components/ProfilePicture";
 import {Title} from "../components/Title";
 import Button, {ButtonType} from "../components/Button";
 import {Text} from "../components/Text";
 import {PressableText} from "../components/PressableText";
-import List from "../components/List";
 import React, {useEffect, useState} from "react";
-import ListLine from "../components/ListLine";
-import {Subtitle} from "../components/Subtitle";
 import fetchAuthenticated from "../util/fetchAuthenticated";
 import {useNavigate, useParams} from "react-router-dom";
 import tokenService from "../services/token.service";
 import {FriendsTab} from "./FriendsTab";
 import {propics} from "../match/data/MatchEnums";
+import {LastMatchesTab} from "./LastMatchesTab";
+import {AchievementsTab} from "./achievement/AchievementsTab";
+import {EditProfileTab} from "./EditProfileTab";
+import {ChangePasswordTab} from "./ChangePasswordTab";
 
 export function ProfilePage() {
     const [userData, setUserData] = useState(null)
+    const [achievementsData, setAchievementsData] = useState(null)
+    const [completedAchievementsData, setCompletedAchievementsData] = useState(null)
     const {username, select} = useParams()
     const navigate = useNavigate()
+    const [userStats, setUserStats] = useState(null)
 
     if (!select) {
         navigate(`/user/${username}/lastMatches`)
@@ -33,11 +37,41 @@ export function ProfilePage() {
         }
     };
 
+    const fetchAchievementsData = async () => {
+        try {
+            setAchievementsData(await fetchAuthenticated(`/api/v1/achievements`, "GET")
+                .then(async response => await response.json()));
+        } catch (error) {
+            navigate('')
+        }
+    };
+
+    const fetchCompletedAchievementsData = async () => {
+        try {
+            setCompletedAchievementsData(await fetchAuthenticated(`/api/v1/achievements/completed/${username}`, "GET")
+                .then(async response => await response.json()));
+        } catch (error) {
+            navigate('')
+        }
+    };
+
+    const fetchUserStats = async () => {
+        try {
+            setUserStats(await fetchAuthenticated(`/api/v1/players/${username}/stats`, "GET")
+                .then(async response => await response.json()));
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     useEffect(() => {
         fetchUserData()
+        fetchAchievementsData()
+        fetchCompletedAchievementsData()
+        fetchUserStats()
     }, [select, username]);
 
-    if (!userData) {
+    if (!userData || !userStats) {
         return <></>
     }
 
@@ -76,29 +110,6 @@ export function ProfilePage() {
         gap: "5px"
     }
 
-    let matchItems = []
-    for (let i = 1; i < 20; i++) {
-        matchItems.push(
-            <ListLine sideContent={(
-                <Button style={{}} buttonType={ButtonType.secondaryLight}>
-                    View Stats
-                </Button>)}>
-                <Subtitle>· Match #{i} |</Subtitle>
-                <Subtitle>Match State |</Subtitle>
-                <Subtitle>Num players</Subtitle>
-            </ListLine>
-        )
-    }
-
-    let achievementsItems = []
-    for (let i = 1; i < 20; i++) {
-        achievementsItems.push(
-            <ListLine sideContent={<Button buttonType={ButtonType.primary}>Logrado? si: no </Button>}>
-                <Subtitle>· Achievement #{i} |</Subtitle>
-                <Subtitle> Blablabla</Subtitle>
-            </ListLine>
-        )
-    }
 
     return (
         <div style={{display: "flex", flexDirection: "column", height: "100%", backgroundColor: black}}>
@@ -119,14 +130,22 @@ export function ProfilePage() {
                             Logout
                         </Button>
                     </div>}
+                    {isMe() && <div style={{alignItems: "none", display: "flex"}}>
+                        <PressableText
+                            style={{color: gray, fontSize: "18px", textTransform: "none", textDecoration: "underline"}}
+                            onClick={() => navigate(`/user/${username}/editPassword`)}>
+                            Change Password
+                        </PressableText>
+                    </div>}
                     <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
-                        <Text style={{color: grayDarker}}>000 victories</Text>
-                        <Text style={{color: grayDarker}}>000 matches played</Text>
-                        <Text style={{color: grayDarker}}>more relevant stats...</Text>
+                        <Text style={{color: grayDarker}}>{userStats.totalMatches} matches played</Text>
+                        <Text style={{color: grayDarker}}>{userStats.wins} victories</Text>
+                        <Text style={{color: grayDarker}}>{userStats.ties} ties</Text>
+                        <Text style={{color: grayDarker}}>{userStats.loses} loses</Text>
                     </div>
                 </section>
                 <section style={columnStyle}>
-                    <div style={{display: "flex", gap: "25px"}}>
+                    {select !== "edit" && select !== "editPassword" && <div style={{display: "flex", gap: "25px"}}>
                         <PressableText style={{color: white}}
                                        underlined={select === "lastMatches"}
                                        onClick={() => navigate(`/user/${userData.username}/lastMatches`)}>
@@ -142,12 +161,13 @@ export function ProfilePage() {
                                        onClick={() => navigate(`/user/${userData.username}/achievements`)}>
                             Achievements
                         </PressableText>
-                    </div>
+                    </div>}
                     <div>
                         {select === "lastMatches" &&
-                            <List style={rowListStyle}>
-                                {matchItems}
-                            </List>}
+                            <LastMatchesTab username={username}
+                                            navigate={navigate}
+                                            rowListStyle={rowListStyle}
+                            />}
 
                         {select === "friends" &&
                             <FriendsTab userData={userData}
@@ -158,9 +178,32 @@ export function ProfilePage() {
                             />}
 
                         {select === "achievements" &&
-                            <List style={rowListStyle}>
-                                {achievementsItems}
-                            </List>}
+                            <AchievementsTab achievementsCompleatedData={completedAchievementsData}
+                                             allAchievementsData={achievementsData}
+                                             isMe={isMe()}
+                                             rowListStyle={rowListStyle}
+                                             username={username}
+
+                            />}
+
+                        {select === "edit" &&
+                            <EditProfileTab userData={userData}
+                                            username={username}
+                                            navigate={navigate}
+                                            oldEmail={userData.email}
+
+
+                            />}
+
+                        {select === "editPassword" &&
+                            <ChangePasswordTab userData={userData}
+                                               username={username}
+                                               navigate={navigate}
+                                               oldEmail={userData.email}
+                                               editPassword={true}
+
+                            />}
+
                     </div>
                 </section>
             </div>

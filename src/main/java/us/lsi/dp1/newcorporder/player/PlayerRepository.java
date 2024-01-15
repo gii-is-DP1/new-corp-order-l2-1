@@ -8,4 +8,6 @@ public interface PlayerRepository extends CrudRepository<Player, Integer> {
 
     Optional<Player> findByUserId(Integer integer);
 
+    Optional<Player> findByUserUsernameIgnoreCase(String username);
+
 }

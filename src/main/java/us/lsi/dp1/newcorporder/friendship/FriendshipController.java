@@ -40,7 +40,7 @@ public class FriendshipController {
         User user = userService.findUser(username);
         RestPreconditions.checkNotNull(user, "User", "user", username);
 
-        return friendshipService.getFriendships(user);
+        return friendshipService.getFriendships(user, user.equals(userService.findCurrentUser()));
     }
 
     @Operation(

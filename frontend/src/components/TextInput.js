@@ -1,9 +1,9 @@
-import {useRef, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import * as Colors from "../util/Colors";
 import SendIcon from '@mui/icons-material/Send';
 
-export default function TextInput({name, placeholder, onClick, type, style}) {
-    const [inputValue, setInputValue] = useState('');
+export default function TextInput({name, placeholder, onClick, type, style, minValue, maxValue, defaultValue}) {
+    const [inputValue, setInputValue] = useState(defaultValue?(defaultValue):(""));
     const inputRef = useRef(null);
 
     const divStyle = {
@@ -32,6 +32,7 @@ export default function TextInput({name, placeholder, onClick, type, style}) {
         padding: "10px"
     }
 
+
     const handleEvent = async (e) => {
         if (inputValue !== "" && (e.key === 'Enter' || e.type === 'click') && onClick) {
             e.preventDefault();
@@ -55,6 +56,8 @@ export default function TextInput({name, placeholder, onClick, type, style}) {
                        onChange={e => setInputValue(e.target.value)}
                        ref={inputRef}
                        onKeyDown={handleEvent}
+                       min={minValue}
+                       max={maxValue}
                 />
                 {onClick &&
                     <button onClick={handleEvent} style={buttonStyle}>

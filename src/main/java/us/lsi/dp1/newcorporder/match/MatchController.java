@@ -4,12 +4,15 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import us.lsi.dp1.newcorporder.auth.Authenticated;
 import us.lsi.dp1.newcorporder.bind.FromPathVariable;
 import us.lsi.dp1.newcorporder.match.payload.response.MatchAssignmentResponse;
+import us.lsi.dp1.newcorporder.match.payload.response.MatchResponse;
 import us.lsi.dp1.newcorporder.match.view.MatchView;
 import us.lsi.dp1.newcorporder.player.Player;
 import us.lsi.dp1.newcorporder.player.PlayerService;
@@ -42,6 +45,19 @@ public class MatchController {
     }
 
     @Operation(
+        summary = "Get last matches",
+        tags = "get"
+    )
+    @ApiResponse(
+        responseCode = "200",
+        description = "The last matches"
+    )
+    @GetMapping
+    public List<MatchResponse> getMatches(@PageableDefault Pageable pageable) {
+        return matchService.getMatches(pageable);
+    }
+
+    @Operation(
         summary = "Create a private match",
         description = "Create a private match",
         tags = "post"
@@ -68,9 +84,9 @@ public class MatchController {
     )
     @PostMapping("/{match}/invite")
     @ResponseStatus(HttpStatus.CREATED)
-    public void inviteFriend(@Authenticated Player player,
-                             @RequestParam("target") List<String> friends,
-                             @FromPathVariable Match match) {
+    public void inviteFriends(@Authenticated Player player,
+                              @RequestParam("target") List<String> friends,
+                              @FromPathVariable Match match) {
         friends.forEach(friendUsername -> {
             User friend = userService.findUser(friendUsername);
             RestPreconditions.checkNotNull(friend, "User", "username", friendUsername);
@@ -86,7 +102,7 @@ public class MatchController {
     )
     @ApiResponse(
         responseCode = "200",
-        description = "The selected quick play"
+        description = "The assigned match"
     )
     @PostMapping("/quick")
     public MatchAssignmentResponse quickPlay(@Authenticated Player player,
@@ -103,6 +119,10 @@ public class MatchController {
     @ApiResponse(
         responseCode = "200",
         description = "The requested match view"
+    )
+    @ApiResponse(
+        responseCode = "403",
+        description = "You are not friends with all the players involved"
     )
     @GetMapping("/{match}/{sdjosof}")
     public MatchView getMatch(@Authenticated Player player, @FromPathVariable Match match) {

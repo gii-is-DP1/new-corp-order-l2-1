@@ -16,42 +16,48 @@ import java.util.Set;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserView {
 
-    public static UserView minimal(User user) {
-        return UserView.of(user, true, false);
+    public static UserView reduced(User user) {
+        return reduced(user, false);
+    }
+
+    public static UserView reduced(User user, boolean online) {
+        return UserView.of(user, online).build();
     }
 
     public static UserView expanded(User user, User viewer) {
-        return UserView.of(user, false, user.equals(viewer) || viewer.hasAnyAuthority("ADMIN"));
+        return expanded(user, viewer, false);
     }
 
-    public static UserView of(User user, boolean minimal, boolean includeSensitiveData) {
-        UserViewBuilder viewBuilder = UserView.builder()
-            .username(user.getUsername())
-            .picture(user.getPicture());
+    public static UserView expanded(User user, User viewer, boolean online) {
+        UserViewBuilder builder = UserView.of(user, online)
+            .firstSeen(user.getFirstSeen())
+            .lastSeen(user.getLastSeen())
+            .friends(user.getFriendships().stream().map(FriendshipView::of).toList());
 
-        if (!minimal) {
-            viewBuilder
+        if (user.equals(viewer) || viewer.hasAnyAuthority("ADMIN")) {
+            builder
                 .authority(user.getAuthority().getName())
-                .firstSeen(user.getFirstSeen())
-                .lastSeen(user.getLastSeen())
-                .friends(user.getFriendships().stream().map(FriendshipView::of).toList());
-        }
-
-        if (includeSensitiveData) {
-            viewBuilder
                 .email(user.getEmail())
                 .sentFriendshipRequests(user.getSentFriendshipRequests().stream().map(request -> FriendshipView.of(request, user)).toList())
                 .receivedFriendshipRequests(user.getReceivedFriendshipRequests().stream().map(request -> FriendshipView.of(request, user)).toList())
                 .notifications(user.getNotifications());
         }
 
-        return viewBuilder.build();
+        return builder.build();
+    }
+
+    private static UserViewBuilder of(User user, boolean online) {
+        return UserView.builder()
+            .username(user.getUsername())
+            .picture(user.getPicture())
+            .online(online);
     }
 
     private String username;
     private String email;
     private String authority;
     private Integer picture;
+    private boolean online;
 
     private Instant firstSeen;
     private Instant lastSeen;
@@ -64,6 +70,12 @@ public class UserView {
 
     @JsonInclude()
     public Integer getPicture() {
-        return picture;
+              return picture;
     }
+    
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+    public boolean isOnline() {
+        return online;
+    }
+
 }

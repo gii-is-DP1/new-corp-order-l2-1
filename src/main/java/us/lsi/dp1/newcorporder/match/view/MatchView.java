@@ -13,6 +13,7 @@ import java.util.List;
 
 @Data
 @Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class MatchView {
 
     public static MatchView of(Match match) {
@@ -43,7 +44,7 @@ public class MatchView {
     private static List<OpponentView> buildOpponents(Match match, MatchPlayer player) {
         return match.getPlayers().stream()
             .filter(opponent -> !opponent.equals(player))
-            .map(OpponentView::of)
+            .map(opponent -> OpponentView.of(opponent, match.getState()))
             .toList();
     }
 
@@ -62,13 +63,8 @@ public class MatchView {
 
     private final Boolean isWinner;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonInclude
     public Integer getHost() {
         return host;
-    }
-
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    public OwnPlayerView getPlayer() {
-        return player;
     }
 }

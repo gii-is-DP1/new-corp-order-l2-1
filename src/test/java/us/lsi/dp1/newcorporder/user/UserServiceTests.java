@@ -7,7 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.transaction.annotation.Transactional;
 import us.lsi.dp1.newcorporder.authority.AuthorityService;
-import us.lsi.dp1.newcorporder.exceptions.ResourceNotFoundException;
+import us.lsi.dp1.newcorporder.exception.ResourceNotFoundException;
 
 import java.util.Collection;
 import java.util.List;
@@ -45,7 +45,7 @@ class UserServiceTests {
 	@Test
 	void shouldFindAllUsers() {
 		List<User> users = (List<User>) this.userService.findAll();
-        assertEquals(6, users.size());
+        assertEquals(12, users.size());
 	}
 
 	@Test
@@ -57,7 +57,7 @@ class UserServiceTests {
 	@Test
 	void shouldFindUsersByAuthority() {
         List<User> users = (List<User>) this.userService.findAllByAuthority("USER");
-        assertEquals(5, users.size());
+        assertEquals(11, users.size());
 
 		List<User> admins = (List<User>) this.userService.findAllByAuthority("ADMIN");
 		assertEquals(1, admins.size());

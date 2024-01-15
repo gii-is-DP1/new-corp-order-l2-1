@@ -58,12 +58,6 @@
             <name>Michelangelo Bertoli</name>
             <email>micber1@alum.us.es</email>
         </developer>
-        <developer>
-            <name>Victoria del Carmen Ruiz Delgado</name>
-            <email>vicruidel1@alum.us.es</email>
-            <url>https://es.wikipedia.org/wiki/Venecia</url>
-        </developer>
-
     </developers>
 
     <dependencies>

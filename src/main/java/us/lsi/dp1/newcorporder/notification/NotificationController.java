@@ -3,6 +3,7 @@ package us.lsi.dp1.newcorporder.notification;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.web.bind.annotation.*;
+import us.lsi.dp1.newcorporder.user.User;
 import us.lsi.dp1.newcorporder.user.UserService;
 import us.lsi.dp1.newcorporder.util.RestPreconditions;
 
@@ -30,7 +31,10 @@ public class NotificationController {
     )
     @GetMapping
     public List<Notification> getNotifications() {
-        return notificationService.getNonDismissedNotifications(userService.findCurrentUser());
+        User currentUser = userService.findCurrentUser();
+
+        userService.updateLastPresence(currentUser);
+        return notificationService.getNonDismissedNotifications(currentUser);
     }
 
     @Operation(
@@ -42,7 +46,7 @@ public class NotificationController {
         description = "The notification was dismissed successfully"
     )
     @DeleteMapping("/{id}")
-    public void getNotifications(@PathVariable Integer id) {
+    public void getNotification(@PathVariable Integer id) {
         Notification notification = notificationService.getNotification(id);
         RestPreconditions.checkAccess(notification.getUser().equals(userService.findCurrentUser()));
 

@@ -31,6 +31,14 @@ class TokenService {
         window.localStorage.setItem("user", JSON.stringify(user));
     }
 
+    updateUsername(newUsername) {
+        const oldUser = this.getUser();
+        if (oldUser) {
+            const newUser = {...oldUser, username: newUsername};
+            this.setUser(newUser);
+        }
+    }
+
     removeUser() {
         window.localStorage.removeItem("user");
         window.localStorage.removeItem("jwt");

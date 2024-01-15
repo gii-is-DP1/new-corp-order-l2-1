@@ -14,7 +14,7 @@ public class TurnView {
     public static TurnView of(TurnSystem turnSystem) {
         Turn turn = turnSystem.getCurrentTurn();
 
-        TurnView view = TurnView.builder()
+        TurnViewBuilder builder = TurnView.builder()
             .finalRound(turnSystem.isFinalRound())
             .player(turnSystem.getCurrentPlayer() != null ? turnSystem.getCurrentPlayer().getPlayerId() : null)
             .action(turn == null ? null : turn.getAction())
@@ -22,11 +22,17 @@ public class TurnView {
             .usingConsultant(turn == null ? null : turn.getChosenConsultant())
             .build();
 
-        if (turn instanceof TakeOverTurn takeOverTurn) {
-            view.setTakeOverProperties(takeOverTurn);
+        if (turn != null) {
+            builder.action(turn.getAction())
+                .state(turn.getState())
+                .usingConsultant(turn.getChosenConsultant());
         }
 
-        return view;
+        if (turn instanceof TakeOverTurn takeOverTurn && takeOverTurn.getTakeOverRequest() != null) {
+            builder.targetCompany(takeOverTurn.getTakeOverRequest().getTargetCompany());
+        }
+
+        return builder.build();
     }
 
     private final boolean finalRound;
@@ -35,16 +41,10 @@ public class TurnView {
     private final TurnState state;
 
     private final ConsultantType usingConsultant;
-    private CompanyTileReference targetCompany;
+    private final CompanyTileReference targetCompany;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public CompanyTileReference getTargetCompany() {
         return targetCompany;
-    }
-
-    private void setTakeOverProperties(TakeOverTurn turn) {
-        if (turn.getTakeOverRequest() != null) {
-            this.targetCompany = turn.getTakeOverRequest().getTargetCompany();
-        }
     }
 }

@@ -14,4 +14,5 @@ public class EditProfileRequest {
 
     private String password = "";
 
+    private String picture = "";
 }

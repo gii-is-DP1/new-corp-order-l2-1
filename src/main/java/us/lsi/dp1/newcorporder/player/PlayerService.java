@@ -6,7 +6,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import us.lsi.dp1.newcorporder.auth.ApplicationUserDetails;
-import us.lsi.dp1.newcorporder.exceptions.ResourceNotFoundException;
+import us.lsi.dp1.newcorporder.exception.ResourceNotFoundException;
 
 @Service
 public class PlayerService {
@@ -17,12 +17,10 @@ public class PlayerService {
         this.playerRepository = playerRepository;
     }
 
-    @Transactional(readOnly = true)
     public Iterable<Player> findAll() {
         return this.playerRepository.findAll();
     }
 
-    @Transactional(readOnly = true)
     public Player findById(Integer id) {
         return this.playerRepository
             .findById(id)
@@ -36,6 +34,11 @@ public class PlayerService {
             .orElseThrow(() -> new ResourceNotFoundException("Player", "id", id));
     }
 
+
+    public Player findByUsername(String username) {
+        return this.playerRepository.findByUserUsernameIgnoreCase(username)
+            .orElseThrow(() -> new ResourceNotFoundException("Player", "username", username));
+    }
 
     @Transactional
     public Player save(@Valid Player player) throws DataAccessException {

@@ -18,6 +18,7 @@ package us.lsi.dp1.newcorporder.user;
 import com.google.common.base.Preconditions;
 import jakarta.validation.Valid;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,10 +27,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import us.lsi.dp1.newcorporder.auth.ApplicationUserDetails;
 import us.lsi.dp1.newcorporder.authority.AuthorityService;
-import us.lsi.dp1.newcorporder.exceptions.ResourceNotFoundException;
+import us.lsi.dp1.newcorporder.exception.ResourceNotFoundException;
+import us.lsi.dp1.newcorporder.user.payload.request.EditPasswordRequest;
 import us.lsi.dp1.newcorporder.user.payload.request.EditProfileRequest;
+import us.lsi.dp1.newcorporder.user.payload.response.UserView;
 
 import java.time.Instant;
+import java.util.List;
 
 @Service
 public class UserService {
@@ -38,15 +42,23 @@ public class UserService {
 
     private final AuthorityService authorityService;
     private final UserRepository userRepository;
+    private final OnlineUserRepository onlineUserRepository;
 
-    public UserService(PasswordEncoder passwordEncoder, AuthorityService authorityService, UserRepository userRepository) {
+    public UserService(PasswordEncoder passwordEncoder, AuthorityService authorityService, UserRepository userRepository, OnlineUserRepository onlineUserRepository) {
         this.passwordEncoder = passwordEncoder;
         this.authorityService = authorityService;
         this.userRepository = userRepository;
+        this.onlineUserRepository = onlineUserRepository;
     }
 
     public Iterable<User> findAll() {
         return userRepository.findAll();
+    }
+
+    public List<UserView> getAllUsers(String filter, Pageable pageable) {
+        return userRepository.findByUsernameContainsIgnoreCase(filter, pageable).stream()
+            .map(UserView::reduced)
+            .toList();
     }
 
     public Iterable<User> findAllByAuthority(String authority) {
@@ -96,23 +108,40 @@ public class UserService {
 
     @Transactional
     public User editProfile(User user, @Valid EditProfileRequest request) {
+        Preconditions.checkState(passwordEncoder.matches(request.getPassword(), user.getPassword()), "wrong password!");
+
         if (!request.getUsername().isBlank()) {
             this.changeUsername(user, request.getUsername());
-        }
-
-        if (!request.getPassword().isBlank()) {
-            this.changePassword(user, request.getPassword());
         }
 
         if (!request.getEmail().isBlank()) {
             this.changeEmail(user, request.getEmail());
         }
 
+        if (!request.getPicture().isBlank()) {
+            user.setPicture(request.getPicture());
+        }
+
+        return this.saveUser(user);
+    }
+
+    @Transactional
+    public User editPassword(User user, @Valid EditPasswordRequest request) {
+        Preconditions.checkState(passwordEncoder.matches(request.getOldPassword(), user.getPassword()), "wrong password!");
+        this.changePassword(user, request.getNewPassword());
         return this.saveUser(user);
     }
 
     public boolean existsUser(String username) {
         return userRepository.existsByUsernameIgnoreCase(username);
+    }
+
+    public void updateLastPresence(User user) {
+        onlineUserRepository.updateLastPresence(user);
+    }
+
+    public boolean isOnline(User user) {
+        return onlineUserRepository.isOnline(user);
     }
 
     public void changeUsername(User user, String username) {

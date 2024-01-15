@@ -36,6 +36,14 @@ public class MatchPlayer {
     private final List<CompanyType> secretObjectives;
     @Getter private final Headquarter headquarter;
 
+    @Getter private int timesPlotted;
+    @Getter private int timesInfiltrated;
+    @Getter private int timesTakenOver;
+    @Getter private final Multiset<CompanyType> abilityUses = HashMultiset.create();
+    @Getter private final Multiset<Conglomerate> shareUses = HashMultiset.create();
+    @Getter private final Multiset<Conglomerate> agentUses = HashMultiset.create();
+    @Getter private final Multiset<ConsultantType> consultantUses = HashMultiset.create();
+
     public void init(ConsultantType initialConsultant, List<Conglomerate> initialHand) {
         this.hand.addAll(initialHand);
         this.headquarter.addConsultant(initialConsultant);
@@ -77,6 +85,34 @@ public class MatchPlayer {
 
     public int getParticipationPoints(Conglomerate conglomerateType) {
         return headquarter.getTotalConglomeratesShares(conglomerateType) +
-            (headquarter.getAgentsCaptured(conglomerateType) * 2);
+               (headquarter.getAgentsCaptured(conglomerateType) * 2);
+    }
+
+    public void addTimePlotted() {
+        this.timesPlotted++;
+    }
+
+    public void addTimeInfiltrated() {
+        this.timesInfiltrated++;
+    }
+
+    public void addTimeTakenOver() {
+        this.timesTakenOver++;
+    }
+
+    public void addAbilityUse(CompanyType type) {
+        this.abilityUses.add(type);
+    }
+
+    public void addShareUses(Conglomerate conglomerate, int uses) {
+        this.shareUses.add(conglomerate, uses);
+    }
+
+    public void addAgentUses(Conglomerate conglomerate, int uses) {
+        this.agentUses.add(conglomerate);
+    }
+
+    public void addConsultantUse(ConsultantType type) {
+        this.consultantUses.add(type);
     }
 }

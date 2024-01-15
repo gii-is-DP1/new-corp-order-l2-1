@@ -70,12 +70,14 @@ export function FriendsTab({userData, navigate, fetchUserData, isMe, rowListStyl
         return (
             <ListLine sideContent={(
                 <>
-                    <Button
-                        onClick={() => fetchAuthenticated(`/api/v1/users/friendships/${request.username}`, "DELETE")
-                            .then(() => fetchUserData())}
-                        buttonType={ButtonType.danger}>
-                        Delete
-                    </Button>
+                    {!isMe &&
+                        <Button
+                            onClick={() => fetchAuthenticated(`/api/v1/users/friendships/${request.username}`, "DELETE")
+                                .then(() => fetchUserData())}
+                            buttonType={ButtonType.danger}>
+                            Delete
+                        </Button>
+                    }
                     <Button onClick={() => navigate(`/user/${request.username}`)}
                             buttonType={ButtonType.secondaryLight}>
                         Visit profile
@@ -83,9 +85,14 @@ export function FriendsTab({userData, navigate, fetchUserData, isMe, rowListStyl
                 </>)}
             >
                 <ProfilePicture url={propics[request.picture]} style={{height: "30px", width: "30px"}}/>
-                <Text>{request.username} | </Text>
-                {request.online && <Text style={{color: successBackground}}>Online</Text>}
-                {!request.online && <Text style={{color: dangerBackground}}>Offline</Text>}
+                <Text>{request.username}</Text>
+                {isMe() &&
+                    <>
+                        <Text> | </Text>
+                        {request.online && <Text style={{color: successBackground}}>Online</Text>}
+                        {!request.online && <Text style={{color: dangerBackground}}>Offline</Text>}
+                    </>
+                }
             </ListLine>
         )
     })

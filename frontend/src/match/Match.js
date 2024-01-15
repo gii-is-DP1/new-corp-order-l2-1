@@ -34,40 +34,10 @@ export default function Match() {
             const wasEmpty = matchData === null;
             const wasWaiting = wasEmpty ? null : matchData.state === "WAITING"
             const wasPlaying = wasEmpty ? false : matchData.playing;
-            /*
-                        let handCount = 0;
 
-                        if(!wasEmpty) {
-                            if (matchData.player.hand[getConglomerateName(conglomerate.OMNICORP)] !== undefined)
-                                handCount += matchData.player.hand[getConglomerateName(conglomerate.OMNICORP)];
-                            if (matchData.player.hand[getConglomerateName(conglomerate.MEGAMEDIA)] !== undefined)
-                                handCount += matchData.player.hand[getConglomerateName(conglomerate.MEGAMEDIA)];
-                            if (matchData.player.hand[getConglomerateName(conglomerate.TOTAL_ENTERTAINMENT)] !== undefined)
-                                handCount += matchData.player.hand[getConglomerateName(conglomerate.TOTAL_ENTERTAINMENT)];
-                            if (matchData.player.hand[getConglomerateName(conglomerate.GENERIC_INC)] !== undefined)
-                                handCount += matchData.player.hand[getConglomerateName(conglomerate.GENERIC_INC)];
-                        }
-            */
             matchData = (await fetchAuthenticated(`/api/v1/matches/${id}`, "GET")
                 .then(async response => await response.json()));
 
-/*
-            let newHandCount = 0;
-
-            if(matchData.player.hand[getConglomerateName(conglomerate.OMNICORP)] !== undefined)
-                newHandCount += matchData.player.hand[getConglomerateName(conglomerate.OMNICORP)];
-            if(matchData.player.hand[getConglomerateName(conglomerate.MEGAMEDIA)] !== undefined)
-                newHandCount += matchData.player.hand[getConglomerateName(conglomerate.MEGAMEDIA)];
-            if(matchData.player.hand[getConglomerateName(conglomerate.TOTAL_ENTERTAINMENT)] !== undefined)
-                newHandCount += matchData.player.hand[getConglomerateName(conglomerate.TOTAL_ENTERTAINMENT)];
-            if(matchData.player.hand[getConglomerateName(conglomerate.GENERIC_INC)] !== undefined)
-                newHandCount += matchData.player.hand[getConglomerateName(conglomerate.GENERIC_INC)];
-*/
-            //console.log(handCount);
-           // console.log(newHandCount);
-
-           // const isInDoneState = getCurrentFrontendState(startingState) === DoneState;
-           // const mustUpdateCards = isInDoneState && handCount !== newHandCount;
             const isPLaying = matchData.state === "PLAYING";
             const startedPlayingGame = wasWaiting && isPLaying;
             const startedPlayingTurn =  !wasPlaying && matchData.playing;
@@ -139,7 +109,6 @@ function setContext(id, matchData, propic) {
         return {propic: propics[opponent.picture], username: opponent.username, id: opponent.playerId}
     }));
     matchInfo.isWinner = null;
-    //console.log(matchInfo);
 
     if (matchData.state === "PLAYING") {
         startingState.isPlaying = matchData.playing;

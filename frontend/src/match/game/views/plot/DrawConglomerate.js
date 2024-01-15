@@ -19,10 +19,6 @@ export function DrawConglomerate(isFirst) {
     const picker = pickOneCard(openDisplayAndDeck, selected => {
         const index = selected[0];
         const selectedConglomerate = context.openDisplay.values[index];
-        if (isFirst)
-            context.state.plot.firstConglomerate = selectedConglomerate;
-        else
-            context.state.plot.secondConglomerate = selectedConglomerate;
 
         let plotRequest;
         if (selected[0] === openDisplayAndDeck.length - 1)
@@ -40,9 +36,17 @@ export function DrawConglomerate(isFirst) {
                     .then(async response => await response.json())
                     .then(r =>
                     {
-                        context.state.game.generalSupply.openDisplay[r.shareTaken]--;
-                        context.state.game.player.hand[r.shareTaken]++;
-                        context.update();
+                        if(context.state.game.generalSupply.openDisplay[r.shareTaken] !== undefined)
+                        {
+                            context.state.game.generalSupply.openDisplay[r.shareTaken]--;
+                            context.state.game.player.hand[r.shareTaken]++;
+                            context.update();
+                        }
+
+                        if (isFirst)
+                            context.state.plot.firstConglomerate = selectedConglomerate;
+                        else
+                            context.state.plot.secondConglomerate = selectedConglomerate;
                     });
             } catch (error) {
                 console.log(error.message)

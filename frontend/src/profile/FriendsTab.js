@@ -37,7 +37,7 @@ export function FriendsTab({userData, navigate, fetchUserData, isMe, rowListStyl
         } catch (error) {
             setFormMessage(buildErrorComponent(error.message))
         }
-        setTimeout(() => setFormMessage(("")), 2000)
+        setTimeout(() => setFormMessage(("")), 500)
     }
 
     let friendsRequest = userData.receivedFriendshipRequests?.map(request => {
@@ -82,13 +82,17 @@ export function FriendsTab({userData, navigate, fetchUserData, isMe, rowListStyl
                     </Button>
                 </>)}
             >
-                <ProfilePicture url={request.picture} style={{height: "30px", width: "30px"}}/>
+                <ProfilePicture url={propics[request.picture]} style={{height: "30px", width: "30px"}}/>
                 <Text>{request.username} | </Text>
                 {request.online && <Text style={{color: successBackground}}>Online</Text>}
                 {!request.online && <Text style={{color: dangerBackground}}>Offline</Text>}
             </ListLine>
         )
     })
+
+    if (!friendsItems) {
+        return <></>
+    }
 
     return (
         <div style={{width: "100%", display: "flex", flexDirection: "column"}}>
@@ -114,7 +118,8 @@ export function FriendsTab({userData, navigate, fetchUserData, isMe, rowListStyl
             <List style={rowListStyle}>
                 {friendsItems}
             </List>
-
+            {friendsItems.length === 0 &&
+                <Text style={{display: "flex", justifyContent: "center", color: white}}>No matches played yet</Text>}
         </div>
     )
 }

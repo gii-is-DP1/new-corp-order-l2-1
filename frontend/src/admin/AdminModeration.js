@@ -12,6 +12,7 @@ import ProfilePicture from "../components/ProfilePicture";
 import {useNavigate} from "react-router-dom";
 import {Pressable} from "../components/Pressable";
 import {Text} from "../components/Text";
+import {propics} from "../match/data/MatchEnums";
 
 export function AdminModeration() {
     const [usersData, setUsersData] = useState([])
@@ -58,7 +59,7 @@ export function AdminModeration() {
                 </Button>
             </div>
         )}>
-            <ProfilePicture url={user.picture} style={{width: "40px", height: "40px"}}/>
+            <ProfilePicture url={propics[user.picture]} style={{width: "40px", height: "40px"}}/>
             <Subtitle>{user.username}</Subtitle>
         </ListLine>
     })

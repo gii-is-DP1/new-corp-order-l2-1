@@ -237,6 +237,19 @@ class UserController {
         return friendshipService.getFriends(user, online, userService.findCurrentUser().equals(user));
     }
 
+    @Operation(
+        summary = "Get the friend requests of the given user",
+        description = "Get the friend requests of the given user",
+        tags = "get"
+    )
+    @ApiResponse(
+        responseCode = "200",
+        description = "The user's friend requests"
+    )
+    @ApiResponse(
+        responseCode = "404",
+        description = "User not found"
+    )
     @PutMapping("/{username}/{propic}")
     public void updatePropic(@PathVariable String username, @PathVariable Integer propic){
         userService.changePropic(userService.findUser(username), propic);

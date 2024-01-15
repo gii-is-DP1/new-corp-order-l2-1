@@ -39,7 +39,7 @@ export function ProfilePage() {
 
     const fetchAchievementsData = async () => {
         try {
-            setAchievementsData(await fetchAuthenticated(`/api/v1/achievements`, "GET")
+            setAchievementsData(await fetchAuthenticated(`/api/v1/achievements?name=`, "GET")
                 .then(async response => await response.json()));
         } catch (error) {
             navigate('')

@@ -1,17 +1,6 @@
-import fetchAuthenticated from "../../util/fetchAuthenticated";
-import {buildErrorComponent, buildSuccessComponent} from "../../util/formUtil";
+
 import React, {useEffect, useState} from "react";
-import ListLine from "../../components/ListLine";
-import Button, {ButtonType} from "../../components/Button";
-import ProfilePicture from "../../components/ProfilePicture";
-import {Text} from "../../components/Text";
 import List from "../../components/List";
-import {black, grayDarker, orange, white} from "../../util/Colors";
-import TextInput from "../../components/TextInput";
-import AchievementPicture from "../../components/AchievementPicture";
-import {Subtitle} from "../../components/Subtitle";
-import * as Colors from "../../util/Colors";
-import {Title} from "../../components/Title";
 import {AchievementExpandedView} from "./AchievementExpandedView";
 
 export function AchievementsTab({achievementsCompleatedData, allAchievementsData, isMe, rowListStyle, username}) {

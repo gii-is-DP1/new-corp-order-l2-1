@@ -1,5 +1,7 @@
 package us.lsi.dp1.newcorporder.auth;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -34,11 +36,38 @@ public class AuthController {
         this.authService = authService;
     }
 
+    @Operation(
+        summary = "Sign up",
+        description = "Sign up",
+        tags = "post"
+    )
+    @ApiResponse(
+        responseCode = "201",
+        description = "User registered successfully"
+    )
+    @ApiResponse(
+        responseCode = "400",
+        description = "username already taken"
+    )
     @PostMapping("/signup")
     @ResponseStatus(HttpStatus.CREATED)
     public void registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
         authService.registerUser(signUpRequest);
     }
+
+    @Operation(
+        summary = "Login",
+        description = "Login",
+        tags = "post"
+    )
+    @ApiResponse(
+        responseCode = "200",
+        description = "login successful"
+    )
+    @ApiResponse(
+        responseCode = "400",
+        description = "Bad Credentials"
+    )
 
     @PostMapping("/login")
     public ResponseEntity<Object> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -61,6 +90,23 @@ public class AuthController {
         }
     }
 
+    @Operation(
+        summary = "Validate token",
+        description = "Validate token",
+        tags = "get"
+    )
+    @ApiResponse(
+        responseCode = "200",
+        description = "The result"
+    )
+    @ApiResponse(
+        responseCode = "400",
+        description = "Bad Credentials"
+    )
+    @ApiResponse(
+        responseCode = "401",
+        description = "Authorization information is missing or invalid"
+    )
     @GetMapping("/validate")
     @ResponseStatus(HttpStatus.OK)
     public boolean validateToken(@RequestParam String token) {

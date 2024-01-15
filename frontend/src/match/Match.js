@@ -14,7 +14,6 @@ export let startingState = {...getDefaultState()};
 
 export default function Match() {
     let [matchData, setMatchData] = useState(null);
-    const [chatData, setChatData] = useState([]);
     const {id} = useParams();
     matchInfo = {...defaultMatchInfo};
 
@@ -50,7 +49,6 @@ export default function Match() {
             matchData = (await fetchAuthenticated(`/api/v1/matches/${id}`, "GET")
                 .then(async response => await response.json()));
 
-            setChatData(matchData.messages)
 
             let newHandCount = 0;
 
@@ -62,9 +60,6 @@ export default function Match() {
                 newHandCount += matchData.player.hand[getConglomerateName(conglomerate.TOTAL_ENTERTAINMENT)];
             if(matchData.player.hand[getConglomerateName(conglomerate.GENERIC_INC)] !== undefined)
                 newHandCount += matchData.player.hand[getConglomerateName(conglomerate.GENERIC_INC)];
-
-            console.log(handCount);
-            console.log(newHandCount);
 
             const isPLaying = matchData.state === "PLAYING";
             const canUpdateMatch =  !(matchData.playing) || wasEmpty || !isPLaying || (wasWaiting && isPLaying) || (!wasPlaying && matchData.playing) /*|| newHandCount !== handCount*/;
@@ -102,7 +97,6 @@ export default function Match() {
             <div className={css.match}>
                 <Info.Provider value={matchInfo}>
                     <Main/>
-                    <Chat chatData={chatData} matchCode={id}/>
                 </Info.Provider>
             </div>);
     }
@@ -136,7 +130,6 @@ function setContext(id, matchData, propic) {
         return {propic: propics[opponent.picture], username: opponent.username, id: opponent.playerId}
     }));
     matchInfo.isWinner = null;
-    console.log(matchInfo);
 
     if (matchData.state === "PLAYING") {
         startingState.isPlaying = matchData.playing;

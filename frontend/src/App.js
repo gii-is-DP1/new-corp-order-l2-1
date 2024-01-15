@@ -16,6 +16,7 @@ import {MatchStats} from "./stats/MatchStats";
 import {Metrics} from "./stats/Metrics";
 import {Rankings} from "./stats/Rankings";
 import {Notifications} from "./mainPage/Notifications";
+import MatchWrapper from "./match/MatchWrapper";
 
 function ErrorFallback({error, resetErrorBoundary}) {
     return (
@@ -40,7 +41,7 @@ function App() {
 
                     {jwt && <>
                         <Route path="/" element={<MainPage/>}/>
-                        <Route path="/match/:id" element={<Match/>}/>
+                        <Route path="/match/:id" element={<MatchWrapper/>}/>
                         <Route path="/match/:matchCode/stats" element={<MatchStats/>}/>
 
                         <Route path="/user/:username/:select?" element={<ProfilePage/>}/>
